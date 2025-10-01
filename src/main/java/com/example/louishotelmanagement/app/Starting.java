@@ -10,10 +10,8 @@ import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.SQLException;
 
-public class HelloApplication extends Application {
+public class Starting extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         // Kiểm tra kết nối database trước khi khởi tạo UI
@@ -23,7 +21,7 @@ public class HelloApplication extends Application {
             return;
         }
         
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("/com/example/louishotelmanagement/fxml/dashboard-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(Starting.class.getResource("/com/example/louishotelmanagement/fxml/dashboard-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1200, 800);
         stage.setTitle("Victoria Hotel Management System");
         stage.setScene(scene);
