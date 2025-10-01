@@ -11,9 +11,15 @@ module com.example.louishotelmanagement {
     requires eu.hansolo.tilesfx;
     requires java.sql;
 
-    opens com.example.louishotelmanagement to javafx.fxml;
+    opens com.example.louishotelmanagement.fxml to javafx.fxml;
     exports com.example.louishotelmanagement.app;
     opens com.example.louishotelmanagement.app to javafx.fxml;
     exports com.example.louishotelmanagement.controller;
     opens com.example.louishotelmanagement.controller to javafx.fxml;
+    exports com.example.louishotelmanagement.model;
+    opens com.example.louishotelmanagement.model to javafx.fxml;
+    exports com.example.louishotelmanagement.dao;
+    opens com.example.louishotelmanagement.dao to javafx.fxml;
+    exports com.example.louishotelmanagement.config;
+    opens com.example.louishotelmanagement.config to javafx.fxml;
 }

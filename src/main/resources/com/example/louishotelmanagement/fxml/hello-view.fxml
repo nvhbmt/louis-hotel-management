@@ -17,6 +17,6 @@
      </content>
    </TitledPane>
 
-    <Label fx:id="welcomeText" />
-    <Button onAction="#onHelloButtonClick" text="Hello!" />
+    <Label fx:id="vanBanChaoMung" />
+    <Button onAction="#khiNhanNutChao" text="Hello!" />
 </VBox>

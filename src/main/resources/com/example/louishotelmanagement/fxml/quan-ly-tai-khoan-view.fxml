@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.QuanLyTaiKhoanController">
+   <center>
+      <!-- Main Content Area -->
+      <VBox spacing="20.0" style="-fx-background-color: #f8f9fa; -fx-padding: 30;">
+         <!-- Header -->
+         <VBox spacing="5.0">
+            <Label text="Quản Lý Tài Khoản" style="-fx-font-size: 28px; -fx-font-weight: bold;" textFill="#2c3e50" />
+            <Label text="Quản lý tài khoản người dùng hệ thống" style="-fx-font-size: 14px;" textFill="#7f8c8d" />
+         </VBox>
+         
+         <!-- Content Placeholder -->
+         <VBox alignment="CENTER" spacing="20.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2); -fx-padding: 40;">
+            <Label text="👤" style="-fx-font-size: 48px;" />
+            <Label text="Trang Quản Lý Tài Khoản" style="-fx-font-size: 24px; -fx-font-weight: bold;" textFill="#2c3e50" />
+            <Label text="Quản lý tài khoản sẽ được hiển thị ở đây" style="-fx-font-size: 14px;" textFill="#7f8c8d" />
+         </VBox>
+      </VBox>
+   </center>
+</BorderPane>

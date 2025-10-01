@@ -1,0 +1,20 @@
+package com.example.louishotelmanagement.controller;
+
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
+
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class QuanLyTaiKhoanController implements Initializable {
+
+    @FXML
+    private Label tieuDeLabel;
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        // Initialize quan ly tai khoan page
+        System.out.println("Quan ly tai khoan page initialized");
+    }
+}
