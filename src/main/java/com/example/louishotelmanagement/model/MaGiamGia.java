@@ -12,10 +12,10 @@ public class MaGiamGia {
     private double tongTienToiThieu;
     private String moTa;
     private String trangThai;
-    private NhanVien nhanVien;
+    private String maNhanVien;
 
 
-    public MaGiamGia(String maGG, String code, double giamGia, String kieuGiamGia, LocalDate ngayBatDau, LocalDate ngayKetThuc, double tongTienToiThieu, String moTa, String trangThai, NhanVien nhanVien) {
+    public MaGiamGia(String maGG, String code, double giamGia, String kieuGiamGia, LocalDate ngayBatDau, LocalDate ngayKetThuc, double tongTienToiThieu, String moTa, String trangThai, String maNhanVien) {
         this.maGG = maGG;
         this.code = code;
         this.giamGia = giamGia;
@@ -25,7 +25,7 @@ public class MaGiamGia {
         this.tongTienToiThieu = tongTienToiThieu;
         this.moTa = moTa;
         this.trangThai = trangThai;
-        this.nhanVien = nhanVien;
+        this.maNhanVien = maNhanVien;
     }
 
     public String getMaGG() {
@@ -96,12 +96,12 @@ public class MaGiamGia {
         this.trangThai = trangThai;
     }
 
-    public NhanVien getNhanVien() {
-        return nhanVien;
+    public String getMaNhanVien() {
+        return maNhanVien;
     }
 
-    public void setNhanVien(NhanVien nhanVien) {
-        this.nhanVien = nhanVien;
+    public void setMaNhanVien(String maNhanVien) {
+        this.maNhanVien = maNhanVien;
     }
 
     @Override
@@ -116,7 +116,7 @@ public class MaGiamGia {
                 ", tongTienToiThieu=" + tongTienToiThieu +
                 ", moTa='" + moTa + '\'' +
                 ", trangThai='" + trangThai + '\'' +
-                ", nhanVien=" + nhanVien +
+                ", maNhanVien=" + maNhanVien +
                 '}';
     }
 }
