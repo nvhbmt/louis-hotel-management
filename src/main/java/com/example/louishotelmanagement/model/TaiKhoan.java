@@ -60,4 +60,16 @@ public class TaiKhoan {
     public void setTrangThai(String trangThai) {
         this.trangThai = trangThai;
     }
+
+    @Override
+    public String toString() {
+        return "TaiKhoan{" +
+                "maTK='" + maTK + '\'' +
+                ", maNhanVien=" + nhanVien.getMaNV() +
+                ", tenDangNhap='" + tenDangNhap + '\'' +
+                ", matKhauHash='" + matKhauHash + '\'' +
+                ", quyen='" + quyen + '\'' +
+                ", trangThai='" + trangThai + '\'' +
+                '}';
+    }
 }
