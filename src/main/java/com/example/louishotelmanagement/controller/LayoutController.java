@@ -15,13 +15,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class DashboardController implements Initializable {
+public class LayoutController implements Initializable {
 
     // Flag to prevent recursive calls
-    private boolean dangCapNhatTongQuan = false;
-
-    @FXML
-    private Button nutTongQuan;
+    private boolean dangCapNhatThongKe = false;
     
     @FXML
     private Button nutQuanLyPhong;
@@ -114,47 +111,34 @@ public class DashboardController implements Initializable {
         nhomChuyenThoiGian = new ToggleGroup();
         nhomChuyenTienTe = new ToggleGroup();
         
-        nutChuyenTuan.setToggleGroup(nhomChuyenThoiGian);
-        nutChuyenThang.setToggleGroup(nhomChuyenThoiGian);
-        nutChuyenNam.setToggleGroup(nhomChuyenThoiGian);
+        // Check if toggle buttons exist before setting toggle groups
+        if (nutChuyenTuan != null && nutChuyenThang != null && nutChuyenNam != null) {
+            nutChuyenTuan.setToggleGroup(nhomChuyenThoiGian);
+            nutChuyenThang.setToggleGroup(nhomChuyenThoiGian);
+            nutChuyenNam.setToggleGroup(nhomChuyenThoiGian);
+            
+            // Set default selections
+            nutChuyenNam.setSelected(true);
+        }
         
-        nutChuyenVnd.setToggleGroup(nhomChuyenTienTe);
-        nutChuyenUsd.setToggleGroup(nhomChuyenTienTe);
+        if (nutChuyenVnd != null && nutChuyenUsd != null) {
+            nutChuyenVnd.setToggleGroup(nhomChuyenTienTe);
+            nutChuyenUsd.setToggleGroup(nhomChuyenTienTe);
+            
+            // Set default selections
+            nutChuyenVnd.setSelected(true);
+        }
         
-        // Set default selections
-        nutChuyenNam.setSelected(true);
-        nutChuyenVnd.setSelected(true);
-        
-        // Set default active menu
-        setActiveMenu(nutTongQuan);
+        // Set default active menu - Thống kê
+        setActiveMenu(nutThongKe);
+        // Load default content - Thống kê
+        loadContent("/com/example/louishotelmanagement/fxml/thong-ke-content.fxml");
     }
 
-    @FXML
-    private void khiNhanTongQuan() {
-        // Prevent recursive calls
-        if (dangCapNhatTongQuan) {
-            System.out.println("Already refreshing dashboard, skipping...");
-            return;
-        }
-        
-        System.out.println("Tong quan clicked");
-        dangCapNhatTongQuan = true;
-        
-        try {
-            setActiveMenu(nutTongQuan);
-            // Dashboard content is already displayed - no need to reload
-            // Just refresh the dashboard statistics data if needed
-            refreshDashboardData();
-        } finally {
-            // Reset flag after completion
-            dangCapNhatTongQuan = false;
-        }
-    }
-    
-    // Method to refresh dashboard data without reloading the FXML
-    private void refreshDashboardData() {
+    // Method to refresh statistical data without reloading the FXML
+    private void refreshStatisticalData() {
         // TODO: Refresh statistics data from database
-        System.out.println("Refreshing dashboard data...");
+        System.out.println("Refreshing statistical data...");
     }
 
     @FXML
@@ -198,9 +182,23 @@ public class DashboardController implements Initializable {
 
     @FXML
     private void khiNhanThongKe() {
+        // Prevent recursive calls
+        if (dangCapNhatThongKe) {
+            System.out.println("Already refreshing statistics, skipping...");
+            return;
+        }
+        
         System.out.println("Thong ke clicked");
-        setActiveMenu(nutThongKe);
-        loadContent("/com/example/louishotelmanagement/fxml/thong-ke-view.fxml");
+        dangCapNhatThongKe = true;
+        
+        try {
+            setActiveMenu(nutThongKe);
+            loadContent("/com/example/louishotelmanagement/fxml/thong-ke-content.fxml");
+            refreshStatisticalData();
+        } finally {
+            // Reset flag after completion
+            dangCapNhatThongKe = false;
+        }
     }
 
     @FXML
@@ -244,7 +242,7 @@ public class DashboardController implements Initializable {
     @FXML
     private void khiNhanLoaiPhong() {
         System.out.println("Loai phong clicked");
-        setActiveMenu(nutLoaiPhong);
+        setActiveMenu(nutQuanLyPhong);
         loadContent("/com/example/louishotelmanagement/fxml/loai-phong-view.fxml");
     }
     
@@ -310,7 +308,7 @@ public class DashboardController implements Initializable {
     
     // Helper method to set active menu styling
     private void setActiveMenu(Button activeButton) {
-        // Reset all menu buttons to default style
+        // Remove all menu buttons to default style
         resetMenuStyles();
         
         // Set active button style
@@ -320,8 +318,8 @@ public class DashboardController implements Initializable {
     // Helper method to reset all menu button styles
     private void resetMenuStyles() {
         Button[] menuButtons = {
-            nutTongQuan, nutQuanLyPhong, nutQuanLyDichVu, nutQuanLyGiamGia,
-            nutQuanLyNhanVien, nutQuanLyTaiKhoan, nutQuanLyKhachHang, nutThongKe,
+            nutThongKe, nutQuanLyPhong, nutQuanLyDichVu, nutQuanLyGiamGia,
+            nutQuanLyNhanVien, nutQuanLyTaiKhoan, nutQuanLyKhachHang,
             nutDanhSachPhong, nutLoaiPhong, nutTrangThaiPhong, nutDanhSachDichVu,
             nutDanhMucDichVu, nutDatDichVu, nutDanhSachNhanVien, nutLichLamViec, nutLuongThuong
         };
@@ -342,9 +340,41 @@ public class DashboardController implements Initializable {
             // Replace the center content
             mainBorderPane.setCenter(content);
             
+            // If this is thong-ke-content, setup toggle buttons
+            if (fxmlPath.contains("thong-ke-content")) {
+                setupThongKeToggleButtons(content);
+            }
+            
         } catch (IOException e) {
             System.err.println("Error loading FXML: " + fxmlPath);
             e.printStackTrace();
+        }
+    }
+    
+    // Setup toggle buttons for thong-ke content
+    private void setupThongKeToggleButtons(javafx.scene.Parent content) {
+        try {
+            // Find toggle buttons in the loaded content
+            ToggleButton tuanBtn = (ToggleButton) content.lookup("#nutChuyenTuan");
+            ToggleButton thangBtn = (ToggleButton) content.lookup("#nutChuyenThang");
+            ToggleButton namBtn = (ToggleButton) content.lookup("#nutChuyenNam");
+            ToggleButton vndBtn = (ToggleButton) content.lookup("#nutChuyenVnd");
+            ToggleButton usdBtn = (ToggleButton) content.lookup("#nutChuyenUsd");
+            
+            if (tuanBtn != null && thangBtn != null && namBtn != null) {
+                tuanBtn.setToggleGroup(nhomChuyenThoiGian);
+                thangBtn.setToggleGroup(nhomChuyenThoiGian);
+                namBtn.setToggleGroup(nhomChuyenThoiGian);
+                namBtn.setSelected(true);
+            }
+            
+            if (vndBtn != null && usdBtn != null) {
+                vndBtn.setToggleGroup(nhomChuyenTienTe);
+                usdBtn.setToggleGroup(nhomChuyenTienTe);
+                vndBtn.setSelected(true);
+            }
+        } catch (Exception e) {
+            System.err.println("Error setting up toggle buttons: " + e.getMessage());
         }
     }
 }

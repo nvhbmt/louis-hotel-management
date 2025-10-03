@@ -17,13 +17,12 @@ public class Starting extends Application {
         // Kiểm tra kết nối database trước khi khởi tạo UI
         if (!initializeDatabase()) {
             showDatabaseErrorDialog();
-//            Platform.exit();
             return;
         }
         
-        FXMLLoader fxmlLoader = new FXMLLoader(Starting.class.getResource("/com/example/louishotelmanagement/fxml/dashboard-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(Starting.class.getResource("/com/example/louishotelmanagement/fxml/layout-chinh.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1200, 800);
-        stage.setTitle("Victoria Hotel Management System");
+        stage.setTitle("Chương trình quản lí khách sạn Louis");
         stage.setScene(scene);
         stage.setMinWidth(1000);
         stage.setMinHeight(600);
