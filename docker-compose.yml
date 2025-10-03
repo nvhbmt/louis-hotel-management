@@ -9,6 +9,5 @@ services:
             ACCEPT_EULA: 'Y'
             SA_PASSWORD: 'SApassword@123'
             MSSQL_PID: 'Developer'
-        volumes:
-            - ./mssql-data:/var/opt/mssql
+            MSSQL_DISABLE_TLS: 'true'
         restart: unless-stopped

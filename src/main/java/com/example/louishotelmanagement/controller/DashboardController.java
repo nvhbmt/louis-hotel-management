@@ -17,6 +17,9 @@ import java.util.ResourceBundle;
 
 public class DashboardController implements Initializable {
 
+    // Flag to prevent recursive calls
+    private boolean dangCapNhatTongQuan = false;
+
     @FXML
     private Button nutTongQuan;
     
@@ -128,10 +131,30 @@ public class DashboardController implements Initializable {
 
     @FXML
     private void khiNhanTongQuan() {
+        // Prevent recursive calls
+        if (dangCapNhatTongQuan) {
+            System.out.println("Already refreshing dashboard, skipping...");
+            return;
+        }
+        
         System.out.println("Tong quan clicked");
-        setActiveMenu(nutTongQuan);
-        // Load dashboard content (default view)
-        loadContent("/com/example/louishotelmanagement/fxml/dashboard-view.fxml");
+        dangCapNhatTongQuan = true;
+        
+        try {
+            setActiveMenu(nutTongQuan);
+            // Dashboard content is already displayed - no need to reload
+            // Just refresh the dashboard statistics data if needed
+            refreshDashboardData();
+        } finally {
+            // Reset flag after completion
+            dangCapNhatTongQuan = false;
+        }
+    }
+    
+    // Method to refresh dashboard data without reloading the FXML
+    private void refreshDashboardData() {
+        // TODO: Refresh statistics data from database
+        System.out.println("Refreshing dashboard data...");
     }
 
     @FXML
