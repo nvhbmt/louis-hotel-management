@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.QuanLyPhongController">
+   <center>
+      <!-- Main Content Area -->
+      <VBox spacing="20.0" style="-fx-background-color: #f8f9fa; -fx-padding: 30;">
+         <!-- Header -->
+         <VBox spacing="5.0">
+            <Label text="Quản Lý Phòng" style="-fx-font-size: 28px; -fx-font-weight: bold;" textFill="#2c3e50" />
+            <Label text="Quản lý thông tin và trạng thái các phòng trong khách sạn" style="-fx-font-size: 14px;" textFill="#7f8c8d" />
+         </VBox>
+         
+         <!-- Control Panel -->
+         <HBox spacing="15.0" alignment="CENTER_LEFT">
+            <Button fx:id="btnThemPhong" text="➕ Thêm Phòng" style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-background-radius: 5; -fx-padding: 10 20;" onAction="#handleThemPhong" />
+            <Button fx:id="btnSuaPhong" text="✏️ Sửa Phòng" style="-fx-background-color: #f39c12; -fx-text-fill: white; -fx-background-radius: 5; -fx-padding: 10 20;" onAction="#handleSuaPhong" />
+            <Button fx:id="btnXoaPhong" text="🗑️ Xóa Phòng" style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-background-radius: 5; -fx-padding: 10 20;" onAction="#handleXoaPhong" />
+            <Button fx:id="btnLamMoi" text="🔄 Làm Mới" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-background-radius: 5; -fx-padding: 10 20;" onAction="#handleLamMoi" />
+         </HBox>
+         
+         <!-- Search and Filter Panel -->
+         <HBox spacing="15.0" alignment="CENTER_LEFT">
+            <Label text="Tìm kiếm:" style="-fx-font-weight: bold;" />
+            <TextField fx:id="txtTimKiem" promptText="Nhập mã phòng hoặc tầng..." style="-fx-background-radius: 5; -fx-padding: 8 12;" onKeyReleased="#handleTimKiem" />
+            <Label text="Tầng:" style="-fx-font-weight: bold;" />
+            <ComboBox fx:id="cbTang" promptText="Tất cả tầng" style="-fx-background-radius: 5; -fx-padding: 8 12;" onAction="#handleLocTang" />
+            <Label text="Trạng thái:" style="-fx-font-weight: bold;" />
+            <ComboBox fx:id="cbTrangThai" promptText="Tất cả trạng thái" style="-fx-background-radius: 5; -fx-padding: 8 12;" onAction="#handleLocTrangThai" />
+            <Label text="Loại phòng:" style="-fx-font-weight: bold;" />
+            <ComboBox fx:id="cbLocLoaiPhong" promptText="Tất cả loại phòng" style="-fx-background-radius: 5; -fx-padding: 8 12;" onAction="#handleLocLoaiPhong" />
+         </HBox>
+         
+         <!-- Table View -->
+         <VBox spacing="10.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2); -fx-padding: 20;">
+            <TableView fx:id="tableViewPhong" style="-fx-background-color: white;">
+               <columns>
+                  <TableColumn fx:id="colMaPhong" text="Mã Phòng" prefWidth="100" />
+                  <TableColumn fx:id="colTang" text="Tầng" prefWidth="80" />
+                  <TableColumn fx:id="colTrangThai" text="Trạng Thái" prefWidth="120" />
+                  <TableColumn fx:id="colMoTa" text="Mô Tả" prefWidth="200" />
+                  <TableColumn fx:id="colMaLoaiPhong" text="Mã Loại Phòng" prefWidth="120" />
+                  <TableColumn fx:id="colTenLoaiPhong" text="Tên Loại Phòng" prefWidth="150" />
+                  <TableColumn fx:id="colDonGia" text="Đơn Giá" prefWidth="120" />
+               </columns>
+            </TableView>
+         </VBox>
+         
+         <!-- Status Bar -->
+         <HBox spacing="10.0" alignment="CENTER_LEFT">
+            <Label fx:id="lblTrangThai" text="Sẵn sàng" style="-fx-font-size: 12px;" textFill="#7f8c8d" />
+            <Separator orientation="VERTICAL" />
+            <Label fx:id="lblSoLuong" text="Tổng số phòng: 0" style="-fx-font-size: 12px;" textFill="#7f8c8d" />
+         </HBox>
+      </VBox>
+   </center>
+</BorderPane>

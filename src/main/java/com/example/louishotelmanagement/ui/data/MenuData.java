@@ -73,10 +73,23 @@ public class MenuData {
                         "/com/example/louishotelmanagement/fxml/nhan-vien-view.fxml")
         );
 
+        // --- 🏨 Quản lý phòng ---
+        TreeItem<MenuItemModel> roomGroup = new TreeItem<>(
+                new MenuItemModel("Quản lý phòng", "mdi2b-bed-outline", null)
+        );
+        roomGroup.getChildren().addAll(List.of(
+                new TreeItem<>(new MenuItemModel("Quản lý phòng", "mdi2b-bed",
+                        "/com/example/louishotelmanagement/fxml/quan-ly-phong-view.fxml")),
+                new TreeItem<>(new MenuItemModel("Loại phòng", "mdi2t-tag",
+                        "/com/example/louishotelmanagement/fxml/loai-phong-view.fxml")),
+                new TreeItem<>(new MenuItemModel("Trạng thái phòng", "mdi2i-information",
+                        "/com/example/louishotelmanagement/fxml/trang-thai-phong-view.fxml"))
+        ));
+
         // --- 🙋 Khách hàng ---
         TreeItem<MenuItemModel> customer = new TreeItem<>(
                 new MenuItemModel("Khách hàng", "mdi2a-account",
-                        "/com/example/louishotelmanagement/fxml/khach-hang-view.fxml")
+                        "/com/example/louishotelmanagement/fxml/quan-ly-khach-hang-view.fxml")
         );
 
         // --- ⚙️ Hệ thống ---
@@ -92,6 +105,7 @@ public class MenuData {
                 invoiceGroup,
                 reportGroup,
                 staff,
+                roomGroup,
                 customer,
                 system
         ));
