@@ -36,10 +36,10 @@
 }
 
 /* Bỏ mũi tên disclosure */
-.tree-disclosure-node {
-    -fx-opacity: 0;
-    -fx-padding: 0;
-}
+/*.tree-disclosure-node {*/
+/*    -fx-opacity: 0;*/
+/*    -fx-padding: 0;*/
+/*}*/
 
 /* Scrollbar mảnh và nhẹ */
 .scroll-bar:vertical {
@@ -51,12 +51,6 @@
 }
 .scroll-bar:vertical .thumb:hover {
     -fx-background-color: #9ca3af;
-}
-
-/* Đường ngăn mảnh giữa các item */
-.tree-cell {
-    -fx-border-color: transparent transparent #f3f4f6 transparent;
-    -fx-border-width: 0 0 1 0;
 }
 
 /* Khi TreeView có focus (hiệu ứng shadow nhẹ) */
