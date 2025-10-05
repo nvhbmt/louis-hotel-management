@@ -19,7 +19,7 @@ public class Starting extends Application {
             showDatabaseErrorDialog();
             return;
         }
-        
+
         FXMLLoader fxmlLoader = new FXMLLoader(Starting.class.getResource("/com/example/louishotelmanagement/fxml/layout-chinh.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1200, 800);
         stage.setTitle("Chương trình quản lí khách sạn Louis");
@@ -34,15 +34,15 @@ public class Starting extends Application {
      * @return true nếu kết nối thành công, false nếu thất bại
      */
     private boolean initializeDatabase() {
-        System.out.println("🚀 Đang khởi tạo ứng dụng...");
-        System.out.println("📊 Kiểm tra kết nối database...");
+        System.out.println("Đang khởi tạo ứng dụng...");
+        System.out.println("Kiểm tra kết nối database...");
         
         boolean isConnected = CauHinhDatabase.testConnection();
         
         if (isConnected) {
-            System.out.println("✅ Ứng dụng sẵn sàng hoạt động!");
+            System.out.println("Ứng dụng sẵn sàng hoạt động!");
         } else {
-            System.err.println("❌ Không thể khởi tạo ứng dụng do lỗi database");
+            System.err.println("Không thể khởi tạo ứng dụng do lỗi database");
         }
         
         return isConnected;
@@ -66,7 +66,7 @@ public class Starting extends Application {
                 "Vui lòng kiểm tra:\n" +
                 "• SQL Server JDBC Driver đã được cài đặt (mssql-jdbc)\n" +
                 "• SQL Server đã được khởi động\n" +
-                "• Database 'HotelDB' đã được tạo\n" +
+                "• Database 'QuanLyKhachSan' đã được tạo\n" +
                 "• Thông tin kết nối trong CauHinhDatabase.java\n" +
                 "• Port 1433 có thể truy cập\n\n" +
                 "Hướng dẫn cài đặt JDBC Driver:\n" +

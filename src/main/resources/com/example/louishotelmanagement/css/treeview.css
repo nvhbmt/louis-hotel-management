@@ -1,0 +1,72 @@
+.tree-view {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e5e7eb;
+    -fx-border-width: 0 1 0 0;
+    -fx-padding: 12 0 12 0;
+}
+
+/* Cell cơ bản */
+.tree-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: #111827;
+    -fx-font-family: "Inter", "Segoe UI", "Roboto", sans-serif;
+    -fx-font-size: 14px;
+    -fx-padding: 8 16 8 16;
+    -fx-cursor: hand;
+    -fx-alignment: CENTER_LEFT;
+    -fx-border-radius: 8;
+}
+
+/* Khi di chuột */
+.tree-cell:hover {
+    -fx-background-color: #f5f5f5;
+}
+
+/* Khi được chọn */
+.tree-cell:selected {
+    -fx-background-color: #f4f4f5;
+    -fx-text-fill: #111827;
+    -fx-font-weight: 600;
+    -fx-background-radius: 8;
+}
+
+/* Icon trái cách đều chữ */
+.tree-cell > .graphic {
+    -fx-padding: 0 12 0 0;
+}
+
+/* Bỏ mũi tên disclosure */
+.tree-disclosure-node {
+    -fx-opacity: 0;
+    -fx-padding: 0;
+}
+
+/* Scrollbar mảnh và nhẹ */
+.scroll-bar:vertical {
+    -fx-background-color: transparent;
+}
+.scroll-bar:vertical .thumb {
+    -fx-background-color: #d1d5db;
+    -fx-background-radius: 5;
+}
+.scroll-bar:vertical .thumb:hover {
+    -fx-background-color: #9ca3af;
+}
+
+/* Đường ngăn mảnh giữa các item */
+.tree-cell {
+    -fx-border-color: transparent transparent #f3f4f6 transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+/* Khi TreeView có focus (hiệu ứng shadow nhẹ) */
+.tree-view:focused {
+    -fx-effect: dropshadow(gaussian, rgba(37,99,235,0.1), 6, 0.3, 0, 0);
+}
+
+/* Padding giữa nhóm menu */
+.tree-cell:filled:expanded,
+.tree-cell:filled:collapsed {
+    -fx-font-weight: 600;
+    -fx-text-fill: #1e293b;
+}

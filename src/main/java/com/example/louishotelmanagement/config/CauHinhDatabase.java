@@ -17,18 +17,18 @@ public class CauHinhDatabase {
         try {
             // Load SQL Server JDBC driver
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-            System.out.println("✅ Đã tải thành công SQL Server JDBC Driver");
+            System.out.println("Đã tải thành công SQL Server JDBC Driver");
         } catch (ClassNotFoundException e) {
-            System.err.println("❌ Không tìm thấy SQL Server JDBC Driver: " + e.getMessage());
-            System.err.println("💡 Hướng dẫn khắc phục:");
-            System.err.println("   1. Thêm dependency mssql-jdbc vào pom.xml:");
-            System.err.println("      <dependency>");
-            System.err.println("          <groupId>com.microsoft.sqlserver</groupId>");
-            System.err.println("          <artifactId>mssql-jdbc</artifactId>");
-            System.err.println("          <version>12.6.1.jre11</version>");
-            System.err.println("      </dependency>");
-            System.err.println("   2. Chạy: mvn clean install");
-            System.err.println("   3. Hoặc refresh Maven project trong IDE");
+            System.err.println("Không tìm thấy SQL Server JDBC Driver: " + e.getMessage());
+            System.err.println("Hướng dẫn khắc phục:");
+            System.err.println("1. Thêm dependency mssql-jdbc vào pom.xml:");
+            System.err.println("    <dependency>");
+            System.err.println("        <groupId>com.microsoft.sqlserver</groupId>");
+            System.err.println("        <artifactId>mssql-jdbc</artifactId>");
+            System.err.println("        <version>12.6.1.jre11</version>");
+            System.err.println("    </dependency>");
+            System.err.println("2. Chạy: mvn clean install");
+            System.err.println("3. Hoặc refresh Maven project trong IDE");
             e.printStackTrace();
         }
     }
@@ -40,8 +40,8 @@ public class CauHinhDatabase {
      */
     public static Connection getConnection() throws SQLException {
         try {
-            System.out.println("🔗 Đang kết nối đến: " + URL);
-            System.out.println("👤 User: " + USER);
+            System.out.println("Đang kết nối đến: " + URL);
+            System.out.println("User: " + USER);
             
             // Set connection properties
             java.util.Properties props = new java.util.Properties();
@@ -54,17 +54,17 @@ public class CauHinhDatabase {
             
             // Kiểm tra kết nối
             if (connection.isValid(5)) {
-                System.out.println("✅ Kết nối database thành công!");
+                System.out.println("Kết nối database thành công!");
                 return connection;
             } else {
                 throw new SQLException("Kết nối không hợp lệ");
             }
             
         } catch (SQLException e) {
-            System.err.println("❌ Lỗi kết nối database:");
-            System.err.println("   - Mã lỗi: " + e.getErrorCode());
-            System.err.println("   - Trạng thái SQL: " + e.getSQLState());
-            System.err.println("   - Thông báo: " + e.getMessage());
+            System.err.println("Lỗi kết nối database:");
+            System.err.println(" - Mã lỗi: " + e.getErrorCode());
+            System.err.println(" - Trạng thái SQL: " + e.getSQLState());
+            System.err.println(" - Thông báo: " + e.getMessage());
             throw e;
         }
     }

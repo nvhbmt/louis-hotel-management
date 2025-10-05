@@ -4,6 +4,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TreeView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
@@ -23,58 +24,13 @@
          </VBox>
          
          <Separator style="-fx-background-color: #e0e0e0;" />
-         
+
          <!-- Menu Section -->
          <VBox spacing="5.0" style="-fx-padding: 20 0 0 0;">
             <Label style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-padding: 0 0 10 0;" text="Menu" textFill="#666666" />
-            
-            <!-- Menu Items -->
-            <VBox spacing="2.0">
-               <!-- Thống Kê - First Menu Item -->
-               <Button fx:id="nutThongKe" alignment="BASELINE_LEFT" graphicTextGap="15.0" maxWidth="Infinity" mnemonicParsing="false" onAction="#khiNhanThongKe" prefHeight="40.0" style="-fx-background-color: #e3f2fd; -fx-text-fill: #1976d2; -fx-font-size: 14px; -fx-cursor: hand; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 8 12; -fx-border-color: #1976d2; -fx-border-width: 1;" text="📊 Thống kê" />
-               
-               <!-- Quản lí phòng - Expandable Menu -->
-               <VBox spacing="2.0">
-                  <Button fx:id="nutQuanLyPhong" alignment="BASELINE_LEFT" graphicTextGap="15.0" maxWidth="Infinity" mnemonicParsing="false" onAction="#khiChuyenQuanLyPhong" prefHeight="40.0" style="-fx-background-color: transparent; -fx-text-fill: #333333; -fx-font-size: 14px; -fx-cursor: hand; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 8 12;" text="🛏 Quản lí phòng" />
-                  <!-- Submenu -->
-                  <VBox fx:id="menuConPhong" managed="false" spacing="1.0" style="-fx-padding: 0 0 0 30;" visible="false">
-                     <Button fx:id="nutDanhSachPhong" alignment="BASELINE_LEFT" graphicTextGap="10.0" maxWidth="Infinity" mnemonicParsing="false" onAction="#khiNhanDanhSachPhong" prefHeight="35.0" style="-fx-background-color: transparent; -fx-text-fill: #666666; -fx-font-size: 13px; -fx-cursor: hand; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 6 10;" text="📋 Danh sách phòng" />
-                     <Button fx:id="nutLoaiPhong" alignment="BASELINE_LEFT" graphicTextGap="10.0" maxWidth="Infinity" mnemonicParsing="false" onAction="#khiNhanLoaiPhong" prefHeight="35.0" style="-fx-background-color: transparent; -fx-text-fill: #666666; -fx-font-size: 13px; -fx-cursor: hand; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 6 10;" text="🏷 Loại phòng" />
-                     <Button fx:id="nutTrangThaiPhong" alignment="BASELINE_LEFT" graphicTextGap="10.0" maxWidth="Infinity" mnemonicParsing="false" onAction="#khiNhanTrangThaiPhong" prefHeight="35.0" style="-fx-background-color: transparent; -fx-text-fill: #666666; -fx-font-size: 13px; -fx-cursor: hand; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 6 10;" text="📊 Trạng thái phòng" />
-                  </VBox>
-               </VBox>
-               
-               <!-- Quản lí dịch vụ - Expandable Menu -->
-               <VBox spacing="2.0">
-                  <Button fx:id="nutQuanLyDichVu" alignment="BASELINE_LEFT" graphicTextGap="15.0" maxWidth="Infinity" mnemonicParsing="false" onAction="#khiChuyenQuanLyDichVu" prefHeight="40.0" style="-fx-background-color: transparent; -fx-text-fill: #333333; -fx-font-size: 14px; -fx-cursor: hand; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 8 12;" text="🍽 Quản lí dịch vụ" />
-                  <!-- Submenu -->
-                  <VBox fx:id="menuConDichVu" managed="false" spacing="1.0" style="-fx-padding: 0 0 0 30;" visible="false">
-                     <Button fx:id="nutDanhSachDichVu" alignment="BASELINE_LEFT" graphicTextGap="10.0" maxWidth="Infinity" mnemonicParsing="false" onAction="#khiNhanDanhSachDichVu" prefHeight="35.0" style="-fx-background-color: transparent; -fx-text-fill: #666666; -fx-font-size: 13px; -fx-cursor: hand; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 6 10;" text="📋 Danh sách dịch vụ" />
-                     <Button fx:id="nutDanhMucDichVu" alignment="BASELINE_LEFT" graphicTextGap="10.0" maxWidth="Infinity" mnemonicParsing="false" onAction="#khiNhanDanhMucDichVu" prefHeight="35.0" style="-fx-background-color: transparent; -fx-text-fill: #666666; -fx-font-size: 13px; -fx-cursor: hand; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 6 10;" text="🏷 Danh mục dịch vụ" />
-                     <Button fx:id="nutDatDichVu" alignment="BASELINE_LEFT" graphicTextGap="10.0" maxWidth="Infinity" mnemonicParsing="false" onAction="#khiNhanDatDichVu" prefHeight="35.0" style="-fx-background-color: transparent; -fx-text-fill: #666666; -fx-font-size: 13px; -fx-cursor: hand; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 6 10;" text="📅 Đặt dịch vụ" />
-                  </VBox>
-               </VBox>
-               
-               <Button fx:id="nutQuanLyGiamGia" alignment="BASELINE_LEFT" graphicTextGap="15.0" maxWidth="Infinity" mnemonicParsing="false" onAction="#khiNhanQuanLyGiamGia" prefHeight="40.0" style="-fx-background-color: transparent; -fx-text-fill: #333333; -fx-font-size: 14px; -fx-cursor: hand; -fx-bodyradius: 8; -fx-background-radius: 8; -fx-padding: 8 12;" text="💰 Quản lí giảm giá" />
-               
-               <!-- Quản lí nhân viên - Expandable Menu -->
-               <VBox spacing="2.0">
-                  <Button fx:id="nutQuanLyNhanVien" alignment="BASELINE_LEFT" graphicTextGap="15.0" maxWidth="Infinity" mnemonicParsing="false" onAction="#khiChuyenQuanLyNhanVien" prefHeight="40.0" style="-fx-background-color: transparent; -fx-text-fill: #333333; -fx-font-size: 14px; -fx-cursor: hand; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 8 12;" text="👥 Quản lí nhân viên" />
-                  <!-- Submenu -->
-                  <VBox fx:id="menuConNhanVien" managed="false" spacing="1.0" style="-fx-padding: 0 0 0 30;" visible="false">
-                     <Button fx:id="nutDanhSachNhanVien" alignment="BASELINE_LEFT" graphicTextGap="10.0" maxWidth="Infinity" mnemonicParsing="false" onAction="#khiNhanDanhSachNhanVien" prefHeight="35.0" style="-fx-background-color: transparent; -fx-text-fill: #666666; -fx-font-size: 13px; -fx-cursor: hand; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 6 10;" text="📋 Danh sách nhân viên" />
-                     <Button fx:id="nutLichLamViec" alignment="BASELINE_LEFT" graphicTextGap="10.0" maxWidth="Infinity" mnemonicParsing="false" onAction="#khiNhanLichLamViec" prefHeight="35.0" style="-fx-background-color: transparent; -fx-text-fill: #666666; -fx-font-size: 13px; -fx-cursor: hand; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 6 10;" text="📅 Lịch làm việc" />
-                     <Button fx:id="nutLuongThuong" alignment="BASELINE_LEFT" graphicTextGap="10.0" maxWidth="Infinity" mnemonicParsing="false" onAction="#khiNhanLuongThuong" prefHeight="35.0" style="-fx-background-color: transparent; -fx-text-fill: #666666; -fx-font-size: 13px; -fx-cursor: hand; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 6 10;" text="💵 Lương thưởng" />
-                  </VBox>
-               </VBox>
-               
-               <Button fx:id="nutQuanLyTaiKhoan" alignment="BASELINE_LEFT" graphicTextGap="15.0" maxWidth="Infinity" mnemonicParsing="false" onAction="#khiNhanQuanLyTaiKhoan" prefHeight="40.0" style="-fx-background-color: transparent; -fx-text-fill: #333333; -fx-font-size: 14px; -fx-cursor: hand; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 8 12;" text="👤 Quản lí tài khoản" />
-               
-               <Button fx:id="nutQuanLyKhachHang" alignment="BASELINE_LEFT" graphicTextGap="15.0" maxWidth="Infinity" mnemonicParsing="false" onAction="#khiNhanQuanLyKhachHang" prefHeight="40.0" style="-fx-background-color: transparent; -fx-text-fill: #333333; -fx-font-size: 14px; -fx-cursor: hand; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 8 12;" text="👥 Quản lí khách hàng" />
-            </VBox>
+            <TreeView fx:id="menuTree" prefHeight="370.0" prefWidth="210.0" stylesheets="@../css/treeview.css" />
          </VBox>
+
       </VBox>
    </left>
-   
-   <!-- Center content will be loaded dynamically -->
 </BorderPane>
