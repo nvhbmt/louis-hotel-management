@@ -14,7 +14,7 @@
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="708.0" prefWidth="880.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
    <top>
-      <Label alignment="TOP_LEFT" style="-fx-font-weight: 900;-fx-font-size: 25px" text="Hủy phòng" BorderPane.alignment="TOP_LEFT">
+      <Label alignment="TOP_LEFT" style="-fx-font-weight: 900;-fx-font-size: 25px" text="Trả phòng" BorderPane.alignment="TOP_LEFT">
          <BorderPane.margin>
             <Insets bottom="30.0" left="20.0" top="10.0" />
          </BorderPane.margin>
@@ -161,7 +161,7 @@
    <bottom>
       <HBox alignment="CENTER" prefHeight="134.0" prefWidth="880.0" BorderPane.alignment="CENTER">
          <children>
-            <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="146.0" style="-fx-background-color: #1574DF;-fx-text-fill: white;-fx-font-size: 20px" text="Hủy phòng" />
+            <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="146.0" style="-fx-background-color: #1574DF;-fx-text-fill: white;-fx-font-size: 20px" text="Trả phòng" />
          </children>
       </HBox>
    </bottom>
