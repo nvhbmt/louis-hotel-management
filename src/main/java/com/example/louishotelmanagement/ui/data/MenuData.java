@@ -19,7 +19,7 @@ public class MenuData {
 
         // --- 🛏️ Quản lý đặt phòng ---
         TreeItem<MenuItemModel> bookingGroup = new TreeItem<>(
-                new MenuItemModel("Đặt phòng", "mdi2b-bed", null)
+                new MenuItemModel("Đặt phòng", "mdi2b-bed", "/com/example/louishotelmanagement/fxml/dat-phong-truc-tiep-view.fxml")
         );
         bookingGroup.getChildren().addAll(List.of(
                 new TreeItem<>(new MenuItemModel("Đặt phòng trước", "mdi2c-calendar-plus",
@@ -27,7 +27,7 @@ public class MenuData {
                 new TreeItem<>(new MenuItemModel("Nhận phòng", "mdi2l-login",
                         "/com/example/louishotelmanagement/fxml/nhan-phong-view.fxml")),
                 new TreeItem<>(new MenuItemModel("Trả phòng", "mdi2l-logout",
-                        "/com/example/louishotelmanagement/fxml/tra-phong-view.fxml"))
+                        "/com/example/louishotelmanagement/fxml/huy-phong-view.fxml"))
         ));
 
         // --- ☕ Dịch vụ ---
