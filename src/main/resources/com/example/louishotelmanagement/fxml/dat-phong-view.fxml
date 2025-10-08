@@ -2,6 +2,8 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TableColumn?>
@@ -13,7 +15,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="708.0" prefWidth="880.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="708.0" prefWidth="880.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.DatPhongController">
     <top>
         <Label style="-fx-font-size: 25px;-fx-font-weight: 900" text="Đặt phòng" BorderPane.alignment="TOP_LEFT">
             <BorderPane.margin>
@@ -40,7 +42,7 @@
                 </VBox>
                 <HBox alignment="CENTER_LEFT" prefHeight="42.0" prefWidth="830.0">
                     <children>
-                        <Label text="Mã Phòng">
+                        <Label prefWidth="78.4" text="Phòng">
                             <HBox.margin>
                                 <Insets right="10.0" />
                             </HBox.margin>
@@ -53,10 +55,7 @@
                                 <Insets right="40.0" />
                             </HBox.margin>
                         </ImageView>
-                        <TextField prefHeight="27.0" prefWidth="500.0">
-                            <HBox.margin>
-                                <Insets />
-                            </HBox.margin></TextField>
+                  <ComboBox fx:id="dsPhong" prefHeight="31.0" prefWidth="499.0" />
                     </children>
                     <VBox.margin>
                         <Insets bottom="5.0" left="50.0" />
@@ -64,7 +63,7 @@
                 </HBox>
                 <HBox alignment="CENTER_LEFT" prefHeight="43.0" prefWidth="880.0">
                     <children>
-                        <Label prefWidth="68.8" text="Họ tên">
+                        <Label text="Khách hàng">
                             <HBox.margin>
                                 <Insets right="10.0" />
                             </HBox.margin>
@@ -77,78 +76,36 @@
                                 <Insets right="40.0" />
                             </HBox.margin>
                         </ImageView>
-                        <TextField prefWidth="500.0" />
+                  <ComboBox fx:id="dsKhachHang" prefHeight="31.0" prefWidth="499.0" />
                     </children>
                     <VBox.margin>
                         <Insets bottom="5.0" left="50.0" />
                     </VBox.margin>
                 </HBox>
-                <HBox prefHeight="43.0" prefWidth="880.0">
-                    <children>
-                        <Label prefWidth="68.8" text="SDT">
-                            <HBox.margin>
-                                <Insets right="10.0" />
-                            </HBox.margin>
-                        </Label>
-                        <ImageView fitHeight="29.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
-                            <image>
-                                <Image url="@../image/phone.png" />
-                            </image>
-                            <HBox.margin>
-                                <Insets right="40.0" />
-                            </HBox.margin>
-                        </ImageView>
-                        <TextField prefWidth="500.0" />
-                    </children>
-                    <VBox.margin>
-                        <Insets bottom="5.0" left="50.0" />
-                    </VBox.margin>
-                </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="43.0" prefWidth="880.0">
+               <children>
+                  <Label prefWidth="78.4" text="Nhân viên">
+                     <HBox.margin>
+                        <Insets right="10.0" />
+                     </HBox.margin>
+                  </Label>
+                  <ImageView fitHeight="29.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../image/steward.png" />
+                     </image>
+                     <HBox.margin>
+                        <Insets right="40.0" />
+                     </HBox.margin>
+                  </ImageView>
+                  <TextField fx:id="maNhanVien" editable="false" prefHeight="31.0" prefWidth="498.0" />
+               </children>
+               <VBox.margin>
+                  <Insets bottom="5.0" left="50.0" />
+               </VBox.margin>
+            </HBox>
                 <HBox prefHeight="41.0" prefWidth="880.0">
                     <children>
-                        <Label prefWidth="68.8" text="Email">
-                            <HBox.margin>
-                                <Insets right="10.0" />
-                            </HBox.margin>
-                        </Label>
-                        <ImageView fitHeight="29.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
-                            <image>
-                                <Image url="@../image/gmail.png" />
-                            </image>
-                            <HBox.margin>
-                                <Insets right="40.0" />
-                            </HBox.margin>
-                        </ImageView>
-                        <TextField prefWidth="500.0" />
-                    </children>
-                    <VBox.margin>
-                        <Insets bottom="5.0" left="50.0" />
-                    </VBox.margin>
-                </HBox>
-                <HBox prefHeight="41.0" prefWidth="880.0">
-                    <children>
-                        <Label prefWidth="68.8" text="CCCD">
-                            <HBox.margin>
-                                <Insets right="10.0" />
-                            </HBox.margin>
-                        </Label>
-                        <ImageView fitHeight="29.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
-                            <image>
-                                <Image url="@../image/identified.png" />
-                            </image>
-                            <HBox.margin>
-                                <Insets right="40.0" />
-                            </HBox.margin>
-                        </ImageView>
-                        <TextField prefWidth="500.0" />
-                    </children>
-                    <VBox.margin>
-                        <Insets bottom="5.0" left="50.0" />
-                    </VBox.margin>
-                </HBox>
-                <HBox prefHeight="41.0" prefWidth="880.0">
-                    <children>
-                        <Label prefWidth="68.8" text="Ngày đặt">
+                        <Label prefWidth="78.4" text="Ngày đặt">
                             <HBox.margin>
                                 <Insets right="10.0" />
                             </HBox.margin>
@@ -161,7 +118,7 @@
                                 <Insets right="40.0" />
                             </HBox.margin>
                         </ImageView>
-                        <TextField prefWidth="500.0" />
+                  <DatePicker fx:id="ngayDat" prefHeight="34.0" prefWidth="498.0" />
                     </children>
                     <VBox.margin>
                         <Insets bottom="5.0" left="50.0" />
@@ -169,7 +126,7 @@
                 </HBox>
                 <HBox prefHeight="41.0" prefWidth="880.0">
                     <children>
-                        <Label prefWidth="68.8" text="Ngày đến">
+                        <Label prefWidth="78.4" text="Ngày đến">
                             <HBox.margin>
                                 <Insets right="10.0" />
                             </HBox.margin>
@@ -182,7 +139,7 @@
                                 <Insets right="40.0" />
                             </HBox.margin>
                         </ImageView>
-                        <TextField prefWidth="500.0" />
+                  <DatePicker fx:id="ngayDen" prefHeight="34.0" prefWidth="498.0" />
                     </children>
                     <VBox.margin>
                         <Insets bottom="5.0" left="50.0" />
@@ -190,7 +147,7 @@
                 </HBox>
                 <HBox prefHeight="41.0" prefWidth="880.0">
                     <children>
-                        <Label prefWidth="68.8" text="Ngày đi">
+                        <Label prefWidth="78.4" text="Ngày đi">
                             <HBox.margin>
                                 <Insets right="10.0" />
                             </HBox.margin>
@@ -203,7 +160,7 @@
                                 <Insets right="40.0" />
                             </HBox.margin>
                         </ImageView>
-                        <TextField prefWidth="500.0" />
+                  <DatePicker fx:id="ngayDi" prefHeight="34.0" prefWidth="499.0" />
                     </children>
                     <VBox.margin>
                         <Insets bottom="5.0" left="50.0" />
@@ -211,7 +168,7 @@
                 </HBox>
                 <HBox alignment="CENTER" prefHeight="34.0" prefWidth="880.0">
                     <children>
-                        <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="41.0" prefWidth="114.0" style="-fx-background-color: #1574DF" text="Đặt phòng" textAlignment="CENTER" textFill="WHITE" />
+                        <Button fx:id="btnDatPhong" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="41.0" prefWidth="114.0" style="-fx-background-color: #1574DF" text="Đặt phòng" textAlignment="CENTER" textFill="WHITE" />
                     </children>
                 </HBox>
             </children>
