@@ -63,11 +63,6 @@ public class LoaiPhong {
 
     @Override
     public String toString() {
-        return "LoaiPhong{" +
-                "maLoaiPhong='" + maLoaiPhong + '\'' +
-                ", tenLoai='" + tenLoai + '\'' +
-                ", moTa='" + moTa + '\'' +
-                ", donGia=" + donGia +
-                '}';
+        return tenLoai + " - (" + maLoaiPhong + ")";
     }
 }

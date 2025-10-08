@@ -1,52 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.RoomFormDialogController">
+<BorderPane xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.RoomFormDialogController">
    <center>
       <VBox spacing="20.0" style="-fx-background-color: #f8f9fa; -fx-padding: 30;">
          <!-- Header -->
          <VBox spacing="5.0">
-            <Label fx:id="lblTieuDe" text="Thêm Phòng Mới" style="-fx-font-size: 24px; -fx-font-weight: bold;" textFill="#2c3e50" />
-            <Label text="Nhập thông tin phòng" style="-fx-font-size: 14px;" textFill="#7f8c8d" />
+            <Label fx:id="lblTieuDe" style="-fx-font-size: 24px; -fx-font-weight: bold;" text="Thêm Phòng Mới" textFill="#2c3e50" />
+            <Label style="-fx-font-size: 14px;" text="Nhập thông tin phòng" textFill="#7f8c8d" />
          </VBox>
          
-         <!-- Form -->
-         <VBox spacing="15.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2); -fx-padding: 30;">
-            <GridPane hgap="15.0" vgap="15.0">
-               <columnConstraints>
-                  <ColumnConstraints minWidth="120.0" />
-                  <ColumnConstraints minWidth="200.0" />
-               </columnConstraints>
-               
-               <!-- Mã phòng -->
-               <Label text="Mã Phòng:" GridPane.columnIndex="0" GridPane.rowIndex="0" style="-fx-font-weight: bold;" />
-               <TextField fx:id="txtMaPhong" GridPane.columnIndex="1" GridPane.rowIndex="0" promptText="VD: P101" />
-               
-               <!-- Tầng -->
-               <Label text="Tầng:" GridPane.columnIndex="0" GridPane.rowIndex="1" style="-fx-font-weight: bold;" />
-               <Spinner fx:id="spinnerTang" GridPane.columnIndex="1" GridPane.rowIndex="1" editable="true" initialValue="1" />
-               
-               <!-- Trạng thái -->
-               <Label text="Trạng thái:" GridPane.columnIndex="0" GridPane.rowIndex="2" style="-fx-font-weight: bold;" />
-               <ComboBox fx:id="cbTrangThai" GridPane.columnIndex="1" GridPane.rowIndex="2" promptText="Chọn trạng thái" />
-               
-               <!-- Loại phòng -->
-               <Label text="Loại phòng:" GridPane.columnIndex="0" GridPane.rowIndex="3" style="-fx-font-weight: bold;" />
-               <ComboBox fx:id="cbLoaiPhong" GridPane.columnIndex="1" GridPane.rowIndex="3" promptText="Chọn loại phòng" />
-               
-               <!-- Mô tả -->
-               <Label text="Mô tả:" GridPane.columnIndex="0" GridPane.rowIndex="4" style="-fx-font-weight: bold;" />
-               <TextArea fx:id="txtMoTa" GridPane.columnIndex="1" GridPane.rowIndex="4" promptText="Nhập mô tả phòng..." prefRowCount="3" wrapText="true" />
-            </GridPane>
-         </VBox>
-         
+         <!-- Form using FormsFX -->
+         <VBox fx:id="formContainer" prefHeight="240.0" prefWidth="489.0" />
+
          <!-- Buttons -->
-         <HBox spacing="15.0" alignment="CENTER_RIGHT">
-            <Button fx:id="btnHuy" text="Hủy" style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-background-radius: 5; -fx-padding: 10 20;" onAction="#handleHuy" />
-            <Button fx:id="btnLuu" text="Lưu" style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-background-radius: 5; -fx-padding: 10 20;" onAction="#handleLuu" />
+         <HBox alignment="CENTER_RIGHT" spacing="15.0">
+            <Button fx:id="btnHuy" onAction="#handleHuy" style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-background-radius: 5; -fx-padding: 10 20;" text="Hủy" />
+            <Button fx:id="btnLuu" onAction="#handleLuu" style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-background-radius: 5; -fx-padding: 10 20;" text="Lưu" />
          </HBox>
       </VBox>
    </center>

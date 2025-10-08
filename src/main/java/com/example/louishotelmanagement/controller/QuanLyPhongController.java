@@ -233,8 +233,6 @@ public class QuanLyPhongController implements Initializable {
             
             // Thiết lập controller và dữ liệu
             RoomFormDialogController controller = loader.getController();
-            controller.setPhongDAO(phongDAO);
-            controller.setLoaiPhongDAO(loaiPhongDAO);
             controller.setMode("ADD");
             
             dialog.showAndWait();
