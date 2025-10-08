@@ -26,6 +26,8 @@ public class MenuData {
                         "/com/example/louishotelmanagement/fxml/dat-phong-view.fxml")),
                 new TreeItem<>(new MenuItemModel("Nhận phòng", "mdi2l-login",
                         "/com/example/louishotelmanagement/fxml/nhan-phong-view.fxml")),
+                new TreeItem<>(new MenuItemModel("Đổi phòng", "mdi2s-swap-horizontal",
+                        "/com/example/louishotelmanagement/fxml/doi-phong-view.fxml")),
                 new TreeItem<>(new MenuItemModel("Trả phòng", "mdi2l-logout",
                         "/com/example/louishotelmanagement/fxml/huy-phong-view.fxml"))
         ));
