@@ -5,7 +5,6 @@ public class Phong {
     private Integer tang;
     private String trangThai;
     private String moTa;
-    private String maLoaiPhong;
     private LoaiPhong loaiPhong;
 
     public Phong() {
@@ -13,17 +12,15 @@ public class Phong {
         this.tang = null;
         this.trangThai = "";
         this.moTa = "";
-        this.maLoaiPhong = "";
         this.loaiPhong = null;
     }
 
-    public Phong(String maPhong, Integer tang, String trangThai, String moTa, String maLoaiPhong) {
+    public Phong(String maPhong, Integer tang, String trangThai, String moTa, LoaiPhong loaiPhong) {
         this.maPhong = maPhong;
         this.tang = tang;
         this.trangThai = trangThai;
         this.moTa = moTa;
-        this.maLoaiPhong = maLoaiPhong;
-        this.loaiPhong = null;
+        this.loaiPhong = loaiPhong;
     }
 
     public Phong(String maPhong) {
@@ -31,7 +28,6 @@ public class Phong {
         this.tang = null;
         this.trangThai = "";
         this.moTa = "";
-        this.maLoaiPhong = "";
         this.loaiPhong = null;
     }
 
@@ -67,13 +63,6 @@ public class Phong {
         this.moTa = moTa;
     }
 
-    public String getMaLoaiPhong() {
-        return maLoaiPhong;
-    }
-
-    public void setMaLoaiPhong(String maLoaiPhong) {
-        this.maLoaiPhong = maLoaiPhong;
-    }
 
     public LoaiPhong getLoaiPhong() {
         return loaiPhong;
@@ -90,7 +79,6 @@ public class Phong {
                 ", tang=" + tang +
                 ", trangThai='" + trangThai + '\'' +
                 ", moTa='" + moTa + '\'' +
-                ", maLoaiPhong='" + maLoaiPhong + '\'' +
                 ", loaiPhong=" + (loaiPhong != null ? loaiPhong.getTenLoai() : "null") +
                 '}';
     }
