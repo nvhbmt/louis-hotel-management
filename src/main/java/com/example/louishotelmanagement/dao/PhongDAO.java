@@ -4,11 +4,14 @@ import com.example.louishotelmanagement.config.CauHinhDatabase;
 import com.example.louishotelmanagement.model.LoaiPhong;
 import com.example.louishotelmanagement.model.Phong;
 
-import java.sql.*;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class PhongDAO {
-    
+
     // Thêm phòng
     public boolean themPhong(Phong phong) throws SQLException {
         String sql = "{call sp_ThemPhong(?,?,?,?,?)}";
@@ -19,7 +22,7 @@ public class PhongDAO {
             cs.setObject(2, phong.getTang());
             cs.setString(3, phong.getTrangThai());
             cs.setString(4, phong.getMoTa());
-            cs.setString(5, phong.getMaLoaiPhong());
+            cs.setString(5, phong.getLoaiPhong().getMaLoaiPhong());
 
             return cs.executeUpdate() > 0;
         }
@@ -27,6 +30,7 @@ public class PhongDAO {
 
     // Lấy danh sách tất cả phòng
     public ArrayList<Phong> layDSPhong() throws SQLException {
+        LoaiPhongDAO loaiPhongDAO = new LoaiPhongDAO();
         ArrayList<Phong> ds = new ArrayList<>();
         String sql = "{call sp_LayDSPhong()}";
         try (Connection con = CauHinhDatabase.getConnection();
@@ -34,12 +38,13 @@ public class PhongDAO {
              ResultSet rs = cs.executeQuery()) {
 
             while (rs.next()) {
+                LoaiPhong loaiPhong = loaiPhongDAO.layLoaiPhongTheoMa(rs.getString("maLoaiPhong"));
                 Phong phong = new Phong(
                         rs.getString("maPhong"),
                         rs.getObject("tang", Integer.class),
                         rs.getString("trangThai"),
                         rs.getString("moTa"),
-                        rs.getString("maLoaiPhong")
+                        loaiPhong
                 );
                 ds.add(phong);
             }
@@ -49,6 +54,7 @@ public class PhongDAO {
 
     // Lấy danh sách phòng theo tầng
     public ArrayList<Phong> layDSPhongTheoTang(Integer tang) throws SQLException {
+        LoaiPhongDAO loaiPhongDAO = new LoaiPhongDAO();
         ArrayList<Phong> ds = new ArrayList<>();
         String sql = "{call sp_LayDSPhongTheoTang(?)}";
         try (Connection con = CauHinhDatabase.getConnection();
@@ -58,12 +64,13 @@ public class PhongDAO {
             ResultSet rs = cs.executeQuery();
 
             while (rs.next()) {
+                LoaiPhong loaiPhong = loaiPhongDAO.layLoaiPhongTheoMa(rs.getString("maLoaiPhong"));
                 Phong phong = new Phong(
                         rs.getString("maPhong"),
                         rs.getObject("tang", Integer.class),
                         rs.getString("trangThai"),
                         rs.getString("moTa"),
-                        rs.getString("maLoaiPhong")
+                        loaiPhong
                 );
                 ds.add(phong);
             }
@@ -73,6 +80,7 @@ public class PhongDAO {
 
     // Lấy danh sách phòng theo trạng thái
     public ArrayList<Phong> layDSPhongTheoTrangThai(String trangThai) throws SQLException {
+        LoaiPhongDAO loaiPhongDAO = new LoaiPhongDAO();
         ArrayList<Phong> ds = new ArrayList<>();
         String sql = "{call sp_LayDSPhongTheoTrangThai(?)}";
         try (Connection con = CauHinhDatabase.getConnection();
@@ -82,12 +90,13 @@ public class PhongDAO {
             ResultSet rs = cs.executeQuery();
 
             while (rs.next()) {
+                LoaiPhong loaiPhong = loaiPhongDAO.layLoaiPhongTheoMa(rs.getString("maLoaiPhong"));
                 Phong phong = new Phong(
                         rs.getString("maPhong"),
                         rs.getObject("tang", Integer.class),
                         rs.getString("trangThai"),
                         rs.getString("moTa"),
-                        rs.getString("maLoaiPhong")
+                        loaiPhong
                 );
                 ds.add(phong);
             }
@@ -97,6 +106,7 @@ public class PhongDAO {
 
     // Lấy danh sách phòng còn trống
     public ArrayList<Phong> layDSPhongTrong() throws SQLException {
+        LoaiPhongDAO loaiPhongDAO = new LoaiPhongDAO();
         ArrayList<Phong> ds = new ArrayList<>();
         String sql = "{call sp_LayDSPhongTrong()}";
         try (Connection con = CauHinhDatabase.getConnection();
@@ -104,12 +114,13 @@ public class PhongDAO {
              ResultSet rs = cs.executeQuery()) {
 
             while (rs.next()) {
+                LoaiPhong loaiPhong = loaiPhongDAO.layLoaiPhongTheoMa(rs.getString("maLoaiPhong"));
                 Phong phong = new Phong(
                         rs.getString("maPhong"),
                         rs.getObject("tang", Integer.class),
                         rs.getString("trangThai"),
                         rs.getString("moTa"),
-                        rs.getString("maLoaiPhong")
+                        loaiPhong
                 );
                 ds.add(phong);
             }
@@ -119,6 +130,7 @@ public class PhongDAO {
 
     // Lấy phòng theo mã
     public Phong layPhongTheoMa(String maPhong) throws SQLException {
+        LoaiPhongDAO loaiPhongDAO = new LoaiPhongDAO();
         String sql = "{call sp_LayPhongTheoMa(?)}";
         try (Connection con = CauHinhDatabase.getConnection();
              CallableStatement cs = con.prepareCall(sql)) {
@@ -127,12 +139,13 @@ public class PhongDAO {
             ResultSet rs = cs.executeQuery();
 
             if (rs.next()) {
+                LoaiPhong loaiPhong = loaiPhongDAO.layLoaiPhongTheoMa(rs.getString("maLoaiPhong"));
                 return new Phong(
                         rs.getString("maPhong"),
                         rs.getObject("tang", Integer.class),
                         rs.getString("trangThai"),
                         rs.getString("moTa"),
-                        rs.getString("maLoaiPhong")
+                        loaiPhong
                 );
             }
         }
@@ -144,12 +157,11 @@ public class PhongDAO {
         String sql = "{call sp_CapNhatPhong(?,?,?,?,?)}";
         try (Connection con = CauHinhDatabase.getConnection();
              CallableStatement cs = con.prepareCall(sql)) {
-
             cs.setString(1, phong.getMaPhong());
-            cs.setObject(2, phong.getTang());
-            cs.setString(3, phong.getTrangThai());
-            cs.setString(4, phong.getMoTa());
-            cs.setString(5, phong.getMaLoaiPhong());
+            cs.setInt(2, phong.getTang());
+            cs.setNString(3, phong.getTrangThai());
+            cs.setNString(4, phong.getMoTa());
+            cs.setString(5, phong.getLoaiPhong().getMaLoaiPhong());
 
             return cs.executeUpdate() > 0;
         }

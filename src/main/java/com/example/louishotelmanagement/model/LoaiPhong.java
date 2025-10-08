@@ -1,6 +1,7 @@
 package com.example.louishotelmanagement.model;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 public class LoaiPhong {
     private String maLoaiPhong;
@@ -63,11 +64,19 @@ public class LoaiPhong {
 
     @Override
     public String toString() {
-        return "LoaiPhong{" +
-                "maLoaiPhong='" + maLoaiPhong + '\'' +
-                ", tenLoai='" + tenLoai + '\'' +
-                ", moTa='" + moTa + '\'' +
-                ", donGia=" + donGia +
-                '}';
+        return tenLoai + " - (" + maLoaiPhong + ")";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        LoaiPhong loaiPhong = (LoaiPhong) o;
+        return Objects.equals(maLoaiPhong, loaiPhong.maLoaiPhong);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(maLoaiPhong);
     }
 }

@@ -40,10 +40,6 @@ public class CauHinhDatabase {
      */
     public static Connection getConnection() throws SQLException {
         try {
-            System.out.println("Đang kết nối đến: " + URL);
-            System.out.println("User: " + USER);
-            
-            // Set connection properties
             java.util.Properties props = new java.util.Properties();
             props.setProperty("user", USER);
             props.setProperty("password", PASS);
@@ -54,7 +50,6 @@ public class CauHinhDatabase {
             
             // Kiểm tra kết nối
             if (connection.isValid(5)) {
-                System.out.println("Kết nối database thành công!");
                 return connection;
             } else {
                 throw new SQLException("Kết nối không hợp lệ");
@@ -75,9 +70,11 @@ public class CauHinhDatabase {
      */
     public static boolean testConnection() {
         try (Connection conn = getConnection()) {
+            System.out.println("Đang kết nối đến: " + URL);
+            System.out.println("User: " + USER);
             return conn != null && !conn.isClosed();
         } catch (SQLException e) {
-            System.err.println("❌ Kiểm tra kết nối thất bại: " + e.getMessage());
+            System.err.println(" Kiểm tra kết nối thất bại: " + e.getMessage());
             return false;
         }
     }
