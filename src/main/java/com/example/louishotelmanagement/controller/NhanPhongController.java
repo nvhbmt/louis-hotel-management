@@ -8,11 +8,9 @@ import com.example.louishotelmanagement.model.CTPhieuDatPhong;
 import com.example.louishotelmanagement.model.KhachHang;
 import com.example.louishotelmanagement.model.PhieuDatPhong;
 import com.example.louishotelmanagement.model.Phong;
+import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 
 import java.net.URL;
 import java.sql.SQLException;
@@ -35,6 +33,7 @@ public class NhanPhongController implements Initializable {
     public PhongDAO phongDAO;
     public KhachHangDAO khachHangDAO;
     public ComboBox dsPhong;
+    public Boolean check = false;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -70,7 +69,7 @@ public class NhanPhongController implements Initializable {
         }
         dsPhong.getSelectionModel().selectFirst();
     }
-    public void handleCheck() throws SQLException {
+    public void handleCheck(javafx.event.ActionEvent actionEvent) throws SQLException {
         PhieuDatPhong pdp = phieuDatPhongDAO.layPhieuDatPhongTheoMa(String.valueOf(dsKhachHang.getPlaceholder()));
         CTPhieuDatPhong ctpdp = ctPhieuDatPhongDAO.layCTPhieuDatPhongTheoMa(pdp.getMaPhieu(), String.valueOf(dsPhong.getPlaceholder()));
         KhachHang kh = khachHangDAO.layKhachHangTheoMa(pdp.getMaKH());
@@ -80,7 +79,29 @@ public class NhanPhongController implements Initializable {
             hoTen.setText(kh.getHoTen());
             ngayDen.setValue(ctpdp.getNgayDen());
             ngayDi.setValue(ctpdp.getNgayDi());
+            check = true;
         }
     }
+    public void showAlertError(String header,String message){
+        Alert alert = new  Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Đã xảy ra lỗi");
+        alert.setHeaderText(header);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
 
+    public void handleNhanPhong(ActionEvent actionEvent) throws SQLException {
+        if(check){
+            phongDAO.capNhatTrangThaiPhong(maPhong.getText(),"Đang sử dụng");
+            PhieuDatPhong pdp = phieuDatPhongDAO.layPhieuDatPhongTheoMa(String.valueOf(dsKhachHang.getPlaceholder()));
+            phieuDatPhongDAO.capNhatTrangThaiPhieuDatPhong(pdp.getMaPhieu(),"Hoàn thành");
+        }
+    }
 }
+
+
+
+
+
+
+

@@ -3,43 +3,32 @@ package com.example.louishotelmanagement.controller;
 import com.example.louishotelmanagement.dao.KhachHangDAO;
 import com.example.louishotelmanagement.dao.PhongDAO;
 import com.example.louishotelmanagement.model.KhachHang;
+import com.example.louishotelmanagement.model.Phong;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.cell.PropertyValueFactory;
-import com.example.louishotelmanagement.model.Phong;
-import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-public class DatPhongController implements Initializable{
+public class DatPhongTaiQuayController implements Initializable {
 
-    public ComboBox dsPhong;
-    public ComboBox dsKhachHang;
-    public DatePicker ngayDen;
-    public DatePicker ngayDi;
-    public Button btnDatPhong;
-    public DatePicker ngayDat;
-    public PhongDAO Pdao;
     public TextField maNhanVien;
-    public KhachHangDAO Kdao;
-    @FXML
-    private TableView<Phong> tablePhong;
-    @FXML
-    private TableColumn<Phong, String> maPhong;
-    @FXML
-    private TableColumn<Phong, Integer> tang;
-    @FXML
-    private TableColumn<Phong, String> trangThai;
-    @FXML
-    private TableColumn<Phong, String> moTa;
-    @FXML
-    private TableColumn<Phong, String> loaiPhong;
-
+    public DatePicker ngayDi;
+    public ComboBox dsKhachHang;
+    public ComboBox dsPhong;
+    public TableView tablePhong;
+    public TableColumn maPhong;
+    public TableColumn tang;
+    public TableColumn trangThai;
+    public TableColumn moTa;
+    public TableColumn loaiPhong;
+    private PhongDAO Pdao;
+    private KhachHangDAO Kdao;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -50,15 +39,16 @@ public class DatPhongController implements Initializable{
         trangThai.setCellValueFactory(new PropertyValueFactory<>("trangThai"));
         moTa.setCellValueFactory(new PropertyValueFactory<>("moTa"));
         loaiPhong.setCellValueFactory(new PropertyValueFactory<>("loaiPhong"));
-        try{
-            layDsPhong();
-            setComboBoxPhong();
-            laydsKhachHang();
-            loadTable();
-        }catch (SQLException e){
-            e.printStackTrace();
-        }
-        dsKhachHang.getSelectionModel().selectFirst();
+            try {
+                layDsPhong();
+                setComboBoxPhong();
+                laydsKhachHang();
+                loadTable();
+
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            dsKhachHang.getSelectionModel().selectFirst();
     }
     public void setComboBoxPhong(){
         dsPhong.getSelectionModel().selectFirst();
@@ -82,7 +72,4 @@ public class DatPhongController implements Initializable{
         tablePhong.setItems(dsPhong);
 
     }
-
-
-
 }
