@@ -84,7 +84,7 @@
             </HBox>
             <HBox alignment="CENTER" prefHeight="49.0" prefWidth="880.0">
                <children>
-                  <Button fx:id="btnCheck" mnemonicParsing="false" prefHeight="42.0" prefWidth="103.0" style="-fx-background-color: #2DC33F;-fx-text-fill: white;-fx-font-size: 20px" text="Check" />
+                  <Button fx:id="btnCheck" mnemonicParsing="false" onAction="#handleCheck" prefHeight="42.0" prefWidth="103.0" style="-fx-background-color: #2DC33F;-fx-text-fill: white;-fx-font-size: 20px" text="Check" />
                </children>
             </HBox>
             <HBox alignment="CENTER" prefHeight="65.0" prefWidth="880.0">
@@ -159,7 +159,7 @@
    <bottom>
       <HBox alignment="CENTER" prefHeight="134.0" prefWidth="880.0" BorderPane.alignment="CENTER">
          <children>
-            <Button fx:id="btnNhanPhong" mnemonicParsing="false" prefHeight="50.0" prefWidth="146.0" style="-fx-background-color: #1574DF;-fx-text-fill: white;-fx-font-size: 20px" text="Nhận phòng" />
+            <Button fx:id="btnNhanPhong" mnemonicParsing="false" onAction="#handleNhanPhong" prefHeight="50.0" prefWidth="146.0" style="-fx-background-color: #1574DF;-fx-text-fill: white;-fx-font-size: 20px" text="Nhận phòng" />
          </children>
       </HBox>
    </bottom>

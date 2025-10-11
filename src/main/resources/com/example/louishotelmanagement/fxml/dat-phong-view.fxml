@@ -5,7 +5,6 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
@@ -174,19 +173,15 @@
             </children>
         </VBox>
     </center>
-    <bottom>
-        <ScrollPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-            <content>
-                <TableView prefHeight="250.0" prefWidth="881.0">
-                    <columns>
-                        <TableColumn prefWidth="75.0" text="Mã phòng" />
-                        <TableColumn prefWidth="112.80001831054688" text="Tầng" />
-                        <TableColumn prefWidth="125.60002136230469" text="Trạng thái" />
-                        <TableColumn prefWidth="255.2000732421875" text="Mô tả" />
-                        <TableColumn prefWidth="300.79998779296875" text="Chi tiết" />
-                    </columns>
-                </TableView>
-            </content>
-        </ScrollPane>
-    </bottom>
+   <bottom>
+          <TableView fx:id="tablePhong" prefHeight="250.0" prefWidth="881.0" BorderPane.alignment="CENTER">
+              <columns>
+                  <TableColumn fx:id="maPhong" prefWidth="75.0" text="Mã phòng" />
+                  <TableColumn fx:id="tang" prefWidth="112.80001831054688" text="Tầng" />
+                  <TableColumn fx:id="trangThai" prefWidth="125.60002136230469" text="Trạng thái" />
+                  <TableColumn fx:id="moTa" prefWidth="255.2000732421875" text="Mô tả" />
+                  <TableColumn fx:id="loaiPhong" prefWidth="300.79998779296875" text="Loại phòng" />
+              </columns>
+          </TableView>
+   </bottom>
 </BorderPane>
