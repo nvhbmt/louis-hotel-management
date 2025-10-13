@@ -4,14 +4,19 @@ import com.example.louishotelmanagement.dao.LoaiPhongDAO;
 import com.example.louishotelmanagement.dao.PhongDAO;
 import com.example.louishotelmanagement.model.LoaiPhong;
 import com.example.louishotelmanagement.model.Phong;
+import com.example.louishotelmanagement.model.TrangThaiPhong;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -25,16 +30,14 @@ import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 public class QuanLyPhongController implements Initializable {
-
     @FXML
-    private Button btnThemPhong;
+    public Label lblsoPhongTrong;
     @FXML
-    private Button btnSuaPhong;
+    public Label lblSoPhongTrong;
     @FXML
-    private Button btnXoaPhong;
+    public Label lblSoPhongSuDung;
     @FXML
-    private Button btnLamMoi;
-
+    public Label lblSoPhongBaoTri;
     @FXML
     private TextField txtTimKiem;
     @FXML
@@ -55,11 +58,11 @@ public class QuanLyPhongController implements Initializable {
     @FXML
     private TableColumn<Phong, String> colMoTa;
     @FXML
-    private TableColumn<Phong, String> colMaLoaiPhong;
-    @FXML
     private TableColumn<Phong, String> colTenLoaiPhong;
     @FXML
     private TableColumn<Phong, BigDecimal> colDonGia;
+    @FXML
+    public TableColumn<Phong, Void> colThaoTac;
 
     @FXML
     private Label lblTrangThai;
@@ -90,6 +93,21 @@ public class QuanLyPhongController implements Initializable {
         }
     }
 
+    private void capNhatThongKe() throws SQLException {
+        int tongSoPhong = phongDAO.layDSPhong().size();
+
+        int soPhongTrong = phongDAO.layDSPhongTheoTrangThai(TrangThaiPhong.TRONG).size();
+
+        int soPhongSuDung = phongDAO.layDSPhongTheoTrangThai(TrangThaiPhong.DANG_SU_DUNG).size();
+
+        int soPhongBaoTri =  phongDAO.layDSPhongTheoTrangThai(TrangThaiPhong.BAO_TRI).size();
+
+        lblsoPhongTrong.setText(String.valueOf(tongSoPhong));
+        lblSoPhongTrong.setText(String.valueOf(soPhongTrong));
+        lblSoPhongSuDung.setText(String.valueOf(soPhongSuDung));
+        lblSoPhongBaoTri.setText(String.valueOf(soPhongBaoTri));
+    }
+
     private void khoiTaoDuLieu() {
         danhSachPhong = FXCollections.observableArrayList();
         danhSachPhongFiltered = FXCollections.observableArrayList();
@@ -113,9 +131,49 @@ public class QuanLyPhongController implements Initializable {
         colDonGia.setCellValueFactory(cellData -> {
             LoaiPhong loaiPhong = cellData.getValue().getLoaiPhong();
             return loaiPhong != null ?
-                    javafx.beans.binding.Bindings.createObjectBinding(() -> loaiPhong.getDonGia()) :
+                    javafx.beans.binding.Bindings.createObjectBinding(loaiPhong::getDonGia) :
                     javafx.beans.binding.Bindings.createObjectBinding(() -> BigDecimal.ZERO);
         });
+
+        colThaoTac.setCellFactory(col -> new TableCell<Phong, Void>() {
+
+            private final Button btnEdit = new Button("Sửa");
+            private final Button btnDelete = new Button("Xóa");
+
+            {
+                btnEdit.getStyleClass().addAll("btn","btn-xs", "btn-info");
+                btnEdit.setStyle("-fx-padding: 2 4 2 4; -fx-min-width: 40px; -fx-pref-width: 40px;");
+
+
+                btnDelete.getStyleClass().addAll("btn","btn-xs", "btn-danger");
+                btnDelete.setStyle("-fx-padding: 2 4 2 4; -fx-min-width: 40px; -fx-pref-width: 40px;");
+
+                btnEdit.setOnAction(event -> {
+                    Phong phong = getTableView().getItems().get(getIndex());
+                    handleSuaPhong(phong);
+                });
+
+                btnDelete.setOnAction(event -> {
+                    Phong phong = getTableView().getItems().get(getIndex());
+                    handleXoaPhong(phong);
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    HBox box = new HBox(8, btnEdit, btnDelete);
+                    box.setAlignment(Pos.CENTER);
+                    setGraphic(box);
+                }
+            }
+        });
+
+        colThaoTac.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(null));
 
         // Thiết lập TableView
         tableViewPhong.setItems(danhSachPhongFiltered);
@@ -131,10 +189,54 @@ public class QuanLyPhongController implements Initializable {
             danhSachTang.add(i);
         }
         cbTang.setItems(FXCollections.observableArrayList(danhSachTang));
+        cbTang.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(Integer item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText("Chọn tầng");
+                } else {
+                    setText("Tầng " + item);
+                }
+            }
+        });
+        cbTang.setCellFactory(_ -> new ListCell<>() {
+            @Override
+            protected void updateItem(Integer item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText("Chọn tầng");
+                } else {
+                    setText("Tầng " + item);
+                }
+            }
+        });
 
         // Khởi tạo ComboBox trạng thái với các trạng thái phù hợp
-        List<String> danhSachTrangThai = List.of("Trống", "Đã đặt", "Đang sử dụng", "Bảo trì", "Dọn dẹp");
+        List<String> danhSachTrangThai = List.of("Trống", "Đã đặt", "Đang sử dụng", "Bảo trì");
         cbTrangThai.setItems(FXCollections.observableArrayList(danhSachTrangThai));
+        cbTrangThai.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText("Chọn trạng thái");
+                } else {
+                    setText(item);
+                }
+            }
+        });
+        cbTrangThai.setCellFactory(_ -> new ListCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText("Chọn trạng thái");
+                } else {
+                    setText(item);
+                }
+            }
+        });
 
         // Khởi tạo ComboBox loại phòng để filter
         khoiTaoComboBoxLoaiPhong();
@@ -145,26 +247,26 @@ public class QuanLyPhongController implements Initializable {
             List<LoaiPhong> danhSachLoaiPhong = loaiPhongDAO.layDSLoaiPhong();
 
             // Thiết lập ComboBox để hiển thị tên loại phòng
-            cbLocLoaiPhong.setCellFactory(_ -> new ListCell<LoaiPhong>() {
+            cbLocLoaiPhong.setCellFactory(_ -> new ListCell<>() {
                 @Override
                 protected void updateItem(LoaiPhong item, boolean empty) {
                     super.updateItem(item, empty);
                     if (empty || item == null) {
-                        setText(null);
+                        setText("Chọn loại phòng");
                     } else {
-                        setText(item.getTenLoai() + " (" + item.getMaLoaiPhong() + ")");
+                        setText(item.getTenLoai());
                     }
                 }
             });
 
-            cbLocLoaiPhong.setButtonCell(new ListCell<LoaiPhong>() {
+            cbLocLoaiPhong.setButtonCell(new ListCell<>() {
                 @Override
                 protected void updateItem(LoaiPhong item, boolean empty) {
                     super.updateItem(item, empty);
                     if (empty || item == null) {
-                        setText(null);
+                        setText("Chọn loại phòng");
                     } else {
-                        setText(item.getTenLoai() + " (" + item.getMaLoaiPhong() + ")");
+                        setText(item.getTenLoai());
                     }
                 }
             });
@@ -183,6 +285,7 @@ public class QuanLyPhongController implements Initializable {
 
             danhSachPhong.clear();
             danhSachPhong.addAll(dsPhong);
+            capNhatThongKe();
 
             // Áp dụng filter hiện tại
             apDungFilter();
@@ -213,6 +316,13 @@ public class QuanLyPhongController implements Initializable {
                     // Filter theo tầng
                     Integer tangFilter = cbTang.getValue();
                     if (tangFilter != null && (phong.getTang() == null || !phong.getTang().equals(tangFilter))) {
+                        return false;
+                    }
+
+                    // Filter theo trạng thái
+                    String trangThaiFilter = cbTrangThai.getValue();
+                    if (trangThaiFilter != null && (phong.getTrangThai() == null ||
+                            !phong.getTrangThai().toString().equalsIgnoreCase(trangThaiFilter))) {
                         return false;
                     }
 
@@ -255,12 +365,7 @@ public class QuanLyPhongController implements Initializable {
     }
 
     @FXML
-    private void handleSuaPhong() {
-        Phong phongChon = tableViewPhong.getSelectionModel().getSelectedItem();
-        if (phongChon == null) {
-            hienThiThongBao("Cảnh báo", "Vui lòng chọn phòng cần sửa!");
-            return;
-        }
+    private void handleSuaPhong(Phong phong) {
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/phong-form-dialog.fxml"));
@@ -272,7 +377,7 @@ public class QuanLyPhongController implements Initializable {
             // Thiết lập controller và dữ liệu
             PhongDialogController controller = loader.getController();
             controller.setMode("EDIT");
-            controller.setPhong(phongChon);
+            controller.setPhong(phong);
             dialog.showAndWait();
 
             // Làm mới dữ liệu sau khi sửa
@@ -284,30 +389,25 @@ public class QuanLyPhongController implements Initializable {
     }
 
     @FXML
-    private void handleXoaPhong() {
-        Phong phongChon = tableViewPhong.getSelectionModel().getSelectedItem();
-        if (phongChon == null) {
-            hienThiThongBao("Cảnh báo", "Vui lòng chọn phòng cần xóa!");
-            return;
-        }
+    private void handleXoaPhong(Phong phong) {
 
         // Xác nhận xóa
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Xác nhận xóa");
         alert.setHeaderText("Bạn có chắc chắn muốn xóa phòng này?");
-        alert.setContentText("Phòng: " + phongChon.getMaPhong() + " - Tầng: " + phongChon.getTang());
+        alert.setContentText("Phòng: " + phong.getMaPhong() + " - Tầng: " + phong.getTang());
 
         alert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
                 try {
                     // Kiểm tra xem phòng có đang được sử dụng không
-                    if (phongDAO.kiemTraPhongDuocSuDung(phongChon.getMaPhong())) {
+                    if (phongDAO.kiemTraPhongDuocSuDung(phong.getMaPhong())) {
                         hienThiThongBao("Lỗi", "Không thể xóa phòng này vì đang được sử dụng!");
                         return;
                     }
 
                     // Xóa phòng
-                    if (phongDAO.xoaPhong(phongChon.getMaPhong())) {
+                    if (phongDAO.xoaPhong(phong.getMaPhong())) {
                         hienThiThongBao("Thành công", "Đã xóa phòng thành công!");
                         taiDuLieu();
                     } else {

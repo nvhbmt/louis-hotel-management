@@ -1,12 +1,14 @@
 package com.example.louishotelmanagement.controller;
 
 import com.dlsc.formsfx.model.structure.*;
+import com.dlsc.formsfx.model.validators.RegexValidator;
 import com.dlsc.formsfx.model.validators.StringLengthValidator;
 import com.dlsc.formsfx.view.renderer.FormRenderer;
 import com.example.louishotelmanagement.dao.LoaiPhongDAO;
 import com.example.louishotelmanagement.dao.PhongDAO;
 import com.example.louishotelmanagement.model.LoaiPhong;
 import com.example.louishotelmanagement.model.Phong;
+import com.example.louishotelmanagement.model.TrangThaiPhong;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -38,7 +40,7 @@ public class PhongDialogController implements Initializable {
     // FormsFX form fields
     private StringField maPhongField;
     private IntegerField tangField;
-    private SingleSelectionField<String> trangThaiField;
+    private SingleSelectionField<TrangThaiPhong> trangThaiField;
     private SingleSelectionField<LoaiPhong> loaiPhongField;
     private StringField moTaField;
 
@@ -76,13 +78,14 @@ public class PhongDialogController implements Initializable {
         }
     }
 
-    public void initializeFormFx(String maPhong, Integer tang, String trangThai, List<LoaiPhong> dsLoaiPhong, String moTa) {
+    public void initializeFormFx(String maPhong, Integer tang, TrangThaiPhong trangThai, List<LoaiPhong> dsLoaiPhong, String moTa) {
         // Initialize FormsFX form fields
         maPhongField = Field.ofStringType(maPhong)
                 .label("Mã Phòng")
                 .placeholder("VD: P101")
                 .validate(
-                        StringLengthValidator.atLeast(3, "Mã phòng phải có ít nhất 3 ký tự")
+                        StringLengthValidator.exactly(4, "Mã phòng phải đúng 4 ký tự"),
+                        RegexValidator.forPattern("^P\\d{3}$", "Mã phòng phải theo định dạng 'Pxxx', trong đó 'x' là chữ số")
                 )
                 .required("Mã phòng không được để trống");
 
@@ -90,7 +93,7 @@ public class PhongDialogController implements Initializable {
                 .label("Tầng")
                 .required("Tầng không được để trống");
 
-        trangThaiField = Field.ofSingleSelectionType(List.of("Trống", "Đã đặt", "Đang sử dụng", "Bảo trì", "Dọn dẹp"))
+        trangThaiField = Field.ofSingleSelectionType(List.of(TrangThaiPhong.TRONG, TrangThaiPhong.DA_DAT, TrangThaiPhong.DANG_SU_DUNG, TrangThaiPhong.BAO_TRI))
                 .label("Trạng thái")
                 .required("Vui lòng chọn trạng thái phòng");
 
@@ -142,7 +145,7 @@ public class PhongDialogController implements Initializable {
 
             // Lưu lại giá trị hiện tại để set lại sau
             LoaiPhong currentLoaiPhongValue = loaiPhongField.getSelection();
-            String currentTrangThaiValue = trangThaiField.getSelection();
+            TrangThaiPhong currentTrangThaiValue = trangThaiField.getSelection();
 
             // Create new field instances to avoid "Cannot change a control's field once set" error
             initializeFormFx(
@@ -173,7 +176,7 @@ public class PhongDialogController implements Initializable {
             if (currentLoaiPhongValue != null) {
                 loaiPhongField.selectionProperty().set(currentLoaiPhongValue);
             }
-            if (currentTrangThaiValue != null && !currentTrangThaiValue.trim().isEmpty()) {
+            if (currentTrangThaiValue != null && !currentTrangThaiValue.toString().trim().isEmpty()) {
                 trangThaiField.selectionProperty().set(currentTrangThaiValue);
             }
 
@@ -184,6 +187,10 @@ public class PhongDialogController implements Initializable {
 
     @FXML
     private void handleLuu() {
+        if (!form.isValid()) {
+            hienThiThongBao("Lỗi", "Vui lòng kiểm tra lại thông tin phòng!");
+           return;
+        }
         try {
             Phong phong = new Phong();
             phong.setMaPhong(maPhongField.valueProperty().get().trim());

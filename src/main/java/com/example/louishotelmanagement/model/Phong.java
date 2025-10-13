@@ -3,19 +3,19 @@ package com.example.louishotelmanagement.model;
 public class Phong {
     private String maPhong;
     private Integer tang;
-    private String trangThai;
+    private TrangThaiPhong trangThai;
     private String moTa;
     private LoaiPhong loaiPhong;
 
     public Phong() {
         this.maPhong = "";
         this.tang = null;
-        this.trangThai = "";
+        this.trangThai = TrangThaiPhong.TRONG;
         this.moTa = "";
         this.loaiPhong = null;
     }
 
-    public Phong(String maPhong, Integer tang, String trangThai, String moTa, LoaiPhong loaiPhong) {
+    public Phong(String maPhong, Integer tang, TrangThaiPhong trangThai, String moTa, LoaiPhong loaiPhong) {
         this.maPhong = maPhong;
         this.tang = tang;
         this.trangThai = trangThai;
@@ -26,7 +26,7 @@ public class Phong {
     public Phong(String maPhong) {
         this.maPhong = maPhong;
         this.tang = null;
-        this.trangThai = "";
+        this.trangThai = TrangThaiPhong.TRONG;
         this.moTa = "";
         this.loaiPhong = null;
     }
@@ -47,11 +47,11 @@ public class Phong {
         this.tang = tang;
     }
 
-    public String getTrangThai() {
+    public TrangThaiPhong getTrangThai() {
         return trangThai;
     }
 
-    public void setTrangThai(String trangThai) {
+    public void setTrangThai(TrangThaiPhong trangThai) {
         this.trangThai = trangThai;
     }
 
