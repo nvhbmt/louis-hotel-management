@@ -16,7 +16,7 @@ CREATE TABLE LoaiPhong (
 CREATE TABLE Phong (
     maPhong nvarchar(10) PRIMARY KEY,
     tang INT,
-    trangThai NVARCHAR(50),
+    trangThai NVARCHAR(50) CHECK (trangThai IN (N'Trống', N'Đang sử dụng', N'Đã đặt', N'Bảo trì')) DEFAULT N'Trống',
     moTa NVARCHAR(255),
     maLoaiPhong nvarchar(10),
     FOREIGN KEY (maLoaiPhong) REFERENCES LoaiPhong(maLoaiPhong)

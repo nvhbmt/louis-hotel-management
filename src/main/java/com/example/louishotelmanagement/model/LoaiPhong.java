@@ -64,7 +64,7 @@ public class LoaiPhong {
 
     @Override
     public String toString() {
-        return tenLoai + " - (" + maLoaiPhong + ")";
+        return tenLoai;
     }
 
     @Override

@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
+import org.kordamp.bootstrapfx.BootstrapFX;
 
 import java.io.IOException;
 
@@ -22,6 +23,7 @@ public class Starting extends Application {
 
         FXMLLoader fxmlLoader = new FXMLLoader(Starting.class.getResource("/com/example/louishotelmanagement/fxml/layout-chinh.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1200, 800);
+        scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
         stage.setTitle("Chương trình quản lí khách sạn Louis");
         stage.setScene(scene);
         stage.setMinWidth(1000);

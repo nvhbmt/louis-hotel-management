@@ -19,7 +19,7 @@ public class MenuData {
 
         // --- 🛏️ Quản lý đặt phòng ---
         TreeItem<MenuItemModel> bookingGroup = new TreeItem<>(
-                new MenuItemModel("Đặt phòng", "mdi2b-bed", "/com/example/louishotelmanagement/fxml/dat-phong-truc-tiep-view.fxml")
+                new MenuItemModel("Đặt phòng", "mdi2b-bed", null)
         );
         bookingGroup.getChildren().addAll(List.of(
                 new TreeItem<>(new MenuItemModel("Đặt phòng trước", "mdi2c-calendar-plus",
