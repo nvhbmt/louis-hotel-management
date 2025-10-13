@@ -16,7 +16,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Region;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -27,7 +26,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 
 public class QuanLyPhongController implements Initializable {
     @FXML
@@ -54,7 +52,7 @@ public class QuanLyPhongController implements Initializable {
     @FXML
     private TableColumn<Phong, Integer> colTang;
     @FXML
-    private TableColumn<Phong, String> colTrangThai;
+    private TableColumn<Phong, TrangThaiPhong> colTrangThai;
     @FXML
     private TableColumn<Phong, String> colMoTa;
     @FXML
@@ -95,12 +93,9 @@ public class QuanLyPhongController implements Initializable {
 
     private void capNhatThongKe() throws SQLException {
         int tongSoPhong = phongDAO.layDSPhong().size();
-
         int soPhongTrong = phongDAO.layDSPhongTheoTrangThai(TrangThaiPhong.TRONG).size();
-
         int soPhongSuDung = phongDAO.layDSPhongTheoTrangThai(TrangThaiPhong.DANG_SU_DUNG).size();
-
-        int soPhongBaoTri =  phongDAO.layDSPhongTheoTrangThai(TrangThaiPhong.BAO_TRI).size();
+        int soPhongBaoTri = phongDAO.layDSPhongTheoTrangThai(TrangThaiPhong.BAO_TRI).size();
 
         lblsoPhongTrong.setText(String.valueOf(tongSoPhong));
         lblSoPhongTrong.setText(String.valueOf(soPhongTrong));
@@ -120,11 +115,35 @@ public class QuanLyPhongController implements Initializable {
         colTrangThai.setCellValueFactory(new PropertyValueFactory<>("trangThai"));
         colMoTa.setCellValueFactory(new PropertyValueFactory<>("moTa"));
 
+        colTrangThai.setCellFactory(_ -> new TableCell<>() {
+            @Override
+            protected void updateItem(TrangThaiPhong item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                    setStyle("");
+                } else {
+                    setText(item.toString());
+                    switch (item) {
+                        case TrangThaiPhong.TRONG ->
+                                setStyle("-fx-background-color: #d4edda; -fx-text-fill: #155724;"); // Xanh lá
+                        case TrangThaiPhong.DA_DAT ->
+                                setStyle("-fx-background-color: #fff3cd; -fx-text-fill: #856404;"); // Vàng
+                        case TrangThaiPhong.DANG_SU_DUNG ->
+                                setStyle("-fx-background-color: #cce5ff; -fx-text-fill: #004085;"); // Xanh dương
+                        case TrangThaiPhong.BAO_TRI ->
+                                setStyle("-fx-background-color: #f8d7da; -fx-text-fill: #721c24;"); // Đỏ
+                        default -> setStyle("");
+                    }
+                }
+            }
+        });
+
         // Cột tên loại phòng và đơn giá sẽ được thiết lập trong taiDuLieu()
         colTenLoaiPhong.setCellValueFactory(cellData -> {
             LoaiPhong loaiPhong = cellData.getValue().getLoaiPhong();
             return loaiPhong != null ?
-                    javafx.beans.binding.Bindings.createStringBinding(() -> loaiPhong.getTenLoai()) :
+                    javafx.beans.binding.Bindings.createStringBinding(loaiPhong::getTenLoai) :
                     javafx.beans.binding.Bindings.createStringBinding(() -> "");
         });
 
@@ -135,25 +154,25 @@ public class QuanLyPhongController implements Initializable {
                     javafx.beans.binding.Bindings.createObjectBinding(() -> BigDecimal.ZERO);
         });
 
-        colThaoTac.setCellFactory(col -> new TableCell<Phong, Void>() {
+        colThaoTac.setCellFactory(_ -> new TableCell<>() {
 
             private final Button btnEdit = new Button("Sửa");
             private final Button btnDelete = new Button("Xóa");
 
             {
-                btnEdit.getStyleClass().addAll("btn","btn-xs", "btn-info");
+                btnEdit.getStyleClass().addAll("btn", "btn-xs", "btn-info");
                 btnEdit.setStyle("-fx-padding: 2 4 2 4; -fx-min-width: 40px; -fx-pref-width: 40px;");
 
 
-                btnDelete.getStyleClass().addAll("btn","btn-xs", "btn-danger");
+                btnDelete.getStyleClass().addAll("btn", "btn-xs", "btn-danger");
                 btnDelete.setStyle("-fx-padding: 2 4 2 4; -fx-min-width: 40px; -fx-pref-width: 40px;");
 
-                btnEdit.setOnAction(event -> {
+                btnEdit.setOnAction(_ -> {
                     Phong phong = getTableView().getItems().get(getIndex());
                     handleSuaPhong(phong);
                 });
 
-                btnDelete.setOnAction(event -> {
+                btnDelete.setOnAction(_ -> {
                     Phong phong = getTableView().getItems().get(getIndex());
                     handleXoaPhong(phong);
                 });
@@ -173,7 +192,7 @@ public class QuanLyPhongController implements Initializable {
             }
         });
 
-        colThaoTac.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(null));
+        colThaoTac.setCellValueFactory(_ -> new ReadOnlyObjectWrapper<>(null));
 
         // Thiết lập TableView
         tableViewPhong.setItems(danhSachPhongFiltered);
@@ -328,14 +347,10 @@ public class QuanLyPhongController implements Initializable {
 
                     // Filter theo loại phòng
                     LoaiPhong loaiPhongFilter = cbLocLoaiPhong.getValue();
-                    if (loaiPhongFilter != null && (phong.getLoaiPhong() == null ||
-                            !phong.getLoaiPhong().getMaLoaiPhong().equals(loaiPhongFilter.getMaLoaiPhong()))) {
-                        return false;
-                    }
-
-                    return true;
+                    return loaiPhongFilter == null || (phong.getLoaiPhong() != null &&
+                            phong.getLoaiPhong().getMaLoaiPhong().equals(loaiPhongFilter.getMaLoaiPhong()));
                 })
-                .collect(Collectors.toList());
+                .toList();
 
         danhSachPhongFiltered.addAll(filtered);
         lblSoLuong.setText("Tổng số phòng: " + danhSachPhongFiltered.size());

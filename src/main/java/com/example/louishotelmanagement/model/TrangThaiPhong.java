@@ -11,19 +11,20 @@ public enum TrangThaiPhong {
     TrangThaiPhong(String trangThai) {
         this.trangThai = trangThai;
     }
-
-    public String getTrangThai() {
-        return trangThai;
-    }
-
+    
     public static TrangThaiPhong fromString(String text) {
         if (text == null) return null;
         text = text.trim().toLowerCase();
         for (TrangThaiPhong tt : values()) {
-            if (tt.getTrangThai().toLowerCase().equals(text) || tt.name().toLowerCase().equals(text)) {
+            if (tt.toString().toLowerCase().equals(text) || tt.name().toLowerCase().equals(text)) {
                 return tt;
             }
         }
         return null; // hoặc throw exception
+    }
+
+    @Override
+    public String toString() {
+        return trangThai;
     }
 }

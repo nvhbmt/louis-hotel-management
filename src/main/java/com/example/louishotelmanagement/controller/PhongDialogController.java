@@ -29,8 +29,6 @@ public class PhongDialogController implements Initializable {
     @FXML
     private VBox formContainer;
     @FXML
-    private Button btnHuy;
-    @FXML
     private Button btnLuu;
 
     private PhongDAO phongDAO;
@@ -138,11 +136,6 @@ public class PhongDialogController implements Initializable {
         try {
             List<LoaiPhong> danhSachLoaiPhong = loaiPhongDAO.layDSLoaiPhong();
 
-            // Convert to string list for display
-            List<String> loaiPhongStrings = danhSachLoaiPhong.stream()
-                    .map(lp -> lp.getTenLoai() + " (" + lp.getMaLoaiPhong() + ")")
-                    .toList();
-
             // Lưu lại giá trị hiện tại để set lại sau
             LoaiPhong currentLoaiPhongValue = loaiPhongField.getSelection();
             TrangThaiPhong currentTrangThaiValue = trangThaiField.getSelection();
@@ -164,7 +157,6 @@ public class PhongDialogController implements Initializable {
                             trangThaiField,
                             loaiPhongField,
                             moTaField)
-
             ).title("Thông tin phòng");
 
             // Clear and re-render form
@@ -189,7 +181,7 @@ public class PhongDialogController implements Initializable {
     private void handleLuu() {
         if (!form.isValid()) {
             hienThiThongBao("Lỗi", "Vui lòng kiểm tra lại thông tin phòng!");
-           return;
+            return;
         }
         try {
             Phong phong = new Phong();
