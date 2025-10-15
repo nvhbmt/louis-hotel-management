@@ -13,7 +13,7 @@ public class MenuData {
 
         TreeItem<MenuItemModel> trangChu = new TreeItem<>(
                 new MenuItemModel("Trang chủ", "mdi2h-home",
-                        "/com/example/louishotelmanagement/fxml/thong-ke-content.fxml")
+                        "/com/example/louishotelmanagement/fxml/trang-chu-view.fxml")
         );
 
         TreeItem<MenuItemModel> phongGroup = new TreeItem<>(
@@ -40,7 +40,6 @@ public class MenuData {
                         "/com/example/louishotelmanagement/fxml/huy-dich-vu.fxml"))
         ));
 
-        // --- 💰 Hóa đơn ---
         TreeItem<MenuItemModel> hoaDonGroup = new TreeItem<>(
                 new MenuItemModel("Hóa đơn", "mdi2c-cash-multiple", null)
         );
@@ -53,24 +52,15 @@ public class MenuData {
                         "/com/example/louishotelmanagement/fxml/hoa-don-view.fxml"))
         ));
 
-        // --- 📊 Thống kê ---
-        TreeItem<MenuItemModel> thongKeGroup = new TreeItem<>(
-                new MenuItemModel("Thống kê", "mdi2c-chart-bar", null)
+        TreeItem<MenuItemModel> thongKe = new TreeItem<>(
+                new MenuItemModel("Thống kê", "mdi2c-chart-bar", "/com/example/louishotelmanagement/fxml/thong-ke-view.fxml")
         );
-        thongKeGroup.getChildren().addAll(List.of(
-                new TreeItem<>(new MenuItemModel("Phòng đặt nhiều nhất", "mdi2f-file",
-                        "/com/example/louishotelmanagement/fxml/thong-ke-phong-view.fxml")),
-                new TreeItem<>(new MenuItemModel("Doanh thu", "mdi2c-chart-line",
-                        "/com/example/louishotelmanagement/fxml/thong-ke-doanh-thu-view.fxml"))
-        ));
 
         TreeItem<MenuItemModel> nhanVienGroup = new TreeItem<>(
                 new MenuItemModel("Nhân viên", "mdi2a-account-group",
                         "/com/example/louishotelmanagement/fxml/nhan-vien-view.fxml")
         );
 
-
-        // --- 🙋 Khách hàng ---
         TreeItem<MenuItemModel> khachHangGroup = new TreeItem<>(
                 new MenuItemModel("Khách hàng", "mdi2a-account",
                         "/com/example/louishotelmanagement/fxml/quan-ly-khach-hang-view.fxml")
@@ -82,7 +72,7 @@ public class MenuData {
                 phongGroup,
                 dichVuGroup,
                 hoaDonGroup,
-                thongKeGroup,
+                thongKe,
                 nhanVienGroup,
                 khachHangGroup
         ));

@@ -15,6 +15,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -36,6 +37,8 @@ public class QuanLyPhongController implements Initializable {
     public Label lblSoPhongSuDung;
     @FXML
     public Label lblSoPhongBaoTri;
+    @FXML
+    public BorderPane rootPane;
     @FXML
     private TextField txtTimKiem;
     @FXML
@@ -121,19 +124,22 @@ public class QuanLyPhongController implements Initializable {
                 super.updateItem(item, empty);
                 if (empty || item == null) {
                     setText(null);
-                    setStyle("");
+                    getStyleClass().clear();
                 } else {
                     setText(item.toString());
+                    getStyleClass().clear();
                     switch (item) {
                         case TrangThaiPhong.TRONG ->
-                                setStyle("-fx-background-color: #d4edda; -fx-text-fill: #155724;"); // Xanh lá
+                                getStyleClass().add("status-trong");
                         case TrangThaiPhong.DA_DAT ->
-                                setStyle("-fx-background-color: #fff3cd; -fx-text-fill: #856404;"); // Vàng
+                                getStyleClass().add("status-da-dat");
                         case TrangThaiPhong.DANG_SU_DUNG ->
-                                setStyle("-fx-background-color: #cce5ff; -fx-text-fill: #004085;"); // Xanh dương
+                                getStyleClass().add("status-dang-su-dung");
                         case TrangThaiPhong.BAO_TRI ->
-                                setStyle("-fx-background-color: #f8d7da; -fx-text-fill: #721c24;"); // Đỏ
-                        default -> setStyle("");
+                                getStyleClass().add("status-bao-tri");
+                        default -> {
+                            // Không thêm style class nào
+                        }
                     }
                 }
             }
@@ -160,12 +166,8 @@ public class QuanLyPhongController implements Initializable {
             private final Button btnDelete = new Button("Xóa");
 
             {
-                btnEdit.getStyleClass().addAll("btn", "btn-xs", "btn-info");
-                btnEdit.setStyle("-fx-padding: 2 4 2 4; -fx-min-width: 40px; -fx-pref-width: 40px;");
-
-
-                btnDelete.getStyleClass().addAll("btn", "btn-xs", "btn-danger");
-                btnDelete.setStyle("-fx-padding: 2 4 2 4; -fx-min-width: 40px; -fx-pref-width: 40px;");
+                btnEdit.getStyleClass().addAll("btn", "btn-xs", "btn-info", "btn-table-edit");
+                btnDelete.getStyleClass().addAll("btn", "btn-xs", "btn-danger", "btn-table-delete");
 
                 btnEdit.setOnAction(_ -> {
                     Phong phong = getTableView().getItems().get(getIndex());

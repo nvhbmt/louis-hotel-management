@@ -1,0 +1,62 @@
+/* ========================================
+   ĐẶT PHÒNG PAGE STYLES
+   ======================================== */
+
+/* Page Title */
+.page-title {
+    -fx-font-size: 25px;
+    -fx-font-weight: 900;
+}
+
+/* Section Title */
+.section-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: 700;
+}
+
+/* Form Container */
+.form-container {
+    -fx-font-size: 15px;
+}
+
+/* Icon Styles */
+.icon-small {
+    -fx-fit-height: 29px;
+    -fx-fit-width: 32px;
+}
+
+.icon-medium {
+    -fx-fit-height: 39px;
+    -fx-fit-width: 42px;
+}
+
+/* Button Styles */
+.btn-info {
+    -fx-background-color: #1574DF;
+    -fx-text-fill: white;
+}
+
+/* Margin Utilities */
+.margin-left-20 {
+    -fx-margin-left: 20px;
+}
+
+.margin-right-10 {
+    -fx-margin-right: 10px;
+}
+
+.margin-right-40 {
+    -fx-margin-right: 40px;
+}
+
+.margin-bottom-5 {
+    -fx-margin-bottom: 5px;
+}
+
+.margin-left-50 {
+    -fx-margin-left: 50px;
+}
+
+.margin-top-10 {
+    -fx-margin-top: 10px;
+}
