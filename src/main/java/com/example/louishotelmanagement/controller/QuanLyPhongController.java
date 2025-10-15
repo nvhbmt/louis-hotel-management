@@ -58,7 +58,7 @@ public class QuanLyPhongController implements Initializable {
     @FXML
     private TableColumn<Phong, String> colTenLoaiPhong;
     @FXML
-    private TableColumn<Phong, BigDecimal> colDonGia;
+    private TableColumn<Phong, Double> colDonGia;
     @FXML
     public TableColumn<Phong, Void> colThaoTac;
 
@@ -151,7 +151,7 @@ public class QuanLyPhongController implements Initializable {
             LoaiPhong loaiPhong = cellData.getValue().getLoaiPhong();
             return loaiPhong != null ?
                     javafx.beans.binding.Bindings.createObjectBinding(loaiPhong::getDonGia) :
-                    javafx.beans.binding.Bindings.createObjectBinding(() -> BigDecimal.ZERO);
+                    javafx.beans.binding.Bindings.createObjectBinding(() -> -0.0);
         });
 
         colThaoTac.setCellFactory(_ -> new TableCell<>() {

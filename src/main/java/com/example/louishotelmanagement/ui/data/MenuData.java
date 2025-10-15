@@ -11,13 +11,11 @@ public class MenuData {
         TreeItem<MenuItemModel> root = new TreeItem<>(new MenuItemModel("Root", null, null));
         root.setExpanded(true);
 
-        // --- 🏠 Trang chủ ---
         TreeItem<MenuItemModel> home = new TreeItem<>(
                 new MenuItemModel("Trang chủ", "mdi2h-home",
                         "/com/example/louishotelmanagement/fxml/thong-ke-content.fxml")
         );
 
-        // --- 🛏️ Quản lý đặt phòng ---
         TreeItem<MenuItemModel> bookingGroup = new TreeItem<>(
                 new MenuItemModel("Đặt phòng", "mdi2b-bed", "/com/example/louishotelmanagement/fxml/phong-view.fxml")
         );
@@ -69,7 +67,6 @@ public class MenuData {
                         "/com/example/louishotelmanagement/fxml/thong-ke-doanh-thu-view.fxml"))
         ));
 
-        // --- 👥 Nhân viên ---
         TreeItem<MenuItemModel> staff = new TreeItem<>(
                 new MenuItemModel("Nhân viên", "mdi2a-account-group",
                         "/com/example/louishotelmanagement/fxml/nhan-vien-view.fxml")
@@ -77,15 +74,13 @@ public class MenuData {
 
         // --- 🏨 Quản lý phòng ---
         TreeItem<MenuItemModel> roomGroup = new TreeItem<>(
-                new MenuItemModel("Quản lý phòng", "mdi2b-bed-outline", null)
+                new MenuItemModel("Phòng", "mdi2b-bed-outline", null)
         );
         roomGroup.getChildren().addAll(List.of(
                 new TreeItem<>(new MenuItemModel("Quản lý phòng", "mdi2b-bed",
                         "/com/example/louishotelmanagement/fxml/quan-ly-phong-view.fxml")),
                 new TreeItem<>(new MenuItemModel("Loại phòng", "mdi2t-tag",
-                        "/com/example/louishotelmanagement/fxml/loai-phong-view.fxml")),
-                new TreeItem<>(new MenuItemModel("Trạng thái phòng", "mdi2i-information",
-                        "/com/example/louishotelmanagement/fxml/trang-thai-phong-view.fxml"))
+                        "/com/example/louishotelmanagement/fxml/loai-phong-view.fxml"))
         ));
 
         // --- 🙋 Khách hàng ---

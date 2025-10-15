@@ -18,7 +18,7 @@ public class LoaiPhongDAO {
             cs.setString(1, loaiPhong.getMaLoaiPhong());
             cs.setString(2, loaiPhong.getTenLoai());
             cs.setString(3, loaiPhong.getMoTa());
-            cs.setBigDecimal(4, loaiPhong.getDonGia());
+            cs.setDouble(4, loaiPhong.getDonGia());
 
             return cs.executeUpdate() > 0;
         }
@@ -37,7 +37,7 @@ public class LoaiPhongDAO {
                         rs.getString("maLoaiPhong"),
                         rs.getString("tenLoai"),
                         rs.getString("moTa"),
-                        rs.getBigDecimal("donGia")
+                        rs.getDouble("donGia")
                 );
                 ds.add(loaiPhong);
             }
@@ -59,7 +59,7 @@ public class LoaiPhongDAO {
                         rs.getString("maLoaiPhong"),
                         rs.getString("tenLoai"),
                         rs.getString("moTa"),
-                        rs.getBigDecimal("donGia")
+                        rs.getDouble("donGia")
                 );
             }
         }
@@ -75,7 +75,7 @@ public class LoaiPhongDAO {
             cs.setString(1, loaiPhong.getMaLoaiPhong());
             cs.setString(2, loaiPhong.getTenLoai());
             cs.setString(3, loaiPhong.getMoTa());
-            cs.setBigDecimal(4, loaiPhong.getDonGia());
+            cs.setDouble(4, loaiPhong.getDonGia());
 
             return cs.executeUpdate() > 0;
         }
