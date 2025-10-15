@@ -147,11 +147,8 @@ public class LoaiPhongController implements Initializable {
             private final Button btnDelete = new Button("Xóa");
 
             {
-                btnEdit.getStyleClass().addAll("btn", "btn-xs", "btn-info");
-                btnEdit.setStyle("-fx-padding: 2 4 2 4; -fx-min-width: 40px; -fx-pref-width: 40px;");
-
-                btnDelete.getStyleClass().addAll("btn", "btn-xs", "btn-danger");
-                btnDelete.setStyle("-fx-padding: 2 4 2 4; -fx-min-width: 40px; -fx-pref-width: 40px;");
+                btnEdit.getStyleClass().addAll("btn", "btn-xs", "btn-info", "btn-table-edit");
+                btnDelete.getStyleClass().addAll("btn", "btn-xs", "btn-danger", "btn-table-delete");
 
                 btnEdit.setOnAction(_ -> {
                     LoaiPhong loaiPhong = getTableView().getItems().get(getIndex());

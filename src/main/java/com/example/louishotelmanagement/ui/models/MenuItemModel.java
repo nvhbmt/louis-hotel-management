@@ -13,7 +13,6 @@ public class MenuItemModel {
     private final String iconText;   // Icon dạng text hoặc emoji (tùy chọn)
     private final String iconPath;   // Đường dẫn ảnh icon (tùy chọn)
     private final String fxmlPath;   // Đường dẫn tới file FXML
-    private final boolean isParent;  // Có phải nhóm cha (menu group)
 
     /**
      * Constructor cơ bản (dùng icon text)
@@ -32,29 +31,25 @@ public class MenuItemModel {
     /**
      * Constructor đầy đủ
      */
-    public MenuItemModel(String title, String iconText, String iconPath, String fxmlPath, boolean isParent) {
+    public MenuItemModel(String title, String iconText, String iconPath, String fxmlPath, boolean _isParent) {
         this.title = title;
         this.iconText = iconText;
         this.iconPath = iconPath;
         this.fxmlPath = fxmlPath;
-        this.isParent = isParent;
     }
 
     // Getter
     public String getTitle() { return title; }
-    public String getIconText() { return iconText; }
-    public String getIconPath() { return iconPath; }
     public String getFxmlPath() { return fxmlPath; }
-    public boolean isParent() { return isParent; }
 
     public javafx.scene.Node getIconNode() {
         if (iconPath != null) {
-            Image img = new Image(getClass().getResourceAsStream(iconPath), 18, 18, true, true);
+            Image img = new Image(getClass().getResourceAsStream(iconPath), 20, 20, true, true);
             return new ImageView(img);
         }
         if (iconText != null && !iconText.isEmpty()) {
             FontIcon icon = new FontIcon(iconText);
-            icon.setIconSize(16);
+            icon.setIconSize(18);
             return icon;
         }
         return null;

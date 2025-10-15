@@ -1,0 +1,60 @@
+/* ========================================
+   LOẠI PHÒNG PAGE STYLES
+   ======================================== */
+
+/* Statistics Cards with Border */
+.stat-card-border {
+    -fx-border-width: 1;
+    -fx-border-color: black;
+    -fx-padding: 10;
+    -fx-border-radius: 8;
+}
+
+.stat-label {
+    -fx-font-size: 16px;
+}
+
+.stat-value {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+}
+
+/* Form Controls */
+.form-field {
+    -fx-background-radius: 5;
+    -fx-padding: 8 12;
+}
+
+/* Table Styles */
+.table-container {
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0, 0, 2);
+    -fx-padding: 10;
+}
+
+.table-view {
+    -fx-background-color: white;
+}
+
+/* Status Bar */
+.status-bar {
+    -fx-font-size: 12px;
+    -fx-text-fill: #7f8c8d;
+}
+
+/* ========================================
+   TABLE ACTION BUTTON STYLES
+   ======================================== */
+
+.btn-table-edit {
+    -fx-padding: 2 4 2 4;
+    -fx-min-width: 40px;
+    -fx-pref-width: 40px;
+}
+
+.btn-table-delete {
+    -fx-padding: 2 4 2 4;
+    -fx-min-width: 40px;
+    -fx-pref-width: 40px;
+}

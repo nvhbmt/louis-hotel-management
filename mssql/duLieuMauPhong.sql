@@ -124,12 +124,12 @@ GO
 -- ===================================================================
 -- 6. Phòng (Phong) - Cần thêm dữ liệu cho bảng này
 -- ===================================================================
--- PRINT N'Đang thêm dữ liệu bảng Phong...';
--- INSERT INTO Phong (maPhong, tang, trangThai, moTa, maLoaiPhong) VALUES
--- ('P101', 1, N'Trống', N'Phòng đơn tầng 1', 'LP01'),
--- ('P102', 1, N'Trống', N'Phòng đôi tầng 1', 'LP02'),
--- ...
--- GO
+PRINT N'Đang thêm dữ liệu bảng Phong...';
+INSERT INTO Phong (maPhong, tang, trangThai, moTa, maLoaiPhong) VALUES
+('P101', 1, N'Trống', N'Phòng đơn tầng 1', 'LP01'),
+('P102', 1, N'Trống', N'Phòng đôi tầng 1', 'LP02'),
+...
+GO
 
 -- ===================================================================
 -- 7. Phiếu đặt phòng (PhieuDatPhong)
