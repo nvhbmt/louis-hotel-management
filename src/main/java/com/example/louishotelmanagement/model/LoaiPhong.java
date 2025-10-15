@@ -7,16 +7,16 @@ public class LoaiPhong {
     private String maLoaiPhong;
     private String tenLoai;
     private String moTa;
-    private BigDecimal donGia;
+    private Double donGia;
 
     public LoaiPhong() {
         this.maLoaiPhong = "";
         this.tenLoai = "";
         this.moTa = "";
-        this.donGia = BigDecimal.ZERO;
+        this.donGia = 0.0;
     }
 
-    public LoaiPhong(String maLoaiPhong, String tenLoai, String moTa, BigDecimal donGia) {
+    public LoaiPhong(String maLoaiPhong, String tenLoai, String moTa, Double donGia) {
         this.maLoaiPhong = maLoaiPhong;
         this.tenLoai = tenLoai;
         this.moTa = moTa;
@@ -27,7 +27,7 @@ public class LoaiPhong {
         this.maLoaiPhong = maLoaiPhong;
         this.tenLoai = "";
         this.moTa = "";
-        this.donGia = BigDecimal.ZERO;
+        this.donGia = 0.0;
     }
 
     public String getMaLoaiPhong() {
@@ -54,11 +54,11 @@ public class LoaiPhong {
         this.moTa = moTa;
     }
 
-    public BigDecimal getDonGia() {
+    public Double getDonGia() {
         return donGia;
     }
 
-    public void setDonGia(BigDecimal donGia) {
+    public void setDonGia(Double donGia) {
         this.donGia = donGia;
     }
 
