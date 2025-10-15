@@ -6,8 +6,8 @@ import java.sql.SQLException;
 
 public class CauHinhDatabase {
     private static final String URL = "jdbc:sqlserver://localhost:1433;databaseName=QuanLyKhachSan;encrypt=false;trustServerCertificate=true";
-    private static final String USER = "sa";
-    private static final String PASS = "SApassword@123";
+    private static final String USER = "lynn";
+    private static final String PASS = "12345";
     
     // Timeout settings
     private static final int CONNECTION_TIMEOUT = 10; // seconds

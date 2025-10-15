@@ -3,8 +3,10 @@
   <component name="SqlDialectMappings">
     <file url="file://$PROJECT_DIR$/mssql/duLieuMauPhong.sql" dialect="TSQL" />
     <file url="file://$PROJECT_DIR$/mssql/khoiTaoDataBase.sql" dialect="TSQL" />
+    <file url="file://$PROJECT_DIR$/mssql/storedProceduresDichVu.sql" dialect="TSQL" />
     <file url="file://$PROJECT_DIR$/mssql/storedProceduresMaGiamGia.sql" dialect="TSQL" />
     <file url="file://$PROJECT_DIR$/mssql/storedProceduresNhanVien.sql" dialect="TSQL" />
+    <file url="file://$PROJECT_DIR$/mssql/storedProceduresPhieuDichVu.sql" dialect="TSQL" />
     <file url="file://$PROJECT_DIR$/mssql/storedProceduresPhong.sql" dialect="TSQL" />
     <file url="file://$PROJECT_DIR$/mssql/storedProceduresTaiKhoan.sql" dialect="TSQL" />
     <file url="file://$PROJECT_DIR$/src/main/java/com/example/louishotelmanagement/dao/LoaiPhongDAO.java" dialect="GenericSQL" />
