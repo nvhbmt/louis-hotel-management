@@ -34,6 +34,8 @@ public class NhanPhongController implements Initializable {
     public KhachHangDAO khachHangDAO;
     public ComboBox dsPhong;
     public Boolean check = false;
+    public DatePicker ngayDat;
+    private ArrayList<String> dsMaKH;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -45,14 +47,23 @@ public class NhanPhongController implements Initializable {
             laydsKh();
             loadData();
             laydsPhong();
+            dsKhachHang.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+                try {
+                    loadData();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            });
         }catch (Exception e){
             e.printStackTrace();
         }
     }
     public void laydsKh() throws SQLException {
         ArrayList<KhachHang> khachhangs = khachHangDAO.layDSKhachHang();
+        dsMaKH = new ArrayList<>();
         for(KhachHang khachHang : khachhangs){
             dsKhachHang.getItems().add(khachHang.getMaKH());
+            dsMaKH.add(khachHang.getMaKH());
         }
         dsKhachHang.getSelectionModel().selectFirst();
     }
@@ -70,17 +81,18 @@ public class NhanPhongController implements Initializable {
         dsPhong.getSelectionModel().selectFirst();
     }
     public void handleCheck(javafx.event.ActionEvent actionEvent) throws SQLException {
-        PhieuDatPhong pdp = phieuDatPhongDAO.layPhieuDatPhongTheoMa(String.valueOf(dsKhachHang.getPlaceholder()));
-        CTPhieuDatPhong ctpdp = ctPhieuDatPhongDAO.layCTPhieuDatPhongTheoMa(pdp.getMaPhieu(), String.valueOf(dsPhong.getPlaceholder()));
-        KhachHang kh = khachHangDAO.layKhachHangTheoMa(pdp.getMaKH());
-        if(ctpdp!=null){
-            maPhong.setText(String.valueOf(ctpdp.getMaPhong()));
-            tang.setText(String.valueOf(ctpdp.getPhong().getTang()));
-            hoTen.setText(kh.getHoTen());
-            ngayDen.setValue(ctpdp.getNgayDen());
-            ngayDi.setValue(ctpdp.getNgayDi());
-            check = true;
-        }
+        ArrayList<CTPhieuDatPhong> dsCTPhieuDatPhong = ctPhieuDatPhongDAO.layDSCTPhieuDatPhongTheoPhong(dsPhong.getSelectionModel().getSelectedItem().toString());
+       for(CTPhieuDatPhong ctpdp : dsCTPhieuDatPhong) {
+           if ((ctpdp.getPhieuDatPhong().getMaKH() == dsMaKH.get(dsKhachHang.getSelectionModel().getSelectedIndex())) && (ctpdp.getPhieuDatPhong().getNgayDat().isEqual(ngayDat.getValue()))) {
+               maPhong.setText(String.valueOf(ctpdp.getMaPhong()));
+               tang.setText(String.valueOf(ctpdp.getPhong().getTang()));
+               KhachHang kh = khachHangDAO.layKhachHangTheoMa(dsMaKH.get(dsKhachHang.getSelectionModel().getSelectedIndex()));
+               hoTen.setText(kh.getHoTen());
+               ngayDen.setValue(ctpdp.getNgayDen());
+               ngayDi.setValue(ctpdp.getNgayDi());
+               check = true;
+           }
+       }
     }
     public void showAlertError(String header,String message){
         Alert alert = new  Alert(Alert.AlertType.ERROR);
@@ -93,7 +105,7 @@ public class NhanPhongController implements Initializable {
     public void handleNhanPhong(ActionEvent actionEvent) throws SQLException {
         if(check){
             phongDAO.capNhatTrangThaiPhong(maPhong.getText(),"Đang sử dụng");
-            PhieuDatPhong pdp = phieuDatPhongDAO.layPhieuDatPhongTheoMa(String.valueOf(dsKhachHang.getPlaceholder()));
+            PhieuDatPhong pdp = phieuDatPhongDAO.layPhieuDatPhongTheoMa(String.valueOf(dsKhachHang.getSelectionModel().getSelectedItem().toString()));
             phieuDatPhongDAO.capNhatTrangThaiPhieuDatPhong(pdp.getMaPhieu(),"Hoàn thành");
         }
     }

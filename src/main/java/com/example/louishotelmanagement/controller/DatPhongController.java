@@ -49,8 +49,6 @@ public class DatPhongController implements Initializable{
     private TableColumn<Phong, String> moTa;
     @FXML
     private TableColumn<Phong, String> loaiPhong;
-    private Form form;
-    private StringField maPhongField;
     private String maPhieu;
     private CTPhieuDatPhongDAO ctpDao;
 
@@ -124,7 +122,13 @@ public class DatPhongController implements Initializable{
         alert.setContentText(message);
         alert.showAndWait();
     }
-
+    public void DatPhong(KhachHang newKh,String maP,LoaiPhong LoaiP) throws SQLException {
+        PhieuDatPhong pdp = new PhieuDatPhong(maPhieu, LocalDate.now(),LocalDate.now(),ngayDi.getValue(),"Đã đặt","",newKh.getMaKH(),"NV01");
+        pdpDao.themPhieuDatPhong(pdp);
+        CTPhieuDatPhong ctpdp = new CTPhieuDatPhong(maPhieu,maP,LocalDate.now(),ngayDi.getValue(), BigDecimal.valueOf(LoaiP.getDonGia()));
+        ctpDao.themCTPhieuDatPhong(ctpdp);
+        showAlert("Thành Công","Bạn đã đặt phòng thành công");
+    }
     public void handleDatPhong(ActionEvent actionEvent) throws SQLException {
         if(ngayDen.getValue() == null || ngayDi.getValue() == null) {
             showAlertError("KHÔNG ĐƯỢC ĐỂ TRỐNG DỮ LIỆU","Dữ liệu của ngày đến hoặc đi đã trống");
@@ -140,11 +144,19 @@ public class DatPhongController implements Initializable{
                 do {
                     maPhieu = "PD"+String.valueOf(ran.nextInt(90)+ran.nextInt(9));
                 }while(checkMaPhieu(maPhieu));
-                PhieuDatPhong pdp = new PhieuDatPhong(maPhieu, LocalDate.now(),LocalDate.now(),ngayDi.getValue(),"Đã đặt","",newKh.getMaKH(),"NV01");
-                pdpDao.themPhieuDatPhong(pdp);
-                CTPhieuDatPhong ctpdp = new CTPhieuDatPhong(maPhieu,maP,LocalDate.now(),ngayDi.getValue(), BigDecimal.valueOf(LoaiP.getDonGia()));
-                ctpDao.themCTPhieuDatPhong(ctpdp);
-                showAlert("Thành Công","Bạn đã đặt phòng thành công");
+                ArrayList<CTPhieuDatPhong> dsCTPhieuDatPhong = ctpDao.layDSCTPhieuDatPhongTheoPhong(maP);
+                if(dsCTPhieuDatPhong.size()!=0){
+                    CTPhieuDatPhong ctp = dsCTPhieuDatPhong.getLast();
+                    if(ctpDao.kiemTraPhongDaDuocDat(ctp.getMaPhong(),ngayDen.getValue(),ngayDi.getValue())) {
+                        showAlertError("Lỗi đặt phòng", "Phòng đã được đặt trong khoảng thời gian này");
+                        return;
+                    }else{
+                        DatPhong(newKh,maP,LoaiP);
+                    }
+                }else{
+                    DatPhong(newKh,maP,LoaiP);
+                }
+
             }
         }
     }

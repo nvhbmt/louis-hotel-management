@@ -113,6 +113,13 @@ public class DatPhongTaiQuayController implements Initializable {
         }
         return false;
     }
+    public void DatPhong(KhachHang newKh,String maP,LoaiPhong LoaiP) throws SQLException {
+        PhieuDatPhong pdp = new PhieuDatPhong(maPhieu, LocalDate.now(),LocalDate.now(),ngayDi.getValue(),"Đã đặt","",newKh.getMaKH(),"NV01");
+        pdpDao.themPhieuDatPhong(pdp);
+        CTPhieuDatPhong ctpdp = new CTPhieuDatPhong(maPhieu,maP,LocalDate.now(),ngayDi.getValue(), BigDecimal.valueOf(LoaiP.getDonGia()));
+        ctpDao.themCTPhieuDatPhong(ctpdp);
+        showAlert("Thành Công","Bạn đã đặt phòng thành công");
+    }
     public void handleDatPhong(ActionEvent actionEvent) throws SQLException {
         if(ngayDi.getValue().isAfter(LocalDate.now())||ngayDi.getValue().isEqual(LocalDate.now())){
             Phong newPhong =  Pdao.layPhongTheoMa(dsPhong.getSelectionModel().getSelectedItem().toString());
@@ -123,13 +130,22 @@ public class DatPhongTaiQuayController implements Initializable {
             do {
                 maPhieu = "PD"+String.valueOf(ran.nextInt(90)+ran.nextInt(9));
             }while(checkMaPhieu(maPhieu));
-            PhieuDatPhong pdp = new PhieuDatPhong(maPhieu, LocalDate.now(),LocalDate.now(),ngayDi.getValue(),"Đã đặt","",newKh.getMaKH(),"NV01");
-            pdpDao.themPhieuDatPhong(pdp);
-            CTPhieuDatPhong ctpdp = new CTPhieuDatPhong(maPhieu,maP,LocalDate.now(),ngayDi.getValue(), BigDecimal.valueOf(LoaiP.getDonGia()));
-            ctpDao.themCTPhieuDatPhong(ctpdp);
-            showAlert("Thành Công","Bạn đã đặt phòng thành công");
+            ArrayList<CTPhieuDatPhong> dsCTPhieuDatPhong = ctpDao.layDSCTPhieuDatPhongTheoPhong(maP);
+            if(dsCTPhieuDatPhong.size()!=0){
+                CTPhieuDatPhong ctp = dsCTPhieuDatPhong.getLast();
+                if(ctpDao.kiemTraPhongDaDuocDat(ctp.getMaPhong(),LocalDate.now(),ngayDi.getValue())) {
+                    showAlertError("Lỗi đặt phòng", "Phòng đã được đặt trong khoảng thời gian này");
+                    return;
+                }else{
+                    DatPhong(newKh,maP,LoaiP);
+                }
+            }else{
+                DatPhong(newKh,maP,LoaiP);
+            }
+
+
         }else{
-            showAlertError("lỖI NGÀY","không được chọn ngày trước ngày hôm nay");
+            showAlertError("lỖI NGÀY","không được chọn ngày đi trước ngày hôm nay");
         }
     }
 }
