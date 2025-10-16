@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
@@ -13,7 +16,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Rectangle?>
 
-<ScrollPane xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.ThongKeController" stylesheets="@../css/main.css, @../css/thong-ke.css">
+<ScrollPane stylesheets="@../css/main.css, @../css/thong-ke.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.ThongKeController">
    <content>
       <BorderPane>
          <center>
@@ -83,30 +86,41 @@
                         </HBox>
                      </HBox>
                      
-                              <!-- Date Range Selection -->
-                     <HBox fx:id="hboxChonNgay" alignment="CENTER_LEFT" spacing="10.0" visible="false">
-                        <Label styleClass="form-label" text="Từ ngày:" />
-                        <DatePicker fx:id="dpTuNgay" onAction="#handleChonNgay" styleClass="date-picker" />
-                        <Label styleClass="form-label" text="Đến ngày:" />
-                        <DatePicker fx:id="dpDenNgay" onAction="#handleChonNgay" styleClass="date-picker" />
-                        <Button fx:id="btnCapNhatChart" onAction="#handleCapNhatChart" styleClass="btn-update" text="Cập nhật" />
-                     </HBox>
-                     
-                              <!-- Year Selection -->
-                     <HBox fx:id="hboxChonNam" alignment="CENTER_LEFT" spacing="10.0">
-                        <Label styleClass="form-label" text="Năm:" />
-                        <ComboBox fx:id="cbNam" onAction="#handleChonNam" prefWidth="100.0" styleClass="combo-box" />
-                        <Button fx:id="btnCapNhatChartNam" onAction="#handleCapNhatChart" styleClass="btn-update" text="Cập nhật" />
-                     </HBox>
+                              <!-- Combined Selection Controls -->
+                     <VBox fx:id="vboxSelectionControls" spacing="10.0" styleClass="selection-controls-container">
+                        <!-- Date Range Selection -->
+                        <HBox fx:id="hboxChonNgay" alignment="CENTER_LEFT" spacing="10.0" visible="false">
+                           <Label styleClass="form-label" text="Từ ngày:" />
+                           <DatePicker fx:id="dpTuNgay" onAction="#handleChonNgay" />
+                           <Label styleClass="form-label" text="Đến ngày:" />
+                           <DatePicker fx:id="dpDenNgay" onAction="#handleChonNgay" />
+                           <Button fx:id="btnCapNhatChart" onAction="#handleCapNhatChart" styleClass="btn-update" text="Cập nhật" />
+                        </HBox>
+                        
+                        <!-- Year Selection -->
+                        <HBox fx:id="hboxChonNam" alignment="CENTER_LEFT" spacing="10.0">
+                           <Label styleClass="form-label" text="Năm:" />
+                           <ComboBox fx:id="cbNam" onAction="#handleChonNam" prefWidth="100.0" styleClass="combo-box" />
+                           <Button fx:id="btnCapNhatChartNam" onAction="#handleCapNhatChart" styleClass="btn-update" text="Cập nhật" />
+                        </HBox>
+                     </VBox>
                      
                               <!-- Chart Container -->
                      <VBox fx:id="vboxChart" alignment="CENTER" prefHeight="300.0" styleClass="chart-data-container">
-                        <Label fx:id="lblChartTitle" styleClass="chart-subtitle" text="Doanh thu theo tháng" />
-                        <VBox fx:id="vboxChartData" alignment="CENTER" spacing="10.0" styleClass="chart-data-content">
-                     <!-- Chart data will be added dynamically -->
-                  </VBox>
-                        <Label fx:id="lblTongDoanhThu" styleClass="chart-total" text="Tổng doanh thu: 0 VNĐ" />
+                        <BarChart fx:id="thongkeBarChart">
+                          <xAxis>
+                            <CategoryAxis side="BOTTOM" />
+                          </xAxis>
+                          <yAxis>
+                            <NumberAxis side="LEFT" />
+                          </yAxis>
+                        </BarChart>
                      </VBox>
+                     
+                              <!-- Total Revenue -->
+                     <HBox alignment="CENTER" spacing="20.0">
+                        <Label fx:id="lblTongDoanhThu" styleClass="total-revenue-label" text="Tổng doanh thu: 0 VNĐ" />
+                     </HBox>
                      
                               <!-- Chart Legend -->
                      <HBox alignment="CENTER" spacing="20.0">
