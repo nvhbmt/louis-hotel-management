@@ -177,3 +177,19 @@
     -fx-font-size: 14px;
     -fx-text-fill: #7f8c8d;
 }
+
+/* Total Revenue Label */
+.total-revenue-label {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #27ae60;
+}
+
+/* Selection Controls Container */
+.selection-controls-container {
+    -fx-background-color: #f8f9fa;
+    -fx-background-radius: 5;
+    -fx-border-color: #e9ecef;
+    -fx-border-radius: 5;
+    -fx-padding: 10;
+}

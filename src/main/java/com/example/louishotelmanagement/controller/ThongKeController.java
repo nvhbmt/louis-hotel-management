@@ -7,10 +7,16 @@ import com.example.louishotelmanagement.dao.ThongKeDAO;
 import com.example.louishotelmanagement.model.LoaiPhong;
 import com.example.louishotelmanagement.model.Phong;
 import com.example.louishotelmanagement.model.TrangThaiPhong;
+import com.example.louishotelmanagement.utils.UIUtils;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -26,6 +32,8 @@ import java.util.List;
 
 public class ThongKeController implements Initializable {
 
+    @FXML
+    public BarChart thongkeBarChart;
     @FXML
     private VBox thongKeContent;
     
@@ -98,11 +106,10 @@ public class ThongKeController implements Initializable {
     private DatePicker dpDenNgay;
     @FXML
     private ComboBox<Integer> cbNam;
-
     @FXML
-    private Label lblChartTitle;
+    private VBox vboxSelectionControls;
     @FXML
-    private VBox vboxChartData;
+    private VBox vboxChart;
     @FXML
     private Label lblTongDoanhThu;
 
@@ -133,7 +140,7 @@ public class ThongKeController implements Initializable {
             taiDuLieuThongKe();
 
         } catch (Exception e) {
-            hienThiThongBao("Lỗi", "Không thể kết nối cơ sở dữ liệu: " + e.getMessage());
+            UIUtils.hienThiThongBao("Lỗi", "Không thể kết nối cơ sở dữ liệu: " + e.getMessage());
         }
     }
 
@@ -157,7 +164,7 @@ public class ThongKeController implements Initializable {
             lblCapNhatCuoi.setText("Cập nhật lần cuối: " + dateFormat.format(new Date()));
 
         } catch (SQLException e) {
-            hienThiThongBao("Lỗi", "Không thể tải dữ liệu thống kê: " + e.getMessage());
+            UIUtils.hienThiThongBao("Lỗi", "Không thể tải dữ liệu thống kê: " + e.getMessage());
         }
     }
 
@@ -308,7 +315,6 @@ public class ThongKeController implements Initializable {
         currentChartType = "NGAY";
         hboxChonNgay.setVisible(true);
         hboxChonNam.setVisible(false);
-        lblChartTitle.setText("Doanh thu theo ngày");
         taiDuLieuChart();
     }
 
@@ -317,7 +323,6 @@ public class ThongKeController implements Initializable {
         currentChartType = "TUAN";
         hboxChonNgay.setVisible(false);
         hboxChonNam.setVisible(true);
-        lblChartTitle.setText("Doanh thu theo tuần");
         taiDuLieuChart();
     }
 
@@ -326,7 +331,6 @@ public class ThongKeController implements Initializable {
         currentChartType = "THANG";
         hboxChonNgay.setVisible(false);
         hboxChonNam.setVisible(true);
-        lblChartTitle.setText("Doanh thu theo tháng");
         taiDuLieuChart();
     }
 
@@ -378,91 +382,52 @@ public class ThongKeController implements Initializable {
             hienThiChart(doanhThuData, soLuongData, tongDoanhThu);
 
         } catch (SQLException e) {
-            hienThiThongBao("Lỗi", "Không thể tải dữ liệu chart: " + e.getMessage());
+            UIUtils.hienThiThongBao("Lỗi", "Không thể tải dữ liệu chart: " + e.getMessage());
         }
     }
 
     private void hienThiChart(Map<String, Double> doanhThuData, Map<String, Integer> soLuongData, double tongDoanhThu) {
         // Clear existing chart data
-        vboxChartData.getChildren().clear();
+        thongkeBarChart.getData().clear();
 
         if (doanhThuData.isEmpty()) {
-            Label noDataLabel = new Label("Không có dữ liệu");
-            noDataLabel.getStyleClass().add("no-data-label");
-            vboxChartData.getChildren().add(noDataLabel);
             lblTongDoanhThu.setText("Tổng doanh thu: 0 VNĐ");
             return;
         }
 
-        // Tìm giá trị lớn nhất để scale chart
-        double maxValue = doanhThuData.values().stream().mapToDouble(Double::doubleValue).max().orElse(1.0);
-        double maxSoLuong = soLuongData.values().stream().mapToInt(Integer::intValue).max().orElse(1);
+        // Tạo series cho doanh thu
+        XYChart.Series<String, Number> doanhThuSeries = new XYChart.Series<>();
+        doanhThuSeries.setName("Doanh thu (VNĐ)");
 
-        // Tạo chart bars
+        // Tạo series cho số lượng (nếu có)
+        XYChart.Series<String, Number> soLuongSeries = new XYChart.Series<>();
+        if (!soLuongData.isEmpty()) {
+            soLuongSeries.setName("Số lượng đặt phòng");
+        }
+
+        // Sắp xếp keys để hiển thị theo thứ tự
         List<String> sortedKeys = new ArrayList<>(doanhThuData.keySet());
         Collections.sort(sortedKeys);
 
+        // Thêm dữ liệu vào series
         for (String key : sortedKeys) {
             Double doanhThu = doanhThuData.getOrDefault(key, 0.0);
             Integer soLuong = soLuongData.getOrDefault(key, 0);
 
-            // Tạo container cho mỗi bar
-            VBox barContainer = new VBox(5);
-            barContainer.setPadding(new Insets(5, 0, 5, 0));
-
-            // Label cho key (ngày/tuần/tháng)
-            Label keyLabel = new Label(key);
-            keyLabel.getStyleClass().add("chart-label");
-            barContainer.getChildren().add(keyLabel);
-
-            // Bar cho doanh thu
-            HBox revenueBar = new HBox(5);
-            Label revenueLabel = new Label("Doanh thu:");
-            revenueLabel.getStyleClass().add("chart-revenue-label");
-            revenueLabel.setPrefWidth(80);
-
-            Rectangle revenueRect = new Rectangle();
-            revenueRect.setHeight(20);
-            revenueRect.setFill(javafx.scene.paint.Color.valueOf("#27ae60"));
-            revenueRect.setWidth(Math.max(1, (doanhThu / maxValue) * 200));
-
-            Label revenueValueLabel = new Label(String.format("%,.0f VNĐ", doanhThu));
-            revenueValueLabel.getStyleClass().add("chart-value-label");
-
-            revenueBar.getChildren().addAll(revenueLabel, revenueRect, revenueValueLabel);
-            barContainer.getChildren().add(revenueBar);
-
-            // Bar cho số lượng (nếu có)
+            doanhThuSeries.getData().add(new XYChart.Data<>(key, doanhThu));
             if (!soLuongData.isEmpty()) {
-                HBox quantityBar = new HBox(5);
-                Label quantityLabel = new Label("Số lượng:");
-                quantityLabel.getStyleClass().add("chart-quantity-label");
-                quantityLabel.setPrefWidth(80);
-
-                Rectangle quantityRect = new Rectangle();
-                quantityRect.setHeight(15);
-                quantityRect.setFill(javafx.scene.paint.Color.valueOf("#3498db"));
-                quantityRect.setWidth(Math.max(1, (soLuong / maxSoLuong) * 200));
-
-                Label quantityValueLabel = new Label(soLuong + " đặt phòng");
-                quantityValueLabel.getStyleClass().add("chart-value-label");
-
-                quantityBar.getChildren().addAll(quantityLabel, quantityRect, quantityValueLabel);
-                barContainer.getChildren().add(quantityBar);
+                soLuongSeries.getData().add(new XYChart.Data<>(key, soLuong));
             }
+        }
 
-            vboxChartData.getChildren().add(barContainer);
+        // Thêm series vào chart
+        thongkeBarChart.getData().add(doanhThuSeries);
+        if (!soLuongData.isEmpty()) {
+            thongkeBarChart.getData().add(soLuongSeries);
         }
 
         // Cập nhật tổng doanh thu
         lblTongDoanhThu.setText(String.format("Tổng doanh thu: %,.0f VNĐ", tongDoanhThu));
     }
 
-    private void hienThiThongBao(String tieuDe, String noiDung) {
-        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
-        alert.setTitle(tieuDe);
-        alert.setHeaderText(null);
-        alert.setContentText(noiDung);
-        alert.showAndWait();
-    }
 }
