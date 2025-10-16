@@ -71,7 +71,7 @@ public class PhongController implements Initializable {
     @FXML
     private void moDatTT(ActionEvent event) {
         // Giả định tên FXML cho Đặt tại quầy
-        moTrang("dat-tai-quay-view.fxml", event);
+        moTrang("dat-phong-truc-tiep-view.fxml", event);
     }
 
     @FXML

@@ -79,7 +79,7 @@
                         <children>
                            <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="74.0" prefWidth="140.0">
                               <children>
-                                 <Button fx:id="btnDatTT" mnemonicParsing="false" onAction="#moNhanPhong" prefHeight="47.0" prefWidth="132.0" style="-fx-background-color: #6F84DA; -fx-border-radius: 20;" text="Đặt tại quầy" textFill="WHITE">
+                                 <Button fx:id="btnDatTT" mnemonicParsing="false" onAction="#moDatTT" prefHeight="47.0" prefWidth="132.0" style="-fx-background-color: #6F84DA; -fx-border-radius: 20;" text="Đặt tại quầy" textFill="WHITE">
                                     <font>
                                        <Font name="System Bold" size="18.0" />
                                     </font>

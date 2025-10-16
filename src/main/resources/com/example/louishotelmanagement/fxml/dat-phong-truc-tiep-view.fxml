@@ -96,7 +96,7 @@
                                 <Insets right="40.0" />
                             </HBox.margin>
                         </ImageView>
-                        <TextField fx:id="maNhanVien" prefWidth="500.0" />
+                        <TextField fx:id="maNhanVien" editable="false" prefWidth="500.0" />
                     </children>
                     <VBox.margin>
                         <Insets bottom="5.0" left="50.0" />
@@ -125,7 +125,7 @@
                 </HBox>
                 <HBox alignment="CENTER" prefHeight="89.0" prefWidth="880.0">
                     <children>
-                        <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="38.0" prefWidth="114.0" style="-fx-background-color: #1574DF" text="Đặt phòng" textAlignment="CENTER" textFill="WHITE" />
+                        <Button fx:id="btnDatPhong" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleDatPhong" prefHeight="38.0" prefWidth="114.0" style="-fx-background-color: #1574DF" text="Đặt phòng" textAlignment="CENTER" textFill="WHITE" />
                     </children>
                 </HBox>
             </children>
