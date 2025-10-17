@@ -3,7 +3,6 @@ package com.example.louishotelmanagement.dao;
 import com.example.louishotelmanagement.config.CauHinhDatabase;
 import com.example.louishotelmanagement.model.LoaiPhong;
 
-import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -106,5 +105,18 @@ public class LoaiPhongDAO {
             }
         }
         return false;
+    }
+
+    // Lấy mã loại phòng tiếp theo
+    public String layMaLoaiPhongTiepTheo() throws SQLException {
+        String sql = "{call sp_LayMaLoaiPhongTiepTheo(?)}";
+        try (Connection con = CauHinhDatabase.getConnection();
+             CallableStatement cs = con.prepareCall(sql)) {
+
+            cs.registerOutParameter(1, java.sql.Types.VARCHAR);
+            cs.execute();
+
+            return cs.getString(1);
+        }
     }
 }

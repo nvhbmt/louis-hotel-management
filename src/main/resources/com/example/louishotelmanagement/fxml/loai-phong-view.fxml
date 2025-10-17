@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.LoaiPhongController" stylesheets="@../css/main.css, @../css/loai-phong.css">
+<BorderPane xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.LoaiPhongController" stylesheets="@../css/main.css, @../css/loai-phong.css">
     <center>
         <!-- Main Content Area -->
         <VBox prefHeight="800.0" prefWidth="950.0" spacing="20.0" styleClass="main-content">
@@ -89,7 +89,7 @@
             <HBox alignment="CENTER_LEFT" spacing="15.0">
                 <TextField fx:id="txtTimKiem" onKeyReleased="#handleTimKiem" prefHeight="33.0" prefWidth="239.0" promptText="Nhập mã loại phòng hoặc tên..." styleClass="form-field" />
                 <ComboBox fx:id="cbLocGia" onAction="#handleLocGia" prefHeight="41.0" prefWidth="138.0" promptText="Tất cả giá" styleClass="form-field" />
-                <Button fx:id="btnLamMoi" onAction="#handleLamMoi" prefHeight="37.0" prefWidth="121.0" styleClass="btn-refresh" text="🔄 Làm Mới" />
+                <Button fx:id="btnLamMoi" onAction="#handleLamMoi" prefHeight="37.0" prefWidth="121.0" styleClass="btn-info" text="🔄 Làm Mới" />
             </HBox>
 
             <!-- Table View -->

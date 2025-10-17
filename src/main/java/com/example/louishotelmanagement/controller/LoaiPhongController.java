@@ -2,6 +2,8 @@ package com.example.louishotelmanagement.controller;
 
 import com.example.louishotelmanagement.dao.LoaiPhongDAO;
 import com.example.louishotelmanagement.model.LoaiPhong;
+import com.example.louishotelmanagement.utils.UIUtils;
+
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -19,7 +21,6 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -76,7 +77,7 @@ public class LoaiPhongController implements Initializable {
             taiDuLieu();
 
         } catch (Exception e) {
-            hienThiThongBao("Lỗi", "Không thể kết nối cơ sở dữ liệu: " + e.getMessage());
+            UIUtils.hienThiThongBao("Lỗi", "Không thể kết nối cơ sở dữ liệu: " + e.getMessage());
         }
     }
 
@@ -233,7 +234,7 @@ public class LoaiPhongController implements Initializable {
             capNhatTrangThai("Đã tải " + dsLoaiPhong.size() + " loại phòng");
 
         } catch (SQLException e) {
-            hienThiThongBao("Lỗi", "Không thể tải dữ liệu loại phòng: " + e.getMessage());
+            UIUtils.hienThiThongBao("Lỗi", "Không thể tải dữ liệu loại phòng: " + e.getMessage());
         }
     }
 
@@ -299,7 +300,7 @@ public class LoaiPhongController implements Initializable {
             taiDuLieu();
 
         } catch (IOException e) {
-            hienThiThongBao("Lỗi", "Không thể mở form thêm loại phòng: " + e.getMessage());
+            UIUtils.hienThiThongBao("Lỗi", "Không thể mở form thêm loại phòng: " + e.getMessage());
         }
     }
 
@@ -322,7 +323,7 @@ public class LoaiPhongController implements Initializable {
             taiDuLieu();
 
         } catch (IOException e) {
-            hienThiThongBao("Lỗi", "Không thể mở form sửa loại phòng: " + e.getMessage());
+            UIUtils.hienThiThongBao("Lỗi", "Không thể mở form sửa loại phòng: " + e.getMessage());
         }
     }
 
@@ -339,20 +340,20 @@ public class LoaiPhongController implements Initializable {
                 try {
                     // Kiểm tra xem loại phòng có đang được sử dụng không
                     if (loaiPhongDAO.kiemTraLoaiPhongDuocSuDung(loaiPhong.getMaLoaiPhong())) {
-                        hienThiThongBao("Lỗi", "Không thể xóa loại phòng này vì đang được sử dụng!");
+                        UIUtils.hienThiThongBao("Lỗi", "Không thể xóa loại phòng này vì đang được sử dụng!");
                         return;
                     }
 
                     // Xóa loại phòng
                     if (loaiPhongDAO.xoaLoaiPhong(loaiPhong.getMaLoaiPhong())) {
-                        hienThiThongBao("Thành công", "Đã xóa loại phòng thành công!");
+                        UIUtils.hienThiThongBao("Thành công", "Đã xóa loại phòng thành công!");
                         taiDuLieu();
                     } else {
-                        hienThiThongBao("Lỗi", "Không thể xóa loại phòng!");
+                        UIUtils.hienThiThongBao("Lỗi", "Không thể xóa loại phòng!");
                     }
 
                 } catch (SQLException e) {
-                    hienThiThongBao("Lỗi", "Lỗi khi xóa loại phòng: " + e.getMessage());
+                    UIUtils.hienThiThongBao("Lỗi", "Lỗi khi xóa loại phòng: " + e.getMessage());
                 }
             }
         });
@@ -379,11 +380,4 @@ public class LoaiPhongController implements Initializable {
         lblTrangThai.setText(message);
     }
 
-    private void hienThiThongBao(String tieuDe, String noiDung) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(tieuDe);
-        alert.setHeaderText(null);
-        alert.setContentText(noiDung);
-        alert.showAndWait();
-    }
 }

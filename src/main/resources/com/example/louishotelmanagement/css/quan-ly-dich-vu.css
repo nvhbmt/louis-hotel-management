@@ -1,0 +1,116 @@
+/* ========================================
+   QUẢN LÝ DỊCH VỤ PAGE STYLES
+   ======================================== */
+
+/* Statistics Cards with Border */
+.stat-card-border {
+    -fx-border-width: 1;
+    -fx-border-color: black;
+    -fx-padding: 10;
+    -fx-border-radius: 8;
+}
+
+.stat-label {
+    -fx-font-size: 16px;
+}
+
+.stat-value {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+}
+
+/* Form Controls */
+.form-field {
+    -fx-background-radius: 5;
+    -fx-padding: 8 12;
+}
+
+/* Table Styles */
+.table-container {
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0, 0, 2);
+    -fx-padding: 10;
+}
+
+.table-view {
+    -fx-background-color: white;
+}
+
+/* Status Bar */
+.status-bar {
+    -fx-font-size: 12px;
+    -fx-text-fill: #7f8c8d;
+}
+
+/* ========================================
+   TABLE CELL STATUS STYLES
+   ======================================== */
+
+.status-active {
+    -fx-background-color: #d4edda;
+    -fx-text-fill: #155724;
+    -fx-padding: 4 8;
+    -fx-background-radius: 4;
+}
+
+.status-inactive {
+    -fx-background-color: #f8d7da;
+    -fx-text-fill: #721c24;
+    -fx-padding: 4 8;
+    -fx-background-radius: 4;
+}
+
+/* ========================================
+   TABLE ACTION BUTTON STYLES
+   ======================================== */
+
+.btn-table-edit {
+    -fx-padding: 2 4 2 4;
+    -fx-min-width: 40px;
+    -fx-pref-width: 40px;
+}
+
+.btn-table-delete {
+    -fx-padding: 2 4 2 4;
+    -fx-min-width: 40px;
+    -fx-pref-width: 40px;
+}
+
+/* ========================================
+   SERVICE SPECIFIC STYLES
+   ======================================== */
+
+/* Price formatting in table cells */
+.table-cell {
+    -fx-alignment: CENTER_RIGHT;
+}
+
+/* Service status indicators */
+.service-available {
+    -fx-background-color: #d1ecf1;
+    -fx-text-fill: #0c5460;
+}
+
+.service-unavailable {
+    -fx-background-color: #f5c6cb;
+    -fx-text-fill: #721c24;
+}
+
+/* Statistics card specific colors */
+.stat-card-total {
+    -fx-background-color: #e3f2fd;
+}
+
+.stat-card-active {
+    -fx-background-color: #e8f5e8;
+}
+
+.stat-card-inactive {
+    -fx-background-color: #ffebee;
+}
+
+.stat-card-value {
+    -fx-background-color: #fff3e0;
+}
+
