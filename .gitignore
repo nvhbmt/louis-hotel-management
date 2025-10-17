@@ -39,3 +39,4 @@ build/
 
 ### docker volume files ###
 /mssql-data/
+/.idea/discord.xml

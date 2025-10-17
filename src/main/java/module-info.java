@@ -13,7 +13,6 @@ module com.example.louishotelmanagement {
     requires java.sql;
     requires java.desktop;
     requires javafx.base;
-    requires com.example.louishotelmanagement;
 
     opens com.example.louishotelmanagement.fxml to javafx.fxml;
     exports com.example.louishotelmanagement.app;
