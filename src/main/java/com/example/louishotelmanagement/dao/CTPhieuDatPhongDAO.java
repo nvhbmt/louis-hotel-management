@@ -10,10 +10,11 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class CTPhieuDatPhongDAO {
-    
-    // Thêm chi tiết phiếu đặt phòng
+
+    // Thêm chi tiết phiếu đặt phòng (Cần 7 tham số đầu vào cho Stored Procedure: maPhieu, maPhong, ngayDen, ngayDi, ngayNhan, ngayTra, giaPhong)
     public boolean themCTPhieuDatPhong(CTPhieuDatPhong ctPhieuDatPhong) throws SQLException {
-        String sql = "{call sp_ThemCTPhieuDatPhong(?,?,?,?,?)}";
+        // Sửa số tham số trong SQL: (7 tham số)
+        String sql = "{call sp_ThemCTPhieuDatPhong(?,?,?,?,?,?,?)}";
         try (Connection con = CauHinhDatabase.getConnection();
              CallableStatement cs = con.prepareCall(sql)) {
 
@@ -21,7 +22,14 @@ public class CTPhieuDatPhongDAO {
             cs.setString(2, ctPhieuDatPhong.getMaPhong());
             cs.setObject(3, ctPhieuDatPhong.getNgayDen() != null ? Date.valueOf(ctPhieuDatPhong.getNgayDen()) : null);
             cs.setObject(4, ctPhieuDatPhong.getNgayDi() != null ? Date.valueOf(ctPhieuDatPhong.getNgayDi()) : null);
-            cs.setBigDecimal(5, ctPhieuDatPhong.getGiaPhong());
+
+            // Thêm ngayNhan (Tham số thứ 5)
+            cs.setObject(5, ctPhieuDatPhong.getNgayNhan() != null ? Date.valueOf(ctPhieuDatPhong.getNgayNhan()) : null);
+            // Thêm ngayTra (Tham số thứ 6)
+            cs.setObject(6, ctPhieuDatPhong.getNgayTra() != null ? Date.valueOf(ctPhieuDatPhong.getNgayTra()) : null);
+
+            // giaPhong (Tham số thứ 7)
+            cs.setBigDecimal(7, ctPhieuDatPhong.getGiaPhong());
 
             return cs.executeUpdate() > 0;
         }
@@ -41,6 +49,9 @@ public class CTPhieuDatPhongDAO {
                         rs.getString("maPhong"),
                         rs.getDate("ngayDen") != null ? rs.getDate("ngayDen").toLocalDate() : null,
                         rs.getDate("ngayDi") != null ? rs.getDate("ngayDi").toLocalDate() : null,
+                        // Thêm ngayNhan và ngayTra vào constructor
+                        rs.getDate("ngayNhan") != null ? rs.getDate("ngayNhan").toLocalDate() : null,
+                        rs.getDate("ngayTra") != null ? rs.getDate("ngayTra").toLocalDate() : null,
                         rs.getBigDecimal("giaPhong")
                 );
                 ds.add(ctPhieuDatPhong);
@@ -65,6 +76,9 @@ public class CTPhieuDatPhongDAO {
                         rs.getString("maPhong"),
                         rs.getDate("ngayDen") != null ? rs.getDate("ngayDen").toLocalDate() : null,
                         rs.getDate("ngayDi") != null ? rs.getDate("ngayDi").toLocalDate() : null,
+                        // Thêm ngayNhan và ngayTra vào constructor
+                        rs.getDate("ngayNhan") != null ? rs.getDate("ngayNhan").toLocalDate() : null,
+                        rs.getDate("ngayTra") != null ? rs.getDate("ngayTra").toLocalDate() : null,
                         rs.getBigDecimal("giaPhong")
                 );
             }
@@ -89,6 +103,9 @@ public class CTPhieuDatPhongDAO {
                         rs.getString("maPhong"),
                         rs.getDate("ngayDen") != null ? rs.getDate("ngayDen").toLocalDate() : null,
                         rs.getDate("ngayDi") != null ? rs.getDate("ngayDi").toLocalDate() : null,
+                        // Thêm ngayNhan và ngayTra vào constructor
+                        rs.getDate("ngayNhan") != null ? rs.getDate("ngayNhan").toLocalDate() : null,
+                        rs.getDate("ngayTra") != null ? rs.getDate("ngayTra").toLocalDate() : null,
                         rs.getBigDecimal("giaPhong")
                 );
                 ds.add(ctPhieuDatPhong);
@@ -114,6 +131,9 @@ public class CTPhieuDatPhongDAO {
                         rs.getString("maPhong"),
                         rs.getDate("ngayDen") != null ? rs.getDate("ngayDen").toLocalDate() : null,
                         rs.getDate("ngayDi") != null ? rs.getDate("ngayDi").toLocalDate() : null,
+                        // Thêm ngayNhan và ngayTra vào constructor
+                        rs.getDate("ngayNhan") != null ? rs.getDate("ngayNhan").toLocalDate() : null,
+                        rs.getDate("ngayTra") != null ? rs.getDate("ngayTra").toLocalDate() : null,
                         rs.getBigDecimal("giaPhong")
                 );
                 ds.add(ctPhieuDatPhong);
@@ -140,6 +160,9 @@ public class CTPhieuDatPhongDAO {
                         rs.getString("maPhong"),
                         rs.getDate("ngayDen") != null ? rs.getDate("ngayDen").toLocalDate() : null,
                         rs.getDate("ngayDi") != null ? rs.getDate("ngayDi").toLocalDate() : null,
+                        // Thêm ngayNhan và ngayTra vào constructor
+                        rs.getDate("ngayNhan") != null ? rs.getDate("ngayNhan").toLocalDate() : null,
+                        rs.getDate("ngayTra") != null ? rs.getDate("ngayTra").toLocalDate() : null,
                         rs.getBigDecimal("giaPhong")
                 );
                 ds.add(ctPhieuDatPhong);
@@ -148,9 +171,10 @@ public class CTPhieuDatPhongDAO {
         return ds;
     }
 
-    // Cập nhật chi tiết phiếu đặt phòng
+    // Cập nhật chi tiết phiếu đặt phòng (Cần 7 tham số đầu vào cho Stored Procedure: maPhieu, maPhong, ngayDen, ngayDi, ngayNhan, ngayTra, giaPhong)
     public boolean capNhatCTPhieuDatPhong(CTPhieuDatPhong ctPhieuDatPhong) throws SQLException {
-        String sql = "{call sp_CapNhatCTPhieuDatPhong(?,?,?,?,?)}";
+        // Sửa số tham số trong SQL: (7 tham số)
+        String sql = "{call sp_CapNhatCTPhieuDatPhong(?,?,?,?,?,?,?)}";
         try (Connection con = CauHinhDatabase.getConnection();
              CallableStatement cs = con.prepareCall(sql)) {
 
@@ -158,11 +182,20 @@ public class CTPhieuDatPhongDAO {
             cs.setString(2, ctPhieuDatPhong.getMaPhong());
             cs.setObject(3, ctPhieuDatPhong.getNgayDen() != null ? Date.valueOf(ctPhieuDatPhong.getNgayDen()) : null);
             cs.setObject(4, ctPhieuDatPhong.getNgayDi() != null ? Date.valueOf(ctPhieuDatPhong.getNgayDi()) : null);
-            cs.setBigDecimal(5, ctPhieuDatPhong.getGiaPhong());
+
+            // Thêm ngayNhan (Tham số thứ 5)
+            cs.setObject(5, ctPhieuDatPhong.getNgayNhan() != null ? Date.valueOf(ctPhieuDatPhong.getNgayNhan()) : null);
+            // Thêm ngayTra (Tham số thứ 6)
+            cs.setObject(6, ctPhieuDatPhong.getNgayTra() != null ? Date.valueOf(ctPhieuDatPhong.getNgayTra()) : null);
+
+            // giaPhong (Tham số thứ 7)
+            cs.setBigDecimal(7, ctPhieuDatPhong.getGiaPhong());
 
             return cs.executeUpdate() > 0;
         }
     }
+
+    // Các hàm Xóa và Kiểm tra/Tính toán không bị ảnh hưởng bởi việc thêm ngayNhan/ngayTra nên giữ nguyên.
 
     // Xóa chi tiết phiếu đặt phòng
     public boolean xoaCTPhieuDatPhong(String maPhieu, String maPhong) throws SQLException {
@@ -219,5 +252,36 @@ public class CTPhieuDatPhongDAO {
             }
         }
         return BigDecimal.ZERO;
+    }
+    // Trong lớp CTPhieuDatPhongDAO.java
+
+    // Cập nhật ngày nhận phòng thực tế (ngayNhan)
+    public boolean capNhatNgayNhan(String maPhieu, String maPhong, LocalDate ngayNhan) throws SQLException {
+        String sql = "{call sp_CapNhatNgayNhanCTPDP(?,?,?)}";
+        try (Connection con = CauHinhDatabase.getConnection();
+             CallableStatement cs = con.prepareCall(sql)) {
+
+            cs.setString(1, maPhieu);
+            cs.setString(2, maPhong);
+            // Chuyển LocalDate sang java.sql.Date
+            cs.setDate(3, ngayNhan != null ? Date.valueOf(ngayNhan) : null);
+
+            return cs.executeUpdate() > 0;
+        }
+    }
+
+    // Cập nhật ngày trả phòng thực tế (ngayTra)
+    public boolean capNhatNgayTra(String maPhieu, String maPhong, LocalDate ngayTra) throws SQLException {
+        String sql = "{call sp_CapNhatNgayTraCTPDP(?,?,?)}";
+        try (Connection con = CauHinhDatabase.getConnection();
+             CallableStatement cs = con.prepareCall(sql)) {
+
+            cs.setString(1, maPhieu);
+            cs.setString(2, maPhong);
+            // Chuyển LocalDate sang java.sql.Date
+            cs.setDate(3, ngayTra != null ? Date.valueOf(ngayTra) : null);
+
+            return cs.executeUpdate() > 0;
+        }
     }
 }
