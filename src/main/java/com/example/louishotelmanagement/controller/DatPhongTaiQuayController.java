@@ -56,7 +56,13 @@ public class DatPhongTaiQuayController implements Initializable {
                 setComboBoxPhong();
                 laydsKhachHang();
                 loadTable();
-
+                tablePhong.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+                    if(newValue != null) {
+                        Phong newPhong = (Phong) newValue;
+                        String maphong = newPhong.getMaPhong();
+                        dsPhong.getSelectionModel().select(maphong);
+                    }
+                });
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
@@ -114,7 +120,7 @@ public class DatPhongTaiQuayController implements Initializable {
         return false;
     }
     public void DatPhong(KhachHang newKh,String maP,LoaiPhong LoaiP) throws SQLException {
-        PhieuDatPhong pdp = new PhieuDatPhong(maPhieu, LocalDate.now(),LocalDate.now(),ngayDi.getValue(),"Đã đặt","",newKh.getMaKH(),"NV01");
+        PhieuDatPhong pdp = new PhieuDatPhong(maPhieu, LocalDate.now(),LocalDate.now(),ngayDi.getValue(),"Đã đặt","Đặt trực tiếp tại quầy",newKh.getMaKH(),"NV01");
         pdpDao.themPhieuDatPhong(pdp);
         CTPhieuDatPhong ctpdp = new CTPhieuDatPhong(maPhieu,maP,LocalDate.now(),ngayDi.getValue(), BigDecimal.valueOf(LoaiP.getDonGia()));
         ctpDao.themCTPhieuDatPhong(ctpdp);

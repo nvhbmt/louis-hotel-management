@@ -123,7 +123,7 @@ public class DatPhongController implements Initializable{
         alert.showAndWait();
     }
     public void DatPhong(KhachHang newKh,String maP,LoaiPhong LoaiP) throws SQLException {
-        PhieuDatPhong pdp = new PhieuDatPhong(maPhieu, LocalDate.now(),LocalDate.now(),ngayDi.getValue(),"Đã đặt","",newKh.getMaKH(),"NV01");
+        PhieuDatPhong pdp = new PhieuDatPhong(maPhieu, LocalDate.now(),LocalDate.now(),ngayDi.getValue(),"Đã đặt","Khách đặt online",newKh.getMaKH(),"NV01");
         pdpDao.themPhieuDatPhong(pdp);
         CTPhieuDatPhong ctpdp = new CTPhieuDatPhong(maPhieu,maP,LocalDate.now(),ngayDi.getValue(), BigDecimal.valueOf(LoaiP.getDonGia()));
         ctpDao.themCTPhieuDatPhong(ctpdp);
