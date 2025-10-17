@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.PhongController">
+<BorderPane stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.PhongController">
    <center>
       <!-- Main Content Area -->
       <VBox prefHeight="634.0" prefWidth="851.0" spacing="20.0" style="-fx-background-color: #f8f9fa; box-border-radius: 15%; -fx-padding: 10 15 10 15;" BorderPane.alignment="CENTER">
@@ -66,10 +66,10 @@
                      </TableView>
                   </children>
                </VBox>
-               <VBox prefHeight="408.0" prefWidth="82.0" />
+               <VBox prefHeight="408.0" prefWidth="55.0" />
                <VBox prefHeight="408.0" prefWidth="227.0" style="-fx-border-color: Black; -fx-padding: 10 10 10 10; -fx-border-radius: 10;">
                   <children>
-                     <Label prefHeight="43.0" prefWidth="55.0" text="Phòng">
+                     <Label prefHeight="33.0" prefWidth="133.0" text="Phòng">
                         <font>
                            <Font name="System Bold" size="18.0" />
                         </font>
@@ -79,7 +79,7 @@
                         <children>
                            <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="74.0" prefWidth="140.0">
                               <children>
-                                 <Button fx:id="btnDatTT" mnemonicParsing="false" onAction="#moDatTT" prefHeight="47.0" prefWidth="132.0" style="-fx-background-color: #6F84DA; -fx-border-radius: 20;" text="Đặt tại quầy" textFill="WHITE">
+                                 <Button fx:id="btnDatTT" mnemonicParsing="false" onAction="#moDatTT" prefHeight="48.0" prefWidth="148.0" styleClass="btn-info" text="Đặt tại quầy" textFill="WHITE">
                                     <font>
                                        <Font name="System Bold" size="18.0" />
                                     </font>
@@ -88,7 +88,7 @@
                            </HBox>
                            <HBox alignment="CENTER" layoutX="40.0" layoutY="155.0" prefHeight="74.0" prefWidth="140.0">
                               <children>
-                                 <Button fx:id="btnNhanPhong" mnemonicParsing="false" onAction="#moNhanPhong" prefHeight="47.0" prefWidth="132.0" style="-fx-background-color: #6F84DA; -fx-border-radius: 20;" text="Nhận phòng" textFill="WHITE">
+                                 <Button fx:id="btnNhanPhong" mnemonicParsing="false" onAction="#moNhanPhong" prefHeight="47.0" prefWidth="148.0" styleClass="btn-info" text="Nhận phòng" textFill="WHITE">
                                     <font>
                                        <Font name="System Bold" size="18.0" />
                                     </font>
@@ -97,7 +97,7 @@
                            </HBox>
                            <HBox alignment="CENTER" layoutX="40.0" layoutY="144.0" prefHeight="74.0" prefWidth="140.0">
                               <children>
-                                 <Button fx:id="btnDoiPhong" mnemonicParsing="false" prefHeight="47.0" prefWidth="132.0" style="-fx-background-color: #6F84DA; -fx-border-radius: 20;" text="Đổi phòng" textFill="WHITE">
+                                 <Button fx:id="btnDoiPhong" mnemonicParsing="false" prefHeight="47.0" prefWidth="148.0" styleClass="btn-info" text="Đổi phòng" textFill="WHITE">
                                     <font>
                                        <Font name="System Bold" size="18.0" />
                                     </font>
@@ -106,7 +106,7 @@
                            </HBox>
                            <HBox alignment="CENTER" layoutX="40.0" layoutY="180.0" prefHeight="74.0" prefWidth="140.0">
                               <children>
-                                 <Button fx:id="btnHuy" mnemonicParsing="false" prefHeight="47.0" prefWidth="132.0" style="-fx-background-color: #6F84DA; -fx-border-radius: 20;" text="Hủy đặt" textFill="WHITE">
+                                 <Button fx:id="btnHuy" mnemonicParsing="false" prefHeight="47.0" prefWidth="148.0" styleClass="btn-info" text="Hủy đặt" textFill="WHITE">
                                     <font>
                                        <Font name="System Bold" size="18.0" />
                                     </font>
@@ -115,7 +115,7 @@
                            </HBox>
                            <HBox alignment="CENTER" layoutX="40.0" layoutY="218.0" prefHeight="74.0" prefWidth="140.0">
                               <children>
-                                 <Button fx:id="btnDichVu" mnemonicParsing="false" prefHeight="47.0" prefWidth="132.0" style="-fx-background-color: #6F84DA; -fx-border-radius: 20;" text="Dịch vụ" textFill="WHITE">
+                                 <Button fx:id="btnDichVu" mnemonicParsing="false" prefHeight="47.0" prefWidth="148.0" styleClass="btn-info" text="Dịch vụ" textFill="WHITE">
                                     <font>
                                        <Font name="System Bold" size="18.0" />
                                     </font>
@@ -124,7 +124,7 @@
                            </HBox>
                            <HBox alignment="CENTER" layoutX="40.0" layoutY="251.0" prefHeight="74.0" prefWidth="140.0">
                               <children>
-                                 <Button fx:id="btnThanhToan" mnemonicParsing="false" prefHeight="47.0" prefWidth="132.0" style="-fx-background-color: #6F84DA; -fx-border-radius: 20;" text="Thanh toán" textFill="WHITE">
+                                 <Button fx:id="btnThanhToan" mnemonicParsing="false" prefHeight="47.0" prefWidth="148.0" styleClass="btn-info" text="Thanh toán" textFill="WHITE">
                                     <font>
                                        <Font name="System Bold" size="18.0" />
                                     </font>

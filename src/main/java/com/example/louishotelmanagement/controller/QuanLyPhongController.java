@@ -22,7 +22,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -65,11 +64,6 @@ public class QuanLyPhongController implements Initializable {
     private TableColumn<Phong, Double> colDonGia;
     @FXML
     public TableColumn<Phong, Void> colThaoTac;
-
-    @FXML
-    private Label lblTrangThai;
-    @FXML
-    private Label lblSoLuong;
 
     private PhongDAO phongDAO;
     private LoaiPhongDAO loaiPhongDAO;
@@ -130,14 +124,10 @@ public class QuanLyPhongController implements Initializable {
                     setText(item.toString());
                     getStyleClass().clear();
                     switch (item) {
-                        case TrangThaiPhong.TRONG ->
-                                getStyleClass().add("status-trong");
-                        case TrangThaiPhong.DA_DAT ->
-                                getStyleClass().add("status-da-dat");
-                        case TrangThaiPhong.DANG_SU_DUNG ->
-                                getStyleClass().add("status-dang-su-dung");
-                        case TrangThaiPhong.BAO_TRI ->
-                                getStyleClass().add("status-bao-tri");
+                        case TrangThaiPhong.TRONG -> getStyleClass().add("status-trong");
+                        case TrangThaiPhong.DA_DAT -> getStyleClass().add("status-da-dat");
+                        case TrangThaiPhong.DANG_SU_DUNG -> getStyleClass().add("status-dang-su-dung");
+                        case TrangThaiPhong.BAO_TRI -> getStyleClass().add("status-bao-tri");
                         default -> {
                             // Không thêm style class nào
                         }
@@ -311,9 +301,6 @@ public class QuanLyPhongController implements Initializable {
 
             // Áp dụng filter hiện tại
             apDungFilter();
-
-            capNhatTrangThai("Đã tải " + dsPhong.size() + " phòng");
-
         } catch (SQLException e) {
             UIUtils.hienThiThongBao("Lỗi", "Không thể tải dữ liệu phòng: " + e.getMessage());
         }
@@ -356,7 +343,6 @@ public class QuanLyPhongController implements Initializable {
                 .toList();
 
         danhSachPhongFiltered.addAll(filtered);
-        lblSoLuong.setText("Tổng số phòng: " + danhSachPhongFiltered.size());
     }
 
     @FXML
@@ -461,9 +447,4 @@ public class QuanLyPhongController implements Initializable {
     private void handleLocLoaiPhong() {
         apDungFilter();
     }
-
-    private void capNhatTrangThai(String message) {
-        lblTrangThai.setText(message);
-    }
-
 }

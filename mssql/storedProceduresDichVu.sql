@@ -10,46 +10,45 @@ GO
 -- =============================================
 
 -- Thêm dịch vụ
-CREATE OR ALTER PROCEDURE sp_ThemDichVu
-    @maDV NVARCHAR(10),
-    @tenDV NVARCHAR(100),
-    @soLuong INT,
-    @donGia DECIMAL(18,2),
-    @moTa NVARCHAR(255) = NULL,
-    @conKinhDoanh BIT = 1
+CREATE OR ALTER PROCEDURE sp_ThemDichVu @maDV NVARCHAR(10),
+                                        @tenDV NVARCHAR(100),
+                                        @soLuong INT,
+                                        @donGia DECIMAL(18, 2),
+                                        @moTa NVARCHAR(255) = NULL,
+                                        @conKinhDoanh BIT = 1
 AS
 BEGIN
     -- 1. KIỂM TRA MÃ DỊCH VỤ (NOT NULL và Tồn Tại)
     IF @maDV IS NULL OR LTRIM(RTRIM(@maDV)) = ''
         BEGIN
-            RAISERROR(N'Mã dịch vụ không được để trống.', 16, 1)
+            RAISERROR (N'Mã dịch vụ không được để trống.', 16, 1)
             RETURN
         END
 
     IF EXISTS (SELECT 1 FROM DichVu WHERE maDV = @maDV)
         BEGIN
-            RAISERROR(N'Mã dịch vụ đã tồn tại. Vui lòng chọn mã khác.', 16, 1)
+            RAISERROR (N'Mã dịch vụ đã tồn tại. Vui lòng chọn mã khác.', 16, 1)
             RETURN
         END
 
     -- 2. KIỂM TRA TÊN DỊCH VỤ (NOT NULL)
     IF @tenDV IS NULL OR LTRIM(RTRIM(@tenDV)) = ''
         BEGIN
-            RAISERROR(N'Tên dịch vụ không được để trống.', 16, 1)
+            RAISERROR (N'Tên dịch vụ không được để trống.', 16, 1)
             RETURN
         END
 
     -- 3. KIỂM TRA SỐ LƯỢNG (NOT NULL và >= 0)
     IF @soLuong IS NULL OR @soLuong < 0
         BEGIN
-            RAISERROR(N'Số lượng phải là một số nguyên không âm (>= 0).', 16, 1)
+            RAISERROR (N'Số lượng phải là một số nguyên không âm (>= 0).', 16, 1)
             RETURN
         END
 
     -- 4. KIỂM TRA ĐƠN GIÁ (NOT NULL và >= 0)
     IF @donGia IS NULL OR @donGia < 0.00
         BEGIN
-            RAISERROR(N'Đơn giá phải là một giá trị tiền tệ không âm (>= 0).', 16, 1)
+            RAISERROR (N'Đơn giá phải là một giá trị tiền tệ không âm (>= 0).', 16, 1)
             RETURN
         END
 
@@ -57,7 +56,7 @@ BEGIN
     IF @conKinhDoanh IS NULL
         BEGIN
             -- Mặc dù đã có giá trị mặc định, nên kiểm tra nếu người dùng truyền NULL rõ ràng
-            RAISERROR(N'Trạng thái kinh doanh không được để trống.', 16, 1)
+            RAISERROR (N'Trạng thái kinh doanh không được để trống.', 16, 1)
             RETURN
         END
 
@@ -70,128 +69,130 @@ END
 GO
 
 -- Lấy danh sách tất cả dịch vụ
-CREATE PROCEDURE sp_LayTatCaDichVu
-@chiLayConKinhDoanh BIT = NULL -- NULL để lấy tất cả, 1 để lấy các dịch vụ đang KD, 0 để lấy dịch vụ đã ngừng KD
+CREATE PROCEDURE sp_LayTatCaDichVu @chiLayConKinhDoanh BIT = NULL -- NULL để lấy tất cả, 1 để lấy các dịch vụ đang KD, 0 để lấy dịch vụ đã ngừng KD
 AS
 BEGIN
-    SELECT
-        maDV,
-        tenDV,
-        soLuong,
-        donGia,
-        moTa,
-        conKinhDoanh
-    FROM
-        DichVu
-    WHERE
-        (@chiLayConKinhDoanh IS NULL OR conKinhDoanh = @chiLayConKinhDoanh)
-    ORDER BY
-        maDV
+    SELECT maDV,
+           tenDV,
+           soLuong,
+           donGia,
+           moTa,
+           conKinhDoanh
+    FROM DichVu
+    WHERE (@chiLayConKinhDoanh IS NULL OR conKinhDoanh = @chiLayConKinhDoanh)
+    ORDER BY maDV
 END
 GO
 
 -- Lấy xóa phòng đánh dấu ngừng kinh doanh
-CREATE PROCEDURE sp_XoaDichVu
-@maDV NVARCHAR(10)
+CREATE PROCEDURE sp_XoaDichVu @maDV NVARCHAR(10)
 AS
 BEGIN
     -- Kiểm tra xem mã dịch vụ có tồn tại không
     IF NOT EXISTS (SELECT 1 FROM DichVu WHERE maDV = @maDV)
         BEGIN
-            RAISERROR(N'Không tìm thấy mã dịch vụ để xóa/ngừng kinh doanh.', 16, 1)
+            RAISERROR (N'Không tìm thấy mã dịch vụ để xóa/ngừng kinh doanh.', 16, 1)
             RETURN
         END
 
     UPDATE DichVu
-    SET
-        conKinhDoanh = 0 -- Đánh dấu là ngừng kinh doanh thay vì xóa cứng (Hard Delete)
-    WHERE
-        maDV = @maDV
+    SET conKinhDoanh = 0 -- Đánh dấu là ngừng kinh doanh thay vì xóa cứng (Hard Delete)
+    WHERE maDV = @maDV
 END
 GO
 
 
 -- Cập nhật dịch vụ
-CCREATE OR ALTER PROCEDURE sp_CapNhatDichVu
-    @maDV NVARCHAR(10),
-    @tenDV NVARCHAR(100),
-    @soLuong INT,
-    @donGia DECIMAL(18,2),
-    @moTa NVARCHAR(255) = NULL,
-    @conKinhDoanh BIT
+CREATE OR ALTER PROCEDURE sp_CapNhatDichVu @maDV NVARCHAR(10),
+                                           @tenDV NVARCHAR(100),
+                                           @soLuong INT,
+                                           @donGia DECIMAL(18, 2),
+                                           @moTa NVARCHAR(255) = NULL,
+                                           @conKinhDoanh BIT
 AS
 BEGIN
     -- 1. KIỂM TRA MÃ DỊCH VỤ CÓ TỒN TẠI KHÔNG (Ràng buộc quan trọng nhất cho UPDATE)
     IF @maDV IS NULL OR LTRIM(RTRIM(@maDV)) = ''
         BEGIN
-            RAISERROR(N'Mã dịch vụ không được để trống khi cập nhật.', 16, 1)
+            RAISERROR (N'Mã dịch vụ không được để trống khi cập nhật.', 16, 1)
             RETURN
         END
 
     IF NOT EXISTS (SELECT 1 FROM DichVu WHERE maDV = @maDV)
         BEGIN
-            RAISERROR(N'Không tìm thấy mã dịch vụ này để cập nhật.', 16, 1)
+            RAISERROR (N'Không tìm thấy mã dịch vụ này để cập nhật.', 16, 1)
             RETURN
         END
 
     -- 2. KIỂM TRA TÊN DỊCH VỤ (NOT NULL)
     IF @tenDV IS NULL OR LTRIM(RTRIM(@tenDV)) = ''
         BEGIN
-            RAISERROR(N'Tên dịch vụ không được để trống.', 16, 1)
+            RAISERROR (N'Tên dịch vụ không được để trống.', 16, 1)
             RETURN
         END
 
     -- 3. KIỂM TRA SỐ LƯỢNG (NOT NULL và >= 0)
     IF @soLuong IS NULL OR @soLuong < 0
         BEGIN
-            RAISERROR(N'Số lượng phải là một số nguyên không âm (>= 0).', 16, 1)
+            RAISERROR (N'Số lượng phải là một số nguyên không âm (>= 0).', 16, 1)
             RETURN
         END
 
     -- 4. KIỂM TRA ĐƠN GIÁ (NOT NULL và >= 0)
     IF @donGia IS NULL OR @donGia < 0.00
         BEGIN
-            RAISERROR(N'Đơn giá phải là một giá trị tiền tệ không âm (>= 0).', 16, 1)
+            RAISERROR (N'Đơn giá phải là một giá trị tiền tệ không âm (>= 0).', 16, 1)
             RETURN
         END
 
     -- 5. KIỂM TRA TRẠNG THÁI KINH DOANH (NOT NULL)
     IF @conKinhDoanh IS NULL
         BEGIN
-            RAISERROR(N'Trạng thái kinh doanh không được để trống.', 16, 1)
+            RAISERROR (N'Trạng thái kinh doanh không được để trống.', 16, 1)
             RETURN
         END
 
     -- THỰC HIỆN CẬP NHẬT DỮ LIỆU NẾU TẤT CẢ ĐỀU HỢP LỆ
     UPDATE DichVu
-    SET
-        tenDV = @tenDV,
-        soLuong = @soLuong,
-        donGia = @donGia,
-        moTa = @moTa,
+    SET tenDV        = @tenDV,
+        soLuong      = @soLuong,
+        donGia       = @donGia,
+        moTa         = @moTa,
         conKinhDoanh = @conKinhDoanh
-    WHERE
-        maDV = @maDV
+    WHERE maDV = @maDV
 
     SELECT N'Cập nhật dịch vụ thành công.' AS Result
 END
 GO
-CREATE OR ALTER PROCEDURE sp_LayTatCaDichVu
-@chiLayConKinhDoanh BIT = NULL -- NULL: Lấy tất cả; 1: Đang kinh doanh; 0: Đã ngừng kinh doanh
+CREATE OR ALTER PROCEDURE sp_LayTatCaDichVu @chiLayConKinhDoanh BIT = NULL -- NULL: Lấy tất cả; 1: Đang kinh doanh; 0: Đã ngừng kinh doanh
 AS
 BEGIN
-    SELECT
-        maDV,
-        tenDV,
-        soLuong,
-        donGia,
-        moTa,
-        conKinhDoanh
-    FROM
-        DichVu
-    WHERE
-        (@chiLayConKinhDoanh IS NULL OR conKinhDoanh = @chiLayConKinhDoanh)
-    ORDER BY
-        maDV
+    SELECT maDV,
+           tenDV,
+           soLuong,
+           donGia,
+           moTa,
+           conKinhDoanh
+    FROM DichVu
+    WHERE (@chiLayConKinhDoanh IS NULL OR conKinhDoanh = @chiLayConKinhDoanh)
+    ORDER BY maDV
+END
+GO
+
+-- Lấy mã dịch vụ tiếp theo
+CREATE OR ALTER PROCEDURE sp_LayMaDichVuTiepTheo @maDichVuTiepTheo NVARCHAR(10) OUTPUT
+AS
+BEGIN
+    DECLARE @maxSo INT = 0;
+    
+    -- Lấy số lớn nhất từ các mã dịch vụ hiện có
+    SELECT @maxSo = ISNULL(MAX(CAST(SUBSTRING(maDV, 3, LEN(maDV) - 2) AS INT)), 0)
+    FROM DichVu
+    WHERE maDV LIKE 'DV%' 
+      AND LEN(maDV) = 5
+      AND ISNUMERIC(SUBSTRING(maDV, 3, 3)) = 1;
+    
+    -- Tạo mã dịch vụ tiếp theo
+    SET @maDichVuTiepTheo = 'DV' + RIGHT('000' + CAST(@maxSo + 1 AS VARCHAR(3)), 3);
 END
 GO

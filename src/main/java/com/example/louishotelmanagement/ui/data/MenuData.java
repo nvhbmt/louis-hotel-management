@@ -32,6 +32,8 @@ public class MenuData {
                 new MenuItemModel("Dịch vụ", "mdi2c-coffee", null)
         );
         dichVuGroup.getChildren().addAll(List.of(
+                new TreeItem<>(new MenuItemModel("Quản lý dịch vụ", "mdi2c-coffee",
+                        "/com/example/louishotelmanagement/fxml/quan-ly-dich-vu-view.fxml")),
                 new TreeItem<>(new MenuItemModel("Thêm dịch vụ", "mdi2p-plus-circle",
                         "/com/example/louishotelmanagement/fxml/them-dich-vu.fxml")),
                 new TreeItem<>(new MenuItemModel("Cung cấp dịch vụ", "mdi2h-handshake",
@@ -58,7 +60,7 @@ public class MenuData {
 
         TreeItem<MenuItemModel> nhanVienGroup = new TreeItem<>(
                 new MenuItemModel("Nhân viên", "mdi2a-account-group",
-                        "/com/example/louishotelmanagement/fxml/nhan-vien-view.fxml")
+                        "/com/example/louishotelmanagement/fxml/quan-ly-nhan-vien-view.fxml")
         );
 
         TreeItem<MenuItemModel> khachHangGroup = new TreeItem<>(

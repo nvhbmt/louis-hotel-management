@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Rectangle?>
 
-<ScrollPane stylesheets="@../css/main.css, @../css/thong-ke.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.ThongKeController">
+<ScrollPane stylesheets="@../css/main.css, @../css/thong-ke.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.ThongKeController">
    <content>
       <BorderPane>
          <center>
@@ -30,7 +30,7 @@
                      </VBox>
                      <VBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="502.0">
                         <children>
-                           <Button fx:id="btnLamMoi" onAction="#handleLamMoi" prefHeight="37.0" prefWidth="112.0" styleClass="btn-refresh" text="🔄 Làm Mới">
+                           <Button fx:id="btnLamMoi" onAction="#handleLamMoi" prefHeight="37.0" prefWidth="112.0" styleClass="btn-info" text="🔄 Làm Mới">
                               <VBox.margin>
                                  <Insets bottom="10.0" />
                               </VBox.margin></Button>
@@ -94,14 +94,14 @@
                            <DatePicker fx:id="dpTuNgay" onAction="#handleChonNgay" />
                            <Label styleClass="form-label" text="Đến ngày:" />
                            <DatePicker fx:id="dpDenNgay" onAction="#handleChonNgay" />
-                           <Button fx:id="btnCapNhatChart" onAction="#handleCapNhatChart" styleClass="btn-update" text="Cập nhật" />
+                           <Button fx:id="btnCapNhatChart" onAction="#handleCapNhatChart" styleClass="btn-success" text="Cập nhật" />
                         </HBox>
                         
                         <!-- Year Selection -->
                         <HBox fx:id="hboxChonNam" alignment="CENTER_LEFT" spacing="10.0">
                            <Label styleClass="form-label" text="Năm:" />
                            <ComboBox fx:id="cbNam" onAction="#handleChonNam" prefWidth="100.0" styleClass="combo-box" />
-                           <Button fx:id="btnCapNhatChartNam" onAction="#handleCapNhatChart" styleClass="btn-update" text="Cập nhật" />
+                           <Button fx:id="btnCapNhatChartNam" onAction="#handleCapNhatChart" styleClass="btn-success" text="Cập nhật" />
                         </HBox>
                      </VBox>
                      

@@ -1,0 +1,73 @@
+/* ========================================
+   FORMSFX CUSTOM STYLES
+   ======================================== */
+
+/* Dialog container styles */
+.dialog-container {
+    -fx-padding: 0px;
+    -fx-border-width: 0px;
+}
+
+.dialog-header {
+    -fx-spacing: 5px;
+}
+
+.dialog-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+.dialog-subtitle {
+    -fx-font-size: 14px;
+    -fx-text-fill: #7f8c8d;
+}
+
+.dialog-buttons {
+    -fx-alignment: CENTER_RIGHT;
+    -fx-spacing: 15px;
+}
+
+.btn-cancel {
+    -fx-background-color: #95a5a6;
+    -fx-text-fill: white;
+    -fx-background-radius: 5px;
+    -fx-padding: 10px 20px;
+}
+
+.btn-save {
+    -fx-background-color: #27ae60;
+    -fx-text-fill: white;
+    -fx-background-radius: 5px;
+    -fx-padding: 10px 20px;
+}
+
+/* Ensure form container has enough space */
+.formsfx-form-container {
+    -fx-spacing: 15px;
+    -fx-min-height: 200px;
+    -fx-pref-height: -1;
+    /* Auto height */
+    -fx-border-width: 0px;
+    -fx-background-color: transparent;
+    -fx-padding: 0px;
+}
+
+/* Remove FormsFX form border */
+.formsfx-form-container .form-renderer {
+    -fx-border-width: 0px;
+    -fx-background-color: transparent;
+    -fx-padding: 0px;
+}
+
+.formsfx-form-container .form {
+    -fx-border-width: 0px;
+    -fx-background-color: transparent;
+    -fx-padding: 0px;
+}
+
+/* Remove any default borders from FormsFX components */
+.formsfx-form-container .formsfx-group {
+    -fx-border-width: 0px;
+    -fx-padding: 0px;
+}

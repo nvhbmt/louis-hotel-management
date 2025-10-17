@@ -7,13 +7,13 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="325.0" prefWidth="674.0" stylesheets="@../css/formsfx.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.PhongDialogController">
+<BorderPane prefHeight="202.0" prefWidth="679.0" stylesheets="@../css/formsfx.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.DichVuDialogController">
     <center>
-        <VBox prefHeight="343.0" prefWidth="610.0" spacing="20.0" styleClass="dialog-container">
+        <VBox spacing="20.0" styleClass="dialog-container">
             <!-- Header -->
             <VBox styleClass="dialog-header">
-                <Label fx:id="lblTieuDe" styleClass="dialog-title" text="Thêm Phòng Mới" />
-                <Label styleClass="dialog-subtitle" text="Nhập thông tin phòng" />
+                <Label fx:id="lblTieuDe" styleClass="dialog-title" text="Thêm Dịch Vụ Mới" />
+                <Label styleClass="dialog-subtitle" text="Nhập thông tin dịch vụ" />
             </VBox>
 
             <!-- Form using FormsFX -->
@@ -26,7 +26,7 @@
             </HBox>
         </VBox>
     </center>
-    <padding>
-        <Insets bottom="32.0" left="32.0" right="32.0" top="32.0" />
-    </padding>
+   <padding>
+      <Insets bottom="32.0" left="32.0" right="32.0" top="32.0" />
+   </padding>
 </BorderPane>
