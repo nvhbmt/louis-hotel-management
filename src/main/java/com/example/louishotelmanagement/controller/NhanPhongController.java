@@ -67,7 +67,7 @@ public class NhanPhongController implements Initializable {
         ArrayList<KhachHang> khachhangs = khachHangDAO.layDSKhachHang();
         dsMaKH = new ArrayList<>();
         for(KhachHang khachHang : khachhangs){
-            dsKhachHang.getItems().add(khachHang.getMaKH());
+            dsKhachHang.getItems().add(khachHang.getHoTen());
             dsMaKH.add(khachHang.getMaKH());
         }
         dsKhachHang.getSelectionModel().selectFirst();
@@ -108,6 +108,7 @@ public class NhanPhongController implements Initializable {
                         ngayDi.setValue(ctpdp.getNgayDi());
                         pTam = phieuDatPhongDAO.layPhieuDatPhongTheoMa(ctpdp.getMaPhieu());
                         check = true;
+                        break;
                     }else{
                         showAlertError("Không tìm thông tin","Không có bất kì thông tin nào về khách hàng và phòng");
                     }
@@ -135,7 +136,7 @@ public class NhanPhongController implements Initializable {
         if(check){
             phongDAO.capNhatTrangThaiPhong(maPhong.getText(),"Đang sử dụng");
             PhieuDatPhong pdp = phieuDatPhongDAO.layPhieuDatPhongTheoMa(maPhieu.getText());
-            phieuDatPhongDAO.capNhatTrangThaiPhieuDatPhong(pdp.getMaPhieu(),"Hoàn thành");
+            phieuDatPhongDAO.capNhatTrangThaiPhieuDatPhong(pdp.getMaPhieu(),"Đang sử dụng");
             ctPhieuDatPhongDAO.capNhatNgayNhan(pTam.getMaPhieu(),maPhong.getText(), LocalDate.now());
             showAlert("Thành công","Bạn đã nhận phòng thành công");
         }else{

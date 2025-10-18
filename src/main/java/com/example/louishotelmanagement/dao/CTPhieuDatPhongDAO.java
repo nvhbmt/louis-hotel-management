@@ -284,4 +284,32 @@ public class CTPhieuDatPhongDAO {
             return cs.executeUpdate() > 0;
         }
     }
+    // Cập nhật mã phòng từ mã phiếu
+    public boolean capNhatMaPhong(String maPhieu, String maPhongCu, String maPhongMoi) throws SQLException {
+        // Gọi SP sp_CapNhatMaPhongCTPDP
+        String sql = "{call sp_CapNhatMaPhongCTPDP(?, ?, ?)}";
+        try (Connection con = CauHinhDatabase.getConnection();
+             CallableStatement cs = con.prepareCall(sql)) {
+
+            cs.setString(1, maPhieu);
+            cs.setString(2, maPhongCu);
+            cs.setString(3, maPhongMoi);
+
+            return cs.executeUpdate() > 0;
+        }
+    }
+    //Cập nhật giá phòng theo mã phiếu
+    public boolean capNhatGiaPhong(String maPhieu, String maPhong, BigDecimal giaPhongMoi) throws SQLException {
+        // Gọi SP sp_CapNhatGiaPhongCTPDP
+        String sql = "{call sp_CapNhatGiaPhongCTPDP(?, ?, ?)}";
+        try (Connection con = CauHinhDatabase.getConnection();
+             CallableStatement cs = con.prepareCall(sql)) {
+
+            cs.setString(1, maPhieu);
+            cs.setString(2, maPhong);
+            cs.setBigDecimal(3, giaPhongMoi); // Giả sử giá phòng là kiểu double/float
+
+            return cs.executeUpdate() > 0;
+        }
+    }
 }
