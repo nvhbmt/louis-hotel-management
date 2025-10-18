@@ -119,6 +119,7 @@ public class TraPhongController implements Initializable{
         if(check){
             phDao.capNhatTrangThaiPhong(maPhong.getText(),"Trống");
             ctpDao.capNhatNgayTra(pTam.getMaPhieu(),maPhong.getText(), LocalDate.now());
+            phieuDatPhongDAO.capNhatTrangThaiPhieuDatPhong(pTam.getMaPhieu(),"Hoàn thành");
             showAlert("Thành công","Đã trả phòng thành công");
         }else{
             showAlertError("Không thể trả phòng","Không tìm được bất kì thông tin nào về phòng");

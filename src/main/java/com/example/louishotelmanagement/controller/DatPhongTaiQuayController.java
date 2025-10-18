@@ -51,7 +51,8 @@ public class DatPhongTaiQuayController implements Initializable {
         trangThai.setCellValueFactory(new PropertyValueFactory<>("trangThai"));
         moTa.setCellValueFactory(new PropertyValueFactory<>("moTa"));
         loaiPhong.setCellValueFactory(new PropertyValueFactory<>("loaiPhong"));
-            try {
+        tablePhong.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        try {
                 layDsPhong();
                 setComboBoxPhong();
                 laydsKhachHang();
@@ -123,6 +124,7 @@ public class DatPhongTaiQuayController implements Initializable {
         PhieuDatPhong pdp = new PhieuDatPhong(maPhieu, LocalDate.now(),LocalDate.now(),ngayDi.getValue(),"Đã đặt","Đặt trực tiếp tại quầy",newKh.getMaKH(),"NV01");
         pdpDao.themPhieuDatPhong(pdp);
         CTPhieuDatPhong ctpdp = new CTPhieuDatPhong(maPhieu,maP,LocalDate.now(),ngayDi.getValue(), BigDecimal.valueOf(LoaiP.getDonGia()));
+        Pdao.capNhatTrangThaiPhong(maP,"Đã đặt");
         ctpDao.themCTPhieuDatPhong(ctpdp);
         showAlert("Thành Công","Bạn đã đặt phòng thành công");
     }
