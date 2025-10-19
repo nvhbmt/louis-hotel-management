@@ -49,7 +49,7 @@ public class MenuData {
                 new TreeItem<>(new MenuItemModel("Thanh toán", "mdi2c-cash",
                         "/com/example/louishotelmanagement/fxml/thanh-toan-view.fxml")),
                 new TreeItem<>(new MenuItemModel("Giảm giá", "mdi2s-sale",
-                        "/com/example/louishotelmanagement/fxml/giam-gia-view.fxml")),
+                        "/com/example/louishotelmanagement/fxml/quan-ly-giam-gia-view.fxml")),
                 new TreeItem<>(new MenuItemModel("Hiển thị hóa đơn", "mdi2f-file-document",
                         "/com/example/louishotelmanagement/fxml/hoa-don-view.fxml"))
         ));
