@@ -62,6 +62,9 @@ public class ContentManager {
         if (controller instanceof PhongController) {
             ((PhongController) controller).setContentSwitcher(switcher);
         }
+        if (controller instanceof TrangChuController) {
+            ((TrangChuController) controller).setContentSwitcher(switcher);
+        }
         // Có thể thêm các controller khác ở đây
     }
     
@@ -86,5 +89,21 @@ public class ContentManager {
      */
     public static boolean isCached(String fxmlPath) {
         return cachedViews.containsKey(fxmlPath);
+    }
+
+    /**
+     * Helper: safe switch with null guard and error handling
+     */
+    public static void safeSwitch(ContentSwitcher switcher, String fxmlPath) {
+        if (switcher == null) {
+            System.err.println("ContentSwitcher chưa được khởi tạo!");
+            return;
+        }
+        try {
+            switcher.switchContent(fxmlPath, true);
+        } catch (Exception e) {
+            System.err.println("Lỗi khi chuyển đến trang: " + fxmlPath);
+            e.printStackTrace();
+        }
     }
 }

@@ -37,33 +37,6 @@
     -fx-padding: 4px 8px;
 }
 
-
-
-/* Style cho các button trong table */
-.btn-table-edit {
-    -fx-background-color: #17a2b8;
-    -fx-text-fill: white;
-    -fx-border-radius: 3px;
-    -fx-background-radius: 3px;
-    -fx-padding: 4px 8px;
-}
-
-.btn-table-edit:hover {
-    -fx-background-color: #138496;
-}
-
-.btn-table-delete {
-    -fx-background-color: #dc3545;
-    -fx-text-fill: white;
-    -fx-border-radius: 3px;
-    -fx-background-radius: 3px;
-    -fx-padding: 4px 8px;
-}
-
-.btn-table-delete:hover {
-    -fx-background-color: #c82333;
-}
-
 /* Style cho các stat cards */
 .stat-card-border {
     -fx-background-color: #ffffff;
@@ -100,33 +73,6 @@
 .form-field:focused {
     -fx-border-color: #80bdff;
     -fx-border-width: 2px;
-}
-
-/* Style cho buttons */
-.btn-success {
-    -fx-background-color: #28a745;
-    -fx-text-fill: white;
-    -fx-border-radius: 4px;
-    -fx-background-radius: 4px;
-    -fx-padding: 8px 16px;
-    -fx-font-weight: bold;
-}
-
-.btn-success:hover {
-    -fx-background-color: #218838;
-}
-
-.btn-info {
-    -fx-background-color: #17a2b8;
-    -fx-text-fill: white;
-    -fx-border-radius: 4px;
-    -fx-background-radius: 4px;
-    -fx-padding: 8px 16px;
-    -fx-font-weight: bold;
-}
-
-.btn-info:hover {
-    -fx-background-color: #138496;
 }
 
 /* Style cho table container */
