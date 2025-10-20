@@ -38,8 +38,6 @@ public class QuanLyDichVuController implements Initializable {
     private TextField txtTimKiem;
     @FXML
     private ComboBox<String> cbTrangThaiKinhDoanh;
-    @FXML
-    private ComboBox<String> cbSapXep;
 
     @FXML
     private TableView<DichVu> tableViewDichVu;
@@ -116,6 +114,11 @@ public class QuanLyDichVuController implements Initializable {
         colSoLuong.setCellValueFactory(new PropertyValueFactory<>("soLuong"));
         colDonGia.setCellValueFactory(new PropertyValueFactory<>("donGia"));
         colMoTa.setCellValueFactory(new PropertyValueFactory<>("moTa"));
+        
+        // Cột trạng thái hiển thị văn bản dựa trên conKinhDoanh
+        colTrangThai.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(
+                cellData.getValue().isConKinhDoanh() ? "Đang kinh doanh" : "Ngừng kinh doanh"
+        ));
 
         // Cột đơn giá với định dạng tiền tệ
         colDonGia.setCellFactory(_ -> new TableCell<>() {
@@ -137,16 +140,16 @@ public class QuanLyDichVuController implements Initializable {
                 super.updateItem(item, empty);
                 if (empty || item == null) {
                     setText(null);
-                    getStyleClass().clear();
+                    getStyleClass().removeAll("status-active", "status-inactive");
                 } else {
                     DichVu dichVu = getTableView().getItems().get(getIndex());
                     if (dichVu.isConKinhDoanh()) {
                         setText("Đang kinh doanh");
-                        getStyleClass().clear();
+                        getStyleClass().removeAll("status-active", "status-inactive");
                         getStyleClass().add("status-active");
                     } else {
                         setText("Ngừng kinh doanh");
-                        getStyleClass().clear();
+                        getStyleClass().removeAll("status-active", "status-inactive");
                         getStyleClass().add("status-inactive");
                     }
                 }
@@ -221,32 +224,6 @@ public class QuanLyDichVuController implements Initializable {
                 }
             }
         });
-
-        // Khởi tạo ComboBox sắp xếp
-        List<String> danhSachSapXep = List.of("Mã dịch vụ", "Tên dịch vụ", "Đơn giá tăng dần", "Đơn giá giảm dần", "Số lượng");
-        cbSapXep.setItems(FXCollections.observableArrayList(danhSachSapXep));
-        cbSapXep.setButtonCell(new ListCell<>() {
-            @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText("Sắp xếp theo");
-                } else {
-                    setText(item);
-                }
-            }
-        });
-        cbSapXep.setCellFactory(_ -> new ListCell<>() {
-            @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText("Sắp xếp theo");
-                } else {
-                    setText(item);
-                }
-            }
-        });
     }
 
     private void taiDuLieu() {
@@ -295,22 +272,6 @@ public class QuanLyDichVuController implements Initializable {
                     }
 
                     return true;
-                })
-                .sorted((dv1, dv2) -> {
-                    // Sắp xếp theo lựa chọn
-                    String sapXep = cbSapXep.getValue();
-                    if (sapXep == null) {
-                        return dv1.getMaDV().compareTo(dv2.getMaDV());
-                    }
-                    
-                    return switch (sapXep) {
-                        case "Mã dịch vụ" -> dv1.getMaDV().compareTo(dv2.getMaDV());
-                        case "Tên dịch vụ" -> dv1.getTenDV().compareTo(dv2.getTenDV());
-                        case "Đơn giá tăng dần" -> Double.compare(dv1.getDonGia(), dv2.getDonGia());
-                        case "Đơn giá giảm dần" -> Double.compare(dv2.getDonGia(), dv1.getDonGia());
-                        case "Số lượng" -> Integer.compare(dv1.getSoLuong(), dv2.getSoLuong());
-                        default -> dv1.getMaDV().compareTo(dv2.getMaDV());
-                    };
                 })
                 .toList();
 
@@ -389,7 +350,6 @@ public class QuanLyDichVuController implements Initializable {
         taiDuLieu();
         txtTimKiem.clear();
         cbTrangThaiKinhDoanh.setValue(null);
-        cbSapXep.setValue(null);
     }
 
     @FXML
