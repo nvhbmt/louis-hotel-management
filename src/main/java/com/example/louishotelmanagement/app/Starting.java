@@ -28,6 +28,10 @@ public class Starting extends Application {
         stage.setScene(scene);
         stage.setMinWidth(1000);
         stage.setMinHeight(600);
+        
+        // Thiết lập full screen
+        stage.setMaximized(true);
+        
         stage.show();
     }
     
