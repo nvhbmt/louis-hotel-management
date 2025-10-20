@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class LayoutController implements Initializable {
+public class LayoutController implements Initializable, ContentSwitcher {
 
     @FXML
     private TreeView<MenuItemModel> menuTree;
@@ -91,15 +91,9 @@ public class LayoutController implements Initializable {
         });
     }
 
-    /** Load FXML vào vùng trung tâm */
+    /** Load FXML vào vùng trung tâm với caching */
     private void loadFXML(String path) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
-            Parent view = loader.load();
-            mainBorderPane.setCenter(view);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        ContentManager.loadFXML(path, mainBorderPane, this);
     }
     
     /** Set item làm active */
@@ -145,5 +139,34 @@ public class LayoutController implements Initializable {
         }
         
         return null;
+    }
+
+    @Override
+    public void switchContent(String fxmlPath) {
+        switchContent(fxmlPath, true);
+    }
+    
+    @Override
+    public void switchContent(String fxmlPath, boolean updateMenuActive) {
+        loadFXML(fxmlPath);
+        
+        if (updateMenuActive) {
+            // Tìm và set active item trong menu
+            TreeItem<MenuItemModel> foundItem = findMenuItemByPath(fxmlPath);
+            if (foundItem != null) {
+                setActiveItem(foundItem);
+                // Expand parent nếu cần
+                expandToItem(foundItem);
+            }
+        }
+    }
+    
+    /** Expand tree để hiển thị item được chọn */
+    private void expandToItem(TreeItem<MenuItemModel> item) {
+        TreeItem<MenuItemModel> parent = item.getParent();
+        while (parent != null && parent != menuTree.getRoot()) {
+            parent.setExpanded(true);
+            parent = parent.getParent();
+        }
     }
 }

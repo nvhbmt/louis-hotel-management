@@ -66,47 +66,50 @@ public class PhongController implements Initializable {
     }
     @FXML
     private void moNhanPhong(javafx.event.ActionEvent actionEvent) {
-        if (switcher != null) {
-            switcher.switchContent("/com/example/louishotelmanagement/fxml/nhan-phong-view.fxml");
-        }
+        switchToPage("/com/example/louishotelmanagement/fxml/nhan-phong-view.fxml");
     }
+    
     @FXML
     private void moDatPhong(javafx.event.ActionEvent actionEvent) {
-        if (switcher != null) {
-            switcher.switchContent("/com/example/louishotelmanagement/fxml/nhan-phong-view.fxml");
-        }
-    private void moDatTT(ActionEvent event) {
-        // Giả định tên FXML cho Đặt tại quầy
-        moTrang("dat-phong-truc-tiep-view.fxml", event);
+        switchToPage("/com/example/louishotelmanagement/fxml/dat-phong-view.fxml");
     }
+    
     @FXML
     private void moDatTT(javafx.event.ActionEvent actionEvent) {
-        if (switcher != null) {
-            switcher.switchContent("/com/example/louishotelmanagement/fxml/dat-phong-truc-tiep-view.fxml");
-        }
+        switchToPage("/com/example/louishotelmanagement/fxml/dat-phong-truc-tiep-view.fxml");
     }
+    
     @FXML
     private void moDoiPhong(javafx.event.ActionEvent actionEvent) {
-        if (switcher != null) {
-            switcher.switchContent("/com/example/louishotelmanagement/fxml/doi-phong-view.fxml");
-        }
+        switchToPage("/com/example/louishotelmanagement/fxml/doi-phong-view.fxml");
     }
+    
     @FXML
     private void moHuy(javafx.event.ActionEvent actionEvent) {
-        if (switcher != null) {
-            switcher.switchContent("/com/example/louishotelmanagement/fxml/huy-phong-view.fxml");
-        }
+        switchToPage("/com/example/louishotelmanagement/fxml/huy-phong-view.fxml");
     }
+    
     @FXML
     private void moDichVu(javafx.event.ActionEvent actionEvent) {
-        if (switcher != null) {
-            switcher.switchContent("/com/example/louishotelmanagement/fxml/dat-dich-vu-view.fxml");
-        }
+        switchToPage("/com/example/louishotelmanagement/fxml/dat-dich-vu-view.fxml");
     }
+    
     @FXML
     private void moThanhToan(javafx.event.ActionEvent actionEvent) {
+        switchToPage("/com/example/louishotelmanagement/fxml/thanh-toan-view.fxml");
+    }
+    
+    /** Helper method để chuyển trang với error handling */
+    private void switchToPage(String fxmlPath) {
         if (switcher != null) {
-            switcher.switchContent("/com/example/louishotelmanagement/fxml/huy-phong-view.fxml");
+            try {
+                switcher.switchContent(fxmlPath, true);
+            } catch (Exception e) {
+                System.err.println("Lỗi khi chuyển đến trang: " + fxmlPath);
+                e.printStackTrace();
+            }
+        } else {
+            System.err.println("ContentSwitcher chưa được khởi tạo!");
         }
     }
 }
