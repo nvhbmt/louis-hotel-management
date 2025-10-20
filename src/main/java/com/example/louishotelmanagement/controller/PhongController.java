@@ -9,7 +9,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 
-import java.awt.event.ActionEvent;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -41,6 +40,8 @@ public class PhongController implements Initializable {
     // --- Data and DAO ---
     private PhongDAO phongDAO;
     private ObservableList<Phong> phongObservableList;
+    
+    private ContentSwitcher switcher;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -59,57 +60,41 @@ public class PhongController implements Initializable {
 
     }
 
-    private ContentSwitcher switcher;
-
     public void setContentSwitcher(ContentSwitcher switcher) {
         this.switcher = switcher;
     }
     @FXML
-    private void moNhanPhong(javafx.event.ActionEvent actionEvent) {
-        switchToPage("/com/example/louishotelmanagement/fxml/nhan-phong-view.fxml");
+    private void moNhanPhong() {
+        ContentManager.safeSwitch(switcher, "/com/example/louishotelmanagement/fxml/nhan-phong-view.fxml");
     }
     
     @FXML
-    private void moDatPhong(javafx.event.ActionEvent actionEvent) {
-        switchToPage("/com/example/louishotelmanagement/fxml/dat-phong-view.fxml");
+    private void moDatPhong() {
+        ContentManager.safeSwitch(switcher, "/com/example/louishotelmanagement/fxml/dat-phong-view.fxml");
     }
     
     @FXML
-    private void moDatTT(javafx.event.ActionEvent actionEvent) {
-        switchToPage("/com/example/louishotelmanagement/fxml/dat-phong-truc-tiep-view.fxml");
+    private void moDatTT() {
+        ContentManager.safeSwitch(switcher, "/com/example/louishotelmanagement/fxml/dat-phong-truc-tiep-view.fxml");
     }
     
     @FXML
-    private void moDoiPhong(javafx.event.ActionEvent actionEvent) {
-        switchToPage("/com/example/louishotelmanagement/fxml/doi-phong-view.fxml");
+    private void moDoiPhong() {
+        ContentManager.safeSwitch(switcher, "/com/example/louishotelmanagement/fxml/doi-phong-view.fxml");
     }
     
     @FXML
-    private void moHuy(javafx.event.ActionEvent actionEvent) {
-        switchToPage("/com/example/louishotelmanagement/fxml/huy-phong-view.fxml");
+    private void moHuy() {
+        ContentManager.safeSwitch(switcher, "/com/example/louishotelmanagement/fxml/huy-phong-view.fxml");
     }
     
     @FXML
-    private void moDichVu(javafx.event.ActionEvent actionEvent) {
-        switchToPage("/com/example/louishotelmanagement/fxml/dat-dich-vu-view.fxml");
+    private void moDichVu() {
+        ContentManager.safeSwitch(switcher, "/com/example/louishotelmanagement/fxml/dat-dich-vu-view.fxml");
     }
     
     @FXML
-    private void moThanhToan(javafx.event.ActionEvent actionEvent) {
-        switchToPage("/com/example/louishotelmanagement/fxml/thanh-toan-view.fxml");
-    }
-    
-    /** Helper method để chuyển trang với error handling */
-    private void switchToPage(String fxmlPath) {
-        if (switcher != null) {
-            try {
-                switcher.switchContent(fxmlPath, true);
-            } catch (Exception e) {
-                System.err.println("Lỗi khi chuyển đến trang: " + fxmlPath);
-                e.printStackTrace();
-            }
-        } else {
-            System.err.println("ContentSwitcher chưa được khởi tạo!");
-        }
+    private void moThanhToan() {
+        ContentManager.safeSwitch(switcher, "/com/example/louishotelmanagement/fxml/thanh-toan-view.fxml");
     }
 }

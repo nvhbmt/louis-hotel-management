@@ -66,19 +66,3 @@
     -fx-background-color: #f8d7da;
     -fx-text-fill: #721c24;
 }
-
-/* ========================================
-   TABLE ACTION BUTTON STYLES
-   ======================================== */
-
-.btn-table-edit {
-    -fx-padding: 2 4 2 4;
-    -fx-min-width: 40px;
-    -fx-pref-width: 40px;
-}
-
-.btn-table-delete {
-    -fx-padding: 2 4 2 4;
-    -fx-min-width: 40px;
-    -fx-pref-width: 40px;
-}
