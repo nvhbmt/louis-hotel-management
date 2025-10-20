@@ -6,7 +6,7 @@ public class MaGiamGia {
     private String maGG;
     private String code;
     private double giamGia;
-    private String kieuGiamGia;
+    private KieuGiamGia kieuGiamGia;
     private LocalDate ngayBatDau;
     private LocalDate ngayKetThuc;
     private double tongTienToiThieu;
@@ -15,7 +15,11 @@ public class MaGiamGia {
     private String maNhanVien;
 
 
-    public MaGiamGia(String maGG, String code, double giamGia, String kieuGiamGia, LocalDate ngayBatDau, LocalDate ngayKetThuc, double tongTienToiThieu, String moTa, String trangThai, String maNhanVien) {
+    // Constructor mặc định
+    public MaGiamGia() {
+    }
+
+    public MaGiamGia(String maGG, String code, double giamGia, KieuGiamGia kieuGiamGia, LocalDate ngayBatDau, LocalDate ngayKetThuc, double tongTienToiThieu, String moTa, String trangThai, String maNhanVien) {
         this.maGG = maGG;
         this.code = code;
         this.giamGia = giamGia;
@@ -30,6 +34,10 @@ public class MaGiamGia {
 
     public String getMaGG() {
         return maGG;
+    }
+
+    public void setMaGG(String maGG) {
+        this.maGG = maGG;
     }
 
     public String getCode() {
@@ -48,11 +56,11 @@ public class MaGiamGia {
         this.giamGia = giamGia;
     }
 
-    public String getKieuGiamGia() {
+    public KieuGiamGia getKieuGiamGia() {
         return kieuGiamGia;
     }
 
-    public void setKieuGiamGia(String kieuGiamGia) {
+    public void setKieuGiamGia(KieuGiamGia kieuGiamGia) {
         this.kieuGiamGia = kieuGiamGia;
     }
 

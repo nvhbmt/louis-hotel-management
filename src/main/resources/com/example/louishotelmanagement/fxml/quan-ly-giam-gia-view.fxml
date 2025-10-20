@@ -8,97 +8,122 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="rootPane" stylesheets="@../css/main.css, @../css/quan-ly-khach-hang.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.QuanLyGiamGiaController">
+<BorderPane fx:id="rootPane" stylesheets="@../css/main.css, @../css/quan-ly-giam-gia.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.QuanLyGiamGiaController">
     <center>
-        <VBox alignment="TOP_CENTER" prefHeight="800.0" prefWidth="950.0" spacing="20.0" styleClass="main-content" VBox.vgrow="ALWAYS">
-            <padding>
-                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-            </padding>
-            <children>
-                <!-- Header Section -->
-                <HBox alignment="CENTER_LEFT" spacing="20.0" HBox.hgrow="ALWAYS">
-                    <children>
-                        <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+        <!-- Main Content Area -->
+        <VBox prefHeight="800.0" prefWidth="950.0" spacing="20.0" styleClass="main-content">
+            <!-- Header -->
+            <VBox prefHeight="44.0" prefWidth="918.0" spacing="5.0">
+            <GridPane>
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                        <VBox prefHeight="60.0" prefWidth="466.0">
                             <children>
-                                <Label styleClass="main-header" text="Quản Lý Mã Giảm Giá">
-                                    <font>
-                                        <Font name="System Bold" size="24.0" />
-                                    </font>
-                                </Label>
-                                <Label styleClass="main-subtitle" text="Quản lý và theo dõi các mã giảm giá của dịch vụ khách sạn">
-                                    <font>
-                                        <Font size="13.0" />
-                                    </font>
-                                </Label>
+                                <Label styleClass="main-header" text="Quản Lý Mã Giảm Giá" />
+                                <Label prefHeight="15.0" prefWidth="445.0" styleClass="main-subtitle" text="Quản lý các mã giảm giá và khuyến mãi trong khách sạn" />
                             </children>
                         </VBox>
-                        <Region HBox.hgrow="ALWAYS" />
-                        <Button fx:id="btnThemMaGiamGia" mnemonicParsing="false" prefHeight="40.0" prefWidth="170.0" styleClass="btn-them-khach-hang" text="➕ Thêm Mã Giảm Giá">
-                            <font>
-                                <Font name="System Bold" size="12.0" />
-                            </font>
-                        </Button>
-                    </children>
-                </HBox>
+                        <HBox alignment="TOP_RIGHT" prefHeight="33.0" prefWidth="145.0" spacing="16.0" GridPane.columnIndex="1">
+                            <children>
+                                <Button fx:id="btnThemMaGiamGia" alignment="CENTER_RIGHT" contentDisplay="RIGHT" onAction="#handleThemMaGiamGia" styleClass="btn-success" text="➕ Thêm Mã Giảm Giá" />
+                            </children>
+                        </HBox>
+               </children>
+               <VBox.margin>
+                  <Insets bottom="32.0" />
+               </VBox.margin>
+            </GridPane>
+                <VBox.margin>
+                    <Insets bottom="32.0" />
+                </VBox.margin>
+            </VBox>
+            <GridPane hgap="20.0">
+                <columnConstraints>
+                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                </columnConstraints>
+                <rowConstraints>
+                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                </rowConstraints>
+                <children>
+                    <VBox prefHeight="200.0" prefWidth="100.0" styleClass="stat-card-border">
+                        <children>
+                            <Label styleClass="stat-label" text="Tổng số mã" />
+                            <Label fx:id="lblTongSoMaGiamGia" styleClass="stat-value" text="0" />
+                        </children>
+                    </VBox>
+                    <VBox layoutX="10.0" layoutY="-27.0" prefHeight="200.0" prefWidth="100.0" styleClass="stat-card-border" GridPane.columnIndex="1">
+                        <children>
+                            <Label styleClass="stat-label" text="Đang hoạt động" />
+                            <Label fx:id="lblSoMaDangHoatDong" styleClass="stat-value" text="0" />
+                        </children>
+                    </VBox>
+                    <VBox layoutX="238.0" layoutY="-27.0" prefHeight="200.0" prefWidth="100.0" styleClass="stat-card-border" GridPane.columnIndex="2">
+                        <children>
+                            <Label styleClass="stat-label" text="Hết hạn" />
+                            <Label fx:id="lblSoMaHetHan" styleClass="stat-value" text="0" />
+                        </children>
+                    </VBox>
+                    <VBox layoutX="10.0" layoutY="-27.0" prefHeight="200.0" prefWidth="100.0" styleClass="stat-card-border" GridPane.columnIndex="3">
+                        <children>
+                            <Label styleClass="stat-label" text="Chưa bắt đầu" />
+                            <Label fx:id="lblSoMaChuaBatDau" styleClass="stat-value" text="0" />
+                        </children>
+                    </VBox>
+                </children>
+                <VBox.margin>
+                    <Insets bottom="20.0" />
+                </VBox.margin>
+            </GridPane>
 
-                <!-- Search and Filter Section -->
-                <HBox alignment="CENTER_LEFT" spacing="15.0" styleClass="filter-container" HBox.hgrow="ALWAYS">
+            <!-- Control Panel -->
+            <HBox alignment="CENTER_LEFT" spacing="15.0" />
+
+            <!-- Search and Filter Panel -->
+            <HBox alignment="CENTER_LEFT" spacing="15.0">
+                <TextField fx:id="txtTimKiem" onKeyReleased="#handleTimKiem" prefHeight="33.0" prefWidth="239.0" promptText="Nhập mã, code hoặc mô tả..." styleClass="form-field" />
+                <ComboBox fx:id="cbKieuGiamGia" onAction="#handleLocKieuGiamGia" prefHeight="41.0" prefWidth="165.0" promptText="Tất cả kiểu giảm giá" styleClass="form-field" />
+                <ComboBox fx:id="cbTrangThai" onAction="#handleLocTrangThai" prefHeight="41.0" prefWidth="165.0" promptText="Tất cả trạng thái" styleClass="form-field" />
+                <Button fx:id="btnLamMoi" onAction="#handleLamMoi" prefHeight="37.0" prefWidth="121.0" styleClass="btn-info" text="🔄 Làm Mới" />
+            </HBox>
+
+            <!-- Table View -->
+            <VBox prefHeight="561.0" prefWidth="890.0" styleClass="table-container">
+                <TableView fx:id="tableViewMaGiamGia" prefHeight="576.0" prefWidth="850.0" styleClass="table-view">
+                    <columns>
+                        <TableColumn fx:id="colMaGG" prefWidth="80.0" text="Mã GG" />
+                        <TableColumn fx:id="colCode" prefWidth="120.0" text="Code" />
+                        <TableColumn fx:id="colGiamGia" prefWidth="100.0" text="Giá Trị" />
+                        <TableColumn fx:id="colKieuGiamGia" prefWidth="120.0" text="Kiểu" />
+                        <TableColumn fx:id="colNgayBatDau" prefWidth="100.0" text="Ngày Bắt Đầu" />
+                        <TableColumn fx:id="colNgayKetThuc" prefWidth="100.0" text="Ngày Kết Thúc" />
+                        <TableColumn fx:id="colTongTienToiThieu" prefWidth="120.0" text="Tổng Tiền Tối Thiểu" />
+                        <TableColumn fx:id="colTrangThai" prefWidth="100.0" text="Trạng Thái" />
+                        <TableColumn fx:id="colMoTa" prefWidth="150.0" text="Mô Tả" />
+                        <TableColumn fx:id="colThaoTac" minWidth="0.0" prefWidth="140.0" text="Thao tác" />
+                    </columns>
                     <padding>
-                        <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                     </padding>
-                    <children>
-                        <!-- Search Field -->
-                        <TextField fx:id="txtTimKiem" prefHeight="45.0" prefWidth="300.0" maxWidth="Infinity" promptText="🔍 Nhập mã giảm giá..." style="-fx-border-color: #B0C4DE; -fx-border-radius: 20; -fx-background-radius: 20; -fx-padding: 10;" styleClass="form-field" HBox.hgrow="ALWAYS">
-                            <font>
-                                <Font size="13.0" />
-                            </font>
-                        </TextField>
-
-                        <!-- Spacer -->
-                        <Region HBox.hgrow="ALWAYS" />
-
-                        <!-- Status ComboBox -->
-                        <ComboBox fx:id="cmbTrangThai" prefHeight="45.0" prefWidth="180.0" maxWidth="Infinity" promptText="Tất cả trạng thái" style="-fx-background-radius: 20; -fx-background-color: #F5F9FF; -fx-border-color: #B0C4DE; -fx-border-radius: 20; -fx-padding: 5;" styleClass="hover-effect" HBox.hgrow="ALWAYS">
-                        </ComboBox>
-
-                        <!-- Refresh Button -->
-                        <Button fx:id="btnLamMoi" mnemonicParsing="false" prefHeight="45.0" prefWidth="130.0" styleClass="btn-lam-moi" text="🔄 Làm Mới">
-                            <font>
-                                <Font name="System Bold" size="12.0" />
-                            </font>
-                        </Button>
-                    </children>
-                </HBox>
-
-                <!-- Table Section -->
-                <VBox prefHeight="600.0" prefWidth="890.0" styleClass="table-container" VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS">
-                    <children>
-                        <TableView fx:id="tableViewKhachHang" prefHeight="600.0" prefWidth="890.0" styleClass="table-view" VBox.vgrow="ALWAYS">
-                            <columnResizePolicy>
-                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                            </columnResizePolicy>
-                            <columns>
-                                <TableColumn fx:id="colMaGiamgia" prefWidth="80.0" minWidth="60.0" maxWidth="Infinity" text="Mã giảm giá" />
-                                <TableColumn fx:id="colCode" prefWidth="100.0" minWidth="80.0" maxWidth="Infinity" text="CODE" />
-                                <TableColumn fx:id="colGiamGia" prefWidth="90.0" minWidth="70.0" maxWidth="Infinity" text="Giảm giá" />
-                                <TableColumn fx:id="colThoiGian" prefWidth="150.0" minWidth="120.0" maxWidth="Infinity" text="Thời gian" />
-                                <TableColumn fx:id="colTongTienToiThieu" prefWidth="130.0" minWidth="100.0" maxWidth="Infinity" text="Tổng tiền tối thiểu" />
-                                <TableColumn fx:id="colMoTa" prefWidth="120.0" minWidth="80.0" maxWidth="Infinity" text="Mô tả" />
-                                <TableColumn fx:id="colTrangThai" prefWidth="90.0" minWidth="70.0" maxWidth="Infinity" text="Trạng thái" />
-                                <TableColumn fx:id="colThaoTac" prefWidth="150.0" minWidth="120.0" maxWidth="Infinity" text="Thao tác" />
-                            </columns>
-                            <padding>
-                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                            </padding>
-                        </TableView>
-                    </children>
-                </VBox>
-            </children>
+                </TableView>
+            </VBox>
         </VBox>
     </center>
+   <padding>
+      <Insets bottom="32.0" left="32.0" right="32.0" top="32.0" />
+   </padding>
 </BorderPane>
