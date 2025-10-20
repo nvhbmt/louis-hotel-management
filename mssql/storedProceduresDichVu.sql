@@ -70,7 +70,7 @@ END
 GO
 
 -- Lấy danh sách tất cả dịch vụ
-CREATE PROCEDURE sp_LayTatCaDichVu
+CREATE OR ALTER PROCEDURE sp_LayTatCaDichVu
 @chiLayConKinhDoanh BIT = NULL -- NULL để lấy tất cả, 1 để lấy các dịch vụ đang KD, 0 để lấy dịch vụ đã ngừng KD
 AS
 BEGIN
@@ -90,15 +90,15 @@ BEGIN
 END
 GO
 
--- Lấy xóa phòng đánh dấu ngừng kinh doanh
-CREATE PROCEDURE sp_XoaDichVu
+-- Đánh dấu ngừng kinh doanh cho một dịch vụ
+CREATE OR ALTER PROCEDURE sp_XoaDichVu -- Gợi ý: Có thể đổi tên thành sp_NgungKinhDoanhDichVu cho rõ nghĩa hơn
 @maDV NVARCHAR(10)
 AS
 BEGIN
     -- Kiểm tra xem mã dịch vụ có tồn tại không
     IF NOT EXISTS (SELECT 1 FROM DichVu WHERE maDV = @maDV)
         BEGIN
-            RAISERROR(N'Không tìm thấy mã dịch vụ để xóa/ngừng kinh doanh.', 16, 1)
+            RAISERROR(N'Không tìm thấy mã dịch vụ để ngừng kinh doanh.', 16, 1)
             RETURN
         END
 
@@ -107,12 +107,14 @@ BEGIN
         conKinhDoanh = 0 -- Đánh dấu là ngừng kinh doanh thay vì xóa cứng (Hard Delete)
     WHERE
         maDV = @maDV
+
+    SELECT N'Đã cập nhật dịch vụ sang trạng thái ngừng kinh doanh.' AS Result
 END
 GO
 
 
 -- Cập nhật dịch vụ
-CCREATE OR ALTER PROCEDURE sp_CapNhatDichVu
+CREATE OR ALTER PROCEDURE sp_CapNhatDichVu
     @maDV NVARCHAR(10),
     @tenDV NVARCHAR(100),
     @soLuong INT,
@@ -174,24 +176,5 @@ BEGIN
         maDV = @maDV
 
     SELECT N'Cập nhật dịch vụ thành công.' AS Result
-END
-GO
-CREATE OR ALTER PROCEDURE sp_LayTatCaDichVu
-@chiLayConKinhDoanh BIT = NULL -- NULL: Lấy tất cả; 1: Đang kinh doanh; 0: Đã ngừng kinh doanh
-AS
-BEGIN
-    SELECT
-        maDV,
-        tenDV,
-        soLuong,
-        donGia,
-        moTa,
-        conKinhDoanh
-    FROM
-        DichVu
-    WHERE
-        (@chiLayConKinhDoanh IS NULL OR conKinhDoanh = @chiLayConKinhDoanh)
-    ORDER BY
-        maDV
 END
 GO

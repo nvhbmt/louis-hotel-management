@@ -21,7 +21,7 @@
             <Label style="-fx-font-size: 28px; -fx-font-weight: bold;" text="Phòng" textFill="#2c3e50" />
             <Label style="-fx-font-size: 14px;" text="Màn hình chính các chức năng phòng" textFill="#7f8c8d" />
          </VBox>
-         <HBox prefHeight="100.0" prefWidth="878.0" style="-fx-border-color: black; -fx-border-radius: 10; -fx-padding: 10 15 10 15;">
+         <HBox prefHeight="66.0" prefWidth="821.0" style="-fx-border-color: black; -fx-border-radius: 10; -fx-padding: 10 15 10 15;">
             <children>
                <VBox prefHeight="47.0" prefWidth="410.0">
                   <children>
@@ -30,7 +30,7 @@
                            <Font name="System Bold" size="14.0" />
                         </font>
                      </Label>
-                     <ComboBox prefHeight="42.0" prefWidth="232.0" promptText="Tầng 1" style="-fx-background-color: white; -fx-border-color: black; -fx-border-radius: 10;">
+                     <ComboBox fx:id="cbxTang" prefHeight="42.0" prefWidth="232.0" promptText="Tầng 1" style="-fx-background-color: white; -fx-border-color: black; -fx-border-radius: 10;">
                         <cursor>
                            <Cursor fx:constant="DEFAULT" />
                         </cursor>
@@ -56,30 +56,39 @@
             <children>
                <VBox prefHeight="408.0" prefWidth="650.0">
                   <children>
-                     <TableView prefHeight="408.0" prefWidth="593.0" style="-fx-border-color: Black; -fx-border-radius: 10;">
+                     <TableView fx:id="tableViewPhong" prefHeight="404.0" prefWidth="594.0" style="-fx-border-color: Black; -fx-border-radius: 10;">
                        <columns>
-                         <TableColumn prefWidth="131.19998854398727" text="Mã Phòng" />
-                           <TableColumn minWidth="0.0" prefWidth="172.0" text="Loại" />
-                           <TableColumn prefWidth="162.39996337890625" text="Đơn giá" />
-                           <TableColumn prefWidth="135.19998168945312" text="Trạng thái" />
+                         <TableColumn fx:id="maPhong" prefWidth="148.00000882148743" text="Mã Phòng" />
+                           <TableColumn fx:id="loaiPhong" minWidth="0.0" prefWidth="155.1999969482422" text="Loại" />
+                           <TableColumn fx:id="donGia" prefWidth="162.39996337890625" text="Đơn giá" />
+                           <TableColumn fx:id="trangThai" prefWidth="149.5999816894531" text="Trạng thái" />
                        </columns>
                      </TableView>
                   </children>
                </VBox>
-               <VBox prefHeight="408.0" prefWidth="82.0" />
+               <VBox prefHeight="408.0" prefWidth="38.0" />
                <VBox prefHeight="408.0" prefWidth="227.0" style="-fx-border-color: Black; -fx-padding: 10 10 10 10; -fx-border-radius: 10;">
                   <children>
-                     <Label prefHeight="43.0" prefWidth="55.0" text="Phòng">
+                     <Label prefHeight="27.0" prefWidth="155.0" text="Phòng">
                         <font>
                            <Font name="System Bold" size="18.0" />
                         </font>
                      </Label>
-                     <Label text="Vui lòng chọn một phòng" />
+                     <Label prefHeight="26.0" prefWidth="163.0" text="Vui lòng chọn một phòng" />
                      <VBox alignment="CENTER" prefHeight="345.0" prefWidth="201.0">
                         <children>
                            <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="74.0" prefWidth="140.0">
                               <children>
-                                 <Button fx:id="btnDatTT" mnemonicParsing="false" onAction="#moNhanPhong" prefHeight="47.0" prefWidth="132.0" style="-fx-background-color: #6F84DA; -fx-border-radius: 20;" text="Đặt tại quầy" textFill="WHITE">
+                                 <Button fx:id="btnDatTT" mnemonicParsing="false" onAction="#moDatTT" prefHeight="40.0" prefWidth="132.0" style="-fx-background-color: #6F84DA; -fx-border-radius: 20;" text="Đặt tại quầy" textFill="WHITE">
+                                    <font>
+                                       <Font name="System Bold" size="18.0" />
+                                    </font>
+                                 </Button>
+                              </children>
+                           </HBox>
+                           <HBox alignment="CENTER" prefHeight="74.0" prefWidth="140.0">
+                              <children>
+                                 <Button fx:id="btnDatPhong" mnemonicParsing="false" onAction="#moDatPhong" prefHeight="40.0" prefWidth="132.0" style="-fx-background-color: #6F84DA; -fx-border-radius: 20;" text="Đặt phòng" textFill="WHITE">
                                     <font>
                                        <Font name="System Bold" size="18.0" />
                                     </font>
@@ -88,7 +97,7 @@
                            </HBox>
                            <HBox alignment="CENTER" layoutX="40.0" layoutY="155.0" prefHeight="74.0" prefWidth="140.0">
                               <children>
-                                 <Button fx:id="btnNhanPhong" mnemonicParsing="false" onAction="#moNhanPhong" prefHeight="47.0" prefWidth="132.0" style="-fx-background-color: #6F84DA; -fx-border-radius: 20;" text="Nhận phòng" textFill="WHITE">
+                                 <Button fx:id="btnNhanPhong" mnemonicParsing="false" onAction="#moNhanPhong" prefHeight="40.0" prefWidth="132.0" style="-fx-background-color: #6F84DA; -fx-border-radius: 20;" text="Nhận phòng" textFill="WHITE">
                                     <font>
                                        <Font name="System Bold" size="18.0" />
                                     </font>
@@ -97,7 +106,7 @@
                            </HBox>
                            <HBox alignment="CENTER" layoutX="40.0" layoutY="144.0" prefHeight="74.0" prefWidth="140.0">
                               <children>
-                                 <Button fx:id="btnDoiPhong" mnemonicParsing="false" prefHeight="47.0" prefWidth="132.0" style="-fx-background-color: #6F84DA; -fx-border-radius: 20;" text="Đổi phòng" textFill="WHITE">
+                                 <Button fx:id="btnDoiPhong" mnemonicParsing="false" onAction="#moDoiPhong" prefHeight="40.0" prefWidth="132.0" style="-fx-background-color: #6F84DA; -fx-border-radius: 20;" text="Đổi phòng" textFill="WHITE">
                                     <font>
                                        <Font name="System Bold" size="18.0" />
                                     </font>
@@ -106,7 +115,7 @@
                            </HBox>
                            <HBox alignment="CENTER" layoutX="40.0" layoutY="180.0" prefHeight="74.0" prefWidth="140.0">
                               <children>
-                                 <Button fx:id="btnHuy" mnemonicParsing="false" prefHeight="47.0" prefWidth="132.0" style="-fx-background-color: #6F84DA; -fx-border-radius: 20;" text="Hủy đặt" textFill="WHITE">
+                                 <Button fx:id="btnHuy" mnemonicParsing="false" onAction="#moHuy" prefHeight="40.0" prefWidth="132.0" style="-fx-background-color: #6F84DA; -fx-border-radius: 20;" text="Hủy đặt" textFill="WHITE">
                                     <font>
                                        <Font name="System Bold" size="18.0" />
                                     </font>
@@ -115,7 +124,7 @@
                            </HBox>
                            <HBox alignment="CENTER" layoutX="40.0" layoutY="218.0" prefHeight="74.0" prefWidth="140.0">
                               <children>
-                                 <Button fx:id="btnDichVu" mnemonicParsing="false" prefHeight="47.0" prefWidth="132.0" style="-fx-background-color: #6F84DA; -fx-border-radius: 20;" text="Dịch vụ" textFill="WHITE">
+                                 <Button fx:id="btnDichVu" mnemonicParsing="false" onAction="#moDichVu" prefHeight="40.0" prefWidth="132.0" style="-fx-background-color: #6F84DA; -fx-border-radius: 20;" text="Dịch vụ" textFill="WHITE">
                                     <font>
                                        <Font name="System Bold" size="18.0" />
                                     </font>
@@ -124,7 +133,7 @@
                            </HBox>
                            <HBox alignment="CENTER" layoutX="40.0" layoutY="251.0" prefHeight="74.0" prefWidth="140.0">
                               <children>
-                                 <Button fx:id="btnThanhToan" mnemonicParsing="false" prefHeight="47.0" prefWidth="132.0" style="-fx-background-color: #6F84DA; -fx-border-radius: 20;" text="Thanh toán" textFill="WHITE">
+                                  <Button fx:id="btnThanhToan" mnemonicParsing="false" onAction="#moThanhToan" prefHeight="40.0" prefWidth="132.0" style="-fx-background-color: #6F84DA; -fx-border-radius: 20;" text="Thanh toán" textFill="WHITE">
                                     <font>
                                        <Font name="System Bold" size="18.0" />
                                     </font>

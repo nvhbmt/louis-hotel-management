@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class LayoutController implements Initializable {
+public class LayoutController implements Initializable,ContentSwitcher {
 
     @FXML
     private TreeView<MenuItemModel> menuTree;
@@ -76,9 +76,23 @@ public class LayoutController implements Initializable {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
             Parent view = loader.load();
+
+            Object controller = loader.getController();
+
+            if (controller instanceof PhongController) {
+                PhongController phongController = (PhongController) controller;
+                // Truyền LayoutController (là ContentSwitcher) cho PhongController
+                phongController.setContentSwitcher(this);
+            }
+
             mainBorderPane.setCenter(view);
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void switchContent(String fxmlPath) {
+        loadFXML(fxmlPath);
     }
 }

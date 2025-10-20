@@ -1,97 +1,109 @@
 package com.example.louishotelmanagement.controller;
 
+import com.example.louishotelmanagement.dao.PhongDAO;
+import com.example.louishotelmanagement.model.Phong;
+import com.example.louishotelmanagement.model.TrangThaiPhong;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.stage.Stage;
-import javafx.event.ActionEvent; // Cần thiết để lấy Stage an toàn
+import javafx.scene.control.*;
 
-import java.io.IOException;
+import java.awt.event.ActionEvent;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class PhongController implements Initializable {
 
-    // Khai báo các thành phần UI (đảm bảo fx:id trong FXML khớp chính xác)
     @FXML
     private Label tieuDeLabel;
 
     @FXML
     private Button btnNhanPhong, btnDatTT, btnDoiPhong, btnHuyDat, btnDichVu, btnThanhToan;
 
-    // Lưu ý: Nút "Hủy đặt" trong FXML của bạn có fx:id="btnHuy", nên bạn cần sửa tên biến ở đây
-    // Ví dụ: private Button btnHuy;
+    @FXML
+    private ComboBox<String> cbxTang;
+    @FXML
+    private TableView<Phong> tableViewPhong;
+
+    @FXML
+    private TableColumn<Phong, String> maPhong;
+
+    @FXML
+    private TableColumn<Phong, String> loaiPhong; // Cột này sẽ lấy tên từ đối tượng LoaiPhong
+
+    @FXML
+    private TableColumn<Phong, Double> donGia; // Cột này sẽ lấy đơn giá từ đối tượng LoaiPhong
+
+    @FXML
+    private TableColumn<Phong, TrangThaiPhong> trangThai;
+
+    // --- Data and DAO ---
+    private PhongDAO phongDAO;
+    private ObservableList<Phong> phongObservableList;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
         System.out.println("Phong page initialized");
-        // Ở đây có thể thêm logic load dữ liệu ban đầu cho ComboBox hoặc TableView
+        //Tầng
+        ObservableList<String> danhSachTang = FXCollections.observableArrayList();
+        int soTangKhachSan = 4;
+        for (int i = 1; i <= soTangKhachSan; i++) {
+            danhSachTang.add("Tầng " + i);
+        }
+        cbxTang.setItems(danhSachTang);
+        cbxTang.setValue("Tầng 1");
+
+        //table
+
     }
 
-    // 🔹 HÀM DÙNG CHUNG: Tái sử dụng Stage để chuyển Scene
-    /**
-     * Tải FXML mới và đặt Scene mới lên Stage hiện tại.
-     * @param tenFXML Tên file FXML cần tải (ví dụ: "nhan-phong-view.fxml")
-     * @param event ActionEvent từ nút bấm
-     */
-    private void moTrang(String tenFXML, ActionEvent event) {
-        try {
-            // Lấy Node (Nút) đã kích hoạt sự kiện
-            javafx.scene.Node sourceNode = (javafx.scene.Node) event.getSource();
+    private ContentSwitcher switcher;
 
-            // 1. Lấy Stage hiện tại một cách an toàn
-            Stage stage = (Stage) sourceNode.getScene().getWindow();
-
-            // 2. Tải FXML mới
-            // Đảm bảo đường dẫn này khớp với nơi bạn lưu trữ file FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/" + tenFXML));
-            Parent root = loader.load();
-
-            // 3. Gán Scene mới
-            stage.setScene(new Scene(root));
-            stage.show();
-
-        } catch (IOException e) {
-            System.err.println("❌ Không thể mở file FXML: " + tenFXML);
-            e.printStackTrace();
+    public void setContentSwitcher(ContentSwitcher switcher) {
+        this.switcher = switcher;
+    }
+    @FXML
+    private void moNhanPhong(javafx.event.ActionEvent actionEvent) {
+        if (switcher != null) {
+            switcher.switchContent("/com/example/louishotelmanagement/fxml/nhan-phong-view.fxml");
         }
     }
-
-    // 🔹 CÁC HÀM XỬ LÝ SỰ KIỆN NÚT BẤM (onAction)
-
     @FXML
-    private void moNhanPhong(ActionEvent event) {
-        moTrang("nhan-phong-view.fxml", event);
+    private void moDatPhong(javafx.event.ActionEvent actionEvent) {
+        if (switcher != null) {
+            switcher.switchContent("/com/example/louishotelmanagement/fxml/nhan-phong-view.fxml");
+        }
     }
-
     @FXML
-    private void moDatTT(ActionEvent event) {
-        // Giả định tên FXML cho Đặt tại quầy
-        moTrang("dat-tai-quay-view.fxml", event);
+    private void moDatTT(javafx.event.ActionEvent actionEvent) {
+        if (switcher != null) {
+            switcher.switchContent("/com/example/louishotelmanagement/fxml/dat-phong-truc-tiep-view.fxml");
+        }
     }
-
     @FXML
-    private void moDoiPhong(ActionEvent event) {
-        moTrang("doi-phong-view.fxml", event);
+    private void moDoiPhong(javafx.event.ActionEvent actionEvent) {
+        if (switcher != null) {
+            switcher.switchContent("/com/example/louishotelmanagement/fxml/doi-phong-view.fxml");
+        }
     }
-
     @FXML
-    private void moHuyDat(ActionEvent event) {
-        // Dùng tên FXML tương ứng với hủy đặt
-        moTrang("huy-dat-view.fxml", event);
+    private void moHuy(javafx.event.ActionEvent actionEvent) {
+        if (switcher != null) {
+            switcher.switchContent("/com/example/louishotelmanagement/fxml/huy-phong-view.fxml");
+        }
     }
-
     @FXML
-    private void moDichVu(ActionEvent event) {
-        moTrang("cung-cap-dich-vu.fxml", event); // Dùng FXML cho Cung cấp dịch vụ
+    private void moDichVu(javafx.event.ActionEvent actionEvent) {
+        if (switcher != null) {
+            switcher.switchContent("/com/example/louishotelmanagement/fxml/dat-dich-vu-view.fxml");
+        }
     }
-
     @FXML
-    private void moThanhToan(ActionEvent event) {
-        moTrang("thanh-toan-view.fxml", event);
+    private void moThanhToan(javafx.event.ActionEvent actionEvent) {
+        if (switcher != null) {
+            switcher.switchContent("/com/example/louishotelmanagement/fxml/huy-phong-view.fxml");
+        }
     }
 }
