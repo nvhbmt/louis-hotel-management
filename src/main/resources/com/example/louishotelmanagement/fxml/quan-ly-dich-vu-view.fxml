@@ -84,7 +84,6 @@
             <HBox alignment="CENTER_LEFT" spacing="15.0">
                 <TextField fx:id="txtTimKiem" onKeyReleased="#handleTimKiem" prefHeight="33.0" prefWidth="239.0" promptText="Nhập mã dịch vụ hoặc tên dịch vụ..." styleClass="form-field" />
                 <ComboBox fx:id="cbTrangThaiKinhDoanh" onAction="#handleLocTrangThai" prefHeight="41.0" prefWidth="165.0" promptText="Tất cả trạng thái" styleClass="form-field" />
-                <ComboBox fx:id="cbSapXep" onAction="#handleSapXep" prefHeight="41.0" prefWidth="165.0" promptText="Sắp xếp theo" styleClass="form-field" />
                 <Button onAction="#handleLamMoi" prefHeight="37.0" prefWidth="121.0" styleClass="btn-info" text="🔄 Làm Mới" />
             </HBox>
 

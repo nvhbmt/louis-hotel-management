@@ -12,7 +12,7 @@ public class TrangChuController {
 
     @FXML
     public void moQuanLyDichVu() {
-        ContentManager.safeSwitch(switcher, "/com/example/louishotelmanagement/fxml/quan-ly-phong-view.fxml");
+        ContentManager.safeSwitch(switcher, "/com/example/louishotelmanagement/fxml/quan-ly-dich-vu-view.fxml");
     }
 
     @FXML

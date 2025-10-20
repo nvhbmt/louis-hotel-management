@@ -174,6 +174,9 @@ public class DichVuDialogController implements Initializable {
             return;
         }
         
+        // Đảm bảo đồng bộ giá trị từ UI vào model trước khi đọc
+        form.persist();
+        
         try {
             DichVu dichVu = taoDichVuTuForm();
             boolean thanhCong = luuDichVu(dichVu);
@@ -190,11 +193,15 @@ public class DichVuDialogController implements Initializable {
 
     private DichVu taoDichVuTuForm() {
         DichVu dichVu = new DichVu();
-        dichVu.setMaDV(maDVField.valueProperty().get().trim());
-        dichVu.setTenDV(tenDVField.valueProperty().get().trim());
+        String ma = maDVField.valueProperty().get();
+        String ten = tenDVField.valueProperty().get();
+        String moTa = moTaField.valueProperty().get();
+        
+        dichVu.setMaDV(ma != null ? ma.trim() : "");
+        dichVu.setTenDV(ten != null ? ten.trim() : "");
         dichVu.setSoLuong(soLuongField.valueProperty().get());
         dichVu.setDonGia(donGiaField.valueProperty().get());
-        dichVu.setMoTa(moTaField.valueProperty().get().trim());
+        dichVu.setMoTa(moTa != null ? moTa.trim() : "");
         dichVu.setConKinhDoanh(conKinhDoanhField.valueProperty().get());
         
         return dichVu;
