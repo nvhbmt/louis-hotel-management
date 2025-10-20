@@ -24,7 +24,7 @@ public class MenuData {
                 new TreeItem<>(new MenuItemModel("Quản lý phòng", "mdi2b-bed",
                         "/com/example/louishotelmanagement/fxml/quan-ly-phong-view.fxml")),
                 new TreeItem<>(new MenuItemModel("Loại phòng", "mdi2t-tag",
-                        "/com/example/louishotelmanagement/fxml/loai-phong-view.fxml"))
+                        "/com/example/louishotelmanagement/fxml/quan-ly-loai-phong-view.fxml"))
         ));
 
         // --- ☕ Dịch vụ ---
