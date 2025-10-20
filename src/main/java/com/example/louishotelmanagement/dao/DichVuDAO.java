@@ -77,4 +77,17 @@ public class DichVuDAO {
         }
         return list;
     }
+
+    // Lấy mã dịch vụ tiếp theo
+    public String layMaDichVuTiepTheo() throws Exception {
+        String sql = "{call sp_LayMaDichVuTiepTheo(?)}";
+        try (Connection con = CauHinhDatabase.getConnection();
+             CallableStatement cs = con.prepareCall(sql)) {
+
+            cs.registerOutParameter(1, java.sql.Types.VARCHAR);
+            cs.execute();
+
+            return cs.getString(1);
+        }
+    }
 }

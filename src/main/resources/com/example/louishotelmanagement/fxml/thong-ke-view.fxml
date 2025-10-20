@@ -1,25 +1,227 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Rectangle?>
 
-<BorderPane xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.ThongKeController">
-   <center>
-      <!-- Main Content Area -->
-      <VBox spacing="20.0" style="-fx-background-color: #f8f9fa; -fx-padding: 30;">
-         <!-- Header -->
-         <VBox spacing="5.0">
-            <Label text="Thống Kê" style="-fx-font-size: 28px; -fx-font-weight: bold;" textFill="#2c3e50" />
-            <Label text="Xem báo cáo và thống kê kinh doanh" style="-fx-font-size: 14px;" textFill="#7f8c8d" />
-         </VBox>
-         
-         <!-- Content Placeholder -->
-         <VBox alignment="CENTER" spacing="20.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2); -fx-padding: 40;">
-            <Label text="📊" style="-fx-font-size: 48px;" />
-            <Label text="Trang Thống Kê" style="-fx-font-size: 24px; -fx-font-weight: bold;" textFill="#2c3e50" />
-            <Label text="Báo cáo thống kê sẽ được hiển thị ở đây" style="-fx-font-size: 14px;" textFill="#7f8c8d" />
-         </VBox>
-      </VBox>
-   </center>
-</BorderPane>
+<ScrollPane stylesheets="@../css/main.css, @../css/thong-ke.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.ThongKeController">
+   <content>
+      <BorderPane>
+         <center>
+            <VBox fx:id="thongKeContent" spacing="20.0" styleClass="main-content">
+               <HBox prefHeight="100.0" prefWidth="200.0">
+                  <children>
+                     <!-- Header -->
+                     <VBox prefHeight="100.0" prefWidth="363.0" spacing="5.0">
+                        <Label styleClass="main-header" text="Thống kê" />
+                        <Label styleClass="main-subtitle" text="Xem tổng quan về hiệu suất kinh doanh khách sạn" />
+                     </VBox>
+                     <VBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="502.0">
+                        <children>
+                           <Button fx:id="btnLamMoi" onAction="#handleLamMoi" prefHeight="37.0" prefWidth="112.0" styleClass="btn-info" text="🔄 Làm Mới">
+                              <VBox.margin>
+                                 <Insets bottom="10.0" />
+                              </VBox.margin></Button>
+                           <Label fx:id="lblCapNhatCuoi" prefHeight="17.0" prefWidth="209.0" styleClass="font-12" text="Cập nhật lần cuối: --" />
+                        </children>
+                     </VBox>
+                  </children>
+               </HBox>
+               
+               <!-- Statistics Cards -->
+               <HBox spacing="20.0">
+                  <!-- Card 1: Total Rooms -->
+                  <VBox alignment="CENTER" prefHeight="120.0" prefWidth="200.0" spacing="10.0" styleClass="stat-card">
+                     <Label styleClass="stat-description" text="Tổng số phòng" />
+                     <Label fx:id="lblTongSoPhong" styleClass="stat-value" text="0" />
+                     <Label styleClass="stat-description" text="Phòng" />
+                  </VBox>
+                  
+                  <!-- Card 2: Occupied Rooms -->
+                  <VBox alignment="CENTER" prefHeight="120.0" prefWidth="200.0" spacing="10.0" styleClass="stat-card">
+                     <Label styleClass="stat-description" text="Phòng đang sử dụng" />
+                     <Label fx:id="lblPhongDangSuDung" styleClass="stat-value" text="0" />
+                     <Label fx:id="lblTiLeSuDung" styleClass="stat-description" text="0%" />
+                  </VBox>
+                  
+                  <!-- Card 3: Total Customers -->
+                  <VBox alignment="CENTER" prefHeight="120.0" prefWidth="200.0" spacing="10.0" styleClass="stat-card">
+                     <Label styleClass="stat-description" text="Tổng khách hàng" />
+                     <Label fx:id="lblTongKhachHang" styleClass="stat-value" text="0" />
+                     <Label styleClass="stat-description" text="Khách hàng" />
+                  </VBox>
+                  
+                  <!-- Card 4: Room Types -->
+                  <VBox alignment="CENTER" prefHeight="120.0" prefWidth="200.0" spacing="10.0" styleClass="stat-card">
+                     <Label styleClass="stat-description" text="Loại phòng" />
+                     <Label fx:id="lblTongLoaiPhong" styleClass="stat-value" text="0" />
+                     <Label styleClass="stat-description" text="Loại" />
+                  </VBox>
+               </HBox>
+               
+                        <!-- Charts Section -->
+               <HBox prefHeight="500.0" spacing="20.0">
+                  <!-- Revenue Chart -->
+                  <VBox prefHeight="500.0" prefWidth="536.0" spacing="15.0" styleClass="chart-container">
+                     <HBox alignment="CENTER_LEFT" spacing="20.0">
+                        <Label styleClass="chart-title" text="Biểu đồ doanh thu" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <!-- Time Period Controls -->
+                        <HBox spacing="5.0">
+                           <ToggleButton fx:id="btnTheoNgay" mnemonicParsing="false" onAction="#handleChonTheoNgay" styleClass="toggle-button" text="Ngày" />
+                           <ToggleButton fx:id="btnTheoTuan" mnemonicParsing="false" onAction="#handleChonTheoTuan" styleClass="toggle-button" text="Tuần" />
+                           <ToggleButton fx:id="btnTheoThang" mnemonicParsing="false" onAction="#handleChonTheoThang" selected="true" styleClass="toggle-button" text="Tháng" />
+                        </HBox>
+                     </HBox>
+                     
+                              <!-- Combined Selection Controls -->
+                     <VBox fx:id="vboxSelectionControls" spacing="10.0" styleClass="selection-controls-container">
+                        <!-- Date Range Selection -->
+                        <HBox fx:id="hboxChonNgay" alignment="CENTER_LEFT" spacing="10.0" visible="false">
+                           <Label styleClass="form-label" text="Từ ngày:" />
+                           <DatePicker fx:id="dpTuNgay" onAction="#handleChonNgay" />
+                           <Label styleClass="form-label" text="Đến ngày:" />
+                           <DatePicker fx:id="dpDenNgay" onAction="#handleChonNgay" />
+                           <Button fx:id="btnCapNhatChart" onAction="#handleCapNhatChart" styleClass="btn-success" text="Cập nhật" />
+                        </HBox>
+                        
+                        <!-- Year Selection -->
+                        <HBox fx:id="hboxChonNam" alignment="CENTER_LEFT" spacing="10.0">
+                           <Label styleClass="form-label" text="Năm:" />
+                           <ComboBox fx:id="cbNam" onAction="#handleChonNam" prefWidth="100.0" styleClass="combo-box" />
+                           <Button fx:id="btnCapNhatChartNam" onAction="#handleCapNhatChart" styleClass="btn-success" text="Cập nhật" />
+                        </HBox>
+                     </VBox>
+                     
+                              <!-- Chart Container -->
+                     <VBox fx:id="vboxChart" alignment="CENTER" prefHeight="300.0" styleClass="chart-data-container">
+                        <BarChart fx:id="thongkeBarChart">
+                          <xAxis>
+                            <CategoryAxis side="BOTTOM" />
+                          </xAxis>
+                          <yAxis>
+                            <NumberAxis side="LEFT" />
+                          </yAxis>
+                        </BarChart>
+                     </VBox>
+                     
+                              <!-- Total Revenue -->
+                     <HBox alignment="CENTER" spacing="20.0">
+                        <Label fx:id="lblTongDoanhThu" styleClass="total-revenue-label" text="Tổng doanh thu: 0 VNĐ" />
+                     </HBox>
+                     
+                              <!-- Chart Legend -->
+                     <HBox alignment="CENTER" spacing="20.0">
+                        <HBox spacing="10.0">
+                           <Rectangle fill="#27ae60" height="15.0" width="15.0" />
+                           <Label styleClass="chart-legend" text="Doanh thu" />
+                        </HBox>
+                        <HBox spacing="10.0">
+                           <Rectangle fill="#3498db" height="15.0" width="15.0" />
+                           <Label styleClass="chart-legend" text="Số lượng đặt phòng" />
+                        </HBox>
+                     </HBox>
+                  </VBox>
+                  
+                           <!-- Room Status Chart -->
+                  <VBox prefWidth="300.0" spacing="15.0" styleClass="chart-container">
+                     <Label styleClass="chart-title" text="Trạng thái phòng" />
+                     
+                              <!-- Room Status Statistics -->
+                     <VBox spacing="15.0">
+                        <HBox alignment="CENTER_LEFT" spacing="15.0">
+                           <Rectangle fill="#27ae60" height="20.0" width="20.0" />
+                           <Label fx:id="lblPhongTrong" styleClass="status-item" text="Phòng trống: 0" />
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" spacing="15.0">
+                           <Rectangle fill="#3498db" height="20.0" width="20.0" />
+                           <Label fx:id="lblPhongDaDat" styleClass="status-item" text="Phòng đã đặt: 0" />
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" spacing="15.0">
+                           <Rectangle fill="#f39c12" height="20.0" width="20.0" />
+                           <Label fx:id="lblPhongDangSuDungChiTiet" styleClass="status-item" text="Phòng đang sử dụng: 0" />
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" spacing="15.0">
+                           <Rectangle fill="#e74c3c" height="20.0" width="20.0" />
+                           <Label fx:id="lblPhongBaoTri" styleClass="status-item" text="Phòng bảo trì: 0" />
+                        </HBox>
+                     </VBox>
+                     
+                              <!-- Simple Bar Chart Representation -->
+                     <VBox spacing="10.0" styleClass="room-status-container">
+                        <Label styleClass="room-status-title" text="Tỷ lệ sử dụng phòng" />
+                        
+                                 <!-- Bar for Empty Rooms -->
+                        <VBox spacing="5.0">
+                           <Label styleClass="room-status-label" text="Trống" />
+                           <HBox spacing="0.0">
+                              <Rectangle fx:id="barPhongTrong" fill="#27ae60" height="20.0" width="0.0" />
+                              <Label fx:id="lblTiLeTrong" styleClass="status-percentage" text="0%" />
+                           </HBox>
+                        </VBox>
+                        
+                                 <!-- Bar for Booked Rooms -->
+                        <VBox spacing="5.0">
+                           <Label styleClass="room-status-label" text="Đã đặt" />
+                           <HBox spacing="0.0">
+                              <Rectangle fx:id="barPhongDaDat" fill="#3498db" height="20.0" width="0.0" />
+                              <Label fx:id="lblTiLeDaDat" styleClass="status-percentage" text="0%" />
+                           </HBox>
+                        </VBox>
+                        
+                                 <!-- Bar for Occupied Rooms -->
+                        <VBox spacing="5.0">
+                           <Label styleClass="room-status-label" text="Đang sử dụng" />
+                           <HBox spacing="0.0">
+                              <Rectangle fx:id="barPhongDangSuDung" fill="#f39c12" height="20.0" width="0.0" />
+                              <Label fx:id="lblTiLeDangSuDung" styleClass="status-percentage" text="0%" />
+                           </HBox>
+                        </VBox>
+                        
+                                 <!-- Bar for Maintenance Rooms -->
+                        <VBox spacing="5.0">
+                           <Label styleClass="room-status-label" text="Bảo trì" />
+                           <HBox spacing="0.0">
+                              <Rectangle fx:id="barPhongBaoTri" fill="#e74c3c" height="20.0" width="0.0" />
+                              <Label fx:id="lblTiLeBaoTri" styleClass="status-percentage" text="0%" />
+                           </HBox>
+                        </VBox>
+                     </VBox>
+                  </VBox>
+               </HBox>
+               
+               <!-- Room Types Section -->
+               <VBox spacing="15.0" styleClass="chart-container">
+                  <Label styleClass="chart-title" text="Loại phòng" />
+                  
+                  <!-- Room Types List -->
+                  <VBox fx:id="vboxLoaiPhong" spacing="10.0" styleClass="room-types-container">
+                     <Label styleClass="room-types-title" text="Danh sách loại phòng" />
+                     <!-- Room types will be added dynamically -->
+                  </VBox>
+                  
+                  <!-- Summary -->
+                  <VBox spacing="8.0" styleClass="summary-container">
+                     <Label styleClass="summary-title" text="Tóm tắt" />
+                     <Label fx:id="lblGiaTrungBinh" styleClass="summary-item" text="Giá trung bình: 0 VNĐ" />
+                     <Label fx:id="lblGiaCaoNhat" styleClass="summary-item" text="Giá cao nhất: 0 VNĐ" />
+                     <Label fx:id="lblGiaThapNhat" styleClass="summary-item" text="Giá thấp nhất: 0 VNĐ" />
+                  </VBox>
+               </VBox>
+            </VBox>
+         </center>
+      </BorderPane>
+   </content>
+</ScrollPane>

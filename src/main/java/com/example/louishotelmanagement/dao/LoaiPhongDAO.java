@@ -3,7 +3,6 @@ package com.example.louishotelmanagement.dao;
 import com.example.louishotelmanagement.config.CauHinhDatabase;
 import com.example.louishotelmanagement.model.LoaiPhong;
 
-import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -18,7 +17,7 @@ public class LoaiPhongDAO {
             cs.setString(1, loaiPhong.getMaLoaiPhong());
             cs.setString(2, loaiPhong.getTenLoai());
             cs.setString(3, loaiPhong.getMoTa());
-            cs.setBigDecimal(4, loaiPhong.getDonGia());
+            cs.setDouble(4, loaiPhong.getDonGia());
 
             return cs.executeUpdate() > 0;
         }
@@ -37,7 +36,7 @@ public class LoaiPhongDAO {
                         rs.getString("maLoaiPhong"),
                         rs.getString("tenLoai"),
                         rs.getString("moTa"),
-                        rs.getBigDecimal("donGia")
+                        rs.getDouble("donGia")
                 );
                 ds.add(loaiPhong);
             }
@@ -59,7 +58,7 @@ public class LoaiPhongDAO {
                         rs.getString("maLoaiPhong"),
                         rs.getString("tenLoai"),
                         rs.getString("moTa"),
-                        rs.getBigDecimal("donGia")
+                        rs.getDouble("donGia")
                 );
             }
         }
@@ -75,7 +74,7 @@ public class LoaiPhongDAO {
             cs.setString(1, loaiPhong.getMaLoaiPhong());
             cs.setString(2, loaiPhong.getTenLoai());
             cs.setString(3, loaiPhong.getMoTa());
-            cs.setBigDecimal(4, loaiPhong.getDonGia());
+            cs.setDouble(4, loaiPhong.getDonGia());
 
             return cs.executeUpdate() > 0;
         }
@@ -106,5 +105,18 @@ public class LoaiPhongDAO {
             }
         }
         return false;
+    }
+
+    // Lấy mã loại phòng tiếp theo
+    public String layMaLoaiPhongTiepTheo() throws SQLException {
+        String sql = "{call sp_LayMaLoaiPhongTiepTheo(?)}";
+        try (Connection con = CauHinhDatabase.getConnection();
+             CallableStatement cs = con.prepareCall(sql)) {
+
+            cs.registerOutParameter(1, java.sql.Types.VARCHAR);
+            cs.execute();
+
+            return cs.getString(1);
+        }
     }
 }

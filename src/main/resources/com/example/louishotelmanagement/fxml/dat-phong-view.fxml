@@ -14,14 +14,14 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="708.0" prefWidth="880.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.DatPhongController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="708.0" prefWidth="880.0" stylesheets="@../css/main.css, @../css/dat-phong.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.DatPhongController">
     <top>
-        <Label style="-fx-font-size: 25px;-fx-font-weight: 900" text="Đặt phòng" BorderPane.alignment="TOP_LEFT">
+        <Label styleClass="page-title" text="Đặt phòng" BorderPane.alignment="TOP_LEFT">
             <BorderPane.margin>
                 <Insets left="20.0" top="10.0" />
             </BorderPane.margin>
          <graphic>
-            <ImageView fitHeight="39.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView pickOnBounds="true" preserveRatio="true" styleClass="icon-medium">
                <image>
                   <Image url="@../image/key-chain.png" />
                </image>
@@ -29,29 +29,29 @@
          </graphic></Label>
     </top>
     <center>
-        <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-font-size: 15px" BorderPane.alignment="CENTER">
+        <VBox prefHeight="200.0" prefWidth="100.0" styleClass="form-container" BorderPane.alignment="CENTER">
             <children>
                 <VBox alignment="CENTER" prefHeight="21.0" prefWidth="880.0">
                     <children>
-                        <Label prefHeight="22.0" prefWidth="195.0" style="-fx-font-size: 20px;-fx-font-weight: 700" text="Thông tin đặt phòng">
+                        <Label prefHeight="22.0" prefWidth="195.0" styleClass="section-title" text="Thông tin đặt phòng">
                             <VBox.margin>
-                                <Insets left="20.0" top="10.0" />
+                                <Insets bottom="20.0" left="20.0" top="10.0" />
                             </VBox.margin></Label>
                     </children>
                 </VBox>
-                <HBox alignment="CENTER_LEFT" prefHeight="42.0" prefWidth="830.0">
+                <HBox alignment="CENTER_LEFT" prefHeight="22.0" prefWidth="830.0">
                     <children>
                         <Label prefWidth="78.4" text="Phòng">
                             <HBox.margin>
                                 <Insets right="10.0" />
                             </HBox.margin>
                         </Label>
-                        <ImageView fitHeight="29.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView pickOnBounds="true" preserveRatio="true" styleClass="icon-small">
                             <image>
                                 <Image url="@../image/hotel.png" />
                             </image>
                             <HBox.margin>
-                                <Insets right="40.0" />
+                                <Insets right="100.0" />
                             </HBox.margin>
                         </ImageView>
                   <ComboBox fx:id="dsPhong" prefHeight="31.0" prefWidth="499.0" />
@@ -67,15 +67,15 @@
                                 <Insets right="10.0" />
                             </HBox.margin>
                         </Label>
-                        <ImageView fitHeight="29.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView pickOnBounds="true" preserveRatio="true" styleClass="icon-small">
                             <image>
                                 <Image url="@../image/detective.png" />
                             </image>
                             <HBox.margin>
-                                <Insets right="40.0" />
+                                <Insets right="100.0" />
                             </HBox.margin>
                         </ImageView>
-                  <ComboBox fx:id="dsKhachHang" prefHeight="31.0" prefWidth="499.0" />
+                  <ComboBox fx:id="dsKhachHang" prefHeight="10.0" prefWidth="499.0" />
                     </children>
                     <VBox.margin>
                         <Insets bottom="5.0" left="50.0" />
@@ -88,12 +88,12 @@
                         <Insets right="10.0" />
                      </HBox.margin>
                   </Label>
-                  <ImageView fitHeight="29.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView pickOnBounds="true" preserveRatio="true" styleClass="icon-small">
                      <image>
                         <Image url="@../image/steward.png" />
                      </image>
                      <HBox.margin>
-                        <Insets right="40.0" />
+                        <Insets right="100.0" />
                      </HBox.margin>
                   </ImageView>
                   <TextField fx:id="maNhanVien" editable="false" prefHeight="31.0" prefWidth="498.0" />
@@ -104,38 +104,17 @@
             </HBox>
                 <HBox prefHeight="41.0" prefWidth="880.0">
                     <children>
-                        <Label prefWidth="78.4" text="Ngày đặt">
-                            <HBox.margin>
-                                <Insets right="10.0" />
-                            </HBox.margin>
-                        </Label>
-                        <ImageView fitHeight="29.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
-                            <image>
-                                <Image url="@../image/calendar.png" />
-                            </image>
-                            <HBox.margin>
-                                <Insets right="40.0" />
-                            </HBox.margin>
-                        </ImageView>
-                  <DatePicker fx:id="ngayDat" prefHeight="34.0" prefWidth="498.0" />
-                    </children>
-                    <VBox.margin>
-                        <Insets bottom="5.0" left="50.0" />
-                    </VBox.margin>
-                </HBox>
-                <HBox prefHeight="41.0" prefWidth="880.0">
-                    <children>
                         <Label prefWidth="78.4" text="Ngày đến">
                             <HBox.margin>
                                 <Insets right="10.0" />
                             </HBox.margin>
                         </Label>
-                        <ImageView fitHeight="29.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView pickOnBounds="true" preserveRatio="true" styleClass="icon-small">
                             <image>
                                 <Image url="@../image/calendar.png" />
                             </image>
                             <HBox.margin>
-                                <Insets right="40.0" />
+                                <Insets right="100.0" />
                             </HBox.margin>
                         </ImageView>
                   <DatePicker fx:id="ngayDen" prefHeight="34.0" prefWidth="498.0" />
@@ -151,12 +130,12 @@
                                 <Insets right="10.0" />
                             </HBox.margin>
                         </Label>
-                        <ImageView fitHeight="29.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView pickOnBounds="true" preserveRatio="true" styleClass="icon-small">
                             <image>
                                 <Image url="@../image/calendar.png" />
                             </image>
                             <HBox.margin>
-                                <Insets right="40.0" />
+                                <Insets right="100.0" />
                             </HBox.margin>
                         </ImageView>
                   <DatePicker fx:id="ngayDi" prefHeight="34.0" prefWidth="499.0" />
@@ -167,7 +146,7 @@
                 </HBox>
                 <HBox alignment="CENTER" prefHeight="34.0" prefWidth="880.0">
                     <children>
-                        <Button fx:id="btnDatPhong" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="41.0" prefWidth="114.0" style="-fx-background-color: #1574DF" text="Đặt phòng" textAlignment="CENTER" textFill="WHITE" />
+                        <Button fx:id="btnDatPhong" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="41.0" prefWidth="114.0" styleClass="btn-info" text="Đặt phòng" textAlignment="CENTER" textFill="WHITE" />
                     </children>
                 </HBox>
             </children>

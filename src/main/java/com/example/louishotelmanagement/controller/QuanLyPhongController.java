@@ -5,6 +5,7 @@ import com.example.louishotelmanagement.dao.PhongDAO;
 import com.example.louishotelmanagement.model.LoaiPhong;
 import com.example.louishotelmanagement.model.Phong;
 import com.example.louishotelmanagement.model.TrangThaiPhong;
+import com.example.louishotelmanagement.utils.UIUtils;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -15,12 +16,12 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -36,6 +37,8 @@ public class QuanLyPhongController implements Initializable {
     public Label lblSoPhongSuDung;
     @FXML
     public Label lblSoPhongBaoTri;
+    @FXML
+    public BorderPane rootPane;
     @FXML
     private TextField txtTimKiem;
     @FXML
@@ -58,14 +61,9 @@ public class QuanLyPhongController implements Initializable {
     @FXML
     private TableColumn<Phong, String> colTenLoaiPhong;
     @FXML
-    private TableColumn<Phong, BigDecimal> colDonGia;
+    private TableColumn<Phong, Double> colDonGia;
     @FXML
     public TableColumn<Phong, Void> colThaoTac;
-
-    @FXML
-    private Label lblTrangThai;
-    @FXML
-    private Label lblSoLuong;
 
     private PhongDAO phongDAO;
     private LoaiPhongDAO loaiPhongDAO;
@@ -87,7 +85,7 @@ public class QuanLyPhongController implements Initializable {
             taiDuLieu();
 
         } catch (Exception e) {
-            hienThiThongBao("Lỗi", "Không thể kết nối cơ sở dữ liệu: " + e.getMessage());
+            UIUtils.hienThiThongBao("Lỗi", "Không thể kết nối cơ sở dữ liệu: " + e.getMessage());
         }
     }
 
@@ -121,19 +119,18 @@ public class QuanLyPhongController implements Initializable {
                 super.updateItem(item, empty);
                 if (empty || item == null) {
                     setText(null);
-                    setStyle("");
+                    getStyleClass().clear();
                 } else {
                     setText(item.toString());
+                    getStyleClass().clear();
                     switch (item) {
-                        case TrangThaiPhong.TRONG ->
-                                setStyle("-fx-background-color: #d4edda; -fx-text-fill: #155724;"); // Xanh lá
-                        case TrangThaiPhong.DA_DAT ->
-                                setStyle("-fx-background-color: #fff3cd; -fx-text-fill: #856404;"); // Vàng
-                        case TrangThaiPhong.DANG_SU_DUNG ->
-                                setStyle("-fx-background-color: #cce5ff; -fx-text-fill: #004085;"); // Xanh dương
-                        case TrangThaiPhong.BAO_TRI ->
-                                setStyle("-fx-background-color: #f8d7da; -fx-text-fill: #721c24;"); // Đỏ
-                        default -> setStyle("");
+                        case TrangThaiPhong.TRONG -> getStyleClass().add("status-trong");
+                        case TrangThaiPhong.DA_DAT -> getStyleClass().add("status-da-dat");
+                        case TrangThaiPhong.DANG_SU_DUNG -> getStyleClass().add("status-dang-su-dung");
+                        case TrangThaiPhong.BAO_TRI -> getStyleClass().add("status-bao-tri");
+                        default -> {
+                            // Không thêm style class nào
+                        }
                     }
                 }
             }
@@ -151,7 +148,7 @@ public class QuanLyPhongController implements Initializable {
             LoaiPhong loaiPhong = cellData.getValue().getLoaiPhong();
             return loaiPhong != null ?
                     javafx.beans.binding.Bindings.createObjectBinding(loaiPhong::getDonGia) :
-                    javafx.beans.binding.Bindings.createObjectBinding(() -> BigDecimal.ZERO);
+                    javafx.beans.binding.Bindings.createObjectBinding(() -> -0.0);
         });
 
         colThaoTac.setCellFactory(_ -> new TableCell<>() {
@@ -160,12 +157,8 @@ public class QuanLyPhongController implements Initializable {
             private final Button btnDelete = new Button("Xóa");
 
             {
-                btnEdit.getStyleClass().addAll("btn", "btn-xs", "btn-info");
-                btnEdit.setStyle("-fx-padding: 2 4 2 4; -fx-min-width: 40px; -fx-pref-width: 40px;");
-
-
-                btnDelete.getStyleClass().addAll("btn", "btn-xs", "btn-danger");
-                btnDelete.setStyle("-fx-padding: 2 4 2 4; -fx-min-width: 40px; -fx-pref-width: 40px;");
+                btnEdit.getStyleClass().addAll("btn", "btn-xs", "btn-info", "btn-table-edit");
+                btnDelete.getStyleClass().addAll("btn", "btn-xs", "btn-danger", "btn-table-delete");
 
                 btnEdit.setOnAction(_ -> {
                     Phong phong = getTableView().getItems().get(getIndex());
@@ -293,7 +286,7 @@ public class QuanLyPhongController implements Initializable {
             cbLocLoaiPhong.setItems(FXCollections.observableArrayList(danhSachLoaiPhong));
 
         } catch (SQLException e) {
-            hienThiThongBao("Lỗi", "Không thể tải danh sách loại phòng: " + e.getMessage());
+            UIUtils.hienThiThongBao("Lỗi", "Không thể tải danh sách loại phòng: " + e.getMessage());
         }
     }
 
@@ -308,11 +301,8 @@ public class QuanLyPhongController implements Initializable {
 
             // Áp dụng filter hiện tại
             apDungFilter();
-
-            capNhatTrangThai("Đã tải " + dsPhong.size() + " phòng");
-
         } catch (SQLException e) {
-            hienThiThongBao("Lỗi", "Không thể tải dữ liệu phòng: " + e.getMessage());
+            UIUtils.hienThiThongBao("Lỗi", "Không thể tải dữ liệu phòng: " + e.getMessage());
         }
     }
 
@@ -353,7 +343,6 @@ public class QuanLyPhongController implements Initializable {
                 .toList();
 
         danhSachPhongFiltered.addAll(filtered);
-        lblSoLuong.setText("Tổng số phòng: " + danhSachPhongFiltered.size());
     }
 
     @FXML
@@ -375,7 +364,7 @@ public class QuanLyPhongController implements Initializable {
             taiDuLieu();
 
         } catch (IOException e) {
-            hienThiThongBao("Lỗi", "Không thể mở form thêm phòng: " + e.getMessage());
+            UIUtils.hienThiThongBao("Lỗi", "Không thể mở form thêm phòng: " + e.getMessage());
         }
     }
 
@@ -399,7 +388,7 @@ public class QuanLyPhongController implements Initializable {
             taiDuLieu();
 
         } catch (IOException e) {
-            hienThiThongBao("Lỗi", "Không thể mở form sửa phòng: " + e.getMessage());
+            UIUtils.hienThiThongBao("Lỗi", "Không thể mở form sửa phòng: " + e.getMessage());
         }
     }
 
@@ -407,33 +396,27 @@ public class QuanLyPhongController implements Initializable {
     private void handleXoaPhong(Phong phong) {
 
         // Xác nhận xóa
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Xác nhận xóa");
-        alert.setHeaderText("Bạn có chắc chắn muốn xóa phòng này?");
-        alert.setContentText("Phòng: " + phong.getMaPhong() + " - Tầng: " + phong.getTang());
-
-        alert.showAndWait().ifPresent(response -> {
-            if (response == ButtonType.OK) {
-                try {
-                    // Kiểm tra xem phòng có đang được sử dụng không
-                    if (phongDAO.kiemTraPhongDuocSuDung(phong.getMaPhong())) {
-                        hienThiThongBao("Lỗi", "Không thể xóa phòng này vì đang được sử dụng!");
-                        return;
-                    }
-
-                    // Xóa phòng
-                    if (phongDAO.xoaPhong(phong.getMaPhong())) {
-                        hienThiThongBao("Thành công", "Đã xóa phòng thành công!");
-                        taiDuLieu();
-                    } else {
-                        hienThiThongBao("Lỗi", "Không thể xóa phòng!");
-                    }
-
-                } catch (SQLException e) {
-                    hienThiThongBao("Lỗi", "Lỗi khi xóa phòng: " + e.getMessage());
+        String message = "Bạn có chắc chắn muốn xóa phòng này?\nPhòng: " + phong.getMaPhong() + " - Tầng: " + phong.getTang();
+        if (UIUtils.hienThiXacNhan("Xác nhận xóa", message)) {
+            try {
+                // Kiểm tra xem phòng có đang được sử dụng không
+                if (phongDAO.kiemTraPhongDuocSuDung(phong.getMaPhong())) {
+                    UIUtils.hienThiThongBao("Lỗi", "Không thể xóa phòng này vì đang được sử dụng!");
+                    return;
                 }
+
+                // Xóa phòng
+                if (phongDAO.xoaPhong(phong.getMaPhong())) {
+                    UIUtils.hienThiThongBao("Thành công", "Đã xóa phòng thành công!");
+                    taiDuLieu();
+                } else {
+                    UIUtils.hienThiThongBao("Lỗi", "Không thể xóa phòng!");
+                }
+
+            } catch (SQLException e) {
+                UIUtils.hienThiThongBao("Lỗi", "Lỗi khi xóa phòng: " + e.getMessage());
             }
-        });
+        }
     }
 
     @FXML
@@ -463,17 +446,5 @@ public class QuanLyPhongController implements Initializable {
     @FXML
     private void handleLocLoaiPhong() {
         apDungFilter();
-    }
-
-    private void capNhatTrangThai(String message) {
-        lblTrangThai.setText(message);
-    }
-
-    private void hienThiThongBao(String tieuDe, String noiDung) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(tieuDe);
-        alert.setHeaderText(null);
-        alert.setContentText(noiDung);
-        alert.showAndWait();
     }
 }

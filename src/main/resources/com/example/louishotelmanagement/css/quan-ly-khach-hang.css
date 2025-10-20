@@ -1,0 +1,106 @@
+/*Thêm khách hàng*/
+.btn-them-khach-hang {
+    -fx-background-color: #66CC00;
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-border-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 5, 0, 0, 2);
+}
+
+.btn-them-khach-hang:hover {
+    -fx-background-color: #57B300;
+    -fx-border-color: #4CAF50;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.25), 8, 0, 0, 3);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+    -fx-transition: 0.3s;
+}
+
+/*Làm mới*/
+.btn-lam-moi {
+    -fx-background-color: #33CCFF;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-border-color: blue;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 3, 0, 0, 1);
+}
+
+/* Hover */
+.btn-lam-moi:hover {
+    -fx-background-color: #1AA3CC;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 5, 0, 0, 2);
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
+}
+
+/*Box thống kê*/
+.stat-box {
+    -fx-border-color: black;
+    -fx-border-width: 2;
+    -fx-background-color: #f9f9f9;
+    -fx-padding: 10;
+    -fx-alignment: center;
+    -fx-spacing: 5;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 1);
+}
+
+.stat-box:hover {
+    -fx-background-color: #e0f7ff;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 10, 0, 0, 3);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+    -fx-transition: all 0.2s ease;
+}
+
+.stat-title {
+    -fx-font-size: 14px;
+    -fx-text-fill: #333;
+}
+
+.stat-number {
+    -fx-font-weight: bold;
+    -fx-font-size: 24px;
+    -fx-text-fill: #1e88e5;
+}
+
+/*Hover cho cmb*/
+.combo-box {
+    -fx-border-width: 1px;
+}
+
+.combo-box:hover {
+    -fx-background-color: #E8F0FE;
+    -fx-border-color: #4A90E2;
+    -fx-border-width: 1px;
+    -fx-cursor: hand;
+}
+
+.combo-box:hover .arrow-button {
+    -fx-background-color: #E8F0FE;
+}
+
+.combo-box:focused {
+    -fx-border-color: #4A90E2;
+    -fx-border-width: 1px;
+}
+
+/*Hover cho txt*/
+.text-field:hover {
+    -fx-border-color: #4A90E2;
+    -fx-cursor: text;
+}
+
+/* Focus state - QUAN TRỌNG HƠN */
+.text-field:focused {
+    -fx-border-color: #4A90E2;
+    -fx-border-width: 2px;
+    -fx-effect: dropshadow(gaussian, #4A90E2, 5, 0.3, 0, 0);
+}

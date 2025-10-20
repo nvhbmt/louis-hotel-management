@@ -2,32 +2,29 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TreeView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
 
-<BorderPane fx:id="mainBorderPane" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.LayoutController">
+<BorderPane fx:id="mainBorderPane" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.LayoutController" stylesheets="@../css/main.css">
    <left>
       <!-- Sidebar -->
-      <VBox prefWidth="250.0" style="-fx-background-color: white; -fx-border-color: #e0e0e0; -fx-border-width: 0 1 0 0;">
+      <VBox prefWidth="250.0" styleClass="sidebar">
          <padding>
-            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+            <Insets bottom="20.0" left="16.0" right="16.0" top="20.0" />
          </padding>
          
          <!-- Logo Section -->
-         <VBox alignment="CENTER" spacing="10.0">
-            <Circle fill="#3498db" radius="30.0" stroke="#2c3e50" strokeWidth="2.0" />
-            <Label style="-fx-font-size: 14px; -fx-font-weight: bold;" text="VICTORIA HOTEL" textFill="#2c3e50" />
+         <VBox alignment="CENTER" spacing="12.0">
+            <Circle fill="#2196F3" radius="32.0" stroke="#1976D2" strokeWidth="2.0" />
+            <Label styleClass="logo-text" text="LOIUS HOTEL" />
          </VBox>
-         
-         <Separator style="-fx-background-color: #e0e0e0;" />
 
          <!-- Menu Section -->
-         <VBox spacing="5.0" style="-fx-padding: 20 0 0 0;">
-            <Label style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-padding: 0 0 10 0;" text="Menu" textFill="#666666" />
-            <TreeView fx:id="menuTree" prefHeight="586.0" prefWidth="210.0" stylesheets="@../css/treeview.css" />
+         <VBox spacing="4.0" styleClass="menu-section">
+            <Label styleClass="menu-label" text="MENU" />
+            <TreeView fx:id="menuTree" prefHeight="586.0" prefWidth="218.0" stylesheets="@../css/treeview.css" />
          </VBox>
 
       </VBox>

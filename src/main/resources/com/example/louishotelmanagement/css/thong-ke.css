@@ -1,0 +1,195 @@
+/* ========================================
+   THỐNG KÊ PAGE STYLES
+   ======================================== */
+
+/* Statistics Cards */
+.stat-card {
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0, 0, 2);
+    -fx-padding: 20;
+}
+
+.stat-description {
+    -fx-font-size: 12px;
+    -fx-text-fill: #7f8c8d;
+}
+
+.stat-value {
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+/* Chart Styles */
+.chart-container {
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0, 0, 2);
+    -fx-padding: 20;
+}
+
+.chart-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+.chart-subtitle {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+.chart-data-container {
+    -fx-background-color: #f8f9fa;
+    -fx-background-radius: 5;
+    -fx-border-color: #e9ecef;
+    -fx-border-radius: 5;
+}
+
+.chart-data-content {
+    -fx-padding: 20;
+}
+
+.chart-total {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #27ae60;
+}
+
+.chart-legend {
+    -fx-font-size: 12px;
+    -fx-text-fill: #2c3e50;
+}
+
+/* Toggle Button Styles */
+.toggle-button {
+    -fx-background-color: transparent;
+    -fx-border-color: #ddd;
+    -fx-border-radius: 3;
+    -fx-padding: 5 10;
+}
+
+.toggle-button:selected {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+}
+
+/* Status Styles */
+.status-item {
+    -fx-font-size: 14px;
+    -fx-text-fill: #2c3e50;
+}
+
+.status-percentage {
+    -fx-font-size: 12px;
+    -fx-text-fill: #2c3e50;
+}
+
+/* Room Status Styles */
+.room-status-container {
+    -fx-background-color: #f8f9fa;
+    -fx-background-radius: 5;
+    -fx-padding: 15;
+}
+
+.room-status-title {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+.room-status-label {
+    -fx-font-size: 12px;
+    -fx-text-fill: #7f8c8d;
+}
+
+/* Room Types Styles */
+.room-types-container {
+    -fx-background-color: #f8f9fa;
+    -fx-background-radius: 5;
+    -fx-padding: 15;
+}
+
+.room-types-title {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+/* Summary Styles */
+.summary-container {
+    -fx-background-color: #e8f5e8;
+    -fx-background-radius: 5;
+    -fx-padding: 10;
+}
+
+.summary-title {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #27ae60;
+}
+
+.summary-item {
+    -fx-font-size: 12px;
+    -fx-text-fill: #2c3e50;
+}
+
+/* ========================================
+   DYNAMIC CHART STYLES
+   ======================================== */
+
+.chart-label {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.chart-value-label {
+    -fx-font-size: 10px;
+}
+
+.chart-revenue-label {
+    -fx-font-size: 10px;
+}
+
+.chart-quantity-label {
+    -fx-font-size: 10px;
+}
+
+/* Room Type List */
+.room-type-header {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.room-type-item {
+    -fx-font-size: 12px;
+}
+
+.room-type-price {
+    -fx-font-size: 12px;
+    -fx-text-fill: #27ae60;
+}
+
+/* No Data Label */
+.no-data-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #7f8c8d;
+}
+
+/* Total Revenue Label */
+.total-revenue-label {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #27ae60;
+}
+
+/* Selection Controls Container */
+.selection-controls-container {
+    -fx-background-color: #f8f9fa;
+    -fx-background-radius: 5;
+    -fx-border-color: #e9ecef;
+    -fx-border-radius: 5;
+    -fx-padding: 10;
+}

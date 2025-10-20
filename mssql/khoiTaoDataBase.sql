@@ -75,6 +75,8 @@ CREATE TABLE CTPhieuDatPhong (
     maPhong nvarchar(10),
     ngayDen DATE,
     ngayDi DATE,
+    ngayNhan Date,
+    ngayTra Date,
     giaPhong DECIMAL(18,2),
     PRIMARY KEY (maPhieu, maPhong),
     FOREIGN KEY (maPhieu) REFERENCES PhieuDatPhong(maPhieu),

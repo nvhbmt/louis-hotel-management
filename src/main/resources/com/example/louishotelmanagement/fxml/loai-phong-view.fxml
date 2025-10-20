@@ -1,25 +1,119 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<BorderPane xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.LoaiPhongController">
-   <center>
-      <!-- Main Content Area -->
-      <VBox spacing="20.0" style="-fx-background-color: #f8f9fa; -fx-padding: 30;">
-         <!-- Header -->
-         <VBox spacing="5.0">
-            <Label text="Loại Phòng" style="-fx-font-size: 28px; -fx-font-weight: bold;" textFill="#2c3e50" />
-            <Label text="Quản lý các loại phòng và giá cả" style="-fx-font-size: 14px;" textFill="#7f8c8d" />
-         </VBox>
-         
-         <!-- Content Placeholder -->
-         <VBox alignment="CENTER" spacing="20.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2); -fx-padding: 40;">
-            <Label text="🏷️" style="-fx-font-size: 48px;" />
-            <Label text="Trang Loại Phòng" style="-fx-font-size: 24px; -fx-font-weight: bold;" textFill="#2c3e50" />
-            <Label text="Quản lý loại phòng sẽ được hiển thị ở đây" style="-fx-font-size: 14px;" textFill="#7f8c8d" />
-         </VBox>
-      </VBox>
-   </center>
+<BorderPane xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.LoaiPhongController" stylesheets="@../css/main.css, @../css/loai-phong.css">
+    <center>
+        <!-- Main Content Area -->
+        <VBox prefHeight="800.0" prefWidth="950.0" spacing="20.0" styleClass="main-content">
+            <!-- Header -->
+            <VBox prefHeight="44.0" prefWidth="918.0" spacing="5.0">
+                <HBox prefHeight="100.0" prefWidth="200.0">
+                    <children>
+                        <VBox prefHeight="53.0" prefWidth="487.0">
+                            <children>
+                                <Label styleClass="main-header" text="Quản Lý Loại Phòng" />
+                                <Label prefHeight="20.0" prefWidth="450.0" styleClass="main-subtitle" text="Quản lý thông tin và giá cả các loại phòng trong khách sạn" />
+                            </children>
+                        </VBox>
+                        <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="431.0" spacing="16.0">
+                            <children>
+                                <Button fx:id="btnThemLoaiPhong" alignment="CENTER_RIGHT" contentDisplay="RIGHT" onAction="#handleThemLoaiPhong" styleClass="btn-success" text="➕ Thêm Loại Phòng" />
+                            </children>
+                        </HBox>
+                    </children>
+                </HBox>
+                <VBox.margin>
+                    <Insets bottom="40.0" />
+                </VBox.margin>
+            </VBox>
+            <GridPane hgap="20.0">
+                <columnConstraints>
+                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                </columnConstraints>
+                <rowConstraints>
+                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                </rowConstraints>
+                <children>
+                    <VBox prefHeight="200.0" prefWidth="100.0" styleClass="stat-card-border">
+                        <children>
+                            <Label styleClass="stat-label" text="Tổng số loại phòng" />
+                            <Label fx:id="lblTongSoLoaiPhong" styleClass="stat-value" text="0" />
+                        </children>
+                    </VBox>
+                    <VBox layoutX="10.0" layoutY="-27.0" prefHeight="200.0" prefWidth="100.0" styleClass="stat-card-border" GridPane.columnIndex="1">
+                        <children>
+                            <Label styleClass="stat-label" text="Giá thấp nhất" />
+                            <Label fx:id="lblGiaThapNhat" styleClass="stat-value" text="0 VNĐ" />
+                        </children>
+                    </VBox>
+                    <VBox layoutX="238.0" layoutY="-27.0" prefHeight="200.0" prefWidth="100.0" styleClass="stat-card-border" GridPane.columnIndex="2">
+                        <children>
+                            <Label styleClass="stat-label" text="Giá cao nhất" />
+                            <Label fx:id="lblGiaCaoNhat" styleClass="stat-value" text="0 VNĐ" />
+                        </children>
+                    </VBox>
+                    <VBox layoutX="10.0" layoutY="-27.0" prefHeight="200.0" prefWidth="100.0" styleClass="stat-card-border" GridPane.columnIndex="3">
+                        <children>
+                            <Label styleClass="stat-label" text="Giá trung bình" />
+                            <Label fx:id="lblGiaTrungBinh" styleClass="stat-value" text="0 VNĐ" />
+                        </children>
+                    </VBox>
+                </children>
+                <VBox.margin>
+                    <Insets bottom="20.0" />
+                </VBox.margin>
+            </GridPane>
+
+            <!-- Control Panel -->
+            <HBox alignment="CENTER_LEFT" spacing="15.0" />
+
+            <!-- Search and Filter Panel -->
+            <HBox alignment="CENTER_LEFT" spacing="15.0">
+                <TextField fx:id="txtTimKiem" onKeyReleased="#handleTimKiem" prefHeight="33.0" prefWidth="239.0" promptText="Nhập mã loại phòng hoặc tên..." styleClass="form-field" />
+                <ComboBox fx:id="cbLocGia" onAction="#handleLocGia" prefHeight="41.0" prefWidth="138.0" promptText="Tất cả giá" styleClass="form-field" />
+                <Button fx:id="btnLamMoi" onAction="#handleLamMoi" prefHeight="37.0" prefWidth="121.0" styleClass="btn-info" text="🔄 Làm Mới" />
+            </HBox>
+
+            <!-- Table View -->
+            <VBox prefHeight="561.0" prefWidth="890.0" styleClass="table-container">
+                <TableView fx:id="tableViewLoaiPhong" prefHeight="576.0" prefWidth="850.0" styleClass="table-view">
+                    <columns>
+                        <TableColumn fx:id="colMaLoaiPhong" prefWidth="100.0" text="Mã Loại Phòng" />
+                        <TableColumn fx:id="colTenLoai" prefWidth="150.0" text="Tên Loại Phòng" />
+                        <TableColumn fx:id="colDonGia" prefWidth="120.0" text="Đơn Giá" />
+                        <TableColumn fx:id="colMoTa" prefWidth="300.0" text="Mô Tả" />
+                        <TableColumn fx:id="colThaoTac" minWidth="0.0" prefWidth="160.6666259765625" text="Thao tác" />
+                    </columns>
+                    <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                    </padding>
+                </TableView>
+            </VBox>
+
+            <!-- Status Bar -->
+            <HBox alignment="CENTER_LEFT" spacing="10.0">
+                <Label fx:id="lblTrangThai" styleClass="status-bar" text="Sẵn sàng" />
+                <Separator orientation="VERTICAL" />
+                <Label fx:id="lblSoLuong" styleClass="status-bar" text="Tổng số loại phòng: 0" />
+            </HBox>
+        </VBox>
+    </center>
 </BorderPane>

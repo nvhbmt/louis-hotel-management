@@ -75,6 +75,9 @@ public class PhongController implements Initializable {
         if (switcher != null) {
             switcher.switchContent("/com/example/louishotelmanagement/fxml/nhan-phong-view.fxml");
         }
+    private void moDatTT(ActionEvent event) {
+        // Giả định tên FXML cho Đặt tại quầy
+        moTrang("dat-phong-truc-tiep-view.fxml", event);
     }
     @FXML
     private void moDatTT(javafx.event.ActionEvent actionEvent) {

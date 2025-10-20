@@ -112,26 +112,6 @@ INSERT INTO MaGiamGia (maGG, code, giamGia, kieuGiamGia, ngayBatDau, ngayKetThuc
 GO
 
 -- ===================================================================
--- 5. Loại phòng (LoaiPhong)
--- ===================================================================
-PRINT N'Đang thêm dữ liệu bảng LoaiPhong...';
-INSERT INTO LoaiPhong (maLoaiPhong, tenLoai, moTa, donGia) VALUES
-                                                               ('LP01', N'Phòng đơn', N'Phòng dành cho 1 người', 300000),
-                                                               ('LP02', N'Phòng đôi', N'Phòng dành cho 2 người', 500000),
-                                                               ('LP03', N'Phòng VIP', N'Phòng cao cấp đầy đủ tiện nghi', 1000000);
-GO
-
--- ===================================================================
--- 6. Phòng (Phong) - Cần thêm dữ liệu cho bảng này
--- ===================================================================
--- PRINT N'Đang thêm dữ liệu bảng Phong...';
--- INSERT INTO Phong (maPhong, tang, trangThai, moTa, maLoaiPhong) VALUES
--- ('P101', 1, N'Trống', N'Phòng đơn tầng 1', 'LP01'),
--- ('P102', 1, N'Trống', N'Phòng đôi tầng 1', 'LP02'),
--- ...
--- GO
-
--- ===================================================================
 -- 7. Phiếu đặt phòng (PhieuDatPhong)
 -- ===================================================================
 PRINT N'Đang thêm dữ liệu bảng PhieuDatPhong...';
@@ -141,12 +121,13 @@ INSERT INTO PhieuDatPhong (maPhieu, ngayDat, ngayDen, ngayDi, trangThai, ghiChu,
 GO
 
 -- ===================================================================
+
 -- 8. Chi tiết phiếu đặt phòng (CTPhieuDatPhong)
 -- ===================================================================
 PRINT N'Đang thêm dữ liệu bảng CTPhieuDatPhong...';
-INSERT INTO CTPhieuDatPhong (maPhieu, maPhong, ngayDen, ngayDi, giaPhong) VALUES
-                                                                              ('PD01', 'P101', '2025-10-05', '2025-10-07', 300000),
-                                                                              ('PD02', 'P102', '2025-10-06', '2025-10-08', 500000);
+INSERT INTO CTPhieuDatPhong (maPhieu, maPhong, ngayDen, ngayDi, ngayNhan, ngayTra, giaPhong) VALUES
+                                                                                                 ('PD01', 'P101', '2025-10-05', '2025-10-07', NULL, NULL, 300000),
+                                                                                                 ('PD02', 'P102', '2025-10-06', '2025-10-08', NULL, NULL, 500000);
 GO
 
 -- ===================================================================
