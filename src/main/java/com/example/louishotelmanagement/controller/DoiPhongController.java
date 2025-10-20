@@ -15,6 +15,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 
 import java.math.BigDecimal;
 import java.net.URL;
@@ -25,7 +27,7 @@ import java.util.ResourceBundle;
 
 public class DoiPhongController implements Initializable {
     public ComboBox dsKhachHang;
-    public ComboBox dsPhongHienTai;
+        public ComboBox dsPhongHienTai;
     public ComboBox dsPhong;
     public TextField maNV;
     public TableView tablePhong;
@@ -59,6 +61,7 @@ public class DoiPhongController implements Initializable {
         moTa.setCellValueFactory(new PropertyValueFactory<>("moTa"));
         loaiPhong.setCellValueFactory(new PropertyValueFactory<>("loaiPhong"));
         tablePhong.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        VBox.setVgrow(tablePhong, Priority.ALWAYS);
         try{
             laydsKhachHang();
             layDsPhong();
@@ -131,6 +134,7 @@ public class DoiPhongController implements Initializable {
                     }
                 }
             }
+            dsPhongHienTai.getSelectionModel().selectFirst();
         }
     }
     public void layDsPhong() throws SQLException {

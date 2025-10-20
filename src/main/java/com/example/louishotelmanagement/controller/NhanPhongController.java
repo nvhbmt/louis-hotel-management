@@ -41,6 +41,7 @@ public class NhanPhongController implements Initializable {
     private ArrayList<String> dsMaKH;
     ArrayList<CTPhieuDatPhong> dsCTPhieuDatPhong;
     private PhieuDatPhong pTam;
+    private ArrayList<PhieuDatPhong> dspdp;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -51,18 +52,39 @@ public class NhanPhongController implements Initializable {
         try{
             laydsKh();
             loadData();
-            laydsPhong();
+            laydsPhongTheoKhachHang();
             dsKhachHang.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
                 try {
                     loadData();
+                    laydsPhongTheoKhachHang();
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
+                }
+            });
+            dsPhong.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue != null) {
+                    capNhatNgayDatTheoPhong(newValue.toString());
                 }
             });
         }catch (Exception e){
             e.printStackTrace();
         }
     }
+
+    private void capNhatNgayDatTheoPhong(String maPhong) {
+        try {
+            ArrayList<CTPhieuDatPhong> dsCTPDP = ctPhieuDatPhongDAO.layDSCTPhieuDatPhongTheoPhong(maPhong);
+            if (!dsCTPDP.isEmpty()) {
+                PhieuDatPhong phieu = phieuDatPhongDAO.layPhieuDatPhongTheoMa(dsCTPDP.getLast().getMaPhieu());
+                ngayDat.setValue(phieu.getNgayDat());
+            } else {
+                ngayDat.setValue(null);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void laydsKh() throws SQLException {
         ArrayList<KhachHang> khachhangs = khachHangDAO.layDSKhachHang();
         dsMaKH = new ArrayList<>();
@@ -74,18 +96,35 @@ public class NhanPhongController implements Initializable {
     }
     public void loadData() throws SQLException{
         if(dsKhachHang.getItems().size()!=0){
-            soDT.setText(khachHangDAO.layKhachHangTheoMa(dsKhachHang.getSelectionModel().getSelectedItem().toString()).getSoDT());
-            CCCD.setText(khachHangDAO.layKhachHangTheoMa(dsKhachHang.getSelectionModel().getSelectedItem().toString()).getCCCD());
+            soDT.setText(khachHangDAO.layKhachHangTheoMa(dsMaKH.get(dsKhachHang.getSelectionModel().getSelectedIndex())).getSoDT());
+            CCCD.setText(khachHangDAO.layKhachHangTheoMa(dsMaKH.get(dsKhachHang.getSelectionModel().getSelectedIndex())).getCCCD());
         }
     }
-    public void laydsPhong() throws SQLException {
-        ArrayList<Phong> phongs = phongDAO.layDSPhong();
-        for(Phong phong : phongs){
-            dsPhong.getItems().add(phong.getMaPhong());
+    public void laydsPhongTheoKhachHang() throws SQLException {
+        dsPhong.getItems().clear();
+        dspdp = new ArrayList<>();
+        ArrayList<PhieuDatPhong> dsPhieu = phieuDatPhongDAO.layDSPhieuDatPhongTheoKhachHang(dsMaKH.get(dsKhachHang.getSelectionModel().getSelectedIndex()));
+        if(dsPhieu.size()>0) {
+            for(PhieuDatPhong p:dsPhieu){
+                if(p.getTrangThai().equalsIgnoreCase("Đã đặt")){
+                    dspdp.add(p);
+                    ArrayList<CTPhieuDatPhong> dsCTP = ctPhieuDatPhongDAO.layDSCTPhieuDatPhongTheoPhieu(p.getMaPhieu());
+                    for(CTPhieuDatPhong ctp : dsCTP){
+                        dsPhong.getItems().add(ctp.getMaPhong());
+                    }
+                }
+            }
         }
-        dsPhong.getSelectionModel().selectFirst();
+        if(dsPhong.getItems().size()!=0){
+            dsPhong.getSelectionModel().selectFirst();
+            capNhatNgayDatTheoPhong(dsPhong.getSelectionModel().getSelectedItem().toString());
+        }else{
+            ngayDat.setValue(null);
+        }
+
     }
     public void handleCheck(javafx.event.ActionEvent actionEvent) throws SQLException {
+        Boolean found = false;
         dsCTPhieuDatPhong = ctPhieuDatPhongDAO.layDSCTPhieuDatPhongTheoPhong(dsPhong.getSelectionModel().getSelectedItem().toString());
         if(dsCTPhieuDatPhong.size()==0){
             showAlertError("Không tìm được phòng","Không tìm thấy bất kì phòng nào có thể nhận");
@@ -109,10 +148,11 @@ public class NhanPhongController implements Initializable {
                         pTam = phieuDatPhongDAO.layPhieuDatPhongTheoMa(ctpdp.getMaPhieu());
                         check = true;
                         break;
-                    }else{
-                        showAlertError("Không tìm thông tin","Không có bất kì thông tin nào về khách hàng và phòng");
                     }
-            }
+                }
+                if(!check){
+                    showAlertError("Không tìm thông tin","Không có bất kì thông tin nào về khách hàng và phòng");
+                }
 
             }
         }
@@ -139,6 +179,8 @@ public class NhanPhongController implements Initializable {
             phieuDatPhongDAO.capNhatTrangThaiPhieuDatPhong(pdp.getMaPhieu(),"Đang sử dụng");
             ctPhieuDatPhongDAO.capNhatNgayNhan(pTam.getMaPhieu(),maPhong.getText(), LocalDate.now());
             showAlert("Thành công","Bạn đã nhận phòng thành công");
+            dsPhong.getItems().remove(dsPhong.getSelectionModel().getSelectedIndex());
+            dsPhong.getSelectionModel().selectFirst();
         }else{
             showAlertError("Không đặt được phòng","Không tìm thấy bất kì phòng nào có thể nhận");
         }

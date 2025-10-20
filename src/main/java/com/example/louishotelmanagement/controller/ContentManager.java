@@ -15,14 +15,15 @@ public class ContentManager {
     
     private static final Map<String, Parent> cachedViews = new HashMap<>();
     private static final Map<String, Object> cachedControllers = new HashMap<>();
-    
+    private static boolean reload;
+
     /**
      * Load FXML với caching để tăng performance
      */
     public static Parent loadFXML(String fxmlPath, BorderPane container, ContentSwitcher switcher) {
         try {
             // Kiểm tra cache trước
-            if (cachedViews.containsKey(fxmlPath)) {
+            if (!reload&&cachedViews.containsKey(fxmlPath)) {
                 Parent cachedView = cachedViews.get(fxmlPath);
                 Object cachedController = cachedControllers.get(fxmlPath);
                 
