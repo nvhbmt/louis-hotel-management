@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane prefHeight="566.0" prefWidth="700.0" stylesheets="@../css/formsfx.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.KhachHangDialogController">
+    <center>
+        <VBox prefHeight="457.0" prefWidth="636.0" spacing="20.0" styleClass="dialog-container">
+            <!-- Header -->
+            <VBox styleClass="dialog-header">
+                <Label fx:id="lblTieuDe" styleClass="dialog-title" text="Thêm Khách Hàng Mới" />
+                <Label styleClass="dialog-subtitle" text="Nhập thông tin mã khách hàng" />
+            </VBox>
+
+            <!-- Form using FormsFX -->
+            <VBox fx:id="formContainer" />
+
+            <!-- Buttons -->
+            <HBox styleClass="dialog-buttons">
+                <Button  onAction="#handleHuy" styleClass="btn-cancel" text="Hủy" />
+                <Button fx:id="btnLuu" onAction="#handleLuu" styleClass="btn-save" text="Lưu" />
+            </HBox>
+        </VBox>
+    </center>
+    <padding>
+        <Insets bottom="32.0" left="32.0" right="32.0" top="32.0" />
+    </padding>
+</BorderPane>
