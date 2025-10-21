@@ -14,6 +14,7 @@ module com.example.louishotelmanagement {
     requires java.desktop;
     requires javafx.base;
     requires javafx.graphics;
+
     opens com.example.louishotelmanagement.fxml to javafx.fxml;
     exports com.example.louishotelmanagement.app;
     opens com.example.louishotelmanagement.app to javafx.fxml;

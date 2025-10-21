@@ -243,10 +243,10 @@ public class DatPhongTaiQuayController implements Initializable {
         return false;
     }
     public void DatPhong(KhachHang newKh,Phong p,String maPhieu) throws SQLException {
-        PhieuDatPhong pdp = new PhieuDatPhong(maPhieu, LocalDate.now(),LocalDate.now(),ngayDi.getValue(),"Đã đặt","Đặt trực tiếp tại quầy",newKh.getMaKH(),"NV01");
+        PhieuDatPhong pdp = new PhieuDatPhong(maPhieu, LocalDate.now(),LocalDate.now(),ngayDi.getValue(),TrangThaiPhieuDatPhong.DANG_SU_DUNG,"Đặt trực tiếp tại quầy",newKh.getMaKH(),"NV01");
         pdpDao.themPhieuDatPhong(pdp);
         CTPhieuDatPhong ctpdp = new CTPhieuDatPhong(maPhieu,p.getMaPhong(),LocalDate.now(),ngayDi.getValue(), BigDecimal.valueOf(p.getLoaiPhong().getDonGia()));
-        Pdao.capNhatTrangThaiPhong(p.getMaPhong(),"Đã đặt");
+        Pdao.capNhatTrangThaiPhong(p.getMaPhong(),TrangThaiPhong.DANG_SU_DUNG.toString());
         ctpDao.themCTPhieuDatPhong(ctpdp);
     }
     public void handleDatPhong(ActionEvent actionEvent) throws SQLException {

@@ -236,10 +236,10 @@ public class DatPhongController implements Initializable{
             alert.showAndWait();
         }
     public void DatPhong(KhachHang newKh,Phong p,String maPhieu) throws SQLException {
-        PhieuDatPhong pdp = new PhieuDatPhong(maPhieu, LocalDate.now(),ngayDen.getValue(),ngayDi.getValue(),"Đã đặt","Đặt trực tiếp tại quầy",newKh.getMaKH(),"NV01");
+        PhieuDatPhong pdp = new PhieuDatPhong(maPhieu, LocalDate.now(),ngayDen.getValue(),ngayDi.getValue(),TrangThaiPhieuDatPhong.DA_DAT,"Đặt trực tiếp tại quầy",newKh.getMaKH(),"NV01");
         pdpDao.themPhieuDatPhong(pdp);
         CTPhieuDatPhong ctpdp = new CTPhieuDatPhong(maPhieu,p.getMaPhong(),ngayDen.getValue(),ngayDi.getValue(), BigDecimal.valueOf(p.getLoaiPhong().getDonGia()));
-        Pdao.capNhatTrangThaiPhong(p.getMaPhong(),"Đã đặt");
+        Pdao.capNhatTrangThaiPhong(p.getMaPhong(),TrangThaiPhong.DA_DAT.toString());
         ctpDao.themCTPhieuDatPhong(ctpdp);
     }
     public void refresh() throws SQLException {
