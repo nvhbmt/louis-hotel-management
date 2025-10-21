@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="708.0" prefWidth="880.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.DoiPhongController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="864.0" prefWidth="1014.4" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.DoiPhongController">
    <top>
       <Label alignment="TOP_LEFT" style="-fx-font-weight: 900;-fx-font-size: 25px" text="Đổi phòng" BorderPane.alignment="TOP_LEFT">
          <BorderPane.margin>
@@ -30,8 +30,20 @@
       </Label>
    </top>
    <center>
-      <VBox prefHeight="474.0" prefWidth="922.0" BorderPane.alignment="CENTER">
+      <VBox prefHeight="474.0" prefWidth="922.0" style="-fx-font-size: 15px" BorderPane.alignment="CENTER">
          <children>
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Label text="Thông tin đổi phòng" style="-fx-font-weight: 700">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets bottom="50.0" />
+                     </HBox.margin>
+                  </Label>
+               </children>
+            </HBox>
             <HBox alignment="CENTER" prefHeight="37.0" prefWidth="880.0">
                <children>
                   <Label prefWidth="137.6" text="Khách hàng">
@@ -42,8 +54,14 @@
                         <Insets right="100.0" />
                      </HBox.margin>
                   </Label>
-                  <ComboBox fx:id="dsKhachHang" prefHeight="26.0" prefWidth="401.0" />
+                  <ComboBox fx:id="dsKhachHang" prefHeight="26.0" prefWidth="670.0">
+                     <HBox.margin>
+                        <Insets left="60.0" />
+                     </HBox.margin></ComboBox>
                </children>
+               <VBox.margin>
+                  <Insets bottom="10.0" />
+               </VBox.margin>
             </HBox>
             <HBox alignment="CENTER" prefHeight="37.0" prefWidth="880.0">
                <children>
@@ -55,8 +73,14 @@
                         <Insets right="100.0" />
                      </HBox.margin>
                   </Label>
-                  <ComboBox fx:id="dsPhongHienTai" prefHeight="26.0" prefWidth="401.0" />
+                  <ComboBox fx:id="dsPhongHienTai" prefHeight="26.0" prefWidth="670.0">
+                     <HBox.margin>
+                        <Insets left="60.0" />
+                     </HBox.margin></ComboBox>
                </children>
+               <VBox.margin>
+                  <Insets bottom="10.0" />
+               </VBox.margin>
             </HBox>
             <HBox alignment="CENTER" prefHeight="37.0" prefWidth="880.0">
                <children>
@@ -68,8 +92,14 @@
                         <Insets right="100.0" />
                      </HBox.margin>
                   </Label>
-                  <ComboBox fx:id="dsPhong" prefHeight="26.0" prefWidth="401.0" />
+                  <ComboBox fx:id="dsPhong" prefHeight="26.0" prefWidth="670.0">
+                     <HBox.margin>
+                        <Insets left="60.0" />
+                     </HBox.margin></ComboBox>
                </children>
+               <VBox.margin>
+                  <Insets bottom="10.0" />
+               </VBox.margin>
             </HBox>
             <HBox alignment="CENTER" prefHeight="37.0" prefWidth="880.0">
                <children>
@@ -81,7 +111,10 @@
                         <Insets right="100.0" />
                      </HBox.margin>
                   </Label>
-                  <TextField fx:id="maNV" prefHeight="26.0" prefWidth="402.0" />
+                  <TextField fx:id="maNV" prefHeight="26.0" prefWidth="670.0">
+                     <HBox.margin>
+                        <Insets left="60.0" />
+                     </HBox.margin></TextField>
                </children>
                <VBox.margin>
                   <Insets bottom="10.0" />
@@ -91,8 +124,11 @@
                <children>
                   <Label style="-fx-font-size: 30px" text="Danh sách phòng" />
                </children>
+               <VBox.margin>
+                  <Insets bottom="10.0" />
+               </VBox.margin>
             </HBox>
-            <TableView fx:id="tablePhong" prefHeight="200.0" prefWidth="200.0">
+            <TableView fx:id="tablePhong" prefHeight="405.0" prefWidth="1014.0">
               <columns>
                 <TableColumn fx:id="maPhong" prefWidth="100.00003051757812" text="Mã phòng" />
                 <TableColumn fx:id="tang" prefWidth="91.19998168945312" text="Tầng" />

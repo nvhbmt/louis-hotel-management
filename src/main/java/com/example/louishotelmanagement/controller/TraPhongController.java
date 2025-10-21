@@ -40,6 +40,7 @@ public class TraPhongController implements Initializable{
     private ArrayList<CTPhieuDatPhong> dsCTPhieuDatPhong;
     private boolean check = false;
     private PhieuDatPhong pTam;
+    private ArrayList<PhieuDatPhong> dspdp;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -48,8 +49,17 @@ public class TraPhongController implements Initializable{
         ctpDao = new CTPhieuDatPhongDAO();
         phieuDatPhongDAO = new PhieuDatPhongDAO();
         try{
-            layDsPhong();
             laydsKhachHang();
+            dsKhachHang.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+                if(newValue!=null){
+                    try {
+                        laydsPhongTheoKhachHang();
+                        dsPhong.getSelectionModel().selectFirst();
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            });
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -63,10 +73,20 @@ public class TraPhongController implements Initializable{
             dsMaKH.add(khachHang.getMaKH());
         }
     }
-    public void layDsPhong() throws SQLException {
-        ArrayList<Phong> phongs = phDao.layDSPhongTrong();
-        for(Phong phong : phongs) {
-            dsPhong.getItems().add(phong.getMaPhong());
+    public void laydsPhongTheoKhachHang() throws SQLException {
+        dsPhong.getItems().clear();
+        dspdp = new ArrayList<>();
+        ArrayList<PhieuDatPhong> dsPhieu = phieuDatPhongDAO.layDSPhieuDatPhongTheoKhachHang(dsMaKH.get(dsKhachHang.getSelectionModel().getSelectedIndex()));
+        if(dsPhieu.size()>0) {
+            for(PhieuDatPhong p:dsPhieu){
+                if(p.getTrangThai().equalsIgnoreCase("Đang sử dụng")){
+                    dspdp.add(p);
+                    ArrayList<CTPhieuDatPhong> dsCTP = ctpDao.layDSCTPhieuDatPhongTheoPhieu(p.getMaPhieu());
+                    for(CTPhieuDatPhong ctp : dsCTP){
+                        dsPhong.getItems().add(ctp.getMaPhong());
+                    }
+                }
+            }
         }
     }
     public void showAlertError(String header,String message){
@@ -85,18 +105,18 @@ public class TraPhongController implements Initializable{
     }
     public void handleCheck(javafx.event.ActionEvent actionEvent) throws SQLException {
         dsCTPhieuDatPhong = ctpDao.layDSCTPhieuDatPhongTheoPhong(dsPhong.getSelectionModel().getSelectedItem().toString());
-        if(dsCTPhieuDatPhong.size()==0){
+        if(dsCTPhieuDatPhong.isEmpty()){
             showAlertError("Không tìm được phòng","Không tìm thấy bất kì phòng nào có thể trả");
             check = false;
             return;
         }
         else{
-            if(ngayDat.getValue()==null){
+            if(ngayDi.getValue()==null){
                 showAlertError("Ngày đi trống","Không được thiếu thông tin ngày đi");
                 return ;
             }else{
                 for(CTPhieuDatPhong ctpdp : dsCTPhieuDatPhong) {
-                    if ((Objects.equals(phieuDatPhongDAO.layPhieuDatPhongTheoMa(ctpdp.getMaPhieu()).getMaKH(), dsMaKH.get(dsKhachHang.getSelectionModel().getSelectedIndex()))) && (phieuDatPhongDAO.layPhieuDatPhongTheoMa(ctpdp.getMaPhieu()).getNgayDi().isEqual(ngayDi.getValue()))) {
+                    if ((phieuDatPhongDAO.layPhieuDatPhongTheoMa(ctpdp.getMaPhieu()).getMaKH().equalsIgnoreCase(dsMaKH.get(dsKhachHang.getSelectionModel().getSelectedIndex()))) && (phieuDatPhongDAO.layPhieuDatPhongTheoMa(ctpdp.getMaPhieu()).getNgayDi().isEqual(ngayDi.getValue()))) {
                         maPhong.setText(String.valueOf(ctpdp.getMaPhong()));
                         tang.setText(String.valueOf(phDao.layPhongTheoMa(ctpdp.getMaPhong()).getTang()));
                         KhachHang kh = khDao.layKhachHangTheoMa(dsMaKH.get(dsKhachHang.getSelectionModel().getSelectedIndex()));
@@ -105,6 +125,7 @@ public class TraPhongController implements Initializable{
                         ngayDat.setValue(pTam.getNgayDat());
                         ngayDen.setValue(ctpdp.getNgayDi());
                         check = true;
+                        break;
                     }else{
                         showAlertError("Không tìm thông tin","Không có bất kì thông tin nào về khách hàng và phòng");
                         return;

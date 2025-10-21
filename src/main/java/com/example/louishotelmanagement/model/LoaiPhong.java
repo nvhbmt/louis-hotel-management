@@ -54,7 +54,7 @@ public class LoaiPhong {
         this.moTa = moTa;
     }
 
-    public Double getDonGia() {
+    public double getDonGia() {
         return donGia;
     }
 
