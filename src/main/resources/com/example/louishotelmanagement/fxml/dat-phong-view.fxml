@@ -63,11 +63,15 @@
                         <Insets right="40.0" />
                      </HBox.margin>
                   </ImageView>
-                  <ComboBox fx:id="dsKhachHang" opacity="0.76" prefHeight="31.0" prefWidth="670.0">
+                  <ComboBox fx:id="dsKhachHang" opacity="0.76" prefHeight="31.0" prefWidth="450.0">
                      <HBox.margin>
                         <Insets left="60.0" />
                      </HBox.margin>
                   </ComboBox>
+                   <Button mnemonicParsing="false" text="Thêm khách hàng">
+                       <HBox.margin>
+                           <Insets left="20.0" />
+                       </HBox.margin></Button>
                </children>
                <VBox.margin>
                   <Insets bottom="5.0" left="50.0" />
@@ -91,7 +95,7 @@
                         <Insets right="40.0" />
                      </HBox.margin>
                   </ImageView>
-                  <TextField fx:id="maNhanVien" editable="false" prefHeight="31.0" prefWidth="670.0">
+                  <TextField fx:id="maNhanVien" editable="false" prefHeight="31.0" prefWidth="611.0">
                      <HBox.margin>
                         <Insets left="60.0" />
                      </HBox.margin>
@@ -119,7 +123,7 @@
                         <Insets right="40.0" />
                      </HBox.margin>
                   </ImageView>
-                  <DatePicker fx:id="ngayDen" prefHeight="31.0" prefWidth="670.0">
+                  <DatePicker fx:id="ngayDen" prefHeight="31.0" prefWidth="611.0">
                      <HBox.margin>
                         <Insets left="60.0" />
                      </HBox.margin>
@@ -147,7 +151,7 @@
                         <Insets right="40.0" />
                      </HBox.margin>
                   </ImageView>
-                  <DatePicker fx:id="ngayDi" prefHeight="31.0" prefWidth="670.0">
+                  <DatePicker fx:id="ngayDi" prefHeight="31.0" prefWidth="611.0">
                      <HBox.margin>
                         <Insets left="60.0" />
                      </HBox.margin>
@@ -183,6 +187,9 @@
                            <font>
                               <Font size="14.0" />
                            </font>
+                           <HBox.margin>
+                              <Insets left="10.0" />
+                           </HBox.margin>
                         </Label>
                         <Label fx:id="SoPhongDaChon" prefHeight="54.0" prefWidth="125.0">
                            <font>
@@ -197,6 +204,9 @@
                            <font>
                               <Font size="14.0" />
                            </font>
+                           <HBox.margin>
+                              <Insets left="10.0" />
+                           </HBox.margin>
                         </Label>
                         <Label fx:id="TongTien" prefHeight="54.0" prefWidth="125.0">
                            <font>

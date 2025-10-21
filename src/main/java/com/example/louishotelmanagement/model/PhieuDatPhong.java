@@ -7,27 +7,23 @@ public class PhieuDatPhong {
     private LocalDate ngayDat;
     private LocalDate ngayDen;
     private LocalDate ngayDi;
-    private String trangThai;
+    private TrangThaiPhieuDatPhong trangThai;
     private String ghiChu;
     private String maKH;
     private String maNV;
-    private KhachHang khachHang;
-    private NhanVien nhanVien;
 
     public PhieuDatPhong() {
         this.maPhieu = "";
         this.ngayDat = null;
         this.ngayDen = null;
         this.ngayDi = null;
-        this.trangThai = "";
         this.ghiChu = "";
+        this.trangThai = null;
         this.maKH = "";
         this.maNV = "";
-        this.khachHang = null;
-        this.nhanVien = null;
     }
 
-    public PhieuDatPhong(String maPhieu, LocalDate ngayDat, LocalDate ngayDen, LocalDate ngayDi, String trangThai, String ghiChu, String maKH, String maNV) {
+    public PhieuDatPhong(String maPhieu, LocalDate ngayDat, LocalDate ngayDen, LocalDate ngayDi, TrangThaiPhieuDatPhong trangThai, String ghiChu, String maKH, String maNV) {
         this.maPhieu = maPhieu;
         this.ngayDat = ngayDat;
         this.ngayDen = ngayDen;
@@ -36,8 +32,6 @@ public class PhieuDatPhong {
         this.ghiChu = ghiChu;
         this.maKH = maKH;
         this.maNV = maNV;
-        this.khachHang = null;
-        this.nhanVien = null;
     }
 
     public PhieuDatPhong(String maPhieu) {
@@ -45,12 +39,10 @@ public class PhieuDatPhong {
         this.ngayDat = null;
         this.ngayDen = null;
         this.ngayDi = null;
-        this.trangThai = "";
+        this.trangThai = null;
         this.ghiChu = "";
         this.maKH = "";
         this.maNV = "";
-        this.khachHang = null;
-        this.nhanVien = null;
     }
 
     public String getMaPhieu() {
@@ -85,11 +77,11 @@ public class PhieuDatPhong {
         this.ngayDi = ngayDi;
     }
 
-    public String getTrangThai() {
+    public TrangThaiPhieuDatPhong getTrangThai() {
         return trangThai;
     }
 
-    public void setTrangThai(String trangThai) {
+    public void setTrangThai(TrangThaiPhieuDatPhong trangThai) {
         this.trangThai = trangThai;
     }
 
@@ -117,22 +109,6 @@ public class PhieuDatPhong {
         this.maNV = maNV;
     }
 
-    public KhachHang getKhachHang() {
-        return khachHang;
-    }
-
-    public void setKhachHang(KhachHang khachHang) {
-        this.khachHang = khachHang;
-    }
-
-    public NhanVien getNhanVien() {
-        return nhanVien;
-    }
-
-    public void setNhanVien(NhanVien nhanVien) {
-        this.nhanVien = nhanVien;
-    }
-
     @Override
     public String toString() {
         return "PhieuDatPhong{" +
@@ -144,8 +120,6 @@ public class PhieuDatPhong {
                 ", ghiChu='" + ghiChu + '\'' +
                 ", maKH='" + maKH + '\'' +
                 ", maNV='" + maNV + '\'' +
-                ", khachHang=" + (khachHang != null ? khachHang.getHoTen() : "null") +
-                ", nhanVien=" + (nhanVien != null ? nhanVien.getHoTen() : "null") +
                 '}';
     }
 }

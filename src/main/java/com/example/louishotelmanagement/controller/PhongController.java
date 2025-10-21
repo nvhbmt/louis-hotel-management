@@ -85,7 +85,7 @@ public class PhongController implements Initializable {
     
     @FXML
     private void moHuy() {
-        ContentManager.safeSwitch(switcher, "/com/example/louishotelmanagement/fxml/huy-phong-view.fxml");
+        ContentManager.safeSwitch(switcher, "/com/example/louishotelmanagement/fxml/huy-dat-phong-view.fxml");
     }
     
     @FXML
