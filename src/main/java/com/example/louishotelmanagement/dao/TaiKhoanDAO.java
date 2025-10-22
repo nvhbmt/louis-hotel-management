@@ -1,12 +1,10 @@
 package com.example.louishotelmanagement.dao;
+
 import com.example.louishotelmanagement.config.CauHinhDatabase;
 import com.example.louishotelmanagement.model.NhanVien;
 import com.example.louishotelmanagement.model.TaiKhoan;
 
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 
 public class TaiKhoanDAO {
@@ -17,14 +15,19 @@ public class TaiKhoanDAO {
         try (Connection con = CauHinhDatabase.getConnection();
              CallableStatement cs = con.prepareCall(sql)) {
             ResultSet rs = cs.executeQuery();
+            NhanVienDAO nhanVienDAO = new NhanVienDAO();
+            
             while (rs.next()) {
+                // Load đầy đủ thông tin nhân viên
+                NhanVien nhanVien = nhanVienDAO.timNhanVienTheoMa(rs.getString("maNV"));
+                
                 TaiKhoan tk = new TaiKhoan(
                         rs.getString("maTK"),
-                        new NhanVien(rs.getString("maNV")), // chỉ gán mã NV
+                        nhanVien != null ? nhanVien : new NhanVien(rs.getString("maNV")),
                         rs.getString("tenDangNhap"),
                         rs.getString("matKhauHash"),
                         rs.getString("quyen"),
-                        rs.getString("trangThai")
+                        rs.getBoolean("trangThai")
                 );
                 ds.add(tk);
             }
@@ -32,8 +35,25 @@ public class TaiKhoanDAO {
         return ds;
     }
 
+    public String layMaTKTiepTheo() throws SQLException {
+        String sql = "SELECT TOP 1 maTK FROM TaiKhoan ORDER BY maTK DESC";
+        try (Connection con = CauHinhDatabase.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                String maTKCuoi = rs.getString("maTK");
+                // Tách số từ mã TK cuối cùng (VD: TK003 -> 3)
+                int soCuoi = Integer.parseInt(maTKCuoi.substring(2));
+                int soMoi = soCuoi + 1;
+                return String.format("TK%03d", soMoi);
+            } else {
+                return "TK001"; // Nếu chưa có tài khoản nào
+            }
+        }
+    }
+
     // 2. Thêm tài khoản
-    public boolean themTaiKhoan(String maTK,NhanVien nv,String tenDangNhap,String matkhau,String quyen,String trangThai) throws SQLException {
+    public boolean themTaiKhoan(String maTK, NhanVien nv, String tenDangNhap, String matkhau, String quyen, boolean trangThai) throws SQLException {
         String sql = "{call sp_ThemTaiKhoan(?,?,?,?,?,?)}";
         try (Connection con = CauHinhDatabase.getConnection();
              CallableStatement cs = con.prepareCall(sql)) {
@@ -42,13 +62,19 @@ public class TaiKhoanDAO {
             cs.setString(3, tenDangNhap);
             cs.setString(4, matkhau);
             cs.setString(5, quyen);
-            cs.setString(6, trangThai);
+            cs.setBoolean(6, trangThai);
             return cs.executeUpdate() > 0;
         }
     }
 
+    // 2.1. Thêm tài khoản với String trangThai (để tương thích)
+    public boolean themTaiKhoan(String maTK, NhanVien nv, String tenDangNhap, String matkhau, String quyen, String trangThai) throws SQLException {
+        boolean trangThaiBool = "Hoạt động".equals(trangThai);
+        return themTaiKhoan(maTK, nv, tenDangNhap, matkhau, quyen, trangThaiBool);
+    }
+
     // 3. Cập nhật tài khoản
-    public boolean capNhatTaiKhoan(String maTK,NhanVien nv,String tenDangNhap,String matkhau,String quyen,String trangThai) throws SQLException {
+    public boolean capNhatTaiKhoan(String maTK, NhanVien nv, String tenDangNhap, String matkhau, String quyen, boolean trangThai) throws SQLException {
         String sql = "{call sp_CapNhatTaiKhoan(?,?,?,?,?,?)}";
         try (Connection con = CauHinhDatabase.getConnection();
              CallableStatement cs = con.prepareCall(sql)) {
@@ -57,9 +83,15 @@ public class TaiKhoanDAO {
             cs.setString(3, tenDangNhap);
             cs.setString(4, matkhau);
             cs.setString(5, quyen);
-            cs.setString(6, trangThai);
+            cs.setBoolean(6, trangThai);
             return cs.executeUpdate() > 0;
         }
+    }
+
+    // 3.1. Cập nhật tài khoản với String trangThai (để tương thích)
+    public boolean capNhatTaiKhoan(String maTK, NhanVien nv, String tenDangNhap, String matkhau, String quyen, String trangThai) throws SQLException {
+        boolean trangThaiBool = "Hoạt động".equals(trangThai);
+        return capNhatTaiKhoan(maTK, nv, tenDangNhap, matkhau, quyen, trangThaiBool);
     }
 
     // 4. Xóa tài khoản
@@ -80,13 +112,38 @@ public class TaiKhoanDAO {
             cs.setString(1, maTK);
             ResultSet rs = cs.executeQuery();
             if (rs.next()) {
+                // Load đầy đủ thông tin nhân viên
+                NhanVienDAO nhanVienDAO = new NhanVienDAO();
+                NhanVien nhanVien = nhanVienDAO.timNhanVienTheoMa(rs.getString("maNV"));
+                
+                return new TaiKhoan(
+                        rs.getString("maTK"),
+                        nhanVien != null ? nhanVien : new NhanVien(rs.getString("maNV")),
+                        rs.getString("tenDangNhap"),
+                        rs.getString("matKhauHash"),
+                        rs.getString("quyen"),
+                        rs.getBoolean("trangThai")
+                );
+            }
+        }
+        return null;
+    }
+
+    // 5.1. Tìm tài khoản theo tên đăng nhập
+    public TaiKhoan timTaiKhoanTheoTenDangNhap(String tenDangNhap) throws SQLException {
+        String sql = "{call sp_TimTaiKhoanTheoTenDangNhap(?)}";
+        try (Connection con = CauHinhDatabase.getConnection();
+             CallableStatement cs = con.prepareCall(sql)) {
+            cs.setString(1, tenDangNhap);
+            ResultSet rs = cs.executeQuery();
+            if (rs.next()) {
                 return new TaiKhoan(
                         rs.getString("maTK"),
                         new NhanVien(rs.getString("maNV")),
                         rs.getString("tenDangNhap"),
                         rs.getString("matKhauHash"),
                         rs.getString("quyen"),
-                        rs.getString("trangThai")
+                        rs.getBoolean("trangThai")
                 );
             }
         }
@@ -108,7 +165,7 @@ public class TaiKhoanDAO {
                         rs.getString("tenDangNhap"),
                         rs.getString("matKhauHash"),
                         rs.getString("quyen"),
-                        rs.getString("trangThai")
+                        rs.getBoolean("trangThai")
                 );
             }
         }

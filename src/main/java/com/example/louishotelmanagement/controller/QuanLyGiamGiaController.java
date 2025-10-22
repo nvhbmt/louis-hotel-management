@@ -3,7 +3,7 @@ package com.example.louishotelmanagement.controller;
 import com.example.louishotelmanagement.dao.MaGiamGiaDAO;
 import com.example.louishotelmanagement.model.KieuGiamGia;
 import com.example.louishotelmanagement.model.MaGiamGia;
-import com.example.louishotelmanagement.utils.UIUtils;
+import com.example.louishotelmanagement.util.ThongBaoUtil;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -24,7 +24,6 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -87,21 +86,21 @@ public class QuanLyGiamGiaController implements Initializable {
             taiDuLieu();
 
         } catch (Exception e) {
-            UIUtils.hienThiThongBao("Lỗi", "Không thể kết nối cơ sở dữ liệu: " + e.getMessage());
+            ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể kết nối cơ sở dữ liệu: " + e.getMessage());
         }
     }
 
     private void capNhatThongKe() throws SQLException {
         List<MaGiamGia> dsMaGiamGia = maGiamGiaDAO.layDSMaGiamGia();
         List<MaGiamGia> dsMaDangHoatDong = maGiamGiaDAO.layMaGiamGiaDangHoatDong();
-        
+
         int tongSoMaGiamGia = dsMaGiamGia.size();
         int soMaDangHoatDong = dsMaDangHoatDong.size();
         int soMaHetHan = 0;
         int soMaChuaBatDau = 0;
-        
+
         LocalDate ngayHienTai = LocalDate.now();
-        
+
         for (MaGiamGia mg : dsMaGiamGia) {
             if (mg.getNgayKetThuc().isBefore(ngayHienTai)) {
                 soMaHetHan++;
@@ -135,7 +134,7 @@ public class QuanLyGiamGiaController implements Initializable {
 
         // Format ngày tháng
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        
+
         colNgayBatDau.setCellFactory(column -> new TableCell<>() {
             @Override
             protected void updateItem(LocalDate item, boolean empty) {
@@ -317,7 +316,7 @@ public class QuanLyGiamGiaController implements Initializable {
             // Áp dụng filter hiện tại
             apDungFilter();
         } catch (SQLException e) {
-            UIUtils.hienThiThongBao("Lỗi", "Không thể tải dữ liệu mã giảm giá: " + e.getMessage());
+            ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể tải dữ liệu mã giảm giá: " + e.getMessage());
         }
     }
 
@@ -331,7 +330,7 @@ public class QuanLyGiamGiaController implements Initializable {
                     if (!timKiem.isEmpty()) {
                         boolean matchMaGG = maGiamGia.getMaGG().toLowerCase().contains(timKiem);
                         boolean matchCode = maGiamGia.getCode().toLowerCase().contains(timKiem);
-                        boolean matchMoTa = maGiamGia.getMoTa() != null && 
+                        boolean matchMoTa = maGiamGia.getMoTa() != null &&
                                 maGiamGia.getMoTa().toLowerCase().contains(timKiem);
                         if (!matchMaGG && !matchCode && !matchMoTa) {
                             return false;
@@ -377,7 +376,7 @@ public class QuanLyGiamGiaController implements Initializable {
             taiDuLieu();
 
         } catch (IOException e) {
-            UIUtils.hienThiThongBao("Lỗi", "Không thể mở form thêm mã giảm giá: " + e.getMessage());
+            ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể mở form thêm mã giảm giá: " + e.getMessage());
         }
     }
 
@@ -400,7 +399,7 @@ public class QuanLyGiamGiaController implements Initializable {
             taiDuLieu();
 
         } catch (IOException e) {
-            UIUtils.hienThiThongBao("Lỗi", "Không thể mở form sửa mã giảm giá: " + e.getMessage());
+            ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể mở form sửa mã giảm giá: " + e.getMessage());
         }
     }
 
@@ -408,18 +407,18 @@ public class QuanLyGiamGiaController implements Initializable {
     private void handleXoaMaGiamGia(MaGiamGia maGiamGia) {
         // Xác nhận xóa
         String message = "Bạn có chắc chắn muốn xóa mã giảm giá này?\nMã: " + maGiamGia.getMaGG() + " - Code: " + maGiamGia.getCode();
-        if (UIUtils.hienThiXacNhan("Xác nhận xóa", message)) {
+        if (ThongBaoUtil.hienThiXacNhan("Xác nhận xóa", message)) {
             try {
                 // Xóa mã giảm giá
                 if (maGiamGiaDAO.xoaMaGiamGia(maGiamGia.getMaGG())) {
-                    UIUtils.hienThiThongBao("Thành công", "Đã xóa mã giảm giá thành công!");
+                    ThongBaoUtil.hienThiThongBao("Thành công", "Đã xóa mã giảm giá thành công!");
                     taiDuLieu();
                 } else {
-                    UIUtils.hienThiThongBao("Lỗi", "Không thể xóa mã giảm giá!");
+                    ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể xóa mã giảm giá!");
                 }
 
             } catch (SQLException e) {
-                UIUtils.hienThiThongBao("Lỗi", "Lỗi khi xóa mã giảm giá: " + e.getMessage());
+                ThongBaoUtil.hienThiThongBao("Lỗi", "Lỗi khi xóa mã giảm giá: " + e.getMessage());
             }
         }
     }

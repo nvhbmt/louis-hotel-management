@@ -67,15 +67,9 @@ GO
 PRINT N'Đang thêm dữ liệu bảng TaiKhoan...';
 -- !!! CẢNH BÁO BẢO MẬT: Mật khẩu không nên lưu dưới dạng văn bản thuần.
 -- Cột matKhauHash nên chứa giá trị đã được băm (hashed) bằng thuật toán an toàn.
-INSERT INTO TaiKhoan (maTK, maNV, tenDangNhap, matKhauHash, quyen, trangThai) VALUES
-                                                                                  ('TK01', 'NV01', 'admin', '123456', N'Admin', N'Active'),
-                                                                                  ('TK02', 'NV02', 'linh_nv', '123456', N'NhanVien', N'Active'),
-                                                                                  ('TK03', 'NV03', 'hung_nv', '123456', N'NhanVien', N'Active'),
-                                                                                  ('TK04', 'NV04', 'mai_nv', '123456', N'NhanVien', N'Active'),
-                                                                                  ('TK05', 'NV05', 'long_nv', '123456', N'NhanVien', N'Active'),
-                                                                                  ('TK06', 'NV06', 'hoa_nv', '123456', N'NhanVien', N'Active'),
-                                                                                  ('TK07', 'NV07', 'quan_nv', '123456', N'NhanVien', N'Active'),
-                                                                                  ('TK08', 'NV08', 'yen_nv', '123456', N'NhanVien', N'Active');
+INSERT INTO TaiKhoan (maTK, maNV, tenDangNhap, matKhauHash, quyen) VALUES
+                                                                              ('TK001', 'NV01', 'manager', '4XKzp/qajqT93GnwSpzI3k00cLhgU/fEFLw/RW1tsqjv6NREO9+L+8ckMRGLxrxY', 'Manager'),
+                                                                              ('TK002', 'NV02', 'staff', 'j+NE/7ITxbv5hcu41ShyHze7rEOu+3rJVS/pCcDVyKs1xKlDgyPNxFmQhcC0iVZ3', 'Staff');
 GO
 
 -- ===================================================================

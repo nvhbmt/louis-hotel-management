@@ -6,7 +6,7 @@
 CREATE OR ALTER PROCEDURE sp_LayDSTaiKhoan
 AS
 BEGIN
-    SELECT maTK, maNV, tenDangNhap, quyen, trangThai
+    SELECT maTK, maNV, tenDangNhap, matKhauHash, quyen, trangThai
     FROM TaiKhoan;
 END
 GO
@@ -16,8 +16,8 @@ CREATE OR ALTER PROCEDURE sp_ThemTaiKhoan @maTK NVARCHAR(10), -- Mã tài khoả
                                           @maNV NVARCHAR(10), -- Mã nhân viên (nếu có)
                                           @tenDangNhap NVARCHAR(50), -- Tên đăng nhập
                                           @matKhauHash NVARCHAR(255), -- Mật khẩu đã hash
-                                          @quyen NVARCHAR(50), -- Quyền (Admin, Lễ tân, Quản lý, ...)
-                                          @trangThai NVARCHAR(50) -- Trạng thái (Hoạt động / Khóa)
+                                          @quyen NVARCHAR(50), -- Quyền (Manager, Staff)
+                                          @trangThai BIT -- Trạng thái (1 = Hoạt động, 0 = Khóa)
 AS
 BEGIN
     INSERT INTO TaiKhoan(maTK, maNV, tenDangNhap, matKhauHash, quyen, trangThai)
@@ -25,17 +25,21 @@ BEGIN
 END
 GO
 
--- 3. Cập nhật thông tin tài khoản (không đổi mật khẩu)
+-- 3. Cập nhật thông tin tài khoản
 CREATE OR ALTER PROCEDURE sp_CapNhatTaiKhoan @maTK NVARCHAR(10),
                                              @maNV NVARCHAR(10),
+                                             @tenDangNhap NVARCHAR(50),
+                                             @matKhauHash NVARCHAR(255),
                                              @quyen NVARCHAR(50),
-                                             @trangThai NVARCHAR(50)
+                                             @trangThai BIT
 AS
 BEGIN
     UPDATE TaiKhoan
-    SET maNV      = @maNV,
-        quyen     = @quyen,
-        trangThai = @trangThai
+    SET maNV         = @maNV,
+        tenDangNhap  = @tenDangNhap,
+        matKhauHash  = @matKhauHash,
+        quyen        = @quyen,
+        trangThai    = @trangThai
     WHERE maTK = @maTK;
 END
 GO
@@ -59,14 +63,25 @@ BEGIN
 END
 GO
 
+-- 5.1. Tìm tài khoản theo tên đăng nhập
+CREATE OR ALTER PROCEDURE sp_TimTaiKhoanTheoTenDangNhap @tenDangNhap NVARCHAR(50)
+AS
+BEGIN
+    SELECT maTK, maNV, tenDangNhap, matKhauHash, quyen, trangThai
+    FROM TaiKhoan
+    WHERE tenDangNhap = @tenDangNhap;
+END
+GO
+
 -- 6. Kiểm tra đăng nhập (Login)
-CREATE OR ALTER PROCEDURE sp_DangNhap @tenDangNhap NVARCHAR(50),
+CREATE OR ALTER PROCEDURE sp_DangNhapTaiKhoan @tenDangNhap NVARCHAR(50),
                                       @matKhauHash NVARCHAR(255)
 AS
 BEGIN
-    SELECT maTK, maNV, tenDangNhap, quyen, trangThai
+    SELECT maTK, maNV, tenDangNhap, matKhauHash, quyen, trangThai
     FROM TaiKhoan
     WHERE tenDangNhap = @tenDangNhap
-      AND matKhauHash = @matKhauHash;
+      AND matKhauHash = @matKhauHash
+      AND trangThai = 'Hoạt động';
 END
 GO

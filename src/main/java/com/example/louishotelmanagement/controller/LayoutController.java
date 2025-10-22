@@ -1,15 +1,16 @@
 package com.example.louishotelmanagement.controller;
 
+import com.example.louishotelmanagement.service.AuthService;
 import com.example.louishotelmanagement.ui.models.MenuItemModel;
+import com.example.louishotelmanagement.util.ThongBaoUtil;
 import com.example.louishotelmanagement.ui.data.MenuData;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.control.TreeCell;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
@@ -23,14 +24,55 @@ public class LayoutController implements Initializable, ContentSwitcher {
     @FXML
     private BorderPane mainBorderPane;
     
+    @FXML
+    private Label userInfoLabel;
+    
+    @FXML
+    private Button logoutBtn;
+    
     private TreeItem<MenuItemModel> currentActiveItem;
+    private AuthService authService;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        authService = AuthService.getInstance();
+        setupUserInfo();
         setupMenuTree();
         loadFXML("/com/example/louishotelmanagement/fxml/trang-chu-view.fxml");
         // Set trang chủ làm active mặc định
         setActiveItem(findMenuItemByPath("/com/example/louishotelmanagement/fxml/trang-chu-view.fxml"));
+    }
+    
+    private void setupUserInfo() {
+        if (authService.isLoggedIn()) {
+            String userName = authService.getCurrentUserName();
+            String userRole = authService.getCurrentUserRole();
+            userInfoLabel.setText(userName + " (" + userRole + ")");
+        }
+        
+        logoutBtn.setOnAction(_ -> handleLogout());
+    }
+    
+    private void handleLogout() {
+        if (ThongBaoUtil.hienThiXacNhan("Xác nhận đăng xuất", "Bạn có chắc chắn muốn đăng xuất?")) {
+            authService.logout();
+            showLoginScreen();
+        }
+    }
+    
+    private void showLoginScreen() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/dang-nhap-view.fxml"));
+            Scene scene = new Scene(loader.load(), 400, 500);
+            
+            Stage stage = (Stage) logoutBtn.getScene().getWindow();
+            stage.setScene(scene);
+            stage.setTitle("Đăng nhập - Hệ thống quản lý khách sạn Louis");
+            stage.setResizable(false);
+            stage.centerOnScreen();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /** Khởi tạo TreeView và xử lý sự kiện */

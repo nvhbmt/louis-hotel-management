@@ -61,6 +61,22 @@
    BUTTON STYLES
    ======================================== */
 
+.btn {
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
+    -fx-cursor: hand;
+}
+
+.btn-xs {
+    -fx-padding: 4 8;
+    -fx-font-size: 11px;
+}
+
+.btn-sm {
+    -fx-padding: 6 12;
+    -fx-font-size: 12px;
+}
+
 .btn-primary {
     -fx-background-color: #3498db;
     -fx-text-fill: white;
@@ -77,6 +93,20 @@
 
 .btn-info {
     -fx-background-color: #3498db;
+    -fx-text-fill: white;
+    -fx-background-radius: 5;
+    -fx-padding: 10 20;
+}
+
+.btn-danger {
+    -fx-background-color: #e74c3c;
+    -fx-text-fill: white;
+    -fx-background-radius: 5;
+    -fx-padding: 10 20;
+}
+
+.btn-warning {
+    -fx-background-color: #f39c12;
     -fx-text-fill: white;
     -fx-background-radius: 5;
     -fx-padding: 10 20;
@@ -288,6 +318,37 @@
     -fx-font-weight: 900;
 }
 
+
+/* ========================================
+   USER SECTION STYLES
+   ======================================== */
+
+.user-section {
+    -fx-padding: 16 0 0 0;
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 1 0 0 0;
+}
+
+.user-label {
+    -fx-font-size: 12px;
+    -fx-font-weight: 500;
+    -fx-padding: 0 0 8 0;
+    -fx-font-family: 'Roboto', 'Segoe UI', sans-serif;
+    -fx-text-fill: #757575;
+}
+
+.user-info {
+    -fx-background-color: #f8f9fa;
+    -fx-background-radius: 5;
+    -fx-padding: 8;
+}
+
+.user-name {
+    -fx-font-size: 12px;
+    -fx-font-weight: 500;
+    -fx-font-family: 'Roboto', 'Segoe UI', sans-serif;
+    -fx-text-fill: #2c3e50;
+}
 
 /* ========================================
    TABLE ACTION BUTTON STYLES
