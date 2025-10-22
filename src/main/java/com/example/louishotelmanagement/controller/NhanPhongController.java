@@ -7,7 +7,6 @@ import com.example.louishotelmanagement.dao.PhongDAO;
 import com.example.louishotelmanagement.model.CTPhieuDatPhong;
 import com.example.louishotelmanagement.model.KhachHang;
 import com.example.louishotelmanagement.model.PhieuDatPhong;
-import com.example.louishotelmanagement.model.Phong;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -49,7 +48,7 @@ public class NhanPhongController implements Initializable {
         ctPhieuDatPhongDAO = new CTPhieuDatPhongDAO();
         khachHangDAO = new KhachHangDAO();
         phongDAO = new PhongDAO();
-        try{
+        try {
             laydsKh();
             loadData();
             laydsPhongTheoKhachHang();
@@ -66,7 +65,7 @@ public class NhanPhongController implements Initializable {
                     capNhatNgayDatTheoPhong(newValue.toString());
                 }
             });
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -88,55 +87,57 @@ public class NhanPhongController implements Initializable {
     public void laydsKh() throws SQLException {
         ArrayList<KhachHang> khachhangs = khachHangDAO.layDSKhachHang();
         dsMaKH = new ArrayList<>();
-        for(KhachHang khachHang : khachhangs){
+        for (KhachHang khachHang : khachhangs) {
             dsKhachHang.getItems().add(khachHang.getHoTen());
             dsMaKH.add(khachHang.getMaKH());
         }
         dsKhachHang.getSelectionModel().selectFirst();
     }
-    public void loadData() throws SQLException{
-        if(dsKhachHang.getItems().size()!=0){
+
+    public void loadData() throws SQLException {
+        if (dsKhachHang.getItems().size() != 0) {
             soDT.setText(khachHangDAO.layKhachHangTheoMa(dsMaKH.get(dsKhachHang.getSelectionModel().getSelectedIndex())).getSoDT());
             CCCD.setText(khachHangDAO.layKhachHangTheoMa(dsMaKH.get(dsKhachHang.getSelectionModel().getSelectedIndex())).getCCCD());
         }
     }
+
     public void laydsPhongTheoKhachHang() throws SQLException {
         dsPhong.getItems().clear();
         dspdp = new ArrayList<>();
         ArrayList<PhieuDatPhong> dsPhieu = phieuDatPhongDAO.layDSPhieuDatPhongTheoKhachHang(dsMaKH.get(dsKhachHang.getSelectionModel().getSelectedIndex()));
-        if(dsPhieu.size()>0) {
-            for(PhieuDatPhong p:dsPhieu){
-                if(p.getTrangThai().equalsIgnoreCase("Đã đặt")){
+        if (dsPhieu.size() > 0) {
+            for (PhieuDatPhong p : dsPhieu) {
+                if (p.getTrangThai().toString().equalsIgnoreCase("Đã đặt")) {
                     dspdp.add(p);
                     ArrayList<CTPhieuDatPhong> dsCTP = ctPhieuDatPhongDAO.layDSCTPhieuDatPhongTheoPhieu(p.getMaPhieu());
-                    for(CTPhieuDatPhong ctp : dsCTP){
+                    for (CTPhieuDatPhong ctp : dsCTP) {
                         dsPhong.getItems().add(ctp.getMaPhong());
                     }
                 }
             }
         }
-        if(dsPhong.getItems().size()!=0){
+        if (dsPhong.getItems().size() != 0) {
             dsPhong.getSelectionModel().selectFirst();
             capNhatNgayDatTheoPhong(dsPhong.getSelectionModel().getSelectedItem().toString());
-        }else{
+        } else {
             ngayDat.setValue(null);
         }
 
     }
+
     public void handleCheck(javafx.event.ActionEvent actionEvent) throws SQLException {
         Boolean found = false;
         dsCTPhieuDatPhong = ctPhieuDatPhongDAO.layDSCTPhieuDatPhongTheoPhong(dsPhong.getSelectionModel().getSelectedItem().toString());
-        if(dsCTPhieuDatPhong.size()==0){
-            showAlertError("Không tìm được phòng","Không tìm thấy bất kì phòng nào có thể nhận");
+        if (dsCTPhieuDatPhong.size() == 0) {
+            showAlertError("Không tìm được phòng", "Không tìm thấy bất kì phòng nào có thể nhận");
             check = false;
             return;
-        }
-        else{
-            if(ngayDat.getValue()==null){
-                showAlertError("Ngày đặt trống","Không được thiếu thông tin ngày đặt");
-                return ;
-            }else{
-                for(CTPhieuDatPhong ctpdp : dsCTPhieuDatPhong) {
+        } else {
+            if (ngayDat.getValue() == null) {
+                showAlertError("Ngày đặt trống", "Không được thiếu thông tin ngày đặt");
+                return;
+            } else {
+                for (CTPhieuDatPhong ctpdp : dsCTPhieuDatPhong) {
                     if ((Objects.equals(phieuDatPhongDAO.layPhieuDatPhongTheoMa(ctpdp.getMaPhieu()).getMaKH(), dsMaKH.get(dsKhachHang.getSelectionModel().getSelectedIndex()))) && (phieuDatPhongDAO.layPhieuDatPhongTheoMa(ctpdp.getMaPhieu()).getNgayDat().isEqual(ngayDat.getValue()))) {
                         maPhieu.setText(ctpdp.getMaPhieu());
                         maPhong.setText(String.valueOf(ctpdp.getMaPhong()));
@@ -150,39 +151,41 @@ public class NhanPhongController implements Initializable {
                         break;
                     }
                 }
-                if(!check){
-                    showAlertError("Không tìm thông tin","Không có bất kì thông tin nào về khách hàng và phòng");
+                if (!check) {
+                    showAlertError("Không tìm thông tin", "Không có bất kì thông tin nào về khách hàng và phòng");
                 }
 
             }
         }
     }
 
-    public void showAlertError(String header,String message){
-        Alert alert = new  Alert(Alert.AlertType.ERROR);
+    public void showAlertError(String header, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Đã xảy ra lỗi");
         alert.setHeaderText(header);
         alert.setContentText(message);
         alert.showAndWait();
     }
-    public void showAlert(String header,String message){
-        Alert alert = new  Alert(Alert.AlertType.INFORMATION);
+
+    public void showAlert(String header, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Thông báo");
         alert.setHeaderText(header);
         alert.setContentText(message);
         alert.showAndWait();
     }
+
     public void handleNhanPhong(ActionEvent actionEvent) throws SQLException {
-        if(check){
-            phongDAO.capNhatTrangThaiPhong(maPhong.getText(),"Đang sử dụng");
+        if (check) {
+            phongDAO.capNhatTrangThaiPhong(maPhong.getText(), "Đang sử dụng");
             PhieuDatPhong pdp = phieuDatPhongDAO.layPhieuDatPhongTheoMa(maPhieu.getText());
-            phieuDatPhongDAO.capNhatTrangThaiPhieuDatPhong(pdp.getMaPhieu(),"Đang sử dụng");
-            ctPhieuDatPhongDAO.capNhatNgayNhan(pTam.getMaPhieu(),maPhong.getText(), LocalDate.now());
-            showAlert("Thành công","Bạn đã nhận phòng thành công");
+            phieuDatPhongDAO.capNhatTrangThaiPhieuDatPhong(pdp.getMaPhieu(), "Đang sử dụng");
+            ctPhieuDatPhongDAO.capNhatNgayNhan(pTam.getMaPhieu(), maPhong.getText(), LocalDate.now());
+            showAlert("Thành công", "Bạn đã nhận phòng thành công");
             dsPhong.getItems().remove(dsPhong.getSelectionModel().getSelectedIndex());
             dsPhong.getSelectionModel().selectFirst();
-        }else{
-            showAlertError("Không đặt được phòng","Không tìm thấy bất kì phòng nào có thể nhận");
+        } else {
+            showAlertError("Không đặt được phòng", "Không tìm thấy bất kì phòng nào có thể nhận");
         }
     }
 }
