@@ -22,7 +22,7 @@
          <graphic>
             <ImageView fitHeight="59.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../image/remove.png" />
+                  <Image url="@../image/computer.png" />
                </image></ImageView>
          </graphic>
       </Label>
@@ -32,7 +32,7 @@
          <children>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <Label text="Thông tin trả phòng" style="-fx-font-weight: 700">
+                  <Label style="-fx-font-weight: 700" text="Thông tin trả phòng">
                      <font>
                         <Font size="24.0" />
                      </font>
