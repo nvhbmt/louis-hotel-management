@@ -7,6 +7,8 @@ import com.example.louishotelmanagement.dao.PhongDAO;
 import com.example.louishotelmanagement.model.CTPhieuDatPhong;
 import com.example.louishotelmanagement.model.KhachHang;
 import com.example.louishotelmanagement.model.PhieuDatPhong;
+import com.example.louishotelmanagement.util.ThongBaoUtil;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -129,12 +131,12 @@ public class NhanPhongController implements Initializable {
         Boolean found = false;
         dsCTPhieuDatPhong = ctPhieuDatPhongDAO.layDSCTPhieuDatPhongTheoPhong(dsPhong.getSelectionModel().getSelectedItem().toString());
         if (dsCTPhieuDatPhong.size() == 0) {
-            showAlertError("Không tìm được phòng", "Không tìm thấy bất kì phòng nào có thể nhận");
+            ThongBaoUtil.hienThiLoi("Lỗi", "Không tìm được phòng");
             check = false;
             return;
         } else {
             if (ngayDat.getValue() == null) {
-                showAlertError("Ngày đặt trống", "Không được thiếu thông tin ngày đặt");
+                ThongBaoUtil.hienThiLoi("Lỗi", "Ngày đặt trống");
                 return;
             } else {
                 for (CTPhieuDatPhong ctpdp : dsCTPhieuDatPhong) {
@@ -152,27 +154,11 @@ public class NhanPhongController implements Initializable {
                     }
                 }
                 if (!check) {
-                    showAlertError("Không tìm thông tin", "Không có bất kì thông tin nào về khách hàng và phòng");
+                    ThongBaoUtil.hienThiLoi("Lỗi", "Không tìm thông tin");
                 }
 
             }
         }
-    }
-
-    public void showAlertError(String header, String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Đã xảy ra lỗi");
-        alert.setHeaderText(header);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-
-    public void showAlert(String header, String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Thông báo");
-        alert.setHeaderText(header);
-        alert.setContentText(message);
-        alert.showAndWait();
     }
 
     public void handleNhanPhong(ActionEvent actionEvent) throws SQLException {
@@ -181,11 +167,11 @@ public class NhanPhongController implements Initializable {
             PhieuDatPhong pdp = phieuDatPhongDAO.layPhieuDatPhongTheoMa(maPhieu.getText());
             phieuDatPhongDAO.capNhatTrangThaiPhieuDatPhong(pdp.getMaPhieu(), "Đang sử dụng");
             ctPhieuDatPhongDAO.capNhatNgayNhan(pTam.getMaPhieu(), maPhong.getText(), LocalDate.now());
-            showAlert("Thành công", "Bạn đã nhận phòng thành công");
+            ThongBaoUtil.hienThiThongBao("Thành công", "Bạn đã nhận phòng thành công");
             dsPhong.getItems().remove(dsPhong.getSelectionModel().getSelectedIndex());
             dsPhong.getSelectionModel().selectFirst();
         } else {
-            showAlertError("Không đặt được phòng", "Không tìm thấy bất kì phòng nào có thể nhận");
+            ThongBaoUtil.hienThiLoi("Lỗi", "Không đặt được phòng");
         }
     }
 }

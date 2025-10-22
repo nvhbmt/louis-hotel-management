@@ -8,6 +8,8 @@ import com.example.louishotelmanagement.model.CTPhieuDatPhong;
 import com.example.louishotelmanagement.model.KhachHang;
 import com.example.louishotelmanagement.model.PhieuDatPhong;
 import com.example.louishotelmanagement.model.Phong;
+import com.example.louishotelmanagement.util.ThongBaoUtil;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -100,22 +102,6 @@ public class DoiPhongController implements Initializable {
 
     }
 
-    public void showAlertError(String header, String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Đã xảy ra lỗi");
-        alert.setHeaderText(header);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-
-    public void showAlert(String header, String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Thông báo");
-        alert.setHeaderText(header);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-
     public void laydsKhachHang() throws SQLException {
         ArrayList<KhachHang> khs = Kdao.layDSKhachHang();
         dsMaKH = new ArrayList<>();
@@ -163,15 +149,15 @@ public class DoiPhongController implements Initializable {
                     Pdao.capNhatTrangThaiPhong(dsPhongHienTai.getSelectionModel().getSelectedItem().toString(), "Trống");
                     Pdao.capNhatTrangThaiPhong(ctp.getMaPhong(), "Đang sử dụng");
 
-                    showAlert("Thành công", "Đã đổi phòng cho khách hàng");
+                    ThongBaoUtil.hienThiThongBao("Thành công", "Đã đổi phòng cho khách hàng");
                 } else {
-                    showAlertError("Không đổi phòng được", "Bạn không thể đổi phòng vì đã đến ngày hạn");
+                    ThongBaoUtil.hienThiLoi("Lỗi", "Không đổi phòng được");
                 }
             } else {
-                showAlertError("Không thực hiện được", "Không tìm thấy bất kì chi tiết phòng nào");
+                ThongBaoUtil.hienThiLoi("Lỗi", "Không thực hiện được");
             }
         } else {
-            showAlertError("Không thực hiện được", "Vui lòng chọn phòng của bạn");
+            ThongBaoUtil.hienThiLoi("Lỗi", "Không thực hiện được");
         }
     }
 

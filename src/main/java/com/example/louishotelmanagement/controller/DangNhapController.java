@@ -4,6 +4,9 @@ import com.example.louishotelmanagement.dao.TaiKhoanDAO;
 import com.example.louishotelmanagement.model.TaiKhoan;
 import com.example.louishotelmanagement.service.AuthService;
 import com.example.louishotelmanagement.util.PasswordUtil;
+import com.example.louishotelmanagement.util.ThongBaoUtil;
+
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -54,7 +57,7 @@ public class DangNhapController implements Initializable {
         String matKhau = matKhauField.getText();
         
         if (tenDangNhap.isEmpty() || matKhau.isEmpty()) {
-            showThongBao("Vui lòng nhập đầy đủ thông tin!", true);
+            ThongBaoUtil.hienThiLoi("Lỗi", "Vui lòng nhập đầy đủ thông tin!");
             return;
         }
         
@@ -68,23 +71,23 @@ public class DangNhapController implements Initializable {
                     if (PasswordUtil.verifyPassword(matKhau, taiKhoan.getMatKhauHash())) {
                         // Đăng nhập thành công
                         authService.setCurrentUser(taiKhoan);
-                        showThongBao("Đăng nhập thành công!", false);
+                        ThongBaoUtil.hienThiThongBao("Thành công", "Đăng nhập thành công!");
                         
                         // Chuyển đến màn hình chính
                         chuyenDenManHinhChinh();
                     } else {
-                        showThongBao("Tên đăng nhập hoặc mật khẩu không đúng!", true);
+                        ThongBaoUtil.hienThiLoi("Lỗi", "Tên đăng nhập hoặc mật khẩu không đúng!");
                     }
                 } else {
-                    showThongBao("Tài khoản đã bị khóa!", true);
+                    ThongBaoUtil.hienThiLoi("Lỗi", "Tài khoản đã bị khóa!");
                 }
             } else {
-                showThongBao("Tên đăng nhập hoặc mật khẩu không đúng!", true);
+                ThongBaoUtil.hienThiLoi("Lỗi", "Tên đăng nhập hoặc mật khẩu không đúng!");
             }
         } catch (SQLException e) {
-            showThongBao("Lỗi kết nối database: " + e.getMessage(), true);
+            ThongBaoUtil.hienThiLoi("Lỗi", "Lỗi kết nối database: " + e.getMessage());
         } catch (Exception e) {
-            showThongBao("Lỗi hệ thống: " + e.getMessage(), true);
+            ThongBaoUtil.hienThiLoi("Lỗi", "Lỗi hệ thống: " + e.getMessage());
         }
     }
     
@@ -96,20 +99,27 @@ public class DangNhapController implements Initializable {
             Stage stage = (Stage) dangNhapBtn.getScene().getWindow();
             stage.setScene(scene);
             stage.setTitle("Hệ thống quản lý khách sạn Louis");
+            
+            // Reset thuộc tính Stage cho màn hình chính
+            stage.setResizable(true);
             stage.setMinWidth(1000);
             stage.setMinHeight(600);
-
-            stage.setMaximized(true);
+            stage.setMaxWidth(Double.MAX_VALUE);
+            stage.setMaxHeight(Double.MAX_VALUE);
+            
+            // Đặt kích thước và maximize
+            stage.setWidth(1200);
+            stage.setHeight(800);
+            stage.centerOnScreen();
             stage.show();
-        } catch (IOException e) {
-            showThongBao("Không thể tải màn hình chính: " + e.getMessage(), true);
+            
+            // Maximize sau khi Stage đã được hiển thị
+            Platform.runLater(() -> {
+                stage.setMaximized(true);
+            });
+        } catch (IOException e) {   
+            ThongBaoUtil.hienThiLoi("Lỗi", "Không thể tải màn hình chính: " + e.getMessage());
             System.out.println("Không thể tải màn hình chính: " + e.getMessage());
         }
-    }
-    
-    private void showThongBao(String message, boolean isError) {
-        thongBaoLabel.setText(message);
-        thongBaoLabel.setStyle(isError ? "-fx-text-fill: #dc3545;" : "-fx-text-fill: #28a745;");
-        thongBaoLabel.setVisible(true);
     }
 }
