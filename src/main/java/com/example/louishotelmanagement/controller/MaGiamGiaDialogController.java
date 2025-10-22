@@ -7,8 +7,7 @@ import com.dlsc.formsfx.view.renderer.FormRenderer;
 import com.example.louishotelmanagement.dao.MaGiamGiaDAO;
 import com.example.louishotelmanagement.model.KieuGiamGia;
 import com.example.louishotelmanagement.model.MaGiamGia;
-import com.example.louishotelmanagement.utils.UIUtils;
-
+import com.example.louishotelmanagement.util.ThongBaoUtil;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -51,12 +50,12 @@ public class MaGiamGiaDialogController implements Initializable {
         try {
             khoiTaoDAO();
             String maGGTiepTheo = layMaGGTiepTheoNeuThemMoi();
-            
+
             taoForm(maGGTiepTheo, "", 0.0, null, LocalDate.now(), LocalDate.now().plusDays(30), 0.0, "", "Hoạt động");
             hienThiForm();
-            
+
         } catch (SQLException e) {
-            UIUtils.hienThiThongBao("Lỗi", "Không thể khởi tạo form: " + e.getMessage());
+            ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể khởi tạo form: " + e.getMessage());
         }
     }
 
@@ -66,19 +65,19 @@ public class MaGiamGiaDialogController implements Initializable {
 
     private String layMaGGTiepTheoNeuThemMoi() {
         if (!"ADD".equals(mode)) return "";
-        
+
         try {
             // Tạo mã giảm giá tiếp theo dựa trên thời gian
             return "GG" + System.currentTimeMillis() % 100000;
         } catch (Exception e) {
-            UIUtils.hienThiThongBao("Lỗi", "Không thể tạo mã giảm giá: " + e.getMessage());
+            ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể tạo mã giảm giá: " + e.getMessage());
             return "";
         }
     }
 
-    private void taoForm(String maGG, String code, Double giamGia, KieuGiamGia kieuGiamGia, 
-                        LocalDate ngayBatDau, LocalDate ngayKetThuc, Double tongTienToiThieu, 
-                        String moTa, String trangThai) {
+    private void taoForm(String maGG, String code, Double giamGia, KieuGiamGia kieuGiamGia,
+                         LocalDate ngayBatDau, LocalDate ngayKetThuc, Double tongTienToiThieu,
+                         String moTa, String trangThai) {
         // Tạo các field
         maGGField = taoFieldMaGG(maGG);
         codeField = taoFieldCode(code);
@@ -91,9 +90,9 @@ public class MaGiamGiaDialogController implements Initializable {
         trangThaiField = taoFieldTrangThai(trangThai);
 
         // Tạo form
-        form = Form.of(Group.of(maGGField, codeField, giamGiaField, kieuGiamGiaField, 
-                               ngayBatDauField, ngayKetThucField, tongTienToiThieuField, 
-                               moTaField, trangThaiField))
+        form = Form.of(Group.of(maGGField, codeField, giamGiaField, kieuGiamGiaField,
+                        ngayBatDauField, ngayKetThucField, tongTienToiThieuField,
+                        moTaField, trangThaiField))
                 .title("Thông tin mã giảm giá");
     }
 
@@ -106,7 +105,7 @@ public class MaGiamGiaDialogController implements Initializable {
                         RegexValidator.forPattern("^GG\\d+$", "Mã giảm giá phải theo định dạng 'GGxxx'")
                 )
                 .required("Mã giảm giá không được để trống");
-        
+
         if ("ADD".equals(mode)) {
             field.editable(false);
         }
@@ -200,11 +199,11 @@ public class MaGiamGiaDialogController implements Initializable {
 
     public void setMaGiamGia(MaGiamGia maGiamGia) {
         if (maGiamGia == null) return;
-        
+
         // Set values
         maGGField.valueProperty().set(maGiamGia.getMaGG());
         maGGField.editable(false);
-        
+
         codeField.valueProperty().set(maGiamGia.getCode());
         giamGiaField.valueProperty().set(maGiamGia.getGiamGia());
         kieuGiamGiaField.selectionProperty().set(maGiamGia.getKieuGiamGia());
@@ -218,21 +217,21 @@ public class MaGiamGiaDialogController implements Initializable {
     @FXML
     private void handleLuu() {
         if (!form.isValid()) {
-            UIUtils.hienThiThongBao("Lỗi", "Vui lòng kiểm tra lại thông tin mã giảm giá!");
+            ThongBaoUtil.hienThiThongBao("Lỗi", "Vui lòng kiểm tra lại thông tin mã giảm giá!");
             return;
         }
-        
+
         try {
             MaGiamGia maGiamGia = taoMaGiamGiaTuForm();
             boolean thanhCong = luuMaGiamGia(maGiamGia);
-            
+
             if (thanhCong) {
                 hienThiThongBaoThanhCong();
                 dongDialog();
             }
-            
+
         } catch (SQLException e) {
-            UIUtils.hienThiThongBao("Lỗi", "Lỗi cơ sở dữ liệu: " + e.getMessage());
+            ThongBaoUtil.hienThiThongBao("Lỗi", "Lỗi cơ sở dữ liệu: " + e.getMessage());
         }
     }
 
@@ -247,28 +246,28 @@ public class MaGiamGiaDialogController implements Initializable {
         maGiamGia.setTongTienToiThieu(tongTienToiThieuField.valueProperty().get());
         maGiamGia.setMoTa(moTaField.valueProperty().get().trim());
         maGiamGia.setTrangThai(trangThaiField.getSelection());
-        
+
         // Set mã nhân viên (có thể lấy từ session hoặc hardcode)
         maGiamGia.setMaNhanVien("NV001"); // TODO: Lấy từ session thực tế
-        
+
         return maGiamGia;
     }
 
     private boolean luuMaGiamGia(MaGiamGia maGiamGia) throws SQLException {
         boolean thanhCong;
-        
+
         if ("ADD".equals(mode)) {
             thanhCong = maGiamGiaDAO.themMaGiamGia(maGiamGia);
         } else {
             thanhCong = maGiamGiaDAO.capNhatMaGiamGia(maGiamGia);
         }
-        
+
         return thanhCong;
     }
 
     private void hienThiThongBaoThanhCong() {
         String thongBao = "ADD".equals(mode) ? "Đã thêm mã giảm giá thành công!" : "Đã cập nhật mã giảm giá thành công!";
-        UIUtils.hienThiThongBao("Thành công", thongBao);
+        ThongBaoUtil.hienThiThongBao("Thành công", thongBao);
     }
 
     @FXML

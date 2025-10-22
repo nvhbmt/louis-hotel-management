@@ -2,7 +2,7 @@ package com.example.louishotelmanagement.controller;
 
 import com.example.louishotelmanagement.dao.KhachHangDAO;
 import com.example.louishotelmanagement.model.KhachHang;
-import com.example.louishotelmanagement.utils.UIUtils;
+import com.example.louishotelmanagement.util.ThongBaoUtil;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,7 +17,6 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -68,8 +67,8 @@ public class QuanLyKhachHangController implements Initializable {
             setupListner();
             loadData();
 
-        }catch (Exception e){
-            UIUtils.hienThiThongBao("Lỗi", "Không thể kết nối cơ sở dữ liệu" + e.getMessage());
+        } catch (Exception e) {
+            ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể kết nối cơ sở dữ liệu" + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -157,16 +156,16 @@ public class QuanLyKhachHangController implements Initializable {
 
     // ------------ Load dữ lệu ------------
     //Load dữ liệu, cập nhật thống kê
-    private  void loadData() {
+    private void loadData() {
         try {
             dsKhachHang = khachHangDAO.layDSKhachHang();
-            ObservableList<KhachHang> danhSach =  FXCollections.observableArrayList(dsKhachHang);
+            ObservableList<KhachHang> danhSach = FXCollections.observableArrayList(dsKhachHang);
 
             tableViewKhachHang.setItems(danhSach);
 
             capNhatThongKe();
-        }catch (Exception e){
-            UIUtils.hienThiThongBao("Lỗi","Lỗi lấy dữ liệu: " + e.getMessage());
+        } catch (Exception e) {
+            ThongBaoUtil.hienThiThongBao("Lỗi", "Lỗi lấy dữ liệu: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -179,7 +178,7 @@ public class QuanLyKhachHangController implements Initializable {
             int soKhachVip = 0;
 
             for (KhachHang kh : dsKhachHang) {
-                if("Khách VIP".equals(kh.getGhiChu())){
+                if ("Khách VIP".equals(kh.getGhiChu())) {
                     soKhachVip++;
                 }
             }
@@ -188,7 +187,7 @@ public class QuanLyKhachHangController implements Initializable {
             lblKhachVIP.setText(String.valueOf(soKhachVip));
 
         } catch (Exception e) {
-            UIUtils.hienThiThongBao("Lỗi", "Không thể cập nhật thống kê: " + e.getMessage());
+            ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể cập nhật thống kê: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -209,8 +208,8 @@ public class QuanLyKhachHangController implements Initializable {
             dialog.showAndWait();
 
             loadData();
-        }catch (Exception e){
-            UIUtils.hienThiThongBao("Lỗi", e.getMessage());
+        } catch (Exception e) {
+            ThongBaoUtil.hienThiThongBao("Lỗi", e.getMessage());
             e.printStackTrace();
         }
     }
@@ -233,7 +232,7 @@ public class QuanLyKhachHangController implements Initializable {
 
         ObservableList<KhachHang> danhSach = FXCollections.observableArrayList();
 
-        for (KhachHang kh: dsKhachHang) {
+        for (KhachHang kh : dsKhachHang) {
             boolean equalTimKiem = timKiem.isEmpty() ||
                     kh.getHoTen() != null && kh.getHoTen().toLowerCase().contains(timKiem) ||
                     kh.getSoDT() != null && kh.getSoDT().toLowerCase().contains(timKiem) ||
@@ -270,7 +269,7 @@ public class QuanLyKhachHangController implements Initializable {
             loadData();
 
         } catch (IOException e) {
-            UIUtils.hienThiThongBao("Lỗi", "Không thể mở form sửa khách hàng: " + e.getMessage());
+            ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể mở form sửa khách hàng: " + e.getMessage());
         }
     }
 
@@ -278,18 +277,18 @@ public class QuanLyKhachHangController implements Initializable {
     private void handleXoaKhachHang(KhachHang KhachHang) {
         // Xác nhận xóa
         String message = "Bạn có chắc chắn muốn xóa khách hàng này?\nMã: " + KhachHang.getMaKH() + " - Họ tên: " + KhachHang.getHoTen();
-        if (UIUtils.hienThiXacNhan("Xác nhận xóa", message)) {
+        if (ThongBaoUtil.hienThiXacNhan("Xác nhận xóa", message)) {
             try {
                 // Xóa mã giảm giá
                 if (khachHangDAO.xoaKhachHang(KhachHang.getMaKH())) {
-                    UIUtils.hienThiThongBao("Thành công", "Đã xóa khách hàng thành công!");
+                    ThongBaoUtil.hienThiThongBao("Thành công", "Đã xóa khách hàng thành công!");
                     loadData();
                 } else {
-                    UIUtils.hienThiThongBao("Lỗi", "Không thể xóa khách hàng!");
+                    ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể xóa khách hàng!");
                 }
 
             } catch (SQLException e) {
-                UIUtils.hienThiThongBao("Lỗi", "Lỗi khi xóa khách hàng: " + e.getMessage());
+                ThongBaoUtil.hienThiThongBao("Lỗi", "Lỗi khi xóa khách hàng: " + e.getMessage());
             }
         }
     }

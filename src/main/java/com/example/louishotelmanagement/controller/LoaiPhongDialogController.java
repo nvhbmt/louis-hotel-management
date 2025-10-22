@@ -6,8 +6,7 @@ import com.dlsc.formsfx.model.validators.StringLengthValidator;
 import com.dlsc.formsfx.view.renderer.FormRenderer;
 import com.example.louishotelmanagement.dao.LoaiPhongDAO;
 import com.example.louishotelmanagement.model.LoaiPhong;
-import com.example.louishotelmanagement.utils.UIUtils;
-
+import com.example.louishotelmanagement.util.ThongBaoUtil;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -43,12 +42,12 @@ public class LoaiPhongDialogController implements Initializable {
         try {
             khoiTaoDAO();
             String maLoaiPhongTiepTheo = layMaLoaiPhongTiepTheoNeuThemMoi();
-            
+
             taoForm(maLoaiPhongTiepTheo, "", 0.0, "");
             hienThiForm();
-            
+
         } catch (SQLException e) {
-            UIUtils.hienThiThongBao("Lỗi", "Không thể khởi tạo form: " + e.getMessage());
+            ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể khởi tạo form: " + e.getMessage());
         }
     }
 
@@ -58,11 +57,11 @@ public class LoaiPhongDialogController implements Initializable {
 
     private String layMaLoaiPhongTiepTheoNeuThemMoi() {
         if (!"ADD".equals(mode)) return "";
-        
+
         try {
             return loaiPhongDAO.layMaLoaiPhongTiepTheo();
         } catch (SQLException e) {
-            UIUtils.hienThiThongBao("Lỗi", "Không thể lấy mã loại phòng tiếp theo: " + e.getMessage());
+            ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể lấy mã loại phòng tiếp theo: " + e.getMessage());
             return "";
         }
     }
@@ -88,7 +87,7 @@ public class LoaiPhongDialogController implements Initializable {
                         RegexValidator.forPattern("^LP\\d{3}$", "Mã loại phòng phải theo định dạng 'LPxxx'")
                 )
                 .required("Mã loại phòng không được để trống");
-        
+
         if ("ADD".equals(mode)) {
             field.editable(false);
         }
@@ -143,7 +142,7 @@ public class LoaiPhongDialogController implements Initializable {
 
     public void setLoaiPhong(LoaiPhong loaiPhong) {
         if (loaiPhong == null) return;
-        
+
         // Set values
         maLoaiPhongField.valueProperty().set(loaiPhong.getMaLoaiPhong());
         maLoaiPhongField.editable(false);
@@ -155,21 +154,21 @@ public class LoaiPhongDialogController implements Initializable {
     @FXML
     private void handleLuu() {
         if (!form.isValid()) {
-            UIUtils.hienThiThongBao("Lỗi", "Vui lòng kiểm tra lại thông tin loại phòng!");
+            ThongBaoUtil.hienThiThongBao("Lỗi", "Vui lòng kiểm tra lại thông tin loại phòng!");
             return;
         }
-        
+
         try {
             LoaiPhong loaiPhong = taoLoaiPhongTuForm();
             boolean thanhCong = luuLoaiPhong(loaiPhong);
-            
+
             if (thanhCong) {
                 hienThiThongBaoThanhCong();
                 dongDialog();
             }
-            
+
         } catch (SQLException e) {
-            UIUtils.hienThiThongBao("Lỗi", "Lỗi cơ sở dữ liệu: " + e.getMessage());
+            ThongBaoUtil.hienThiThongBao("Lỗi", "Lỗi cơ sở dữ liệu: " + e.getMessage());
         }
     }
 
@@ -179,25 +178,25 @@ public class LoaiPhongDialogController implements Initializable {
         loaiPhong.setTenLoai(tenLoaiField.valueProperty().get().trim());
         loaiPhong.setDonGia(donGiaField.valueProperty().get());
         loaiPhong.setMoTa(moTaField.valueProperty().get().trim());
-        
+
         return loaiPhong;
     }
 
     private boolean luuLoaiPhong(LoaiPhong loaiPhong) throws SQLException {
         boolean thanhCong;
-        
+
         if ("ADD".equals(mode)) {
             thanhCong = loaiPhongDAO.themLoaiPhong(loaiPhong);
         } else {
             thanhCong = loaiPhongDAO.capNhatLoaiPhong(loaiPhong);
         }
-        
+
         return thanhCong;
     }
 
     private void hienThiThongBaoThanhCong() {
         String thongBao = "ADD".equals(mode) ? "Đã thêm loại phòng thành công!" : "Đã cập nhật loại phòng thành công!";
-        UIUtils.hienThiThongBao("Thành công", thongBao);
+        ThongBaoUtil.hienThiThongBao("Thành công", thongBao);
     }
 
     @FXML
