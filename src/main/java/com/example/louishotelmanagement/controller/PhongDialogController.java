@@ -9,8 +9,7 @@ import com.example.louishotelmanagement.dao.PhongDAO;
 import com.example.louishotelmanagement.model.LoaiPhong;
 import com.example.louishotelmanagement.model.Phong;
 import com.example.louishotelmanagement.model.TrangThaiPhong;
-import com.example.louishotelmanagement.utils.UIUtils;
-
+import com.example.louishotelmanagement.util.ThongBaoUtil;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -50,12 +49,12 @@ public class PhongDialogController implements Initializable {
             khoiTaoDAO();
             String maPhongTiepTheo = layMaPhongTiepTheoNeuThemMoi();
             List<LoaiPhong> dsLoaiPhong = loaiPhongDAO.layDSLoaiPhong();
-            
+
             taoForm(maPhongTiepTheo, 1, null, dsLoaiPhong, "");
             hienThiForm();
-            
+
         } catch (SQLException e) {
-            UIUtils.hienThiThongBao("Lỗi", "Không thể khởi tạo form: " + e.getMessage());
+            ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể khởi tạo form: " + e.getMessage());
         }
     }
 
@@ -66,17 +65,17 @@ public class PhongDialogController implements Initializable {
 
     private String layMaPhongTiepTheoNeuThemMoi() {
         if (!"ADD".equals(mode)) return "";
-        
+
         try {
             return phongDAO.layMaPhongTiepTheo();
         } catch (SQLException e) {
-            UIUtils.hienThiThongBao("Lỗi", "Không thể lấy mã phòng tiếp theo: " + e.getMessage());
+            ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể lấy mã phòng tiếp theo: " + e.getMessage());
             return "";
         }
     }
 
-    private void taoForm(String maPhong, Integer tang, TrangThaiPhong trangThai, 
-                           List<LoaiPhong> dsLoaiPhong, String moTa) {
+    private void taoForm(String maPhong, Integer tang, TrangThaiPhong trangThai,
+                         List<LoaiPhong> dsLoaiPhong, String moTa) {
         // Tạo các field
         maPhongField = taoFieldMaPhong(maPhong);
         tangField = taoFieldTang(tang);
@@ -98,7 +97,7 @@ public class PhongDialogController implements Initializable {
                         RegexValidator.forPattern("^P\\d{3}$", "Mã phòng phải theo định dạng 'Pxxx'")
                 )
                 .required("Mã phòng không được để trống");
-        
+
         if ("ADD".equals(mode)) {
             field.editable(false);
         }
@@ -113,10 +112,10 @@ public class PhongDialogController implements Initializable {
 
     private SingleSelectionField<TrangThaiPhong> taoFieldTrangThai(TrangThaiPhong trangThai) {
         return Field.ofSingleSelectionType(List.of(
-                TrangThaiPhong.TRONG, 
-                TrangThaiPhong.DA_DAT, 
-                TrangThaiPhong.DANG_SU_DUNG, 
-                TrangThaiPhong.BAO_TRI))
+                        TrangThaiPhong.TRONG,
+                        TrangThaiPhong.DA_DAT,
+                        TrangThaiPhong.DANG_SU_DUNG,
+                        TrangThaiPhong.BAO_TRI))
                 .label("Trạng thái")
                 .required("Vui lòng chọn trạng thái phòng");
     }
@@ -159,15 +158,15 @@ public class PhongDialogController implements Initializable {
 
     public void setPhong(Phong phong) {
         if (phong == null) return;
-        
+
         // Set values
         maPhongField.valueProperty().set(phong.getMaPhong());
         maPhongField.editable(false);
-        
+
         if (phong.getTang() != null) {
             tangField.valueProperty().set(phong.getTang());
         }
-        
+
         trangThaiField.selectionProperty().set(phong.getTrangThai());
         moTaField.valueProperty().set(phong.getMoTa());
         loaiPhongField.selectionProperty().set(phong.getLoaiPhong());
@@ -176,21 +175,21 @@ public class PhongDialogController implements Initializable {
     @FXML
     private void handleLuu() {
         if (!form.isValid()) {
-            UIUtils.hienThiThongBao("Lỗi", "Vui lòng kiểm tra lại thông tin phòng!");
+            ThongBaoUtil.hienThiThongBao("Lỗi", "Vui lòng kiểm tra lại thông tin phòng!");
             return;
         }
-        
+
         try {
             Phong phong = taoPhongTuForm();
             boolean thanhCong = luuPhong(phong);
-            
+
             if (thanhCong) {
                 hienThiThongBaoThanhCong();
                 dongDialog();
             }
-            
+
         } catch (SQLException e) {
-            UIUtils.hienThiThongBao("Lỗi", "Lỗi cơ sở dữ liệu: " + e.getMessage());
+            ThongBaoUtil.hienThiThongBao("Lỗi", "Lỗi cơ sở dữ liệu: " + e.getMessage());
         }
     }
 
@@ -200,30 +199,30 @@ public class PhongDialogController implements Initializable {
         phong.setTang(tangField.valueProperty().get());
         phong.setTrangThai(trangThaiField.getSelection());
         phong.setMoTa(moTaField.valueProperty().get().trim());
-        
+
         LoaiPhong loaiPhong = loaiPhongField.getSelection();
         if (loaiPhong != null) {
             phong.setLoaiPhong(loaiPhong);
         }
-        
+
         return phong;
     }
 
     private boolean luuPhong(Phong phong) throws SQLException {
         boolean thanhCong;
-        
+
         if ("ADD".equals(mode)) {
             thanhCong = phongDAO.themPhong(phong);
         } else {
             thanhCong = phongDAO.capNhatPhong(phong);
         }
-        
+
         return thanhCong;
     }
 
     private void hienThiThongBaoThanhCong() {
         String thongBao = "ADD".equals(mode) ? "Đã thêm phòng thành công!" : "Đã cập nhật phòng thành công!";
-        UIUtils.hienThiThongBao("Thành công", thongBao);
+        ThongBaoUtil.hienThiThongBao("Thành công", thongBao);
     }
 
     @FXML

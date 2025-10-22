@@ -7,7 +7,7 @@ import com.example.louishotelmanagement.dao.ThongKeDAO;
 import com.example.louishotelmanagement.model.LoaiPhong;
 import com.example.louishotelmanagement.model.Phong;
 import com.example.louishotelmanagement.model.TrangThaiPhong;
-import com.example.louishotelmanagement.utils.UIUtils;
+import com.example.louishotelmanagement.util.ThongBaoUtil;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -25,7 +25,6 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Year;
 import java.util.*;
-import java.util.List;
 
 public class ThongKeController implements Initializable {
 
@@ -33,7 +32,7 @@ public class ThongKeController implements Initializable {
     public BarChart thongkeBarChart;
     @FXML
     private VBox thongKeContent;
-    
+
     // Statistics Cards
     @FXML
     private Label lblTongSoPhong;
@@ -45,7 +44,7 @@ public class ThongKeController implements Initializable {
     private Label lblTongKhachHang;
     @FXML
     private Label lblTongLoaiPhong;
-    
+
     // Room Status Details
     @FXML
     private Label lblPhongTrong;
@@ -55,7 +54,7 @@ public class ThongKeController implements Initializable {
     private Label lblPhongDangSuDungChiTiet;
     @FXML
     private Label lblPhongBaoTri;
-    
+
     // Bar Charts
     @FXML
     private Rectangle barPhongTrong;
@@ -65,7 +64,7 @@ public class ThongKeController implements Initializable {
     private Rectangle barPhongDangSuDung;
     @FXML
     private Rectangle barPhongBaoTri;
-    
+
     // Percentages
     @FXML
     private Label lblTiLeTrong;
@@ -75,7 +74,7 @@ public class ThongKeController implements Initializable {
     private Label lblTiLeDangSuDung;
     @FXML
     private Label lblTiLeBaoTri;
-    
+
     // Room Types
     @FXML
     private VBox vboxLoaiPhong;
@@ -85,7 +84,7 @@ public class ThongKeController implements Initializable {
     private Label lblGiaCaoNhat;
     @FXML
     private Label lblGiaThapNhat;
-    
+
     // Revenue Chart Controls
     @FXML
     private ToggleButton btnTheoNgay;
@@ -137,7 +136,7 @@ public class ThongKeController implements Initializable {
             taiDuLieuThongKe();
 
         } catch (Exception e) {
-            UIUtils.hienThiThongBao("Lỗi", "Không thể kết nối cơ sở dữ liệu: " + e.getMessage());
+            ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể kết nối cơ sở dữ liệu: " + e.getMessage());
         }
     }
 
@@ -161,7 +160,7 @@ public class ThongKeController implements Initializable {
             lblCapNhatCuoi.setText("Cập nhật lần cuối: " + dateFormat.format(new Date()));
 
         } catch (SQLException e) {
-            UIUtils.hienThiThongBao("Lỗi", "Không thể tải dữ liệu thống kê: " + e.getMessage());
+            ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể tải dữ liệu thống kê: " + e.getMessage());
         }
     }
 
@@ -170,7 +169,7 @@ public class ThongKeController implements Initializable {
         int phongDangSuDung = (int) dsPhong.stream()
                 .filter(p -> p.getTrangThai() == TrangThaiPhong.DANG_SU_DUNG)
                 .count();
-        
+
         double tiLeSuDung = tongSoPhong > 0 ? (double) phongDangSuDung / tongSoPhong * 100 : 0;
 
         lblTongSoPhong.setText(String.valueOf(tongSoPhong));
@@ -182,19 +181,19 @@ public class ThongKeController implements Initializable {
 
     private void capNhatTrangThaiPhong(List<Phong> dsPhong) {
         int tongSoPhong = dsPhong.size();
-        
+
         int phongTrong = (int) dsPhong.stream()
                 .filter(p -> p.getTrangThai() == TrangThaiPhong.TRONG)
                 .count();
-        
+
         int phongDaDat = (int) dsPhong.stream()
                 .filter(p -> p.getTrangThai() == TrangThaiPhong.DA_DAT)
                 .count();
-        
+
         int phongDangSuDung = (int) dsPhong.stream()
                 .filter(p -> p.getTrangThai() == TrangThaiPhong.DANG_SU_DUNG)
                 .count();
-        
+
         int phongBaoTri = (int) dsPhong.stream()
                 .filter(p -> p.getTrangThai() == TrangThaiPhong.BAO_TRI)
                 .count();
@@ -227,7 +226,7 @@ public class ThongKeController implements Initializable {
     private void capNhatLoaiPhong(List<LoaiPhong> dsLoaiPhong) {
         // Clear existing content
         vboxLoaiPhong.getChildren().clear();
-        
+
         // Add header
         Label headerLabel = new Label("Danh sách loại phòng");
         headerLabel.getStyleClass().add("room-type-header");
@@ -237,14 +236,14 @@ public class ThongKeController implements Initializable {
         for (LoaiPhong loaiPhong : dsLoaiPhong) {
             HBox roomTypeBox = new HBox(10);
             roomTypeBox.setPadding(new Insets(5, 0, 5, 0));
-            
+
             Label nameLabel = new Label(loaiPhong.getTenLoai());
             nameLabel.getStyleClass().add("room-type-item");
             nameLabel.setPrefWidth(120);
-            
+
             Label priceLabel = new Label(String.format("%,.0f VNĐ", loaiPhong.getDonGia()));
             priceLabel.getStyleClass().add("room-type-price");
-            
+
             roomTypeBox.getChildren().addAll(nameLabel, priceLabel);
             vboxLoaiPhong.getChildren().add(roomTypeBox);
         }
@@ -255,12 +254,12 @@ public class ThongKeController implements Initializable {
                     .mapToDouble(LoaiPhong::getDonGia)
                     .average()
                     .orElse(0.0);
-            
+
             double giaCaoNhat = dsLoaiPhong.stream()
                     .mapToDouble(LoaiPhong::getDonGia)
                     .max()
                     .orElse(0.0);
-            
+
             double giaThapNhat = dsLoaiPhong.stream()
                     .mapToDouble(LoaiPhong::getDonGia)
                     .min()
@@ -379,7 +378,7 @@ public class ThongKeController implements Initializable {
             hienThiChart(doanhThuData, soLuongData, tongDoanhThu);
 
         } catch (SQLException e) {
-            UIUtils.hienThiThongBao("Lỗi", "Không thể tải dữ liệu chart: " + e.getMessage());
+            ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể tải dữ liệu chart: " + e.getMessage());
         }
     }
 

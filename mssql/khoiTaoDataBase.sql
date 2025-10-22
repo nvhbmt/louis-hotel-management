@@ -51,7 +51,7 @@ CREATE TABLE TaiKhoan (
     tenDangNhap NVARCHAR(50) UNIQUE NOT NULL,
     matKhauHash NVARCHAR(255),
     quyen NVARCHAR(50),
-    trangThai NVARCHAR(50),
+    trangThai BIT DEFAULT 1, -- 1 = Hoạt động, 0 = Khóa
     FOREIGN KEY (maNV) REFERENCES NhanVien(maNV)
 );
 

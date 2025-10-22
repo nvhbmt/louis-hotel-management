@@ -6,7 +6,7 @@ import com.dlsc.formsfx.model.validators.StringLengthValidator;
 import com.dlsc.formsfx.view.renderer.FormRenderer;
 import com.example.louishotelmanagement.dao.KhachHangDAO;
 import com.example.louishotelmanagement.model.KhachHang;
-import com.example.louishotelmanagement.utils.UIUtils;
+import com.example.louishotelmanagement.util.ThongBaoUtil;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -58,7 +58,7 @@ public class KhachHangDialogController implements Initializable {
         try {
             return "KH" + System.currentTimeMillis() % 100000;
         } catch (Exception e) {
-            UIUtils.hienThiThongBao("Lỗi", e.getMessage());
+            ThongBaoUtil.hienThiThongBao("Lỗi", e.getMessage());
             return "";
         }
     }
@@ -82,7 +82,7 @@ public class KhachHangDialogController implements Initializable {
                 .label("Mã khách hàng:")
                 .placeholder("VD: KH001")
                 .validate(
-                        StringLengthValidator.atLeast(5,"Mã khách hàng cần phải có ít nhất 5 ký tự"),
+                        StringLengthValidator.atLeast(5, "Mã khách hàng cần phải có ít nhất 5 ký tự"),
                         RegexValidator.forPattern("KH\\d{3}", "Mã khách hàng phải có định dạnh 'KHxxx'")
                 )
                 .required("Mã khách hàng không được để trống");
@@ -201,7 +201,7 @@ public class KhachHangDialogController implements Initializable {
     @FXML
     private void handleLuu() {
         if (!form.isValid()) {
-            UIUtils.hienThiThongBao("Lỗi", "Vui lòng kiểm tra lại thông tin khách hàng!");
+            ThongBaoUtil.hienThiThongBao("Lỗi", "Vui lòng kiểm tra lại thông tin khách hàng!");
             return;
         }
 
@@ -213,8 +213,8 @@ public class KhachHangDialogController implements Initializable {
                 hienThiThongBaoThanhCong();
                 dongDialog();
             }
-        }catch (Exception e) {
-            UIUtils.hienThiThongBao("Lỗi", "Lỗi cơ sở dữ liệu: " + e.getMessage());
+        } catch (Exception e) {
+            ThongBaoUtil.hienThiThongBao("Lỗi", "Lỗi cơ sở dữ liệu: " + e.getMessage());
         }
     }
 
@@ -241,14 +241,14 @@ public class KhachHangDialogController implements Initializable {
                 thanhCong = khachHangDAO.capNhatKhachHang(khachHang);
             }
         } catch (Exception e) {
-            UIUtils.hienThiThongBao("Lỗi", e.getMessage());
+            ThongBaoUtil.hienThiThongBao("Lỗi", e.getMessage());
         }
         return thanhCong;
     }
 
     private void hienThiThongBaoThanhCong() {
         String thongBao = "ADD".equals(mode) ? "Đã thêm nhân viên thành công!" : "Đã cập nhật nhân viên thành công!";
-        UIUtils.hienThiThongBao("Thành công", thongBao);
+        ThongBaoUtil.hienThiThongBao("Thành công", thongBao);
     }
 
     @FXML

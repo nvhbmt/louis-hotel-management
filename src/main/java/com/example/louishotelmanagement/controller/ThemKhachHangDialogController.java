@@ -2,7 +2,7 @@ package com.example.louishotelmanagement.controller;
 
 import com.example.louishotelmanagement.dao.KhachHangDAO;
 import com.example.louishotelmanagement.model.KhachHang;
-import com.example.louishotelmanagement.utils.UIUtils;
+import com.example.louishotelmanagement.util.ThongBaoUtil;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -44,33 +44,33 @@ public class ThemKhachHangDialogController implements Initializable {
         String cccdStr = cccd.getText();
         // Các trường bắt buộc không được để trống
         if (hoTenStr.isEmpty() || soDTStr.isEmpty() || cccdStr.isEmpty() || ngaySinhDate == null) {
-            UIUtils.hienThiLoi("Lỗi nhập liệu", "Vui lòng nhập đầy đủ Họ Tên, SĐT, CCCD và Ngày Sinh.");
+            ThongBaoUtil.hienThiLoi("Lỗi nhập liệu", "Vui lòng nhập đầy đủ Họ Tên, SĐT, CCCD và Ngày Sinh.");
             return;
         }
 
         // Kiểm tra định dạng SĐT (ví dụ: 10 chữ số, có thể điều chỉnh theo định dạng bạn muốn)
         if (!soDTStr.matches("^\\d{10}$")) {
-            UIUtils.hienThiLoi("Lỗi SĐT", "Số điện thoại phải gồm 10 chữ số.");
+            ThongBaoUtil.hienThiLoi("Lỗi SĐT", "Số điện thoại phải gồm 10 chữ số.");
             return;
         }
 
         // Kiểm tra tính logic của Ngày Sinh
         if (ngaySinhDate.isAfter(LocalDate.now())) {
-            UIUtils.hienThiLoi("Lỗi ngày sinh", "Ngày sinh không thể là ngày trong tương lai.");
+            ThongBaoUtil.hienThiLoi("Lỗi ngày sinh", "Ngày sinh không thể là ngày trong tương lai.");
             return;
         }
         Random ran = new Random();
         ArrayList<KhachHang> listKhachHang = kDao.layDSKhachHang();
         ArrayList<String> dsMaKh = new ArrayList<>();
-        for(KhachHang k: listKhachHang){
+        for (KhachHang k : listKhachHang) {
             dsMaKh.add(k.getMaKH());
         }
-        do{
-            maKH = "KH"+ran.nextInt(90);
-        }while(dsMaKh.contains(maKH));
-        KhachHang kh =  new KhachHang(maKH,hoTenStr,soDTStr,emailStr,diaChiStr,ngaySinhDate,ghiChuStr,cccdStr);
+        do {
+            maKH = "KH" + ran.nextInt(90);
+        } while (dsMaKh.contains(maKH));
+        KhachHang kh = new KhachHang(maKH, hoTenStr, soDTStr, emailStr, diaChiStr, ngaySinhDate, ghiChuStr, cccdStr);
         kDao.themKhachHang(kh);
-        UIUtils.hienThiThongBao("Thông báo","Thêm khách hàng thành công");
+        ThongBaoUtil.hienThiThongBao("Thông báo", "Thêm khách hàng thành công");
         // Đóng cửa sổ hiện tại
         Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
         stage.close();
