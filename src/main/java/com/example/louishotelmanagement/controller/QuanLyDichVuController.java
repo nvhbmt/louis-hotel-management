@@ -2,7 +2,7 @@ package com.example.louishotelmanagement.controller;
 
 import com.example.louishotelmanagement.dao.DichVuDAO;
 import com.example.louishotelmanagement.model.DichVu;
-import com.example.louishotelmanagement.utils.UIUtils;
+import com.example.louishotelmanagement.util.ThongBaoUtil;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -79,27 +79,27 @@ public class QuanLyDichVuController implements Initializable {
             taiDuLieu();
 
         } catch (Exception e) {
-            UIUtils.hienThiThongBao("Lỗi", "Không thể kết nối cơ sở dữ liệu: " + e.getMessage());
+            ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể kết nối cơ sở dữ liệu: " + e.getMessage());
         }
     }
 
     private void capNhatThongKe() throws Exception {
         List<DichVu> tatCaDichVu = dichVuDAO.layTatCaDichVu(null);
         List<DichVu> dichVuConKinhDoanh = dichVuDAO.layTatCaDichVu(true);
-        //List<DichVu> dichVuNgungKinhDoanh = dichVuDAO.layTatCaDichVu(false);
+        List<DichVu> dichVuNgungKinhDoanh = dichVuDAO.layTatCaDichVu(false);
 
         int tongSo = tatCaDichVu.size();
         int conKinhDoanh = dichVuConKinhDoanh.size();
-        //int ngungKinhDoanh = dichVuNgungKinhDoanh.size();
-        
+        int ngungKinhDoanh = dichVuNgungKinhDoanh.size();
+
         double tongGiaTri = tatCaDichVu.stream()
                 .mapToDouble(dv -> dv.getDonGia() * dv.getSoLuong())
                 .sum();
 
         lblTongSoDichVu.setText(String.valueOf(tongSo));
         lblSoDichVuConKinhDoanh.setText(String.valueOf(conKinhDoanh));
-        //lblSoDichVuNgungKinhDoanh.setText(String.valueOf(ngungKinhDoanh));
-        //lblTongGiaTriDichVu.setText(String.format("%.0f VNĐ", tongGiaTri));
+        lblSoDichVuNgungKinhDoanh.setText(String.valueOf(ngungKinhDoanh));
+        lblTongGiaTriDichVu.setText(String.format("%.0f VNĐ", tongGiaTri));
     }
 
     private void khoiTaoDuLieu() {
@@ -114,7 +114,7 @@ public class QuanLyDichVuController implements Initializable {
         colSoLuong.setCellValueFactory(new PropertyValueFactory<>("soLuong"));
         colDonGia.setCellValueFactory(new PropertyValueFactory<>("donGia"));
         colMoTa.setCellValueFactory(new PropertyValueFactory<>("moTa"));
-        
+
         // Cột trạng thái hiển thị văn bản dựa trên conKinhDoanh
         colTrangThai.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(
                 cellData.getValue().isConKinhDoanh() ? "Đang kinh doanh" : "Ngừng kinh doanh"
@@ -238,10 +238,10 @@ public class QuanLyDichVuController implements Initializable {
             // Áp dụng filter hiện tại
             apDungFilter();
 
-            //capNhatTrangThai("Đã tải " + dsDichVu.size() + " dịch vụ");
+            capNhatTrangThai("Đã tải " + dsDichVu.size() + " dịch vụ");
 
         } catch (Exception e) {
-            UIUtils.hienThiThongBao("Lỗi", "Không thể tải dữ liệu dịch vụ: " + e.getMessage());
+            ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể tải dữ liệu dịch vụ: " + e.getMessage());
         }
     }
 
@@ -276,7 +276,7 @@ public class QuanLyDichVuController implements Initializable {
                 .toList();
 
         danhSachDichVuFiltered.addAll(filtered);
-        //lblSoLuong.setText("Tổng số dịch vụ: " + danhSachDichVuFiltered.size());
+        lblSoLuong.setText("Tổng số dịch vụ: " + danhSachDichVuFiltered.size());
     }
 
     @FXML
@@ -298,7 +298,7 @@ public class QuanLyDichVuController implements Initializable {
             taiDuLieu();
 
         } catch (IOException e) {
-            UIUtils.hienThiThongBao("Lỗi", "Không thể mở form thêm dịch vụ: " + e.getMessage());
+            ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể mở form thêm dịch vụ: " + e.getMessage());
         }
     }
 
@@ -321,7 +321,7 @@ public class QuanLyDichVuController implements Initializable {
             taiDuLieu();
 
         } catch (IOException e) {
-            UIUtils.hienThiThongBao("Lỗi", "Không thể mở form sửa dịch vụ: " + e.getMessage());
+            ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể mở form sửa dịch vụ: " + e.getMessage());
         }
     }
 
@@ -329,18 +329,18 @@ public class QuanLyDichVuController implements Initializable {
     private void handleXoaDichVu(DichVu dichVu) {
         // Xác nhận xóa
         String message = "Bạn có chắc chắn muốn ngừng kinh doanh dịch vụ này?\nDịch vụ: " + dichVu.getMaDV() + " - " + dichVu.getTenDV();
-        if (UIUtils.hienThiXacNhan("Xác nhận ngừng kinh doanh", message)) {
+        if (ThongBaoUtil.hienThiXacNhan("Xác nhận ngừng kinh doanh", message)) {
             try {
                 // Ngừng kinh doanh dịch vụ
                 if (dichVuDAO.xoaDichVu(dichVu.getMaDV())) {
-                    UIUtils.hienThiThongBao("Thành công", "Đã ngừng kinh doanh dịch vụ thành công!");
+                    ThongBaoUtil.hienThiThongBao("Thành công", "Đã ngừng kinh doanh dịch vụ thành công!");
                     taiDuLieu();
                 } else {
-                    UIUtils.hienThiThongBao("Lỗi", "Không thể ngừng kinh doanh dịch vụ!");
+                    ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể ngừng kinh doanh dịch vụ!");
                 }
 
             } catch (Exception e) {
-                UIUtils.hienThiThongBao("Lỗi", "Lỗi khi ngừng kinh doanh dịch vụ: " + e.getMessage());
+                ThongBaoUtil.hienThiThongBao("Lỗi", "Lỗi khi ngừng kinh doanh dịch vụ: " + e.getMessage());
             }
         }
     }
@@ -367,8 +367,8 @@ public class QuanLyDichVuController implements Initializable {
         apDungFilter();
     }
 
-//    private void capNhatTrangThai(String message) {
-//        lblTrangThai.setText(message);
-//    }
+    private void capNhatTrangThai(String message) {
+        lblTrangThai.setText(message);
+    }
 }
 
