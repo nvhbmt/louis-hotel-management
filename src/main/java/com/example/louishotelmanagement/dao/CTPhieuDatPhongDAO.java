@@ -2,7 +2,6 @@ package com.example.louishotelmanagement.dao;
 
 import com.example.louishotelmanagement.config.CauHinhDatabase;
 import com.example.louishotelmanagement.model.CTPhieuDatPhong;
-import com.example.louishotelmanagement.model.Phong;
 
 import java.math.BigDecimal;
 import java.sql.*;

@@ -4,7 +4,10 @@ import com.example.louishotelmanagement.dao.CTPhieuDatPhongDAO;
 import com.example.louishotelmanagement.dao.KhachHangDAO;
 import com.example.louishotelmanagement.dao.PhieuDatPhongDAO;
 import com.example.louishotelmanagement.dao.PhongDAO;
-import com.example.louishotelmanagement.model.*;
+import com.example.louishotelmanagement.model.CTPhieuDatPhong;
+import com.example.louishotelmanagement.model.KhachHang;
+import com.example.louishotelmanagement.model.PhieuDatPhong;
+import com.example.louishotelmanagement.model.Phong;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -103,7 +106,7 @@ public class NhanPhongController implements Initializable {
         ArrayList<PhieuDatPhong> dsPhieu = phieuDatPhongDAO.layDSPhieuDatPhongTheoKhachHang(dsMaKH.get(dsKhachHang.getSelectionModel().getSelectedIndex()));
         if(dsPhieu.size()>0) {
             for(PhieuDatPhong p:dsPhieu){
-                if(p.getTrangThai() == TrangThaiPhieuDatPhong.DA_DAT){
+                if(p.getTrangThai().equalsIgnoreCase("Đã đặt")){
                     dspdp.add(p);
                     ArrayList<CTPhieuDatPhong> dsCTP = ctPhieuDatPhongDAO.layDSCTPhieuDatPhongTheoPhieu(p.getMaPhieu());
                     for(CTPhieuDatPhong ctp : dsCTP){

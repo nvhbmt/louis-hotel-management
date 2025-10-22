@@ -3,6 +3,7 @@ package com.example.louishotelmanagement.model;
 public enum TrangThaiPhieuDatPhong {
     HOAN_THANH("Hoàn thành"),
     DA_DAT("Đã đặt"),
+    DA_HUY("Đã hủy"),
     DANG_SU_DUNG("Đang sử dụng");
 
     private final String trangThai;
