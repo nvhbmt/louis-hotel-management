@@ -5,6 +5,7 @@ import javafx.scene.Parent;
 import javafx.scene.layout.BorderPane;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -65,6 +66,14 @@ public class ContentManager {
         }
         if (controller instanceof TrangChuController) {
             ((TrangChuController) controller).setContentSwitcher(switcher);
+        }
+        if (controller instanceof Refreshable) {
+            try {
+                ((Refreshable) controller).refreshData();
+            } catch (SQLException e) {
+                System.err.println("Lỗi khi refreshData: " + e.getMessage());
+                // Xử lý lỗi SQL nếu cần
+            }
         }
         // Có thể thêm các controller khác ở đây
     }

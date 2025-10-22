@@ -10,15 +10,14 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.ThemKhachHangDialogController">
    <center>
       <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
          <children>
             <HBox alignment="CENTER" prefHeight="32.0" prefWidth="600.0">
                <children>
                   <Label prefHeight="30.0" prefWidth="93.0" text="Tên khách hàng" />
-                  <TextField prefHeight="32.0" prefWidth="452.0" />
+                  <TextField fx:id="hoTen" prefHeight="32.0" prefWidth="452.0" />
                </children>
                <VBox.margin>
                   <Insets bottom="10.0" />
@@ -27,7 +26,7 @@
             <HBox alignment="CENTER" prefHeight="32.0" prefWidth="600.0">
                <children>
                   <Label prefHeight="30.0" prefWidth="93.0" text="Số điện thoại" />
-                  <TextField prefHeight="32.0" prefWidth="452.0" />
+                  <TextField fx:id="soDT" prefHeight="32.0" prefWidth="452.0" />
                </children>
                <VBox.margin>
                   <Insets bottom="10.0" />
@@ -36,7 +35,7 @@
             <HBox alignment="CENTER" prefHeight="32.0" prefWidth="600.0">
                <children>
                   <Label prefHeight="30.0" prefWidth="93.0" text="Email" />
-                  <TextField prefHeight="32.0" prefWidth="452.0" />
+                  <TextField fx:id="email" prefHeight="32.0" prefWidth="452.0" />
                </children>
                <VBox.margin>
                   <Insets bottom="10.0" />
@@ -45,7 +44,7 @@
             <HBox alignment="CENTER" prefHeight="32.0" prefWidth="600.0">
                <children>
                   <Label prefHeight="30.0" prefWidth="93.0" text="Địa chỉ" />
-                  <TextField prefHeight="32.0" prefWidth="452.0" />
+                  <TextField fx:id="diaChi" prefHeight="32.0" prefWidth="452.0" />
                </children>
                <VBox.margin>
                   <Insets bottom="10.0" />
@@ -54,7 +53,7 @@
             <HBox alignment="CENTER" prefHeight="32.0" prefWidth="600.0">
                <children>
                   <Label prefHeight="30.0" prefWidth="93.0" text="Ngày sinh" />
-                  <DatePicker prefHeight="32.0" prefWidth="452.0" />
+                  <DatePicker fx:id="ngaySinh" prefHeight="32.0" prefWidth="452.0" />
                </children>
                <VBox.margin>
                   <Insets bottom="10.0" />
@@ -63,7 +62,7 @@
             <HBox alignment="CENTER" prefHeight="32.0" prefWidth="600.0">
                <children>
                   <Label prefHeight="30.0" prefWidth="93.0" text="Ghi chú" />
-                  <TextField prefHeight="32.0" prefWidth="452.0" />
+                  <TextField fx:id="ghiChu" prefHeight="32.0" prefWidth="452.0" />
                </children>
                <VBox.margin>
                   <Insets bottom="10.0" />
@@ -72,7 +71,7 @@
             <HBox alignment="CENTER" prefHeight="32.0" prefWidth="600.0">
                <children>
                   <Label prefHeight="30.0" prefWidth="93.0" text="CCCD" />
-                  <TextField prefHeight="32.0" prefWidth="452.0" />
+                  <TextField fx:id="cccd" prefHeight="32.0" prefWidth="452.0" />
                </children>
             </HBox>
          </children>
@@ -81,12 +80,12 @@
    <bottom>
       <HBox alignment="CENTER" prefHeight="54.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
-            <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="76.0" text="Thêm">
+            <Button mnemonicParsing="false" onAction="#handleThem" prefHeight="40.0" prefWidth="76.0" text="Thêm">
                <HBox.margin>
                   <Insets right="50.0" />
                </HBox.margin>
             </Button>
-            <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="76.0" text="Hủy" />
+            <Button mnemonicParsing="false" onAction="#handleHuy" prefHeight="40.0" prefWidth="76.0" text="Hủy" />
          </children>
       </HBox>
    </bottom>

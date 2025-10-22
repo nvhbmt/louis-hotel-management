@@ -14,8 +14,8 @@ GO
 -- Thêm một số phòng mẫu
 INSERT INTO Phong (maPhong, tang, trangThai, moTa, maLoaiPhong) VALUES
 -- Tầng 1 - Phòng đơn
-('P101', 1, N'Trống', N'Phòng đơn tầng 1, cửa sổ hướng sân', 'LP001'),
-('P102', 1, N'Trống', N'Phòng đơn tầng 1, cửa sổ hướng đường', 'LP001'),
+('P101', 1, N'Đã đặt', N'Phòng đơn tầng 1, cửa sổ hướng sân', 'LP001'),
+('P102', 1, N'Đã đặt', N'Phòng đơn tầng 1, cửa sổ hướng đường', 'LP001'),
 ('P103', 1, N'Trống', N'Phòng đơn tầng 1, góc tòa nhà', 'LP001'),
 
 -- Tầng 1 - Phòng đôi
@@ -45,10 +45,6 @@ INSERT INTO Phong (maPhong, tang, trangThai, moTa, maLoaiPhong) VALUES
 ('P502', 5, N'Trống', N'Phòng Suite tầng 5, view thành phố', 'LP005');
 GO
 
--- Thêm một số phòng đang được sử dụng để test
-UPDATE Phong SET trangThai = N'Đang sử dụng' WHERE maPhong IN ('P101', 'P204');
-UPDATE Phong SET trangThai = N'Đã đặt' WHERE maPhong IN ('P102', 'P301');
-UPDATE Phong SET trangThai = N'Bảo trì' WHERE maPhong = 'P103';
 
 -- ===================================================================
 -- 1. Nhân viên (NhanVien)
