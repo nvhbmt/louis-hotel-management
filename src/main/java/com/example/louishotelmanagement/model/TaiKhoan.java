@@ -6,15 +6,25 @@ public class TaiKhoan {
     private String tenDangNhap;
     private String matKhauHash;
     private String quyen;
-    private String trangThai;
+    private boolean trangThai; // true = Hoạt động, false = Khóa
 
-    public TaiKhoan(String maTK, NhanVien nhanVien, String tenDangNhap, String matKhauHash, String quyen, String trangThai) {
+    public TaiKhoan(String maTK, NhanVien nhanVien, String tenDangNhap, String matKhauHash, String quyen, boolean trangThai) {
         this.maTK = maTK;
         this.nhanVien = nhanVien;
         this.tenDangNhap = tenDangNhap;
         this.matKhauHash = matKhauHash;
         this.quyen = quyen;
         this.trangThai = trangThai;
+    }
+    
+    // Constructor với String trangThai để tương thích với database
+    public TaiKhoan(String maTK, NhanVien nhanVien, String tenDangNhap, String matKhauHash, String quyen, String trangThai) {
+        this.maTK = maTK;
+        this.nhanVien = nhanVien;
+        this.tenDangNhap = tenDangNhap;
+        this.matKhauHash = matKhauHash;
+        this.quyen = quyen;
+        this.trangThai = "Hoạt động".equals(trangThai);
     }
 
     public String getMaTK() {
@@ -41,6 +51,10 @@ public class TaiKhoan {
         this.tenDangNhap = tenDangNhap;
     }
 
+    public String getMatKhauHash() {
+        return matKhauHash;
+    }
+
     public void setMatKhauHash(String matKhauHash) {
         this.matKhauHash = matKhauHash;
     }
@@ -53,12 +67,20 @@ public class TaiKhoan {
         this.quyen = quyen;
     }
 
-    public String getTrangThai() {
+    public boolean getTrangThai() {
         return trangThai;
     }
 
-    public void setTrangThai(String trangThai) {
+    public void setTrangThai(boolean trangThai) {
         this.trangThai = trangThai;
+    }
+    
+    public void setTrangThai(String trangThai) {
+        this.trangThai = "Hoạt động".equals(trangThai);
+    }
+    
+    public String getTrangThaiDisplay() {
+        return trangThai ? "Hoạt động" : "Khóa";
     }
 
     @Override
@@ -69,7 +91,7 @@ public class TaiKhoan {
                 ", tenDangNhap='" + tenDangNhap + '\'' +
                 ", matKhauHash='" + matKhauHash + '\'' +
                 ", quyen='" + quyen + '\'' +
-                ", trangThai='" + trangThai + '\'' +
+                ", trangThai='" + getTrangThaiDisplay() + '\'' +
                 '}';
     }
 }

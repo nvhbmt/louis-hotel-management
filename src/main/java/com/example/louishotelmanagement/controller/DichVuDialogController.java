@@ -6,7 +6,7 @@ import com.dlsc.formsfx.model.validators.StringLengthValidator;
 import com.dlsc.formsfx.view.renderer.FormRenderer;
 import com.example.louishotelmanagement.dao.DichVuDAO;
 import com.example.louishotelmanagement.model.DichVu;
-import com.example.louishotelmanagement.utils.UIUtils;
+import com.example.louishotelmanagement.util.ThongBaoUtil;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -43,12 +43,12 @@ public class DichVuDialogController implements Initializable {
         try {
             khoiTaoDAO();
             String maDichVuTiepTheo = layMaDichVuTiepTheoNeuThemMoi();
-            
+
             taoForm(maDichVuTiepTheo, "", 0, 0.0, "", true);
             hienThiForm();
-            
+
         } catch (Exception e) {
-            UIUtils.hienThiThongBao("Lỗi", "Không thể khởi tạo form: " + e.getMessage());
+            ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể khởi tạo form: " + e.getMessage());
         }
     }
 
@@ -58,11 +58,11 @@ public class DichVuDialogController implements Initializable {
 
     private String layMaDichVuTiepTheoNeuThemMoi() {
         if (!"ADD".equals(mode)) return "";
-        
+
         try {
             return "DV" + System.currentTimeMillis() % 100000;
         } catch (Exception e) {
-            UIUtils.hienThiThongBao("Lỗi", "Không thể lấy mã dịch vụ tiếp theo: " + e.getMessage());
+            ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể lấy mã dịch vụ tiếp theo: " + e.getMessage());
             return "";
         }
     }
@@ -90,7 +90,7 @@ public class DichVuDialogController implements Initializable {
                         RegexValidator.forPattern("^DV\\d{3}$", "Mã dịch vụ phải theo định dạng 'DVxxx'")
                 )
                 .required("Mã dịch vụ không được để trống");
-        
+
         if ("ADD".equals(mode)) {
             field.editable(false);
         }
@@ -156,7 +156,7 @@ public class DichVuDialogController implements Initializable {
 
     public void setDichVu(DichVu dichVu) {
         if (dichVu == null) return;
-        
+
         // Set values
         maDVField.valueProperty().set(dichVu.getMaDV());
         maDVField.editable(false);
@@ -170,24 +170,24 @@ public class DichVuDialogController implements Initializable {
     @FXML
     private void handleLuu() {
         if (!form.isValid()) {
-            UIUtils.hienThiThongBao("Lỗi", "Vui lòng kiểm tra lại thông tin dịch vụ!");
+            ThongBaoUtil.hienThiThongBao("Lỗi", "Vui lòng kiểm tra lại thông tin dịch vụ!");
             return;
         }
-        
+
         // Đảm bảo đồng bộ giá trị từ UI vào model trước khi đọc
         form.persist();
-        
+
         try {
             DichVu dichVu = taoDichVuTuForm();
             boolean thanhCong = luuDichVu(dichVu);
-            
+
             if (thanhCong) {
                 hienThiThongBaoThanhCong();
                 dongDialog();
             }
-            
+
         } catch (Exception e) {
-            UIUtils.hienThiThongBao("Lỗi", "Lỗi cơ sở dữ liệu: " + e.getMessage());
+            ThongBaoUtil.hienThiThongBao("Lỗi", "Lỗi cơ sở dữ liệu: " + e.getMessage());
         }
     }
 
@@ -196,32 +196,32 @@ public class DichVuDialogController implements Initializable {
         String ma = maDVField.valueProperty().get();
         String ten = tenDVField.valueProperty().get();
         String moTa = moTaField.valueProperty().get();
-        
+
         dichVu.setMaDV(ma != null ? ma.trim() : "");
         dichVu.setTenDV(ten != null ? ten.trim() : "");
         dichVu.setSoLuong(soLuongField.valueProperty().get());
         dichVu.setDonGia(donGiaField.valueProperty().get());
         dichVu.setMoTa(moTa != null ? moTa.trim() : "");
         dichVu.setConKinhDoanh(conKinhDoanhField.valueProperty().get());
-        
+
         return dichVu;
     }
 
     private boolean luuDichVu(DichVu dichVu) throws Exception {
         boolean thanhCong;
-        
+
         if ("ADD".equals(mode)) {
             thanhCong = dichVuDAO.themDichVu(dichVu);
         } else {
             thanhCong = dichVuDAO.capNhatDichVu(dichVu);
         }
-        
+
         return thanhCong;
     }
 
     private void hienThiThongBaoThanhCong() {
         String thongBao = "ADD".equals(mode) ? "Đã thêm dịch vụ thành công!" : "Đã cập nhật dịch vụ thành công!";
-        UIUtils.hienThiThongBao("Thành công", thongBao);
+        ThongBaoUtil.hienThiThongBao("Thành công", thongBao);
     }
 
     @FXML

@@ -28,15 +28,14 @@ public class NhanVienDAO {
             return cs.executeUpdate()>0;
         }
     }
-    public ArrayList layDSNhanVien()throws SQLException{
+    public ArrayList<NhanVien> layDSNhanVien()throws SQLException{
         ArrayList<NhanVien> dsnhanVien = new ArrayList<>();
         String sql = "{call sp_LayDSNhanVien()}";
         try(Connection con = CauHinhDatabase.getConnection();
         CallableStatement cs = con.prepareCall(sql);) {
             ResultSet rs = cs.executeQuery();
-            NhanVien nv = null;
             while (rs.next()) {
-                nv = new NhanVien(
+                NhanVien nv = new NhanVien(
                         rs.getString("maNV"),
                         rs.getString("hoTen"),
                         rs.getString("soDT"),
@@ -44,8 +43,8 @@ public class NhanVienDAO {
                         rs.getString("chucVu"),
                         rs.getDate("ngaySinh").toLocalDate()
                 );
+                dsnhanVien.add(nv);
             }
-            dsnhanVien.add(nv);
             return dsnhanVien;
         }
     }

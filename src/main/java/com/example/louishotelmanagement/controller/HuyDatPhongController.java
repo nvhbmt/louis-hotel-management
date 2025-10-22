@@ -5,8 +5,7 @@ import com.example.louishotelmanagement.dao.KhachHangDAO;
 import com.example.louishotelmanagement.dao.PhieuDatPhongDAO;
 import com.example.louishotelmanagement.dao.PhongDAO;
 import com.example.louishotelmanagement.model.*;
-import com.example.louishotelmanagement.utils.UIUtils;
-import javafx.beans.property.Property;
+import com.example.louishotelmanagement.util.ThongBaoUtil;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -21,7 +20,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-public class HuyDatPhongController implements Initializable,Refreshable {
+public class HuyDatPhongController implements Initializable, Refreshable {
 
     public TextField searchTextField;
     @FXML
@@ -58,22 +57,23 @@ public class HuyDatPhongController implements Initializable,Refreshable {
         kDao = new KhachHangDAO();
         pDao = new PhieuDatPhongDAO();
         ctpDao = new CTPhieuDatPhongDAO();
-        phDao =  new PhongDAO();
-        try{
+        phDao = new PhongDAO();
+        try {
             KhoiTaoTableView();
             tablePhieu.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
-               if(newValue != null){
-                   try {
-                       loadCTThongTinPhong();
-                   } catch (SQLException e) {
-                       throw new RuntimeException(e);
-                   }
-               }
+                if (newValue != null) {
+                    try {
+                        loadCTThongTinPhong();
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
             });
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
+
     public void KhoiTaoTableView() throws SQLException {
         colMaPhieu.setCellValueFactory(new PropertyValueFactory<>("maPhieu"));
         colNgayDat.setCellValueFactory(new PropertyValueFactory<>("ngayDat"));
@@ -117,7 +117,7 @@ public class HuyDatPhongController implements Initializable,Refreshable {
                 if (empty || item == null) {
                     setText(null);
 
-                }else{
+                } else {
                     try {
                         KhachHang khachHang = kDao.layKhachHangTheoMa(item);
 
@@ -142,10 +142,11 @@ public class HuyDatPhongController implements Initializable,Refreshable {
         // Cho phép chọn nhiều dòng
         tablePhieu.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
     }
+
     public void loadCTThongTinPhong() throws SQLException {
-        if(tablePhieu.getSelectionModel().getSelectedItem()==null){
-            UIUtils.hienThiLoi("Lỗi thông tin","Không tìm thấy thông tin phòng");
-        }else{
+        if (tablePhieu.getSelectionModel().getSelectedItem() == null) {
+            ThongBaoUtil.hienThiLoi("Lỗi thông tin", "Không tìm thấy thông tin phòng");
+        } else {
             PhieuDatPhong phieuTam = (PhieuDatPhong) tablePhieu.getSelectionModel().getSelectedItem();
             ArrayList<CTPhieuDatPhong> dsCTP = ctpDao.layDSCTPhieuDatPhongTheoPhieu(phieuTam.getMaPhieu());
             Phong pTam = phDao.layPhongTheoMa(dsCTP.getLast().getMaPhong());
@@ -157,26 +158,21 @@ public class HuyDatPhongController implements Initializable,Refreshable {
             txtMoTa.setText(pTam.getMoTa());
         }
     }
-    public void showAlert(String header,String message){
-        Alert alert = new  Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Thông báo");
-        alert.setHeaderText(header);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
+
+
     public void handleTim(ActionEvent actionEvent) throws SQLException {
         String searchtxt = searchTextField.getText();
         if (searchtxt == null || searchtxt.isEmpty()) {
-            UIUtils.hienThiLoi("Không thể tìm","Không được để trống nội dung tìm kiếm");
-        }else{
+            ThongBaoUtil.hienThiLoi("Không thể tìm", "Không được để trống nội dung tìm kiếm");
+        } else {
             PhieuDatPhong phieuDatPhong = pDao.layPhieuDatPhongTheoMa(searchtxt);
             if (phieuDatPhong != null) {
                 ObservableList<PhieuDatPhong> ketQuaTimKiem = FXCollections.observableArrayList(phieuDatPhong);
                 tablePhieu.setItems(ketQuaTimKiem);
                 tablePhieu.refresh();
-            }else{
+            } else {
                 tablePhieu.setItems(FXCollections.observableArrayList());
-                UIUtils.hienThiLoi("Lỗi tìm kiếm","Không tìm thấy bất kì phiếu đặt phòng");
+                ThongBaoUtil.hienThiLoi("Lỗi tìm kiếm", "Không tìm thấy bất kì phiếu đặt phòng");
             }
         }
     }
@@ -191,27 +187,27 @@ public class HuyDatPhongController implements Initializable,Refreshable {
     }
 
     public void handleHuyPhieuDat(ActionEvent actionEvent) throws SQLException {
-        if(tablePhieu.getSelectionModel().getSelectedIndex()!=-1){
+        if (tablePhieu.getSelectionModel().getSelectedIndex() != -1) {
             PhieuDatPhong phieuTam = (PhieuDatPhong) tablePhieu.getSelectionModel().getSelectedItem();
-            if(phieuTam.getTrangThai().equals(TrangThaiPhieuDatPhong.DA_DAT)){
+            if (phieuTam.getTrangThai().equals(TrangThaiPhieuDatPhong.DA_DAT)) {
                 phieuTam.setTrangThai(TrangThaiPhieuDatPhong.DA_HUY);
-                pDao.capNhatTrangThaiPhieuDatPhong(phieuTam.getMaPhieu(),phieuTam.getTrangThai().toString());
+                pDao.capNhatTrangThaiPhieuDatPhong(phieuTam.getMaPhieu(), phieuTam.getTrangThai().toString());
                 ArrayList<CTPhieuDatPhong> dsCTP = ctpDao.layDSCTPhieuDatPhongTheoPhieu(phieuTam.getMaPhieu());
-                for(CTPhieuDatPhong ctp : dsCTP){
+                for (CTPhieuDatPhong ctp : dsCTP) {
                     boolean check = phDao.capNhatTrangThaiPhong(ctp.getMaPhong(), TrangThaiPhong.TRONG.toString());
-                    if(check == false){
-                        UIUtils.hienThiLoi("Lỗi hủy đặt phòng","Không thể cập nhật trạng thái phòng");
+                    if (check == false) {
+                        ThongBaoUtil.hienThiLoi("Lỗi hủy đặt phòng", "Không thể cập nhật trạng thái phòng");
                         return;
                     }
                 }
-                UIUtils.hienThiThongBao("Thông báo","Hủy đặt phòng thành công");
+                ThongBaoUtil.hienThiThongBao("Thông báo", "Hủy đặt phòng thành công");
                 tablePhieu.refresh();
-            }else{
-                UIUtils.hienThiLoi("Lỗi hủy đặt phòng","Phòng đang trong trạng thái "+phieuTam.getTrangThai().toString()+" không thể hủy!");
+            } else {
+                ThongBaoUtil.hienThiLoi("Lỗi hủy đặt phòng", "Phòng đang trong trạng thái " + phieuTam.getTrangThai().toString() + " không thể hủy!");
             }
 
-        }else{
-            UIUtils.hienThiLoi("Lỗi hủy đặt phòng","Vui lòng chọn phiếu để hủy");
+        } else {
+            ThongBaoUtil.hienThiLoi("Lỗi hủy đặt phòng", "Vui lòng chọn phiếu để hủy");
         }
     }
 
