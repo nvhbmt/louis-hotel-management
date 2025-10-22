@@ -86,11 +86,11 @@ public class QuanLyDichVuController implements Initializable {
     private void capNhatThongKe() throws Exception {
         List<DichVu> tatCaDichVu = dichVuDAO.layTatCaDichVu(null);
         List<DichVu> dichVuConKinhDoanh = dichVuDAO.layTatCaDichVu(true);
-        List<DichVu> dichVuNgungKinhDoanh = dichVuDAO.layTatCaDichVu(false);
+        //List<DichVu> dichVuNgungKinhDoanh = dichVuDAO.layTatCaDichVu(false);
 
         int tongSo = tatCaDichVu.size();
         int conKinhDoanh = dichVuConKinhDoanh.size();
-        int ngungKinhDoanh = dichVuNgungKinhDoanh.size();
+        //int ngungKinhDoanh = dichVuNgungKinhDoanh.size();
         
         double tongGiaTri = tatCaDichVu.stream()
                 .mapToDouble(dv -> dv.getDonGia() * dv.getSoLuong())
@@ -98,8 +98,8 @@ public class QuanLyDichVuController implements Initializable {
 
         lblTongSoDichVu.setText(String.valueOf(tongSo));
         lblSoDichVuConKinhDoanh.setText(String.valueOf(conKinhDoanh));
-        lblSoDichVuNgungKinhDoanh.setText(String.valueOf(ngungKinhDoanh));
-        lblTongGiaTriDichVu.setText(String.format("%.0f VNĐ", tongGiaTri));
+        //lblSoDichVuNgungKinhDoanh.setText(String.valueOf(ngungKinhDoanh));
+        //lblTongGiaTriDichVu.setText(String.format("%.0f VNĐ", tongGiaTri));
     }
 
     private void khoiTaoDuLieu() {
@@ -238,7 +238,7 @@ public class QuanLyDichVuController implements Initializable {
             // Áp dụng filter hiện tại
             apDungFilter();
 
-            capNhatTrangThai("Đã tải " + dsDichVu.size() + " dịch vụ");
+            //capNhatTrangThai("Đã tải " + dsDichVu.size() + " dịch vụ");
 
         } catch (Exception e) {
             UIUtils.hienThiThongBao("Lỗi", "Không thể tải dữ liệu dịch vụ: " + e.getMessage());
@@ -276,7 +276,7 @@ public class QuanLyDichVuController implements Initializable {
                 .toList();
 
         danhSachDichVuFiltered.addAll(filtered);
-        lblSoLuong.setText("Tổng số dịch vụ: " + danhSachDichVuFiltered.size());
+        //lblSoLuong.setText("Tổng số dịch vụ: " + danhSachDichVuFiltered.size());
     }
 
     @FXML
@@ -367,8 +367,8 @@ public class QuanLyDichVuController implements Initializable {
         apDungFilter();
     }
 
-    private void capNhatTrangThai(String message) {
-        lblTrangThai.setText(message);
-    }
+//    private void capNhatTrangThai(String message) {
+//        lblTrangThai.setText(message);
+//    }
 }
 

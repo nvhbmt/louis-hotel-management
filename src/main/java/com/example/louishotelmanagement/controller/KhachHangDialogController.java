@@ -7,6 +7,8 @@ import com.dlsc.formsfx.view.renderer.FormRenderer;
 import com.example.louishotelmanagement.dao.KhachHangDAO;
 import com.example.louishotelmanagement.model.KhachHang;
 import com.example.louishotelmanagement.utils.UIUtils;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -35,7 +37,7 @@ public class KhachHangDialogController implements Initializable {
     private StringField emailField;
     private StringField diaChiField;
     private DateField ngaySinhField;
-    private StringField ghiChuField;
+    private SingleSelectionField<String> ghiChuField;
     private StringField CCCDField;
     private Form form;
     public Label lblTieuDe;
@@ -99,7 +101,7 @@ public class KhachHangDialogController implements Initializable {
                 .placeholder("VD: George Floyd")
                 .validate(
                         StringLengthValidator.atLeast(5, "Họ và tên khách hàng phải có ít nhất 5 ký tự"),
-                        RegexValidator.forPattern("[A-Z][a-z]+( [A-Z][a-z]+)+", "Họ tên khách hàng chữ cái đầu mỗi từ phải viết hoa")
+                        RegexValidator.forPattern("^\\p{Lu}\\p{Ll}+( \\p{Lu}\\p{Ll}*)*$", "Họ tên khách hàng chữ cái đầu mỗi từ phải viết hoa")
                 )
                 .required("Họ và tên khách hàng không được để trống");
         return field;
@@ -143,10 +145,25 @@ public class KhachHangDialogController implements Initializable {
         return field;
     }
 
-    private StringField taoFieldGhiChu(String ghiChu) {
-        StringField field = Field.ofStringType(ghiChu)
+    private SingleSelectionField<String> taoFieldGhiChu(String ghiChu) {
+        ObservableList<String> dsGhiChu = FXCollections.observableArrayList(
+                        "Khách quen",
+                        "Khách VIP",
+                        "Khách doanh nghiệp"
+                );
+
+        SingleSelectionField<String> field = Field.ofSingleSelectionType(dsGhiChu)
                 .label("Ghi chú:")
-                .placeholder("Nhập ghi chú nếu có");
+                .placeholder("Chọn hàng khách")
+                .required(true);
+
+        // Nếu ở mode sửa và có ghi chú sẵn
+        if (ghiChu != null && dsGhiChu.contains(ghiChu)) {
+            int index = dsGhiChu.indexOf(ghiChu);
+            if (index >= 0) {
+                field.select(index);
+            }
+        }
         return field;
     }
 
@@ -188,14 +205,21 @@ public class KhachHangDialogController implements Initializable {
             return;
         }
 
-        maKHField.valueProperty().setValue(khachHang.getMaKH());
-        hoTenField.valueProperty().setValue(khachHang.getHoTen());
-        soDTField.valueProperty().setValue(khachHang.getSoDT());
-        emailField.valueProperty().setValue(khachHang.getEmail());
-        diaChiField.valueProperty().setValue(khachHang.getDiaChi());
-        ngaySinhField.valueProperty().setValue(khachHang.getNgaySinh());
-        ghiChuField.valueProperty().setValue(khachHang.getGhiChu());
-        CCCDField.valueProperty().setValue(khachHang.getCCCD());
+        formContainer.getChildren().clear();
+
+        // Tạo lại form với dữ liệu khách hàng
+        taoForm(
+                khachHang.getMaKH(),
+                khachHang.getHoTen(),
+                khachHang.getSoDT(),
+                khachHang.getEmail(),
+                khachHang.getDiaChi(),
+                khachHang.getNgaySinh(),
+                khachHang.getGhiChu(),
+                khachHang.getCCCD()
+        );
+
+        hienThiForm();
     }
 
     @FXML
@@ -226,7 +250,7 @@ public class KhachHangDialogController implements Initializable {
         khachHang.setEmail(emailField.valueProperty().getValue());
         khachHang.setDiaChi(diaChiField.valueProperty().getValue());
         khachHang.setNgaySinh(ngaySinhField.valueProperty().getValue());
-        khachHang.setGhiChu(ghiChuField.valueProperty().getValue());
+        khachHang.setGhiChu(ghiChuField.getSelection());
         khachHang.setCCCD(CCCDField.valueProperty().getValue());
 
         return khachHang;
