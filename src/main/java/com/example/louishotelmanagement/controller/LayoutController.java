@@ -68,7 +68,15 @@ public class LayoutController implements Initializable, ContentSwitcher {
             Stage stage = (Stage) logoutBtn.getScene().getWindow();
             stage.setScene(scene);
             stage.setTitle("Đăng nhập - Hệ thống quản lý khách sạn Louis");
+            
+            // Reset kích thước và thuộc tính Stage
             stage.setResizable(false);
+            stage.setMinWidth(400);
+            stage.setMinHeight(500);
+            stage.setMaxWidth(400);
+            stage.setMaxHeight(500);
+            stage.setWidth(400);
+            stage.setHeight(500);
             stage.centerOnScreen();
         } catch (IOException e) {
             e.printStackTrace();
