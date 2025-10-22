@@ -4,10 +4,7 @@ import com.example.louishotelmanagement.dao.CTPhieuDatPhongDAO;
 import com.example.louishotelmanagement.dao.KhachHangDAO;
 import com.example.louishotelmanagement.dao.PhieuDatPhongDAO;
 import com.example.louishotelmanagement.dao.PhongDAO;
-import com.example.louishotelmanagement.model.CTPhieuDatPhong;
-import com.example.louishotelmanagement.model.KhachHang;
-import com.example.louishotelmanagement.model.PhieuDatPhong;
-import com.example.louishotelmanagement.model.Phong;
+import com.example.louishotelmanagement.model.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -19,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-public class NhanPhongController implements Initializable {
+public class NhanPhongController implements Initializable, Refreshable {
     public ComboBox dsKhachHang;
     public TextField soDT;
     public TextField CCCD;
@@ -106,7 +103,7 @@ public class NhanPhongController implements Initializable {
         ArrayList<PhieuDatPhong> dsPhieu = phieuDatPhongDAO.layDSPhieuDatPhongTheoKhachHang(dsMaKH.get(dsKhachHang.getSelectionModel().getSelectedIndex()));
         if(dsPhieu.size()>0) {
             for(PhieuDatPhong p:dsPhieu){
-                if(p.getTrangThai().equalsIgnoreCase("Đã đặt")){
+                if(p.getTrangThai().equals(TrangThaiPhieuDatPhong.DA_DAT)){
                     dspdp.add(p);
                     ArrayList<CTPhieuDatPhong> dsCTP = ctPhieuDatPhongDAO.layDSCTPhieuDatPhongTheoPhieu(p.getMaPhieu());
                     for(CTPhieuDatPhong ctp : dsCTP){
@@ -184,6 +181,13 @@ public class NhanPhongController implements Initializable {
         }else{
             showAlertError("Không đặt được phòng","Không tìm thấy bất kì phòng nào có thể nhận");
         }
+    }
+
+    @Override
+    public void refreshData() throws SQLException {
+        dsKhachHang.getSelectionModel().selectFirst();
+        laydsPhongTheoKhachHang();
+        ngayDat.setValue(null);
     }
 }
 

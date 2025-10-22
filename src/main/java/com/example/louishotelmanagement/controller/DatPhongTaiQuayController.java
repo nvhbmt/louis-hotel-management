@@ -7,12 +7,18 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.sql.SQLException;
@@ -21,7 +27,7 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.ResourceBundle;
 
-public class DatPhongTaiQuayController implements Initializable {
+public class DatPhongTaiQuayController implements Initializable,Refreshable {
 
     public TextField maNhanVien;
     public DatePicker ngayDi;
@@ -197,6 +203,7 @@ public class DatPhongTaiQuayController implements Initializable {
         return tongTien;
     }
     public void laydsKhachHang() throws  SQLException{
+        dsKhachHang.getItems().clear();
         ArrayList<KhachHang> khs = Kdao.layDSKhachHang();
         dsMaKH = new ArrayList<>();
         for(KhachHang khachHang : khs) {
@@ -211,7 +218,9 @@ public class DatPhongTaiQuayController implements Initializable {
         alert.setContentText(message);
         alert.showAndWait();
     }
-    public void refresh() throws SQLException {
+    @Override // 👈 Thêm @Override
+    public void refreshData() throws SQLException { // 👈 Đổi tên từ refresh() sang refreshData()
+        laydsKhachHang();
         dsKhachHang.getSelectionModel().selectFirst();
         ngayDi.setValue(null);
         tablePhong.getSelectionModel().clearSelection();
@@ -262,7 +271,7 @@ public class DatPhongTaiQuayController implements Initializable {
                     }while(checkMaPhieu(maPhieu));
                     DatPhong(newKh,p,maPhieu);
                 }
-                refresh();
+                refreshData();
                 showAlert("Thành Công","Bạn đã đặt phòng thành công");
             }else{
                 showAlertError("lỖI NGÀY","không được chọn ngày đi trước ngày hôm nay");
@@ -273,6 +282,37 @@ public class DatPhongTaiQuayController implements Initializable {
     }
 
     public void handleRefresh(ActionEvent actionEvent) throws SQLException {
-        refresh();
+        refreshData();
+    }
+
+    public void handleThemKhachHang(ActionEvent actionEvent) {
+        try {
+            // 1. Tải FXML
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/them-khach-hang-form.fxml"));
+            Parent parent = loader.load();
+
+            // 2. Lấy Controller (nếu cần truyền dữ liệu hoặc gọi phương thức)
+            // ThemKhachHangDialogController controller = loader.getController();
+
+            // 3. Tạo Stage (Cửa sổ mới)
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Thêm Khách Hàng Mới");
+
+            // Cài đặt làm cửa sổ Modal (bắt buộc phải tương tác trước khi quay lại cửa sổ cũ)
+            // Lấy Stage hiện tại từ sự kiện nếu cần
+            // Stage ownerStage = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
+            // dialogStage.initOwner(ownerStage);
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
+
+            // 4. Thiết lập Scene và hiển thị
+            dialogStage.setScene(new Scene(parent));
+            dialogStage.showAndWait(); // showAndWait() sẽ chặn luồng cho đến khi hộp thoại đóng lại
+            refreshData();
+        } catch (IOException e) {
+            System.err.println("Lỗi khi tải FXML Thêm Khách Hàng: " + e.getMessage());
+            e.printStackTrace();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -4,10 +4,7 @@ import com.example.louishotelmanagement.dao.CTPhieuDatPhongDAO;
 import com.example.louishotelmanagement.dao.KhachHangDAO;
 import com.example.louishotelmanagement.dao.PhieuDatPhongDAO;
 import com.example.louishotelmanagement.dao.PhongDAO;
-import com.example.louishotelmanagement.model.CTPhieuDatPhong;
-import com.example.louishotelmanagement.model.KhachHang;
-import com.example.louishotelmanagement.model.PhieuDatPhong;
-import com.example.louishotelmanagement.model.Phong;
+import com.example.louishotelmanagement.model.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -25,9 +22,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-public class DoiPhongController implements Initializable {
+public class DoiPhongController implements Initializable ,Refreshable{
     public ComboBox dsKhachHang;
-        public ComboBox dsPhongHienTai;
+    public ComboBox dsPhongHienTai;
     public ComboBox dsPhong;
     public TextField maNV;
     public TableView tablePhong;
@@ -126,7 +123,7 @@ public class DoiPhongController implements Initializable {
         ArrayList<PhieuDatPhong> dsPhieu = pdpDao.layDSPhieuDatPhongTheoKhachHang(dsMaKH.get(dsKhachHang.getSelectionModel().getSelectedIndex()));
         if(dsPhieu.size()>0) {
             for(PhieuDatPhong p:dsPhieu){
-                if(p.getTrangThai().equalsIgnoreCase("Đang sử dụng")){
+                if(p.getTrangThai().equals(TrangThaiPhieuDatPhong.DANG_SU_DUNG)){
                     dspdp.add(p);
                     ArrayList<CTPhieuDatPhong> dsCTP = ctpDao.layDSCTPhieuDatPhongTheoPhieu(p.getMaPhieu());
                     for(CTPhieuDatPhong ctp : dsCTP){
@@ -138,6 +135,7 @@ public class DoiPhongController implements Initializable {
         }
     }
     public void layDsPhong() throws SQLException {
+        dsPhong.getItems().clear();
         ArrayList<Phong> phongs = Pdao.layDSPhongTrong();
 
         for(Phong phong : phongs) {
@@ -146,7 +144,8 @@ public class DoiPhongController implements Initializable {
     }
     public void handleDoiPhong(ActionEvent actionEvent) throws SQLException {
         if(dsPhongHienTai.getSelectionModel().getSelectedItem()!=null){
-            CTPhieuDatPhong ctp = ctpDao.layCTPhieuDatPhongTheoMa(dspdp.get(0).getMaPhieu(),dsPhongHienTai.getSelectionModel().getSelectedItem().toString());
+            ArrayList<CTPhieuDatPhong> dsctp = ctpDao.layDSCTPhieuDatPhongTheoPhong(dsPhongHienTai.getSelectionModel().getSelectedItem().toString());
+            CTPhieuDatPhong ctp = dsctp.getLast();
             if(ctp!=null){
                 if(ctp.getNgayDi().isAfter(LocalDate.now())){
                     ctp.setMaPhong(dsPhong.getSelectionModel().getSelectedItem().toString());
@@ -157,6 +156,7 @@ public class DoiPhongController implements Initializable {
                     Pdao.capNhatTrangThaiPhong(ctp.getMaPhong(),"Đang sử dụng");
 
                     showAlert("Thành công","Đã đổi phòng cho khách hàng");
+                    refreshData();
                 }else{
                     showAlertError("Không đổi phòng được","Bạn không thể đổi phòng vì đã đến ngày hạn");
                 }
@@ -169,4 +169,14 @@ public class DoiPhongController implements Initializable {
     }
 
 
+    @Override
+    public void refreshData() throws SQLException {
+        dsKhachHang.getSelectionModel().selectFirst();
+        laydsPhongTheoKhachHang();
+        dsPhongHienTai.getSelectionModel().selectFirst();
+        layDsPhong();
+        dsPhong.getSelectionModel().selectFirst();
+        loadTable();
+        tablePhong.getSelectionModel().clearSelection();
+    }
 }

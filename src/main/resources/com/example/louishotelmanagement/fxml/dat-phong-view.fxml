@@ -68,7 +68,7 @@
                         <Insets left="60.0" />
                      </HBox.margin>
                   </ComboBox>
-                   <Button mnemonicParsing="false" text="Thêm khách hàng">
+                   <Button mnemonicParsing="false" onAction="#handleThemKhachHang" text="Thêm khách hàng">
                        <HBox.margin>
                            <Insets left="20.0" />
                        </HBox.margin></Button>
