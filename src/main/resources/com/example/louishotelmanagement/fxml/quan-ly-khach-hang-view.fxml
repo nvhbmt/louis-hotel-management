@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
@@ -6,7 +7,6 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.cell.PropertyValueFactory?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
@@ -18,7 +18,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="rootPane" stylesheets="@../css/main.css, @../css/quan-ly-khach-hang.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.QuanLyKhachHangController">
+<BorderPane fx:id="rootPane" stylesheets="@../css/main.css, @../css/quan-ly-khach-hang.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.QuanLyKhachHangController">
     <center>
         <VBox alignment="TOP_CENTER" prefHeight="800.0" prefWidth="950.0" spacing="15.0" styleClass="main-content" VBox.vgrow="ALWAYS">
             <children>
@@ -50,7 +50,7 @@
                     </children>
                 </VBox>
 
-                <GridPane alignment="TOP_CENTER" hgap="20" prefHeight="150.0" prefWidth="890.0" VBox.vgrow="NEVER" HBox.hgrow="ALWAYS">
+                <GridPane alignment="TOP_CENTER" hgap="20" prefHeight="150.0" prefWidth="890.0" HBox.hgrow="ALWAYS" VBox.vgrow="NEVER">
                     <columnConstraints>
                         <ColumnConstraints hgrow="ALWAYS" percentWidth="25" />
                         <ColumnConstraints hgrow="ALWAYS" percentWidth="25" />
@@ -127,13 +127,13 @@
 
                 <HBox alignment="CENTER_LEFT" spacing="15.0" HBox.hgrow="ALWAYS">
                     <children>
-                        <TextField fx:id="txtTimKiem" prefHeight="41.0" prefWidth="200.0" maxWidth="Infinity" promptText="Nhập mã khách hàng..." style="-fx-border-color: #B0C4DE; -fx-border-radius: 15; -fx-background-radius: 15;" styleClass="form-field" HBox.hgrow="ALWAYS" />
+                        <TextField fx:id="txtTimKiem" maxWidth="Infinity" prefHeight="41.0" prefWidth="200.0" promptText="Nhập mã khách hàng..." style="-fx-border-color: #B0C4DE; -fx-border-radius: 15; -fx-background-radius: 15;" styleClass="form-field" HBox.hgrow="ALWAYS" />
 
-                        <ComboBox fx:id="cmbHang" prefHeight="41.0" prefWidth="150.0" maxWidth="Infinity" promptText="Hạng khách" style="-fx-background-radius: 15; -fx-background-color: #F5F9FF; -fx-border-color: #B0C4DE; -fx-border-radius: 15;" styleClass="hover-effect" HBox.hgrow="ALWAYS" />
+                        <ComboBox fx:id="cmbHang" maxWidth="Infinity" prefHeight="41.0" prefWidth="150.0" promptText="Hạng khách" style="-fx-background-radius: 15; -fx-background-color: #F5F9FF; -fx-border-color: #B0C4DE; -fx-border-radius: 15;" styleClass="hover-effect" HBox.hgrow="ALWAYS" />
 
-                        <ComboBox fx:id="cmbTrangThai" prefHeight="41.0" prefWidth="150.0" maxWidth="Infinity" promptText="Tất cả trạng thái" style="-fx-background-radius: 15; -fx-background-color: #F5F9FF; -fx-border-color: #B0C4DE; -fx-border-radius: 15;" styleClass="hover-effect" HBox.hgrow="ALWAYS" />
+                        <ComboBox fx:id="cmbTrangThai" maxWidth="Infinity" prefHeight="41.0" prefWidth="150.0" promptText="Tất cả trạng thái" style="-fx-background-radius: 15; -fx-background-color: #F5F9FF; -fx-border-color: #B0C4DE; -fx-border-radius: 15;" styleClass="hover-effect" HBox.hgrow="ALWAYS" />
 
-                        <Button fx:id="btnLamMoi" mnemonicParsing="false" prefHeight="37.0" prefWidth="150.0" maxWidth="Infinity" styleClass="btn-lam-moi" text="🔄 Làm Mới" HBox.hgrow="ALWAYS">
+                        <Button fx:id="btnLamMoi" maxWidth="Infinity" mnemonicParsing="false" prefHeight="37.0" prefWidth="150.0" styleClass="btn-lam-moi" text="🔄 Làm Mới" HBox.hgrow="ALWAYS">
                             <font>
                                 <Font name="System Bold" size="12.0" />
                             </font>
@@ -141,19 +141,21 @@
                     </children>
                 </HBox>
 
-                <VBox prefHeight="561.0" prefWidth="890.0" styleClass="table-container" VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS">
+                <VBox prefHeight="561.0" prefWidth="890.0" styleClass="table-container" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
                     <children>
                         <TableView fx:id="tableViewKhachHang" prefHeight="576.0" prefWidth="850.0" VBox.vgrow="ALWAYS">
                             <columnResizePolicy>
                                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                             </columnResizePolicy>
                             <columns>
-                                <TableColumn fx:id="colMaKH" prefWidth="98.0" minWidth="80.0" maxWidth="Infinity" text="Mã Khách Hàng" />
-                                <TableColumn fx:id="colHoTen" prefWidth="166.0" minWidth="120.0" maxWidth="Infinity" text="Họ và Tên" />
-                                <TableColumn fx:id="colSoDT" prefWidth="130.0" minWidth="100.0" maxWidth="Infinity" text="Số điện thoại" />
-                                <TableColumn fx:id="colEmail" prefWidth="128.0" minWidth="100.0" maxWidth="Infinity" text="Email" />
-                                <TableColumn fx:id="colHangKhach" prefWidth="125.0" minWidth="100.0" maxWidth="Infinity" text="Hạng khách" />
-                                <TableColumn fx:id="colThaoTac" prefWidth="203.0" minWidth="150.0" maxWidth="Infinity" text="Thao tác" />
+                                <TableColumn fx:id="colMaKH" maxWidth="Infinity" minWidth="80.0" prefWidth="98.0" text="Mã Khách Hàng" />
+                                <TableColumn fx:id="colHoTen" maxWidth="Infinity" minWidth="120.0" prefWidth="143.0" text="Họ và Tên" />
+                                <TableColumn fx:id="colSoDT" maxWidth="Infinity" minWidth="100.0" prefWidth="127.0" text="Số điện thoại" />
+                                <TableColumn fx:id="colEmail" maxWidth="Infinity" minWidth="97.0" prefWidth="97.0" text="Email" />
+                                <TableColumn fx:id="colGhiChu" maxWidth="Infinity" prefWidth="86.0" text="Ghi chú" />
+                                <TableColumn fx:id="colHangKhach" maxWidth="Infinity" minWidth="89.0" prefWidth="97.0" text="Hạng khách" />
+                                <TableColumn fx:id="colTrangThai" maxWidth="Infinity" minWidth="89.0" prefWidth="78.0" text="Trạng thái" />
+                                <TableColumn fx:id="colThaoTac" maxWidth="Infinity" minWidth="150.0" prefWidth="203.0" text="Thao tác" />
                             </columns>
                             <padding>
                                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

@@ -2,8 +2,10 @@ package com.example.louishotelmanagement.controller;
 
 import com.example.louishotelmanagement.dao.KhachHangDAO;
 import com.example.louishotelmanagement.model.KhachHang;
+import com.example.louishotelmanagement.model.TrangThaiKhachHang;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
 import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -16,6 +18,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 
 import java.io.IOException;
 import java.net.URL;
@@ -26,10 +29,11 @@ import java.util.ResourceBundle;
 public class QuanLyKhachHangController implements Initializable {
 
     private KhachHangDAO khachHangDAO;
+
     @FXML
     private ComboBox<String> cmbHang;
     @FXML
-    private ComboBox<String> cmbTrangThai;
+    private ComboBox<TrangThaiKhachHang> cmbTrangThai;
     @FXML
     private TableView<KhachHang> tableViewKhachHang;
     @FXML
@@ -43,8 +47,14 @@ public class QuanLyKhachHangController implements Initializable {
     @FXML
     private TableColumn<KhachHang, String> colHangKhach;
     @FXML
+    private TableColumn<KhachHang, String> colGhiChu;
+    @FXML
+    private TableColumn<KhachHang, String> colTrangThai;
+    @FXML
     private TableColumn<KhachHang, Void> colThaoTac;
+
     private ArrayList<KhachHang> dsKhachHang;
+
     @FXML
     private Label lblSoKhachHang;
     @FXML
@@ -64,18 +74,18 @@ public class QuanLyKhachHangController implements Initializable {
             //Khởi tạo dữ liệu
             setupComboBox();
             setupTableColumns();
-            setupListner();
+            setupListener();
             loadData();
 
         } catch (Exception e) {
-            ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể kết nối cơ sở dữ liệu" + e.getMessage());
+            ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể kết nối cơ sở dữ liệu: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
     // ------------ Khởi tạo UI ------------
-    //Khởi tạo combobox
     private void setupComboBox() {
+        // Hạng khách
         ObservableList<String> dsHang = FXCollections.observableArrayList(
                 "Tất cả hạng",
                 "Khách VIP",
@@ -85,23 +95,34 @@ public class QuanLyKhachHangController implements Initializable {
         cmbHang.setItems(dsHang);
         cmbHang.setValue("Tất cả hạng");
 
-        ObservableList<String> dsTrangThai = FXCollections.observableArrayList(
-                "Tất cả trạng thái",
-                "Đang lưu trú",
-                "Check-out",
-                "Đã đặt"
-        );
+        // Trạng thái khách hàng (dùng enum)
+        ObservableList<TrangThaiKhachHang> dsTrangThai = FXCollections.observableArrayList(TrangThaiKhachHang.values());
         cmbTrangThai.setItems(dsTrangThai);
-        cmbTrangThai.setValue("Tất cả trạng thái");
+        cmbTrangThai.getItems().add(0, null); // "Tất cả trạng thái"
+        cmbTrangThai.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(TrangThaiKhachHang object) {
+                return object == null ? "Tất cả trạng thái" : object.getTenHienThi();
+            }
+
+            @Override
+            public TrangThaiKhachHang fromString(String string) {
+                return null; // không cần
+            }
+        });
+        cmbTrangThai.getSelectionModel().select(0);
     }
 
-    //Nạp dữ liệu vào table
     private void setupTableColumns() {
         colMaKH.setCellValueFactory(new PropertyValueFactory<>("maKH"));
         colHoTen.setCellValueFactory(new PropertyValueFactory<>("hoTen"));
         colSoDT.setCellValueFactory(new PropertyValueFactory<>("soDT"));
         colEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
-        colHangKhach.setCellValueFactory(new PropertyValueFactory<>("ghiChu"));
+        colHangKhach.setCellValueFactory(new PropertyValueFactory<>("hangKhach"));
+        colGhiChu.setCellValueFactory(new PropertyValueFactory<>("ghiChu"));
+        colTrangThai.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getTrangThai().getTenHienThi())
+        );
 
         colThaoTac.setCellFactory(_ -> new TableCell<>() {
             private final Button btnEdit = new Button("Sửa");
@@ -125,7 +146,6 @@ public class QuanLyKhachHangController implements Initializable {
             @Override
             protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
-
                 if (empty) {
                     setGraphic(null);
                 } else {
@@ -139,30 +159,20 @@ public class QuanLyKhachHangController implements Initializable {
         colThaoTac.setCellValueFactory(_ -> new ReadOnlyObjectWrapper<>(null));
     }
 
-    //Đăng ký sự kiện
-    private void setupListner() {
-        cmbHang.valueProperty().addListener((observable, oldValue, newValue) -> {
-            apDungFilterKhachHang();
-        });
-
-        txtTimKiem.textProperty().addListener((observable, oldValue, newValue) -> {
-            apDungFilterKhachHang();
-        });
-
-        btnLamMoi.setOnAction(event -> lamMoiDanhSachKhachHang());
-
-        btnThemKhachHang.setOnAction(event -> handleThemKhachHang());
+    private void setupListener() {
+        cmbHang.valueProperty().addListener((obs, oldV, newV) -> apDungFilterKhachHang());
+        cmbTrangThai.valueProperty().addListener((obs, oldV, newV) -> apDungFilterKhachHang());
+        txtTimKiem.textProperty().addListener((obs, oldV, newV) -> apDungFilterKhachHang());
+        btnLamMoi.setOnAction(e -> lamMoiDanhSachKhachHang());
+        btnThemKhachHang.setOnAction(e -> handleThemKhachHang());
     }
 
-    // ------------ Load dữ lệu ------------
-    //Load dữ liệu, cập nhật thống kê
+    // ------------ Load dữ liệu ------------
     private void loadData() {
         try {
             dsKhachHang = khachHangDAO.layDSKhachHang();
             ObservableList<KhachHang> danhSach = FXCollections.observableArrayList(dsKhachHang);
-
             tableViewKhachHang.setItems(danhSach);
-
             capNhatThongKe();
         } catch (Exception e) {
             ThongBaoUtil.hienThiThongBao("Lỗi", "Lỗi lấy dữ liệu: " + e.getMessage());
@@ -170,29 +180,17 @@ public class QuanLyKhachHangController implements Initializable {
         }
     }
 
-    // ------------ Xử lý logic ------------
-    //Cập nhật các ô thống kê
+    // ------------ Logic ------------
     void capNhatThongKe() {
-        try {
-            int tongSoKhach = dsKhachHang.size();
-            int soKhachVip = 0;
+        int tongSoKhach = dsKhachHang.size();
+        int soKhachVip = (int) dsKhachHang.stream()
+                .filter(kh -> "Khách VIP".equalsIgnoreCase(kh.getHangKhach()))
+                .count();
 
-            for (KhachHang kh : dsKhachHang) {
-                if ("Khách VIP".equals(kh.getGhiChu())) {
-                    soKhachVip++;
-                }
-            }
-
-            lblSoKhachHang.setText(String.valueOf(tongSoKhach));
-            lblKhachVIP.setText(String.valueOf(soKhachVip));
-
-        } catch (Exception e) {
-            ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể cập nhật thống kê: " + e.getMessage());
-            e.printStackTrace();
-        }
+        lblSoKhachHang.setText(String.valueOf(tongSoKhach));
+        lblKhachVIP.setText(String.valueOf(soKhachVip));
     }
 
-    //Thêm khách hàng
     @FXML
     private void handleThemKhachHang() {
         try {
@@ -206,7 +204,6 @@ public class QuanLyKhachHangController implements Initializable {
             controller.setMode("ADD");
 
             dialog.showAndWait();
-
             loadData();
         } catch (Exception e) {
             ThongBaoUtil.hienThiThongBao("Lỗi", e.getMessage());
@@ -217,41 +214,40 @@ public class QuanLyKhachHangController implements Initializable {
     private void lamMoiDanhSachKhachHang() {
         txtTimKiem.setText("");
         cmbHang.setValue("Tất cả hạng");
-        cmbTrangThai.setValue("Tất cả trạng thái");
+        cmbTrangThai.getSelectionModel().select(0);
 
-        ObservableList<KhachHang> danhSach = FXCollections.observableArrayList(dsKhachHang);
-        tableViewKhachHang.setItems(danhSach);
-
+        tableViewKhachHang.setItems(FXCollections.observableArrayList(dsKhachHang));
         capNhatThongKe();
     }
 
-    // Tìm kiếm + combobox lọc
     private void apDungFilterKhachHang() {
-        String timKiem = (txtTimKiem.getText() != null) ? txtTimKiem.getText().toLowerCase().trim() : "";
+        String timKiem = txtTimKiem.getText() != null ? txtTimKiem.getText().toLowerCase().trim() : "";
         String hangFilter = cmbHang.getValue();
+        TrangThaiKhachHang trangThaiFilter = cmbTrangThai.getValue();
 
-        ObservableList<KhachHang> danhSach = FXCollections.observableArrayList();
+        ObservableList<KhachHang> filteredList = FXCollections.observableArrayList();
 
         for (KhachHang kh : dsKhachHang) {
-            boolean equalTimKiem = timKiem.isEmpty() ||
-                    kh.getHoTen() != null && kh.getHoTen().toLowerCase().contains(timKiem) ||
-                    kh.getSoDT() != null && kh.getSoDT().toLowerCase().contains(timKiem) ||
-                    kh.getEmail() != null && kh.getEmail().toLowerCase().contains(timKiem);
+            boolean matchSearch = timKiem.isEmpty() ||
+                    (kh.getHoTen() != null && kh.getHoTen().toLowerCase().contains(timKiem)) ||
+                    (kh.getSoDT() != null && kh.getSoDT().toLowerCase().contains(timKiem)) ||
+                    (kh.getEmail() != null && kh.getEmail().toLowerCase().contains(timKiem));
 
-            boolean equalHang = hangFilter == null ||
-                    hangFilter.equals("Tất cả hạng") ||
-                    kh.getGhiChu() != null && kh.getGhiChu().equalsIgnoreCase(hangFilter);
+            boolean matchHang = hangFilter == null || "Tất cả hạng".equals(hangFilter) ||
+                    (kh.getHangKhach() != null && kh.getHangKhach().equalsIgnoreCase(hangFilter));
 
-            if (equalTimKiem && equalHang) {
-                danhSach.add(kh);
+            boolean matchTrangThai = trangThaiFilter == null || kh.getTrangThai() == trangThaiFilter;
+
+            if (matchSearch && matchHang && matchTrangThai) {
+                filteredList.add(kh);
             }
         }
 
-        tableViewKhachHang.setItems(danhSach);
+        tableViewKhachHang.setItems(filteredList);
     }
 
     @FXML
-    private void handleSuaKhachHang(KhachHang KhachHang) {
+    private void handleSuaKhachHang(KhachHang khachHang) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/khach-hang-form-dialog.fxml"));
             Stage dialog = new Stage();
@@ -259,13 +255,11 @@ public class QuanLyKhachHangController implements Initializable {
             dialog.initModality(Modality.APPLICATION_MODAL);
             dialog.setScene(new Scene(loader.load()));
 
-            // Thiết lập controller và dữ liệu
             KhachHangDialogController controller = loader.getController();
             controller.setMode("EDIT");
-            controller.setKhachHang(KhachHang);
-            dialog.showAndWait();
+            controller.setKhachHang(khachHang);
 
-            // Làm mới dữ liệu sau khi sửa
+            dialog.showAndWait();
             loadData();
 
         } catch (IOException e) {
@@ -274,13 +268,11 @@ public class QuanLyKhachHangController implements Initializable {
     }
 
     @FXML
-    private void handleXoaKhachHang(KhachHang KhachHang) {
-        // Xác nhận xóa
-        String message = "Bạn có chắc chắn muốn xóa khách hàng này?\nMã: " + KhachHang.getMaKH() + " - Họ tên: " + KhachHang.getHoTen();
+    private void handleXoaKhachHang(KhachHang khachHang) {
+        String message = "Bạn có chắc chắn muốn xóa khách hàng này?\nMã: " + khachHang.getMaKH() + " - Họ tên: " + khachHang.getHoTen();
         if (ThongBaoUtil.hienThiXacNhan("Xác nhận xóa", message)) {
             try {
-                // Xóa mã giảm giá
-                if (khachHangDAO.xoaKhachHang(KhachHang.getMaKH())) {
+                if (khachHangDAO.xoaKhachHang(khachHang.getMaKH())) {
                     ThongBaoUtil.hienThiThongBao("Thành công", "Đã xóa khách hàng thành công!");
                     loadData();
                 } else {
