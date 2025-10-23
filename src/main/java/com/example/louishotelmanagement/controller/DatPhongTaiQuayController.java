@@ -2,6 +2,7 @@ package com.example.louishotelmanagement.controller;
 
 import com.example.louishotelmanagement.dao.*;
 import com.example.louishotelmanagement.model.*;
+import com.example.louishotelmanagement.util.ThongBaoUtil;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -287,32 +288,21 @@ public class DatPhongTaiQuayController implements Initializable,Refreshable {
 
     public void handleThemKhachHang(ActionEvent actionEvent) {
         try {
-            // 1. Tải FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/them-khach-hang-form.fxml"));
-            Parent parent = loader.load();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/khach-hang-form-dialog.fxml"));
+            Stage dialog = new Stage();
+            dialog.setTitle("Thêm Khách Hàng Mới");
+            dialog.initModality(Modality.APPLICATION_MODAL);
+            dialog.setScene(new Scene(loader.load()));
 
-            // 2. Lấy Controller (nếu cần truyền dữ liệu hoặc gọi phương thức)
-            // ThemKhachHangDialogController controller = loader.getController();
+            KhachHangDialogController controller = loader.getController();
+            controller.setMode("ADD");
 
-            // 3. Tạo Stage (Cửa sổ mới)
-            Stage dialogStage = new Stage();
-            dialogStage.setTitle("Thêm Khách Hàng Mới");
+            dialog.showAndWait();
 
-            // Cài đặt làm cửa sổ Modal (bắt buộc phải tương tác trước khi quay lại cửa sổ cũ)
-            // Lấy Stage hiện tại từ sự kiện nếu cần
-            // Stage ownerStage = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
-            // dialogStage.initOwner(ownerStage);
-            dialogStage.initModality(Modality.APPLICATION_MODAL);
-
-            // 4. Thiết lập Scene và hiển thị
-            dialogStage.setScene(new Scene(parent));
-            dialogStage.showAndWait(); // showAndWait() sẽ chặn luồng cho đến khi hộp thoại đóng lại
             refreshData();
-        } catch (IOException e) {
-            System.err.println("Lỗi khi tải FXML Thêm Khách Hàng: " + e.getMessage());
+        } catch (Exception e) {
+            ThongBaoUtil.hienThiThongBao("Lỗi", e.getMessage());
             e.printStackTrace();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
         }
     }
 }

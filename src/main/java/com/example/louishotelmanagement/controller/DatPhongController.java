@@ -9,6 +9,7 @@ import com.example.louishotelmanagement.dao.KhachHangDAO;
 import com.example.louishotelmanagement.dao.PhieuDatPhongDAO;
 import com.example.louishotelmanagement.dao.PhongDAO;
 import com.example.louishotelmanagement.model.*;
+import com.example.louishotelmanagement.util.ThongBaoUtil;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -23,6 +24,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.kordamp.bootstrapfx.BootstrapFX;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -254,6 +256,7 @@ public class DatPhongController implements Initializable, Refreshable{
     public void refreshData() throws SQLException { // 👈 Đổi tên từ refresh() sang refreshData()
         laydsKhachHang();
         dsKhachHang.getSelectionModel().selectFirst();
+        ngayDen.setValue(null);
         ngayDi.setValue(null);
         tablePhong.getSelectionModel().clearSelection();
         SoPhongDaChon.setText(null);
@@ -264,24 +267,61 @@ public class DatPhongController implements Initializable, Refreshable{
         tablePhong.setItems(observableListPhong);
         tablePhong.refresh();
     }
+    public void hienThiPhieuDatPhong(PhieuDatPhong pdp, ArrayList<Phong> dsPhong) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/phieu-dat-phong-pdf-view.fxml"));
+            Parent root = loader.load();
+
+            PhieuDatPhongPDFController controller = loader.getController();
+
+            // Truyền dữ liệu sang Controller mới
+            controller.setPhieuDatPhongData(pdp, dsPhong);
+
+
+            Stage stage = new Stage();
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
+            stage.setTitle("Phiếu Xác Nhận Đặt Phòng " + pdp.getMaPhieu());
+            stage.setScene(scene);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.show();
+        } catch (IOException e) {
+            ThongBaoUtil.hienThiThongBao("Lỗi giao diện", "Không thể tải giao diện phiếu xác nhận.");
+            e.printStackTrace();
+        }
+    }
     public void handleDatPhong(ActionEvent actionEvent) throws SQLException {
         if(ngayDen.getValue() == null || ngayDi.getValue() == null) {
             showAlertError("KHÔNG ĐƯỢC ĐỂ TRỐNG DỮ LIỆU","Dữ liệu của ngày đến hoặc đi đã trống");
         }else{
-            if(ngayDen.getValue().isAfter(ngayDi.getValue())) {
-                showAlertError("XUẤT HIỆN LỖI NGÀY","Không được để ngày đến sau ngày đi");
+            if(ngayDen.getValue().isBefore(LocalDate.now())) {
+                ThongBaoUtil.hienThiLoi("Lỗi ngày đặt","kHông được chọn ngày trước hôm nay");
             }else{
-                KhachHang newKh = Kdao.layKhachHangTheoMa(dsMaKH.get(dsKhachHang.getSelectionModel().getSelectedIndex()));
-                for(Phong p:listPhongDuocDat){
-                    Random ran =  new Random();
-                    do {
-                        maPhieu = "PD"+String.valueOf(ran.nextInt(90)+ran.nextInt(9));
-                    }while(checkMaPhieu(maPhieu));
-                    DatPhong(newKh,p,maPhieu);
+
+                if(ngayDen.getValue().isAfter(ngayDi.getValue())) {
+                    showAlertError("XUẤT HIỆN LỖI NGÀY","Không được để ngày đến sau ngày đi");
+                }else{
+                    KhachHang newKh = Kdao.layKhachHangTheoMa(dsMaKH.get(dsKhachHang.getSelectionModel().getSelectedIndex()));
+                    for(Phong p:listPhongDuocDat){
+                        Random ran =  new Random();
+                        do {
+                            maPhieu = "PD"+String.valueOf(ran.nextInt(990)+ran.nextInt(9));
+                        }while(checkMaPhieu(maPhieu));
+                        DatPhong(newKh,p,maPhieu);
+                    }
+                    ThongBaoUtil.hienThiThongBao("Thông báo","Đặt phòng thành công");
+                    PhieuDatPhong phieu = pdpDao.layPhieuDatPhongTheoMa(maPhieu);
+                    if(phieu != null){
+                        hienThiPhieuDatPhong(phieu,listPhongDuocDat);
+                    }
+                    refreshData();
                 }
             }
+
         }
-        refreshData();
+
+
+
     }
 
     public void handleRefresh(ActionEvent actionEvent) throws SQLException {
