@@ -2,6 +2,7 @@ package com.example.louishotelmanagement.controller;
 
 import com.example.louishotelmanagement.dao.*;
 import com.example.louishotelmanagement.model.*;
+import com.example.louishotelmanagement.service.AuthService;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
@@ -56,11 +57,12 @@ public class DatPhongTaiQuayController implements Initializable,Refreshable {
     private PhongDAO Pdao;
     private KhachHangDAO Kdao;
     private PhieuDatPhongDAO pdpDao;
-    private CTPhieuDatPhongDAO ctpDao;
     private ArrayList<String> dsMaKH;
     private NhanVienDAO nvdao;
     private String maPhieu;
     private ArrayList<Phong> listPhongDuocDat;
+    private HoaDonDAO hDao;
+    private CTHoaDonPhongDAO cthdpDao;
 
 
     @Override
@@ -69,7 +71,8 @@ public class DatPhongTaiQuayController implements Initializable,Refreshable {
         Kdao = new KhachHangDAO();
         pdpDao = new PhieuDatPhongDAO();
         nvdao = new NhanVienDAO();
-        ctpDao = new CTPhieuDatPhongDAO();
+        hDao = new HoaDonDAO();
+        cthdpDao =  new CTHoaDonPhongDAO();
         listPhongDuocDat = new ArrayList<>();
         tablePhong.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         try {
@@ -253,23 +256,27 @@ public class DatPhongTaiQuayController implements Initializable,Refreshable {
         return false;
     }
     public void DatPhong(KhachHang newKh,Phong p,String maPhieu) throws SQLException {
-        PhieuDatPhong pdp = new PhieuDatPhong(maPhieu, LocalDate.now(),LocalDate.now(),ngayDi.getValue(),TrangThaiPhieuDatPhong.DANG_SU_DUNG,"Đặt trực tiếp tại quầy",newKh.getMaKH(),"NV01");
+        PhieuDatPhong pdp = new PhieuDatPhong(maPhieu, LocalDate.now(),LocalDate.now(),ngayDi.getValue(),TrangThaiPhieuDatPhong.DA_DAT,"Đặt trực tiếp tại quầy",newKh.getMaKH(),"NV01");
         pdpDao.themPhieuDatPhong(pdp);
-        CTPhieuDatPhong ctpdp = new CTPhieuDatPhong(maPhieu,p.getMaPhong(),LocalDate.now(),ngayDi.getValue(), BigDecimal.valueOf(p.getLoaiPhong().getDonGia()));
-        Pdao.capNhatTrangThaiPhong(p.getMaPhong(),TrangThaiPhong.DANG_SU_DUNG.toString());
-        ctpDao.themCTPhieuDatPhong(ctpdp);
+        AuthService authService = AuthService.getInstance();
+        String maNV = authService.getCurrentUser().getNhanVien().getMaNV();
+        HoaDon hd = new HoaDon(hDao.taoMaHoaDonTiepTheo(), LocalDate.now(),null,TrangThaiHoaDon.CHUA_THANH_TOAN,null,newKh.getMaKH(),maNV,null);
+        CTHoaDonPhong cthdp = new CTHoaDonPhong(hd.getMaHD(),pdp.getMaPhieu(),p.getMaPhong(),null,null,BigDecimal.valueOf(p.getLoaiPhong().getDonGia()));
+        Pdao.capNhatTrangThaiPhong(p.getMaPhong(),TrangThaiPhong.DA_DAT.toString());
+        cthdpDao.themCTHoaDonPhong(cthdp);
     }
+
     public void handleDatPhong(ActionEvent actionEvent) throws SQLException {
         if(ngayDi.getValue()==null) {
             showAlertError("Lỗi ngày","Không được bỏ trống ngày đi");
         }else{
             if(ngayDi.getValue().isAfter(LocalDate.now())||ngayDi.getValue().isEqual(LocalDate.now())){
                 KhachHang newKh = Kdao.layKhachHangTheoMa(dsMaKH.get(dsKhachHang.getSelectionModel().getSelectedIndex()));
+                Random ran =  new Random();
+                do {
+                    maPhieu = "PD"+String.valueOf(ran.nextInt(990)+ran.nextInt(9));
+                }while(checkMaPhieu(maPhieu));
                 for(Phong p:listPhongDuocDat){
-                    Random ran =  new Random();
-                    do {
-                        maPhieu = "PD"+String.valueOf(ran.nextInt(90)+ran.nextInt(9));
-                    }while(checkMaPhieu(maPhieu));
                     DatPhong(newKh,p,maPhieu);
                 }
                 refreshData();

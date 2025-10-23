@@ -1,6 +1,6 @@
 package com.example.louishotelmanagement.controller;
 
-import com.example.louishotelmanagement.dao.CTPhieuDatPhongDAO;
+import com.example.louishotelmanagement.dao.CTHoaDonPhongDAO;
 import com.example.louishotelmanagement.dao.KhachHangDAO;
 import com.example.louishotelmanagement.dao.PhieuDatPhongDAO;
 import com.example.louishotelmanagement.dao.PhongDAO;
@@ -50,13 +50,13 @@ public class HuyDatPhongController implements Initializable, Refreshable {
     public KhachHangDAO kDao;
     public PhongDAO phDao;
     public PhieuDatPhongDAO pDao;
-    public CTPhieuDatPhongDAO ctpDao;
+    public CTHoaDonPhongDAO cthdpDao;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         kDao = new KhachHangDAO();
         pDao = new PhieuDatPhongDAO();
-        ctpDao = new CTPhieuDatPhongDAO();
+        cthdpDao = new CTHoaDonPhongDAO();
         phDao = new PhongDAO();
         try {
             KhoiTaoTableView();
@@ -148,7 +148,7 @@ public class HuyDatPhongController implements Initializable, Refreshable {
             ThongBaoUtil.hienThiLoi("Lỗi thông tin", "Không tìm thấy thông tin phòng");
         } else {
             PhieuDatPhong phieuTam = (PhieuDatPhong) tablePhieu.getSelectionModel().getSelectedItem();
-            ArrayList<CTPhieuDatPhong> dsCTP = ctpDao.layDSCTPhieuDatPhongTheoPhieu(phieuTam.getMaPhieu());
+            ArrayList<CTHoaDonPhong> dsCTP = cthdpDao.getCTHoaDonPhongTheoMaPhieu(phieuTam.getMaPhieu());
             Phong pTam = phDao.layPhongTheoMa(dsCTP.getLast().getMaPhong());
             txtMaPhong.setText(pTam.getMaPhong());
             txtLoaiPhong.setText(pTam.getLoaiPhong().getTenLoai());
@@ -192,8 +192,8 @@ public class HuyDatPhongController implements Initializable, Refreshable {
             if (phieuTam.getTrangThai().equals(TrangThaiPhieuDatPhong.DA_DAT)) {
                 phieuTam.setTrangThai(TrangThaiPhieuDatPhong.DA_HUY);
                 pDao.capNhatTrangThaiPhieuDatPhong(phieuTam.getMaPhieu(), phieuTam.getTrangThai().toString());
-                ArrayList<CTPhieuDatPhong> dsCTP = ctpDao.layDSCTPhieuDatPhongTheoPhieu(phieuTam.getMaPhieu());
-                for (CTPhieuDatPhong ctp : dsCTP) {
+                ArrayList<CTHoaDonPhong> dsCTP = cthdpDao.getCTHoaDonPhongTheoMaPhieu(phieuTam.getMaPhieu());
+                for (CTHoaDonPhong ctp : dsCTP) {
                     boolean check = phDao.capNhatTrangThaiPhong(ctp.getMaPhong(), TrangThaiPhong.TRONG.toString());
                     if (check == false) {
                         ThongBaoUtil.hienThiLoi("Lỗi hủy đặt phòng", "Không thể cập nhật trạng thái phòng");
