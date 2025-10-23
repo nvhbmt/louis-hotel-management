@@ -18,7 +18,7 @@ GO
 -- Thêm một số phòng mẫu
 INSERT INTO Phong (maPhong, tang, trangThai, moTa, maLoaiPhong) VALUES
 -- Tầng 1 - Phòng đơn
-('P101', 1, N'Đang dọn dẹp', N'Phòng đơn tầng 1, cửa sổ hướng sân vườn', 'LP001'),
+('P101', 1, N'Đã đặt', N'Phòng đơn tầng 1, cửa sổ hướng sân vườn', 'LP001'),
 ('P102', 1, N'Đã đặt', N'Phòng đơn tầng 1, cửa sổ hướng đường lớn', 'LP001'),
 ('P103', 1, N'Trống', N'Phòng đơn tầng 1, yên tĩnh', 'LP001'),
 
@@ -106,35 +106,47 @@ INSERT INTO DichVu (maDV, tenDV, soLuong, donGia, moTa, conKinhDoanh) VALUES
                                                                           ('DV004', N'Ăn sáng buffet', 200, 180000, N'Buffet sáng cao cấp tại nhà hàng', 1),
                                                                           ('DV005', N'Thức ăn phòng (Room Service)', 100, 150000, N'Dịch vụ gọi món ăn nhẹ tại phòng', 1);
 GO
-
 -------------------------------------------------------------------
 -- 7. Phiếu đặt phòng (PhieuDatPhong)
 -------------------------------------------------------------------
 PRINT N'Đang thêm dữ liệu bảng PhieuDatPhong...';
 INSERT INTO PhieuDatPhong (maPhieu, ngayDat, ngayDen, ngayDi, trangThai, ghiChu, maKH, maNV) VALUES
-                                                                                                 ('PD001', '2025-10-15', '2025-10-20', '2025-10-23', N'Đã hủy', N'Khách báo hủy vì lý do cá nhân', 'KH001', 'NV002'), -- Phiếu đã hủy
-                                                                                                 ('PD002', '2025-10-20', '2025-10-22', '2025-10-25', N'Đã đặt', N'Khách yêu cầu phòng yên tĩnh', 'KH003', 'NV004'), -- Phiếu còn hiệu lực
-                                                                                                 ('PD003', '2025-10-10', '2025-10-18', '2025-10-20', N'Đã nhận phòng', N'Đã check-in sớm 1 giờ', 'KH004', 'NV002'); -- Đã nhận phòng
+                                                                                                 ('PD001', '2025-10-10', '2025-10-10', '2025-10-12', N'Hoàn tất', N'Khách đã trả phòng đúng hạn', 'KH001', 'NV002'),
+                                                                                                 ('PD002', '2025-10-14', '2025-10-14', '2025-10-15', N'Hoàn tất', N'Khách check-out sớm 1 ngày', 'KH002', 'NV004'),
+                                                                                                 ('PD003', '2025-10-16', '2025-10-16', '2025-10-17', N'Hoàn tất', N'Khách trả phòng P105', 'KH003', 'NV002'),
+                                                                                                 ('PD004', '2025-10-20', '2025-10-22', '2025-10-25', N'Đã đặt', N'Khách yêu cầu phòng yên tĩnh', 'KH004', 'NV003'),
+                                                                                                 ('PD005', '2025-10-21', '2025-10-24', '2025-10-26', N'Đã đặt', N'Khách đặt phòng có view đường', 'KH005', 'NV004');
 GO
 
--------------------------------------------------------------------
--- 8. Chi tiết phiếu đặt phòng (CTPhieuDatPhong)
--------------------------------------------------------------------
-PRINT N'Đang thêm dữ liệu bảng CTPhieuDatPhong...';
-INSERT INTO CTPhieuDatPhong (maPhieu, maPhong, ngayDen, ngayDi, ngayNhan, ngayTra, giaPhong) VALUES
-                                                                                                 ('PD001', 'P102', '2025-10-20', '2025-10-23', NULL, NULL, 500000), -- PD001 bị hủy
-                                                                                                 ('PD002', 'P204', '2025-10-22', '2025-10-25', NULL, NULL, 850000), -- PD002 sắp đến
-                                                                                                 ('PD003', 'P105', '2025-10-18', '2025-10-20', '2025-10-18', NULL, 850000); -- PD003 đã nhận
-GO
 
 -------------------------------------------------------------------
--- 9. Hóa đơn (HoaDon)
+-- 8. Bảng hóa đơn (HoaDon)
 -------------------------------------------------------------------
 PRINT N'Đang thêm dữ liệu bảng HoaDon...';
-INSERT INTO HoaDon (maHD, ngayLap, phuongThuc, ngayDat, ngayDen, ngayDi, maKH, maNV, maGG, maPhieu, maPhieuDV) VALUES
-                                                                                                                   ('HD001', '2025-10-12', N'Chuyển khoản', '2025-10-10', '2025-10-10', '2025-10-12', 'KH001', 'NV002', 'GG001', NULL, 'DVHD001'), -- Thanh toán phòng P301, dùng GG001
-                                                                                                                   ('HD002', '2025-10-15', N'Tiền mặt', '2025-10-14', '2025-10-14', '2025-10-15', 'KH002', 'NV004', NULL, NULL, 'DVHD002'), -- Thanh toán phòng P401
-                                                                                                                   ('HD003', '2025-10-17', N'Thẻ tín dụng', '2025-10-16', '2025-10-16', '2025-10-17', 'KH003', 'NV002', 'GG002', NULL, NULL); -- Thanh toán phòng P105 (Giả sử P105 đã check-out ngày 17)
+INSERT INTO HoaDon (maHD, ngayLap, phuongThuc,trangThai, tongTien, maKH, maNV, maGG)
+VALUES
+    ('HD001', '2025-10-12', N'Chuyển khoản',N'Đã thanh toán', 4500000, 'KH001', 'NV002', 'GG001'),
+    ('HD002', '2025-10-15', N'Tiền mặt',N'Chưa thanh toán', 4000000, 'KH002', 'NV004', NULL),
+    ('HD003', '2025-10-17', N'Ví điện tử',N'Chưa thanh toán', 3600000, 'KH003', 'NV002', 'GG002'),
+    ('HD004', '2025-10-23', N'Tiền mặt',N'Đã thanh toán', 2000000, 'KH004', 'NV003', NULL),
+    ('HD005', '2025-10-24', N'Chuyển khoản',N'Đã thanh toán', 2200000, 'KH005', 'NV004', NULL);
+GO
+
+
+-------------------------------------------------------------------
+-- 9. Bảng chi tiết hóa đơn phòng (CTHoaDonPhong)
+-------------------------------------------------------------------
+PRINT N'Đang thêm dữ liệu bảng CTHoaDonPhong...';
+INSERT INTO CTHoaDonPhong (maHD, maPhieu, maPhong, ngayDen, ngayDi, giaPhong)
+VALUES
+    -- Các phòng đã sử dụng
+    ('HD001', 'PD001', 'P301', '2025-10-10', '2025-10-12', 1500000),  -- 3 ngày * 1.5tr = 4.5tr
+    ('HD002', 'PD002', 'P401', '2025-10-14', '2025-10-15', 2000000),  -- 2 ngày * 2tr = 4tr
+    ('HD003', 'PD003', 'P105', '2025-10-16', '2025-10-17', 1200000),  -- 3 ngày * 1.2tr = 3.6tr
+
+    -- Các phòng đã đặt nhưng chưa đến
+    ('HD004', 'PD004', 'P101', '2025-10-22', '2025-10-25', 1000000),  -- 3 ngày * 1tr = 3tr
+    ('HD005', 'PD005', 'P102', '2025-10-24', '2025-10-26', 1100000);  -- 2 ngày * 1.1tr = 2.2tr
 GO
 
 -------------------------------------------------------------------
@@ -142,36 +154,19 @@ GO
 -------------------------------------------------------------------
 PRINT N'Đang thêm dữ liệu bảng PhieuDichVu...';
 INSERT INTO PhieuDichVu (maPhieuDV, maHD, ngayLap, maNV, ghiChu) VALUES
-                                                                     ('DVHD001', 'HD001', '2025-10-11', 'NV003', N'Giặt ủi cho khách phòng P301'),
-                                                                     ('DVHD002', 'HD002', '2025-10-15', 'NV003', N'Đưa đón sân bay cho khách phòng P401');
+                                                                     ('PDV001', 'HD001', '2025-10-11', 'NV003', N'Giặt ủi và dọn phòng cho khách phòng P301'),
+                                                                     ('PDV002', 'HD002', '2025-10-15', 'NV004', N'Đưa đón sân bay và phục vụ ăn sáng phòng P401'),
+                                                                     ('PDV003', 'HD003', '2025-10-16', 'NV002', N'Phục vụ ăn tối cho khách phòng P105');
 GO
 
 -------------------------------------------------------------------
--- 11. Chi tiết phiếu dịch vụ (CTPhieuDichVu)
+-- Chi tiết hóa đơn dịch vụ (CTHoaDonDichVu)
 -------------------------------------------------------------------
-PRINT N'Đang thêm dữ liệu bảng CTPhieuDichVu...';
-INSERT INTO CTPhieuDichVu (maPhieuDV, maDV, soLuong, donGia) VALUES
-                                                                 ('DVHD001', 'DV001', 3, 60000),    -- Giặt ủi 3 món cho HD001
-                                                                 ('DVHD001', 'DV004', 1, 180000),   -- 1 suất ăn sáng cho HD001
-                                                                 ('DVHD002', 'DV002', 1, 350000);   -- Đưa đón sân bay cho HD002
+INSERT INTO CTHoaDonDichVu (maHD, maPhieuDV, maDV, soLuong, donGia)
+VALUES
+    ('HD001', 'PDV001', 'DV001', 2, 50000),
+    ('HD001', 'PDV001', 'DV002', 1, 150000),
+    ('HD002', 'PDV002', 'DV003', 1, 200000),
+    ('HD003', 'PDV003', 'DV001', 3, 50000),
+    ('HD003', 'PDV003', 'DV004', 1, 100000);
 GO
-
--------------------------------------------------------------------
--- 12. Chi tiết hóa đơn (CTHoaDon)
--------------------------------------------------------------------
-PRINT N'Đang thêm dữ liệu bảng CTHoaDon...';
-INSERT INTO CTHoaDon (maCTHD, maHD, loai, maPhong, maDV, soLuong, donGia) VALUES
--- Các chi tiết cho Hóa đơn HD001 (P301 - 2 đêm, DV001 - 3, DV004 - 1)
-('CT001', 'HD001', N'Phong',  'P301', NULL,   2, 1300000), -- Tiền phòng P301, 2 đêm * 1,300,000
-('CT002', 'HD001', N'DichVu', NULL,   'DV001', 3, 60000),  -- Tiền dịch vụ giặt ủi, 3 món * 60,000
-('CT003', 'HD001', N'DichVu', NULL,   'DV004', 1, 180000), -- Tiền dịch vụ ăn sáng, 1 suất * 180,000
-
--- Các chi tiết cho Hóa đơn HD002 (P401 - 1 đêm, DV002 - 1)
-('CT004', 'HD002', N'Phong',  'P401', NULL,   1, 2200000), -- Tiền phòng P401, 1 đêm * 2,200,000
-('CT005', 'HD002', N'DichVu', NULL,   'DV002', 1, 350000), -- Tiền dịch vụ đưa đón, 1 lần * 350,000
-
--- Các chi tiết cho Hóa đơn HD003 (P105 - 1 đêm)
-('CT006', 'HD003', N'Phong',  'P105', NULL,   1, 850000); -- Tiền phòng P105, 1 đêm * 850,000
-GO
-
-PRINT N'Thêm dữ liệu mẫu hoàn tất.';

@@ -1,14 +1,8 @@
 package com.example.louishotelmanagement.controller;
 
-import com.dlsc.formsfx.model.structure.Element;
-import com.dlsc.formsfx.model.structure.Form;
-import com.dlsc.formsfx.model.structure.Group;
-import com.dlsc.formsfx.model.structure.StringField;
-import com.example.louishotelmanagement.dao.CTPhieuDatPhongDAO;
-import com.example.louishotelmanagement.dao.KhachHangDAO;
-import com.example.louishotelmanagement.dao.PhieuDatPhongDAO;
-import com.example.louishotelmanagement.dao.PhongDAO;
+import com.example.louishotelmanagement.dao.*;
 import com.example.louishotelmanagement.model.*;
+import com.example.louishotelmanagement.service.AuthService;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -71,7 +65,8 @@ public class DatPhongController implements Initializable, Refreshable{
     @FXML
     private TableView<Phong> tablePhong;
     private String maPhieu;
-    private CTPhieuDatPhongDAO ctpDao;
+    private CTHoaDonPhongDAO cthdpDao;
+    private HoaDonDAO hDao;
     public ArrayList<Phong> listPhongDuocDat = new ArrayList<>();
 
     @Override
@@ -79,7 +74,8 @@ public class DatPhongController implements Initializable, Refreshable{
         Pdao = new PhongDAO();
         Kdao = new KhachHangDAO();
         pdpDao = new PhieuDatPhongDAO();
-        ctpDao = new CTPhieuDatPhongDAO();
+        cthdpDao = new CTHoaDonPhongDAO();
+        hDao = new HoaDonDAO();
 
         tablePhong.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         try{
@@ -248,9 +244,12 @@ public class DatPhongController implements Initializable, Refreshable{
     public void DatPhong(KhachHang newKh,Phong p,String maPhieu) throws SQLException {
         PhieuDatPhong pdp = new PhieuDatPhong(maPhieu, LocalDate.now(),ngayDen.getValue(),ngayDi.getValue(),TrangThaiPhieuDatPhong.DA_DAT,"Đặt trực tiếp tại quầy",newKh.getMaKH(),"NV01");
         pdpDao.themPhieuDatPhong(pdp);
-        CTPhieuDatPhong ctpdp = new CTPhieuDatPhong(maPhieu,p.getMaPhong(),ngayDen.getValue(),ngayDi.getValue(), BigDecimal.valueOf(p.getLoaiPhong().getDonGia()));
+        AuthService authService = AuthService.getInstance();
+        String maNV = authService.getCurrentUser().getNhanVien().getMaNV();
+        HoaDon hd = new HoaDon(hDao.taoMaHoaDonTiepTheo(), LocalDate.now(),null,TrangThaiHoaDon.CHUA_THANH_TOAN,null,newKh.getMaKH(),maNV,null);
+        CTHoaDonPhong cthdp = new CTHoaDonPhong(hd.getMaHD(),pdp.getMaPhieu(),p.getMaPhong(),null,null,BigDecimal.valueOf(p.getLoaiPhong().getDonGia()));
         Pdao.capNhatTrangThaiPhong(p.getMaPhong(),TrangThaiPhong.DA_DAT.toString());
-        ctpDao.themCTPhieuDatPhong(ctpdp);
+        cthdpDao.themCTHoaDonPhong(cthdp);
     }
     @Override
     public void refreshData() throws SQLException { // 👈 Đổi tên từ refresh() sang refreshData()
@@ -302,11 +301,11 @@ public class DatPhongController implements Initializable, Refreshable{
                     showAlertError("XUẤT HIỆN LỖI NGÀY","Không được để ngày đến sau ngày đi");
                 }else{
                     KhachHang newKh = Kdao.layKhachHangTheoMa(dsMaKH.get(dsKhachHang.getSelectionModel().getSelectedIndex()));
+                    Random ran =  new Random();
+                    do {
+                        maPhieu = "PD"+String.valueOf(ran.nextInt(990)+ran.nextInt(9));
+                    }while(checkMaPhieu(maPhieu));
                     for(Phong p:listPhongDuocDat){
-                        Random ran =  new Random();
-                        do {
-                            maPhieu = "PD"+String.valueOf(ran.nextInt(990)+ran.nextInt(9));
-                        }while(checkMaPhieu(maPhieu));
                         DatPhong(newKh,p,maPhieu);
                     }
                     ThongBaoUtil.hienThiThongBao("Thông báo","Đặt phòng thành công");
