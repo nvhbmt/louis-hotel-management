@@ -24,7 +24,7 @@ INSERT INTO Phong (maPhong, tang, trangThai, moTa, maLoaiPhong) VALUES
 
 -- Tầng 1 - Phòng đôi
 ('P104', 1, N'Trống', N'Phòng đôi tầng 1, cửa sổ hướng sân', 'LP002'),
-('P105', 1, N'Đang sử dụng', N'Phòng đôi tầng 1, cửa sổ hướng đường', 'LP002'), -- Đang sử dụng cho HD03
+('P105', 1, N'Trống', N'Phòng đôi tầng 1, cửa sổ hướng đường', 'LP002'), -- Đang sử dụng cho HD03
 
 -- Tầng 2 - Phòng đơn
 ('P201', 2, N'Trống', N'Phòng đơn tầng 2, view hồ bơi', 'LP001'),
@@ -37,11 +37,11 @@ INSERT INTO Phong (maPhong, tang, trangThai, moTa, maLoaiPhong) VALUES
 ('P206', 2, N'Trống', N'Phòng đôi tầng 2, góc tòa nhà', 'LP002'),
 
 -- Tầng 3 - Phòng gia đình
-('P301', 3, N'Đang sử dụng', N'Phòng gia đình tầng 3, cửa sổ hướng sân', 'LP003'), -- Đang sử dụng cho HD01
+('P301', 3, N'Trống', N'Phòng gia đình tầng 3, cửa sổ hướng sân', 'LP003'), -- Đang sử dụng cho HD01
 ('P302', 3, N'Trống', N'Phòng gia đình tầng 3, cửa sổ hướng đường', 'LP003'),
 
 -- Tầng 4 - Phòng VIP
-('P401', 4, N'Đang sử dụng', N'Phòng VIP tầng 4, view đẹp nhất', 'LP004'), -- Đang sử dụng cho HD02
+('P401', 4, N'Trống', N'Phòng VIP tầng 4, view đẹp nhất', 'LP004'), -- Đang sử dụng cho HD02
 ('P402', 4, N'Trống', N'Phòng VIP tầng 4, góc tòa nhà', 'LP004'),
 
 -- Tầng 5 - Phòng Suite
@@ -117,11 +117,13 @@ GO
 -------------------------------------------------------------------
 PRINT N'Đang thêm dữ liệu bảng PhieuDatPhong...';
 INSERT INTO PhieuDatPhong (maPhieu, ngayDat, ngayDen, ngayDi, trangThai, ghiChu, maKH, maNV) VALUES
-                                                                                                 ('PD001', '2025-10-10', '2025-10-10', '2025-10-12', N'Hoàn tất', N'Khách đã trả phòng đúng hạn', 'KH001', 'NV002'),
-                                                                                                 ('PD002', '2025-10-14', '2025-10-14', '2025-10-15', N'Hoàn tất', N'Khách check-out sớm 1 ngày', 'KH002', 'NV004'),
-                                                                                                 ('PD003', '2025-10-16', '2025-10-16', '2025-10-17', N'Hoàn tất', N'Khách trả phòng P105', 'KH003', 'NV002'),
-                                                                                                 ('PD004', '2025-10-20', '2025-10-22', '2025-10-25', N'Đã đặt', N'Khách yêu cầu phòng yên tĩnh', 'KH004', 'NV003'),
-                                                                                                 ('PD005', '2025-10-21', '2025-10-24', '2025-10-26', N'Đã đặt', N'Khách đặt phòng có view đường', 'KH005', 'NV004');
+                                                                                                 ('PD001', '2025-10-10', '2025-10-10', '2025-10-12', N'Hoàn thành', N'Khách đã trả phòng đúng hạn', 'KH001', 'NV002'),
+                                                                                                 ('PD002', '2025-10-14', '2025-10-14', '2025-10-15', N'Hoàn thành', N'Khách check-out sớm 1 ngày', 'KH002', 'NV004'),
+                                                                                                 ('PD003', '2025-10-16', '2025-10-16', '2025-10-17', N'Hoàn thành', N'Khách trả phòng P105', 'KH003', 'NV002'),
+                                                                                                 ('PD004', '2025-10-20', '2025-10-22', '2025-10-25', N'Hoàn thành', N'Khách yêu cầu phòng yên tĩnh', 'KH004', 'NV003'),
+                                                                                                 ('PD005', '2025-10-21', '2025-10-24', '2025-10-26', N'Hoàn thành', N'Khách đặt phòng có view đường', 'KH005', 'NV004'),
+                                                                                                 ('PD006', '2025-10-24', '2025-10-24', '2025-10-26', N'Đã đặt', N'Khách đặt phòng qua điện thoại', 'KH003', 'NV001'),
+                                                                                                 ('PD007', '2025-10-25', '2025-10-25', '2025-10-28', N'Đã đặt', N'Khách đặt phòng qua website', 'KH004', 'NV003');
 GO
 
 
@@ -132,10 +134,12 @@ PRINT N'Đang thêm dữ liệu bảng HoaDon...';
 INSERT INTO HoaDon (maHD, ngayLap, phuongThuc,trangThai, tongTien, maKH, maNV, maGG)
 VALUES
     ('HD001', '2025-10-12', N'Chuyển khoản',N'Đã thanh toán', 4500000, 'KH001', 'NV002', 'GG001'),
-    ('HD002', '2025-10-15', N'Tiền mặt',N'Chưa thanh toán', 4000000, 'KH002', 'NV004', NULL),
-    ('HD003', '2025-10-17', N'Ví điện tử',N'Chưa thanh toán', 3600000, 'KH003', 'NV002', 'GG002'),
+    ('HD002', '2025-10-15', N'Tiền mặt',N'Đã thanh toán', 4000000, 'KH002', 'NV004', NULL),
+    ('HD003', '2025-10-17', N'Ví điện tử',N'Đã thanh toán', 3600000, 'KH003', 'NV002', 'GG002'),
     ('HD004', '2025-10-23', N'Tiền mặt',N'Đã thanh toán', 2000000, 'KH004', 'NV003', NULL),
-    ('HD005', '2025-10-24', N'Chuyển khoản',N'Đã thanh toán', 2200000, 'KH005', 'NV004', NULL);
+    ('HD005', '2025-10-24', N'Chuyển khoản',N'Đã thanh toán', 2200000, 'KH005', 'NV004', NULL),
+    ('HD006', '2025-10-24', N'Tiền mặt',N'Chưa thanh toán', 1800000, 'KH003', 'NV001', NULL),
+    ('HD007', '2025-10-25', N'Chuyển khoản',N'Chưa thanh toán', 3500000, 'KH001', 'NV002', NULL);
 GO
 
 
@@ -145,14 +149,23 @@ GO
 PRINT N'Đang thêm dữ liệu bảng CTHoaDonPhong...';
 INSERT INTO CTHoaDonPhong (maHD, maPhieu, maPhong, ngayDen, ngayDi, giaPhong)
 VALUES
-    -- Các phòng đã sử dụng
-    ('HD001', 'PD001', 'P301', '2025-10-10', '2025-10-12', 1500000),  -- 3 ngày * 1.5tr = 4.5tr
-    ('HD002', 'PD002', 'P401', '2025-10-14', '2025-10-15', 2000000),  -- 2 ngày * 2tr = 4tr
-    ('HD003', 'PD003', 'P105', '2025-10-16', '2025-10-17', 1200000),  -- 3 ngày * 1.2tr = 3.6tr
+    -- Đã cập nhật lại đơn giá phòng cho 5 chi tiết hóa đơn cũ
+    -- HD001/PD001 (P301 - LP003: Phòng Gia Đình)
+    ('HD001', 'PD001', 'P301', '2025-10-10', '2025-10-12', 1300000),
+    -- HD002/PD002 (P401 - LP004: Phòng VIP)
+    ('HD002', 'PD002', 'P401', '2025-10-14', '2025-10-15', 2200000),
+    -- HD003/PD003 (P105 - LP002: Phòng Đôi)
+    ('HD003', 'PD003', 'P105', '2025-10-16', '2025-10-17', 850000),
+    -- HD004/PD004 (P101 - LP001: Phòng Đơn)
+    ('HD004', 'PD004', 'P101', '2025-10-22', '2025-10-25', 500000),
+    -- HD005/PD005 (P102 - LP001: Phòng Đơn)
+    ('HD005', 'PD005', 'P102', '2025-10-24', '2025-10-26', 500000),
 
-    -- Các phòng đã đặt nhưng chưa đến
-    ('HD004', 'PD004', 'P101', '2025-10-22', '2025-10-25', 1000000),  -- 3 ngày * 1tr = 3tr
-    ('HD005', 'PD005', 'P102', '2025-10-24', '2025-10-26', 1100000);  -- 2 ngày * 1.1tr = 2.2tr
+    -- Thêm 2 chi tiết hóa đơn mới
+    -- HD006 (Liên kết với PD003) - Phòng P204 (LP002: Phòng Đôi, giá 850k)
+    ('HD006', 'PD003', 'P204', '2025-10-24',null,  850000),
+    -- HD007 (Liên kết với PD004) - Phòng P205 (LP002: Phòng Đôi, giá 850k)
+    ('HD007', 'PD004', 'P205', '2025-10-25',null ,850000);
 GO
 
 -------------------------------------------------------------------
