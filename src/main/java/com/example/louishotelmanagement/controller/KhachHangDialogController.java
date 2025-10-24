@@ -20,7 +20,6 @@ import javafx.stage.Stage;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.ResourceBundle;
 
 public class KhachHangDialogController implements Initializable {
