@@ -17,6 +17,10 @@ public class HoaDon {
     public HoaDon() {
     }
 
+    public HoaDon(String maHD) {
+        this.maHD = maHD;
+    }
+
     // Constructor đầy đủ tham số
     public HoaDon(String maHD, LocalDate ngayLap, PhuongThucThanhToan phuongThuc,TrangThaiHoaDon trangThai,
                   BigDecimal tongTien, String maKH, String maNV, String maGG) {
