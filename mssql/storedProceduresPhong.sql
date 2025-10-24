@@ -10,10 +10,10 @@ GO
 -- =============================================
 
 -- Thêm loại phòng
-CREATE OR ALTER PROCEDURE sp_ThemLoaiPhong @maLoaiPhong NVARCHAR(10),
-                                           @tenLoai NVARCHAR(100),
-                                           @moTa NVARCHAR(255),
-                                           @donGia DECIMAL(18, 2)
+CREATE PROCEDURE sp_ThemLoaiPhong @maLoaiPhong NVARCHAR(10),
+                                  @tenLoai NVARCHAR(100),
+                                  @moTa NVARCHAR(255),
+                                  @donGia DECIMAL(18, 2)
 AS
 BEGIN
 
@@ -51,7 +51,7 @@ END
 GO
 
 -- Lấy danh sách tất cả loại phòng
-CREATE OR ALTER PROCEDURE sp_LayDSLoaiPhong
+CREATE PROCEDURE sp_LayDSLoaiPhong
 AS
 BEGIN
 
@@ -62,7 +62,7 @@ END
 GO
 
 -- Lấy loại phòng theo mã
-CREATE OR ALTER PROCEDURE sp_LayLoaiPhongTheoMa @maLoaiPhong NVARCHAR(10)
+CREATE PROCEDURE sp_LayLoaiPhongTheoMa @maLoaiPhong NVARCHAR(10)
 AS
 BEGIN
 
@@ -73,10 +73,10 @@ END
 GO
 
 -- Cập nhật loại phòng
-CREATE OR ALTER PROCEDURE sp_CapNhatLoaiPhong @maLoaiPhong NVARCHAR(10),
-                                              @tenLoai NVARCHAR(100),
-                                              @moTa NVARCHAR(255),
-                                              @donGia DECIMAL(18, 2)
+CREATE PROCEDURE sp_CapNhatLoaiPhong @maLoaiPhong NVARCHAR(10),
+                                     @tenLoai NVARCHAR(100),
+                                     @moTa NVARCHAR(255),
+                                     @donGia DECIMAL(18, 2)
 AS
 BEGIN
 
@@ -110,7 +110,7 @@ END
 GO
 
 -- Xóa loại phòng
-CREATE OR ALTER PROCEDURE sp_XoaLoaiPhong @maLoaiPhong NVARCHAR(10)
+CREATE PROCEDURE sp_XoaLoaiPhong @maLoaiPhong NVARCHAR(10)
 AS
 BEGIN
 
@@ -134,7 +134,7 @@ END
 GO
 
 -- Kiểm tra loại phòng có được sử dụng không
-CREATE OR ALTER PROCEDURE sp_KiemTraLoaiPhongDuocSuDung @maLoaiPhong NVARCHAR(10)
+CREATE PROCEDURE sp_KiemTraLoaiPhongDuocSuDung @maLoaiPhong NVARCHAR(10)
 AS
 BEGIN
 
@@ -149,11 +149,11 @@ GO
 -- =============================================
 
 -- Thêm phòng
-CREATE OR ALTER PROCEDURE sp_ThemPhong @maPhong NVARCHAR(10),
-                                       @tang INT,
-                                       @trangThai NVARCHAR(50),
-                                       @moTa NVARCHAR(255),
-                                       @maLoaiPhong NVARCHAR(10)
+CREATE PROCEDURE sp_ThemPhong @maPhong NVARCHAR(10),
+                              @tang INT,
+                              @trangThai NVARCHAR(50),
+                              @moTa NVARCHAR(255),
+                              @maLoaiPhong NVARCHAR(10)
 AS
 BEGIN
 
@@ -203,7 +203,7 @@ END
 GO
 
 -- Lấy danh sách tất cả phòng
-CREATE OR ALTER PROCEDURE sp_LayDSPhong
+CREATE PROCEDURE sp_LayDSPhong
 AS
 BEGIN
 
@@ -221,7 +221,7 @@ END
 GO
 
 -- Lấy danh sách phòng theo tầng
-CREATE OR ALTER PROCEDURE sp_LayDSPhongTheoTang @tang INT
+CREATE PROCEDURE sp_LayDSPhongTheoTang @tang INT
 AS
 BEGIN
 
@@ -240,7 +240,7 @@ END
 GO
 
 -- Lấy danh sách phòng theo trạng thái
-CREATE OR ALTER PROCEDURE sp_LayDSPhongTheoTrangThai @trangThai NVARCHAR(50)
+CREATE PROCEDURE sp_LayDSPhongTheoTrangThai @trangThai NVARCHAR(50)
 AS
 BEGIN
 
@@ -259,7 +259,7 @@ END
 GO
 
 -- Lấy danh sách phòng còn trống
-CREATE OR ALTER PROCEDURE sp_LayDSPhongTrong
+CREATE PROCEDURE sp_LayDSPhongTrong
 AS
 BEGIN
 
@@ -278,7 +278,7 @@ END
 GO
 
 -- Lấy phòng theo mã
-CREATE OR ALTER PROCEDURE sp_LayPhongTheoMa @maPhong NVARCHAR(10)
+CREATE PROCEDURE sp_LayPhongTheoMa @maPhong NVARCHAR(10)
 AS
 BEGIN
 
@@ -296,11 +296,11 @@ END
 GO
 
 -- Cập nhật phòng
-CREATE OR ALTER PROCEDURE sp_CapNhatPhong @maPhong NVARCHAR(10),
-                                          @tang INT,
-                                          @trangThai NVARCHAR(50),
-                                          @moTa NVARCHAR(255),
-                                          @maLoaiPhong NVARCHAR(10)
+CREATE PROCEDURE sp_CapNhatPhong @maPhong NVARCHAR(10),
+                                 @tang INT,
+                                 @trangThai NVARCHAR(50),
+                                 @moTa NVARCHAR(255),
+                                 @maLoaiPhong NVARCHAR(10)
 AS
 BEGIN
     -- Kiểm tra phòng có tồn tại không
@@ -347,8 +347,8 @@ END
 GO
 
 -- Cập nhật trạng thái phòng
-CREATE OR ALTER PROCEDURE sp_CapNhatTrangThaiPhong @maPhong NVARCHAR(10),
-                                                   @trangThai NVARCHAR(50)
+CREATE PROCEDURE sp_CapNhatTrangThaiPhong @maPhong NVARCHAR(10),
+                                          @trangThai NVARCHAR(50)
 AS
 BEGIN
 
@@ -374,7 +374,7 @@ END
 GO
 
 -- Xóa phòng
-CREATE OR ALTER PROCEDURE sp_XoaPhong @maPhong NVARCHAR(10)
+CREATE PROCEDURE sp_XoaPhong @maPhong NVARCHAR(10)
 AS
 BEGIN
 
@@ -398,7 +398,7 @@ END
 GO
 
 -- Kiểm tra phòng có được sử dụng không
-CREATE OR ALTER PROCEDURE sp_KiemTraPhongDuocSuDung @maPhong NVARCHAR(10)
+CREATE PROCEDURE sp_KiemTraPhongDuocSuDung @maPhong NVARCHAR(10)
 AS
 BEGIN
 
@@ -413,7 +413,7 @@ GO
 -- =============================================
 
 -- Thống kê phòng theo trạng thái
-CREATE OR ALTER PROCEDURE sp_ThongKePhongTheoTrangThai
+CREATE PROCEDURE sp_ThongKePhongTheoTrangThai
 AS
 BEGIN
 
@@ -425,7 +425,7 @@ END
 GO
 
 -- Thống kê phòng theo loại
-CREATE OR ALTER PROCEDURE sp_ThongKePhongTheoLoai
+CREATE PROCEDURE sp_ThongKePhongTheoLoai
 AS
 BEGIN
 
@@ -440,7 +440,7 @@ END
 GO
 
 -- Thống kê phòng theo tầng
-CREATE OR ALTER PROCEDURE sp_ThongKePhongTheoTang
+CREATE PROCEDURE sp_ThongKePhongTheoTang
 AS
 BEGIN
 
@@ -455,10 +455,10 @@ END
 GO
 
 -- Tìm kiếm phòng
-CREATE OR ALTER PROCEDURE sp_TimKiemPhong @tuKhoa NVARCHAR(100),
-                                          @tang INT = NULL,
-                                          @trangThai NVARCHAR(50) = NULL,
-                                          @maLoaiPhong NVARCHAR(10) = NULL
+CREATE PROCEDURE sp_TimKiemPhong @tuKhoa NVARCHAR(100),
+                                 @tang INT = NULL,
+                                 @trangThai NVARCHAR(50) = NULL,
+                                 @maLoaiPhong NVARCHAR(10) = NULL
 AS
 BEGIN
 
@@ -482,36 +482,36 @@ END
 GO
 
 -- Lấy mã phòng tiếp theo
-CREATE OR ALTER PROCEDURE sp_LayMaPhongTiepTheo @maPhongTiepTheo NVARCHAR(10) OUTPUT
+CREATE PROCEDURE sp_LayMaPhongTiepTheo @maPhongTiepTheo NVARCHAR(10) OUTPUT
 AS
 BEGIN
     DECLARE @maxSo INT = 0;
-    
+
     -- Lấy số lớn nhất từ các mã phòng hiện có
     SELECT @maxSo = ISNULL(MAX(CAST(SUBSTRING(maPhong, 2, LEN(maPhong) - 1) AS INT)), 0)
     FROM Phong
-    WHERE maPhong LIKE 'P%' 
+    WHERE maPhong LIKE 'P%'
       AND LEN(maPhong) = 4
       AND ISNUMERIC(SUBSTRING(maPhong, 2, 3)) = 1;
-    
+
     -- Tạo mã phòng tiếp theo
     SET @maPhongTiepTheo = 'P' + RIGHT('000' + CAST(@maxSo + 1 AS VARCHAR(3)), 3);
 END
 GO
 
 -- Lấy mã loại phòng tiếp theo
-CREATE OR ALTER PROCEDURE sp_LayMaLoaiPhongTiepTheo @maLoaiPhongTiepTheo NVARCHAR(10) OUTPUT
+CREATE PROCEDURE sp_LayMaLoaiPhongTiepTheo @maLoaiPhongTiepTheo NVARCHAR(10) OUTPUT
 AS
 BEGIN
     DECLARE @maxSo INT = 0;
-    
+
     -- Lấy số lớn nhất từ các mã loại phòng hiện có
     SELECT @maxSo = ISNULL(MAX(CAST(SUBSTRING(maLoaiPhong, 3, LEN(maLoaiPhong) - 2) AS INT)), 0)
     FROM LoaiPhong
-    WHERE maLoaiPhong LIKE 'LP%' 
+    WHERE maLoaiPhong LIKE 'LP%'
       AND LEN(maLoaiPhong) = 5
       AND ISNUMERIC(SUBSTRING(maLoaiPhong, 3, 3)) = 1;
-    
+
     -- Tạo mã loại phòng tiếp theo
     SET @maLoaiPhongTiepTheo = 'LP' + RIGHT('000' + CAST(@maxSo + 1 AS VARCHAR(3)), 3);
 END

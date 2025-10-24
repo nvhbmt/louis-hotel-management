@@ -5,6 +5,7 @@ import com.example.louishotelmanagement.dao.KhachHangDAO;
 import com.example.louishotelmanagement.dao.PhieuDatPhongDAO;
 import com.example.louishotelmanagement.dao.PhongDAO;
 import com.example.louishotelmanagement.model.*;
+import com.example.louishotelmanagement.service.AuthService;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
 
 import javafx.collections.FXCollections;
@@ -114,7 +115,7 @@ public class DoiPhongController implements Initializable,Refreshable {
         ArrayList<PhieuDatPhong> dsPhieu = pdpDao.layDSPhieuDatPhongTheoKhachHang(dsMaKH.get(dsKhachHang.getSelectionModel().getSelectedIndex()));
         if (dsPhieu.size() > 0) {
             for (PhieuDatPhong p : dsPhieu) {
-                if (p.getTrangThai() != null && p.getTrangThai().equals(TrangThaiPhieuDatPhong.DA_DAT)) {
+                if (p.getTrangThai() != null && p.getTrangThai().equals(TrangThaiPhieuDatPhong.DANG_SU_DUNG)) {
                     dspdp.add(p);
                     ArrayList<CTHoaDonPhong> dsCTP = cthdpDao.getCTHoaDonPhongTheoMaPhieu(p.getMaPhieu());
                     for (CTHoaDonPhong ctp : dsCTP) {
@@ -146,7 +147,7 @@ public class DoiPhongController implements Initializable,Refreshable {
                 Pdao.capNhatTrangThaiPhong(dsPhong.getSelectionModel().getSelectedItem().toString(), TrangThaiPhong.DANG_SU_DUNG.toString());
                 refreshData();
             }
-
+            ThongBaoUtil.hienThiThongBao("Thông báo","Đổi phòng thành công");
         } else {
             ThongBaoUtil.hienThiLoi("Lỗi", "Không thực hiện được");
         }
@@ -163,5 +164,7 @@ public class DoiPhongController implements Initializable,Refreshable {
         dsPhong.getSelectionModel().selectFirst();
         dsKhachHang.getSelectionModel().selectFirst();
         loadTable();
+        AuthService authService = AuthService.getInstance();
+        maNV.setText(authService.getCurrentUser().getNhanVien().getMaNV());
     }
 }
