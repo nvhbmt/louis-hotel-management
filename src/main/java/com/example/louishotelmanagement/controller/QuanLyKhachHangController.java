@@ -58,6 +58,10 @@ public class QuanLyKhachHangController implements Initializable {
     @FXML
     private Label lblSoKhachHang;
     @FXML
+    private Label lblCheckout;
+    @FXML
+    private Label lblDangLuuTru;
+    @FXML
     private Label lblKhachVIP;
     @FXML
     private TextField txtTimKiem;
@@ -183,12 +187,23 @@ public class QuanLyKhachHangController implements Initializable {
     // ------------ Logic ------------
     void capNhatThongKe() {
         int tongSoKhach = dsKhachHang.size();
+
         int soKhachVip = (int) dsKhachHang.stream()
                 .filter(kh -> "Khách VIP".equalsIgnoreCase(kh.getHangKhach()))
                 .count();
 
+        int soKhachDangLuuTru = (int) dsKhachHang.stream()
+                .filter(kh -> "Đang lưu trú".equalsIgnoreCase(kh.getTrangThai().getTenHienThi()))
+                .count();
+
+        int soKhachCheckout = (int) dsKhachHang.stream()
+                .filter(kh -> "Check-out".equalsIgnoreCase(kh.getTrangThai().getTenHienThi()))
+                .count();
+
         lblSoKhachHang.setText(String.valueOf(tongSoKhach));
+        lblDangLuuTru.setText(String.valueOf(soKhachDangLuuTru));
         lblKhachVIP.setText(String.valueOf(soKhachVip));
+        lblCheckout.setText(String.valueOf(soKhachCheckout));
     }
 
     @FXML
@@ -218,6 +233,7 @@ public class QuanLyKhachHangController implements Initializable {
 
         tableViewKhachHang.setItems(FXCollections.observableArrayList(dsKhachHang));
         capNhatThongKe();
+        tableViewKhachHang.refresh();
     }
 
     private void apDungFilterKhachHang() {
@@ -244,6 +260,7 @@ public class QuanLyKhachHangController implements Initializable {
         }
 
         tableViewKhachHang.setItems(filteredList);
+        tableViewKhachHang.refresh();
     }
 
     @FXML

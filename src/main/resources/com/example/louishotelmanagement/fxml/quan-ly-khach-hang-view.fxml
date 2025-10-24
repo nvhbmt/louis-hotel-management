@@ -98,7 +98,7 @@
                             <HBox alignment="CENTER_LEFT" spacing="15">
                                 <VBox alignment="CENTER_LEFT" spacing="15" HBox.hgrow="ALWAYS">
                                     <Label styleClass="stat-title" text="Đã check-out" />
-                                    <Label fx:id="lblCheckOut" styleClass="stat-number" text="14" />
+                                    <Label fx:id="lblCheckout" styleClass="stat-number" text="14" />
                                 </VBox>
                                 <ImageView fitHeight="45" fitWidth="45" preserveRatio="true">
                                     <image>
