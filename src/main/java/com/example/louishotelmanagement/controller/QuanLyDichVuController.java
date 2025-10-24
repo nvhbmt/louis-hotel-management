@@ -20,6 +20,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -64,6 +65,7 @@ public class QuanLyDichVuController implements Initializable {
     private DichVuDAO dichVuDAO;
     private ObservableList<DichVu> danhSachDichVu;
     private ObservableList<DichVu> danhSachDichVuFiltered;
+    private ArrayList<DichVu> dsDichVu;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -74,6 +76,7 @@ public class QuanLyDichVuController implements Initializable {
             khoiTaoDuLieu();
             khoiTaoTableView();
             khoiTaoComboBox();
+            khoiTaoSukien();
 
             // Load dữ liệu
             taiDuLieu();
@@ -83,24 +86,29 @@ public class QuanLyDichVuController implements Initializable {
         }
     }
 
-    private void capNhatThongKe() throws Exception {
-        List<DichVu> tatCaDichVu = dichVuDAO.layTatCaDichVu(null);
-        List<DichVu> dichVuConKinhDoanh = dichVuDAO.layTatCaDichVu(true);
-        List<DichVu> dichVuNgungKinhDoanh = dichVuDAO.layTatCaDichVu(false);
+    private void capNhatThongKe() {
+        if (dsDichVu == null) return;
 
-        int tongSo = tatCaDichVu.size();
-        int conKinhDoanh = dichVuConKinhDoanh.size();
-        int ngungKinhDoanh = dichVuNgungKinhDoanh.size();
+        int tongSo = dsDichVu.size();
+        int conKinhDoanh = 0;
+        int ngungKinhDoanh = 0;
+        double tongGiaTri = 0;
 
-        double tongGiaTri = tatCaDichVu.stream()
-                .mapToDouble(dv -> dv.getDonGia() * dv.getSoLuong())
-                .sum();
+        for (DichVu dv : dsDichVu) {
+            if (dv.isConKinhDoanh()) {
+                conKinhDoanh++;
+            } else {
+                ngungKinhDoanh++;
+            }
+            tongGiaTri += dv.getDonGia() * dv.getSoLuong();
+        }
 
         lblTongSoDichVu.setText(String.valueOf(tongSo));
         lblSoDichVuConKinhDoanh.setText(String.valueOf(conKinhDoanh));
-        lblSoDichVuNgungKinhDoanh.setText(String.valueOf(ngungKinhDoanh));
-        lblTongGiaTriDichVu.setText(String.format("%.0f VNĐ", tongGiaTri));
+        //lblSoDichVuNgungKinhDoanh.setText(String.valueOf(ngungKinhDoanh));
+        //lblTongGiaTriDichVu.setText(String.format("%.0f VNĐ", tongGiaTri));
     }
+
 
     private void khoiTaoDuLieu() {
         danhSachDichVu = FXCollections.observableArrayList();
@@ -229,7 +237,7 @@ public class QuanLyDichVuController implements Initializable {
     private void taiDuLieu() {
         try {
             // Lấy danh sách dịch vụ từ database
-            List<DichVu> dsDichVu = dichVuDAO.layTatCaDichVu(null);
+            dsDichVu = dichVuDAO.layTatCaDichVu();
 
             danhSachDichVu.clear();
             danhSachDichVu.addAll(dsDichVu);
@@ -238,7 +246,7 @@ public class QuanLyDichVuController implements Initializable {
             // Áp dụng filter hiện tại
             apDungFilter();
 
-            capNhatTrangThai("Đã tải " + dsDichVu.size() + " dịch vụ");
+            //capNhatTrangThai("Đã tải " + dsDichVu.size() + " dịch vụ");
 
         } catch (Exception e) {
             ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể tải dữ liệu dịch vụ: " + e.getMessage());
@@ -246,37 +254,28 @@ public class QuanLyDichVuController implements Initializable {
     }
 
     private void apDungFilter() {
+        String timKiem = txtTimKiem.getText() != null ? txtTimKiem.getText().trim().toLowerCase() : "";
+        String trangThaiFilter = cbTrangThaiKinhDoanh.getValue();
+
+        // Xóa dữ liệu cũ
         danhSachDichVuFiltered.clear();
 
-        List<DichVu> filtered = danhSachDichVu.stream()
-                .filter(dichVu -> {
-                    // Filter theo tìm kiếm
-                    String timKiem = txtTimKiem.getText().toLowerCase();
-                    if (!timKiem.isEmpty()) {
-                        boolean matchMaDV = dichVu.getMaDV().toLowerCase().contains(timKiem);
-                        boolean matchTenDV = dichVu.getTenDV().toLowerCase().contains(timKiem);
-                        if (!matchMaDV && !matchTenDV) {
-                            return false;
-                        }
-                    }
+        for (DichVu dv : dsDichVu) {
+            // Lọc theo tìm kiếm (tên hoặc mã)
+            boolean matchTimKiem = timKiem.isEmpty() ||
+                    (dv.getTenDV() != null && dv.getTenDV().toLowerCase().contains(timKiem)) ||
+                    (dv.getMaDV() != null && dv.getMaDV().toLowerCase().contains(timKiem));
 
-                    // Filter theo trạng thái kinh doanh
-                    String trangThaiFilter = cbTrangThaiKinhDoanh.getValue();
-                    if (trangThaiFilter != null) {
-                        if ("Đang kinh doanh".equals(trangThaiFilter) && !dichVu.isConKinhDoanh()) {
-                            return false;
-                        }
-                        if ("Ngừng kinh doanh".equals(trangThaiFilter) && dichVu.isConKinhDoanh()) {
-                            return false;
-                        }
-                    }
+            // Lọc theo trạng thái
+            boolean matchTrangThai = trangThaiFilter == null || trangThaiFilter.equals("Tất cả trạng thái") ||
+                    (trangThaiFilter.equals("Đang kinh doanh") && dv.isConKinhDoanh()) ||
+                    (trangThaiFilter.equals("Ngừng kinh doanh") && !dv.isConKinhDoanh());
 
-                    return true;
-                })
-                .toList();
-
-        danhSachDichVuFiltered.addAll(filtered);
-        lblSoLuong.setText("Tổng số dịch vụ: " + danhSachDichVuFiltered.size());
+            // Nếu thỏa cả 2 điều kiện, thêm vào filtered list
+            if (matchTimKiem && matchTrangThai) {
+                danhSachDichVuFiltered.add(dv);
+            }
+        }
     }
 
     @FXML
@@ -345,6 +344,11 @@ public class QuanLyDichVuController implements Initializable {
         }
     }
 
+    private void khoiTaoSukien() {
+        txtTimKiem.textProperty().addListener((obs, oldVal, newVal) -> apDungFilter());
+        cbTrangThaiKinhDoanh.valueProperty().addListener((obs, oldVal, newVal) -> apDungFilter());
+    }
+
     @FXML
     private void handleLamMoi() {
         taiDuLieu();
@@ -352,23 +356,10 @@ public class QuanLyDichVuController implements Initializable {
         cbTrangThaiKinhDoanh.setValue(null);
     }
 
-    @FXML
-    private void handleTimKiem() {
-        apDungFilter();
-    }
 
-    @FXML
-    private void handleLocTrangThai() {
-        apDungFilter();
-    }
 
-    @FXML
-    private void handleSapXep() {
-        apDungFilter();
-    }
-
-    private void capNhatTrangThai(String message) {
-        lblTrangThai.setText(message);
-    }
+//    private void capNhatTrangThai(String message) {
+//        lblTrangThai.setText(message);
+//    }
 }
 
