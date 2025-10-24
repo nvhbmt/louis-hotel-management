@@ -2,8 +2,7 @@ package com.example.louishotelmanagement.controller;
 
 import com.example.louishotelmanagement.dao.LoaiPhongDAO;
 import com.example.louishotelmanagement.model.LoaiPhong;
-import com.example.louishotelmanagement.utils.UIUtils;
-
+import com.example.louishotelmanagement.util.ThongBaoUtil;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -51,10 +50,6 @@ public class LoaiPhongController implements Initializable {
     @FXML
     private TableColumn<LoaiPhong, Void> colThaoTac;
     @FXML
-    private Label lblTrangThai;
-    @FXML
-    private Label lblSoLuong;
-    @FXML
     private Button btnThemLoaiPhong;
     @FXML
     private Button btnLamMoi;
@@ -77,13 +72,13 @@ public class LoaiPhongController implements Initializable {
             taiDuLieu();
 
         } catch (Exception e) {
-            UIUtils.hienThiThongBao("Lỗi", "Không thể kết nối cơ sở dữ liệu: " + e.getMessage());
+            ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể kết nối cơ sở dữ liệu: " + e.getMessage());
         }
     }
 
     private void capNhatThongKe() throws SQLException {
         List<LoaiPhong> dsLoaiPhong = loaiPhongDAO.layDSLoaiPhong();
-        
+
         int tongSoLoaiPhong = dsLoaiPhong.size();
         lblTongSoLoaiPhong.setText(String.valueOf(tongSoLoaiPhong));
 
@@ -92,12 +87,12 @@ public class LoaiPhongController implements Initializable {
                     .map(LoaiPhong::getDonGia)
                     .min(Double::compareTo)
                     .orElse(0.0);
-            
+
             Double giaCaoNhat = dsLoaiPhong.stream()
                     .map(LoaiPhong::getDonGia)
                     .max(Double::compareTo)
                     .orElse(0.0);
-            
+
             Double giaTrungBinh = dsLoaiPhong.stream()
                     .map(LoaiPhong::getDonGia)
                     .reduce(0.0, Double::sum) / tongSoLoaiPhong;
@@ -188,11 +183,11 @@ public class LoaiPhongController implements Initializable {
     private void khoiTaoComboBox() {
         // Khởi tạo ComboBox lọc giá
         List<String> danhSachLocGia = List.of(
-            "Dưới 1 triệu",
-            "1-2 triệu", 
-            "2-5 triệu",
-            "5-10 triệu",
-            "Trên 10 triệu"
+                "Dưới 1 triệu",
+                "1-2 triệu",
+                "2-5 triệu",
+                "5-10 triệu",
+                "Trên 10 triệu"
         );
         cbLocGia.setItems(FXCollections.observableArrayList(danhSachLocGia));
         cbLocGia.setButtonCell(new ListCell<>() {
@@ -231,10 +226,8 @@ public class LoaiPhongController implements Initializable {
             // Áp dụng filter hiện tại
             apDungFilter();
 
-            capNhatTrangThai("Đã tải " + dsLoaiPhong.size() + " loại phòng");
-
         } catch (SQLException e) {
-            UIUtils.hienThiThongBao("Lỗi", "Không thể tải dữ liệu loại phòng: " + e.getMessage());
+            ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể tải dữ liệu loại phòng: " + e.getMessage());
         }
     }
 
@@ -258,7 +251,7 @@ public class LoaiPhongController implements Initializable {
                     if (giaFilter != null) {
                         Double donGia = loaiPhong.getDonGia();
                         if (donGia == null) return false;
-                        
+
                         switch (giaFilter) {
                             case "Dưới 1 triệu":
                                 return donGia < 1000000.0;
@@ -278,7 +271,6 @@ public class LoaiPhongController implements Initializable {
                 .toList();
 
         danhSachLoaiPhongFiltered.addAll(filtered);
-        lblSoLuong.setText("Tổng số loại phòng: " + danhSachLoaiPhongFiltered.size());
     }
 
     @FXML
@@ -300,7 +292,7 @@ public class LoaiPhongController implements Initializable {
             taiDuLieu();
 
         } catch (IOException e) {
-            UIUtils.hienThiThongBao("Lỗi", "Không thể mở form thêm loại phòng: " + e.getMessage());
+            ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể mở form thêm loại phòng: " + e.getMessage());
         }
     }
 
@@ -323,40 +315,34 @@ public class LoaiPhongController implements Initializable {
             taiDuLieu();
 
         } catch (IOException e) {
-            UIUtils.hienThiThongBao("Lỗi", "Không thể mở form sửa loại phòng: " + e.getMessage());
+            ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể mở form sửa loại phòng: " + e.getMessage());
         }
     }
 
     @FXML
     private void handleXoaLoaiPhong(LoaiPhong loaiPhong) {
         // Xác nhận xóa
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Xác nhận xóa");
-        alert.setHeaderText("Bạn có chắc chắn muốn xóa loại phòng này?");
-        alert.setContentText("Loại phòng: " + loaiPhong.getTenLoai() + " - Mã: " + loaiPhong.getMaLoaiPhong());
-
-        alert.showAndWait().ifPresent(response -> {
-            if (response == ButtonType.OK) {
-                try {
-                    // Kiểm tra xem loại phòng có đang được sử dụng không
-                    if (loaiPhongDAO.kiemTraLoaiPhongDuocSuDung(loaiPhong.getMaLoaiPhong())) {
-                        UIUtils.hienThiThongBao("Lỗi", "Không thể xóa loại phòng này vì đang được sử dụng!");
-                        return;
-                    }
-
-                    // Xóa loại phòng
-                    if (loaiPhongDAO.xoaLoaiPhong(loaiPhong.getMaLoaiPhong())) {
-                        UIUtils.hienThiThongBao("Thành công", "Đã xóa loại phòng thành công!");
-                        taiDuLieu();
-                    } else {
-                        UIUtils.hienThiThongBao("Lỗi", "Không thể xóa loại phòng!");
-                    }
-
-                } catch (SQLException e) {
-                    UIUtils.hienThiThongBao("Lỗi", "Lỗi khi xóa loại phòng: " + e.getMessage());
+        String message = "Bạn có chắc chắn muốn xóa loại phòng này?\nLoại phòng: " + loaiPhong.getTenLoai() + " - Mã: " + loaiPhong.getMaLoaiPhong();
+        if (ThongBaoUtil.hienThiXacNhan("Xác nhận xóa", message)) {
+            try {
+                // Kiểm tra xem loại phòng có đang được sử dụng không
+                if (loaiPhongDAO.kiemTraLoaiPhongDuocSuDung(loaiPhong.getMaLoaiPhong())) {
+                    ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể xóa loại phòng này vì đang được sử dụng!");
+                    return;
                 }
+
+                // Xóa loại phòng
+                if (loaiPhongDAO.xoaLoaiPhong(loaiPhong.getMaLoaiPhong())) {
+                    ThongBaoUtil.hienThiThongBao("Thành công", "Đã xóa loại phòng thành công!");
+                    taiDuLieu();
+                } else {
+                    ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể xóa loại phòng!");
+                }
+
+            } catch (SQLException e) {
+                ThongBaoUtil.hienThiThongBao("Lỗi", "Lỗi khi xóa loại phòng: " + e.getMessage());
             }
-        });
+        }
     }
 
     @FXML
@@ -376,8 +362,5 @@ public class LoaiPhongController implements Initializable {
         apDungFilter();
     }
 
-    private void capNhatTrangThai(String message) {
-        lblTrangThai.setText(message);
-    }
 
 }

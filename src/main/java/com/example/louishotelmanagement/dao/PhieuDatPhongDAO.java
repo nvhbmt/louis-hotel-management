@@ -4,6 +4,7 @@ import com.example.louishotelmanagement.config.CauHinhDatabase;
 import com.example.louishotelmanagement.model.KhachHang;
 import com.example.louishotelmanagement.model.NhanVien;
 import com.example.louishotelmanagement.model.PhieuDatPhong;
+import com.example.louishotelmanagement.model.TrangThaiPhieuDatPhong;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -21,7 +22,7 @@ public class PhieuDatPhongDAO {
             cs.setObject(2, phieuDatPhong.getNgayDat() != null ? Date.valueOf(phieuDatPhong.getNgayDat()) : null);
             cs.setObject(3, phieuDatPhong.getNgayDen() != null ? Date.valueOf(phieuDatPhong.getNgayDen()) : null);
             cs.setObject(4, phieuDatPhong.getNgayDi() != null ? Date.valueOf(phieuDatPhong.getNgayDi()) : null);
-            cs.setString(5, phieuDatPhong.getTrangThai());
+            cs.setString(5, phieuDatPhong.getTrangThai().toString());
             cs.setString(6, phieuDatPhong.getGhiChu());
             cs.setString(7, phieuDatPhong.getMaKH());
             cs.setString(8, phieuDatPhong.getMaNV());
@@ -44,7 +45,7 @@ public class PhieuDatPhongDAO {
                         rs.getDate("ngayDat") != null ? rs.getDate("ngayDat").toLocalDate() : null,
                         rs.getDate("ngayDen") != null ? rs.getDate("ngayDen").toLocalDate() : null,
                         rs.getDate("ngayDi") != null ? rs.getDate("ngayDi").toLocalDate() : null,
-                        rs.getString("trangThai"),
+                        TrangThaiPhieuDatPhong.fromString(rs.getString("trangThai")),
                         rs.getString("ghiChu"),
                         rs.getString("maKH"),
                         rs.getString("maNV")
@@ -70,7 +71,7 @@ public class PhieuDatPhongDAO {
                         rs.getDate("ngayDat") != null ? rs.getDate("ngayDat").toLocalDate() : null,
                         rs.getDate("ngayDen") != null ? rs.getDate("ngayDen").toLocalDate() : null,
                         rs.getDate("ngayDi") != null ? rs.getDate("ngayDi").toLocalDate() : null,
-                        rs.getString("trangThai"),
+                        TrangThaiPhieuDatPhong.fromString(rs.getString("TrangThai")),
                         rs.getString("ghiChu"),
                         rs.getString("maKH"),
                         rs.getString("maNV")
@@ -97,7 +98,7 @@ public class PhieuDatPhongDAO {
                         rs.getDate("ngayDat") != null ? rs.getDate("ngayDat").toLocalDate() : null,
                         rs.getDate("ngayDen") != null ? rs.getDate("ngayDen").toLocalDate() : null,
                         rs.getDate("ngayDi") != null ? rs.getDate("ngayDi").toLocalDate() : null,
-                        rs.getString("trangThai"),
+                        TrangThaiPhieuDatPhong.fromString(rs.getString("TrangThai")),
                         rs.getString("ghiChu"),
                         rs.getString("maKH"),
                         rs.getString("maNV")
@@ -125,7 +126,7 @@ public class PhieuDatPhongDAO {
                         rs.getDate("ngayDat") != null ? rs.getDate("ngayDat").toLocalDate() : null,
                         rs.getDate("ngayDen") != null ? rs.getDate("ngayDen").toLocalDate() : null,
                         rs.getDate("ngayDi") != null ? rs.getDate("ngayDi").toLocalDate() : null,
-                        rs.getString("trangThai"),
+                        TrangThaiPhieuDatPhong.fromString(rs.getString("TrangThai")),
                         rs.getString("ghiChu"),
                         rs.getString("maKH"),
                         rs.getString("maNV")
@@ -153,7 +154,7 @@ public class PhieuDatPhongDAO {
                         rs.getDate("ngayDat") != null ? rs.getDate("ngayDat").toLocalDate() : null,
                         rs.getDate("ngayDen") != null ? rs.getDate("ngayDen").toLocalDate() : null,
                         rs.getDate("ngayDi") != null ? rs.getDate("ngayDi").toLocalDate() : null,
-                        rs.getString("trangThai"),
+                        TrangThaiPhieuDatPhong.fromString(rs.getString("TrangThai")),
                         rs.getString("ghiChu"),
                         rs.getString("maKH"),
                         rs.getString("maNV")
@@ -182,7 +183,7 @@ public class PhieuDatPhongDAO {
                         rs.getDate("ngayDat") != null ? rs.getDate("ngayDat").toLocalDate() : null,
                         rs.getDate("ngayDen") != null ? rs.getDate("ngayDen").toLocalDate() : null,
                         rs.getDate("ngayDi") != null ? rs.getDate("ngayDi").toLocalDate() : null,
-                        rs.getString("trangThai"),
+                        TrangThaiPhieuDatPhong.fromString(rs.getString("TrangThai")),
                         rs.getString("ghiChu"),
                         rs.getString("maKH"),
                         rs.getString("maNV")
@@ -203,7 +204,7 @@ public class PhieuDatPhongDAO {
             cs.setObject(2, phieuDatPhong.getNgayDat() != null ? Date.valueOf(phieuDatPhong.getNgayDat()) : null);
             cs.setObject(3, phieuDatPhong.getNgayDen() != null ? Date.valueOf(phieuDatPhong.getNgayDen()) : null);
             cs.setObject(4, phieuDatPhong.getNgayDi() != null ? Date.valueOf(phieuDatPhong.getNgayDi()) : null);
-            cs.setString(5, phieuDatPhong.getTrangThai());
+            cs.setString(5, phieuDatPhong.getTrangThai().toString());
             cs.setString(6, phieuDatPhong.getGhiChu());
             cs.setString(7, phieuDatPhong.getMaKH());
             cs.setString(8, phieuDatPhong.getMaNV());

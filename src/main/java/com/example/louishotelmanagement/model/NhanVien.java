@@ -78,13 +78,6 @@ public class NhanVien {
 
     @Override
     public String toString() {
-        return "NhanVien{" +
-                "maNV='" + maNV + '\'' +
-                ", hoTen='" + hoTen + '\'' +
-                ", soDT='" + soDT + '\'' +
-                ", diaChi='" + diaChi + '\'' +
-                ", chucVu='" + chucVu + '\'' +
-                ", ngaySinh=" + ngaySinh +
-                '}';
+        return maNV + " - " + hoTen;
     }
 }

@@ -1,8 +1,10 @@
 package com.example.louishotelmanagement.ui.data;
 
+import com.example.louishotelmanagement.service.AuthService;
 import com.example.louishotelmanagement.ui.models.MenuItemModel;
 import javafx.scene.control.TreeItem;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MenuData {
@@ -10,6 +12,9 @@ public class MenuData {
     public static TreeItem<MenuItemModel> createMenuTree() {
         TreeItem<MenuItemModel> root = new TreeItem<>(new MenuItemModel("Root", null, null));
         root.setExpanded(true);
+
+        AuthService authService = AuthService.getInstance();
+        String userRole = authService.getCurrentUserRole();
 
         TreeItem<MenuItemModel> trangChu = new TreeItem<>(
                 new MenuItemModel("Trang chủ", "mdi2h-home",
@@ -24,10 +29,9 @@ public class MenuData {
                 new TreeItem<>(new MenuItemModel("Quản lý phòng", "mdi2b-bed",
                         "/com/example/louishotelmanagement/fxml/quan-ly-phong-view.fxml")),
                 new TreeItem<>(new MenuItemModel("Loại phòng", "mdi2t-tag",
-                        "/com/example/louishotelmanagement/fxml/loai-phong-view.fxml"))
+                        "/com/example/louishotelmanagement/fxml/quan-ly-loai-phong-view.fxml"))
         ));
 
-        // --- ☕ Dịch vụ ---
         TreeItem<MenuItemModel> dichVuGroup = new TreeItem<>(
                 new MenuItemModel("Dịch vụ", "mdi2c-coffee", null)
         );
@@ -59,25 +63,36 @@ public class MenuData {
         );
 
         TreeItem<MenuItemModel> nhanVienGroup = new TreeItem<>(
-                new MenuItemModel("Nhân viên", "mdi2a-account-group",
-                        "/com/example/louishotelmanagement/fxml/quan-ly-nhan-vien-view.fxml")
+                new MenuItemModel("Nhân viên", "mdi2a-account-group", null)
         );
+        nhanVienGroup.getChildren().addAll(List.of(
+                new TreeItem<>(new MenuItemModel("Quản lý nhân viên", "mdi2a-account-group",
+                        "/com/example/louishotelmanagement/fxml/quan-ly-nhan-vien-view.fxml")),
+                new TreeItem<>(new MenuItemModel("Quản lý tài khoản", "mdi2k-key",
+                        "/com/example/louishotelmanagement/fxml/quan-ly-tai-khoan-view.fxml"))
+        ));
 
         TreeItem<MenuItemModel> khachHangGroup = new TreeItem<>(
                 new MenuItemModel("Khách hàng", "mdi2a-account",
                         "/com/example/louishotelmanagement/fxml/quan-ly-khach-hang-view.fxml")
         );
 
+        // Phân quyền menu theo role
+        List<TreeItem<MenuItemModel>> menuItems = new ArrayList<>();
+        menuItems.add(trangChu);
+        menuItems.add(phongGroup);
+        menuItems.add(dichVuGroup);
+        menuItems.add(hoaDonGroup);
 
-        root.getChildren().addAll(List.of(
-                trangChu,
-                phongGroup,
-                dichVuGroup,
-                hoaDonGroup,
-                thongKe,
-                nhanVienGroup,
-                khachHangGroup
-        ));
+        // Chỉ Manager mới có quyền xem thống kê và quản lý nhân viên
+        if ("Manager".equals(userRole)) {
+            menuItems.add(thongKe);
+            menuItems.add(nhanVienGroup);
+        }
+
+        menuItems.add(khachHangGroup);
+
+        root.getChildren().addAll(menuItems);
 
         return root;
     }

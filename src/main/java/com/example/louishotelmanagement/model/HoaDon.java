@@ -1,43 +1,36 @@
 package com.example.louishotelmanagement.model;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class HoaDon {
     private String maHD;
     private LocalDate ngayLap;
-    private String phuongThuc;
-    private LocalDate ngayDat;
-    private LocalDate ngayDen;
-    private LocalDate ngayDi;
+    private PhuongThucThanhToan phuongThuc;
+    private TrangThaiHoaDon trangThai;
+    private BigDecimal tongTien;
     private String maKH;
     private String maNV;
-    private String maGG;      // Có thể là null
-    private String maPhieu;   // Có thể là null
-    private String maPhieuDV; // Có thể là null
+    private String maGG; // Có thể null
 
     // Constructor không tham số
     public HoaDon() {
     }
 
     // Constructor đầy đủ tham số
-    public HoaDon(String maHD, LocalDate ngayLap, String phuongThuc, LocalDate ngayDat,
-                  LocalDate ngayDen, LocalDate ngayDi, String maKH, String maNV,
-                  String maGG, String maPhieu, String maPhieuDV) {
+    public HoaDon(String maHD, LocalDate ngayLap, PhuongThucThanhToan phuongThuc,TrangThaiHoaDon trangThai,
+                  BigDecimal tongTien, String maKH, String maNV, String maGG) {
         this.maHD = maHD;
         this.ngayLap = ngayLap;
         this.phuongThuc = phuongThuc;
-        this.ngayDat = ngayDat;
-        this.ngayDen = ngayDen;
-        this.ngayDi = ngayDi;
+        this.trangThai = trangThai;
+        this.tongTien = tongTien;
         this.maKH = maKH;
         this.maNV = maNV;
         this.maGG = maGG;
-        this.maPhieu = maPhieu;
-        this.maPhieuDV = maPhieuDV;
     }
 
-    // Getters and Setters
-
+    // Getters & Setters
     public String getMaHD() {
         return maHD;
     }
@@ -54,36 +47,20 @@ public class HoaDon {
         this.ngayLap = ngayLap;
     }
 
-    public String getPhuongThuc() {
+    public PhuongThucThanhToan getPhuongThuc() {
         return phuongThuc;
     }
 
-    public void setPhuongThuc(String phuongThuc) {
+    public void setPhuongThuc(PhuongThucThanhToan phuongThuc) {
         this.phuongThuc = phuongThuc;
     }
 
-    public LocalDate getNgayDat() {
-        return ngayDat;
+    public BigDecimal getTongTien() {
+        return tongTien;
     }
 
-    public void setNgayDat(LocalDate ngayDat) {
-        this.ngayDat = ngayDat;
-    }
-
-    public LocalDate getNgayDen() {
-        return ngayDen;
-    }
-
-    public void setNgayDen(LocalDate ngayDen) {
-        this.ngayDen = ngayDen;
-    }
-
-    public LocalDate getNgayDi() {
-        return ngayDi;
-    }
-
-    public void setNgayDi(LocalDate ngayDi) {
-        this.ngayDi = ngayDi;
+    public void setTongTien(BigDecimal tongTien) {
+        this.tongTien = tongTien;
     }
 
     public String getMaKH() {
@@ -110,37 +87,25 @@ public class HoaDon {
         this.maGG = maGG;
     }
 
-    public String getMaPhieu() {
-        return maPhieu;
+    public TrangThaiHoaDon getTrangThai() {
+        return trangThai;
     }
 
-    public void setMaPhieu(String maPhieu) {
-        this.maPhieu = maPhieu;
+    public void setTrangThai(TrangThaiHoaDon trangThai) {
+        this.trangThai = trangThai;
     }
 
-    public String getMaPhieuDV() {
-        return maPhieuDV;
-    }
-
-    public void setMaPhieuDV(String maPhieuDV) {
-        this.maPhieuDV = maPhieuDV;
-    }
-
-    // Ghi đè phương thức toString() để hiển thị thông tin đối tượng dễ dàng
     @Override
     public String toString() {
-        return "HoaDon{" +
-                "maHD='" + maHD + '\'' +
-                ", ngayLap=" + ngayLap +
-                ", phuongThuc='" + phuongThuc + '\'' +
-                ", ngayDat=" + ngayDat +
-                ", ngayDen=" + ngayDen +
-                ", ngayDi=" + ngayDi +
-                ", maKH='" + maKH + '\'' +
-                ", maNV='" + maNV + '\'' +
-                ", maGG='" + maGG + '\'' +
-                ", maPhieu='" + maPhieu + '\'' +
-                ", maPhieuDV='" + maPhieuDV + '\'' +
-                '}';
+        return String.format(
+                "HoaDon{maHD='%s', ngayLap=%s, phuongThuc='%s', tongTien=%,.0f, maKH='%s', maNV='%s', maGG='%s'}",
+                maHD,
+                ngayLap,
+                phuongThuc,
+                tongTien != null ? tongTien.doubleValue() : 0,
+                maKH,
+                maNV,
+                maGG
+        );
     }
 }

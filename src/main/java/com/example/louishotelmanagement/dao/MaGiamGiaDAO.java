@@ -1,5 +1,6 @@
 package com.example.louishotelmanagement.dao;
 import com.example.louishotelmanagement.config.CauHinhDatabase;
+import com.example.louishotelmanagement.model.KieuGiamGia;
 import com.example.louishotelmanagement.model.MaGiamGia;
 
 import java.sql.*;
@@ -15,7 +16,7 @@ public class MaGiamGiaDAO {
             cs.setString(1, mg.getMaGG());
             cs.setString(2, mg.getCode());
             cs.setDouble(3, mg.getGiamGia());
-            cs.setString(4, mg.getKieuGiamGia());
+            cs.setString(4, mg.getKieuGiamGia().toString());
             cs.setDate(5, Date.valueOf(mg.getNgayBatDau()));
             cs.setDate(6, Date.valueOf(mg.getNgayKetThuc()));
             cs.setDouble(7, mg.getTongTienToiThieu());
@@ -40,7 +41,7 @@ public class MaGiamGiaDAO {
                         rs.getString("maGG"),
                         rs.getString("code"),
                         rs.getDouble("giamGia"),
-                        rs.getString("kieuGiamGia"),
+                        KieuGiamGia.fromString(rs.getString("kieuGiamGia")),
                         rs.getDate("ngayBatDau").toLocalDate(),
                         rs.getDate("ngayKetThuc").toLocalDate(),
                         rs.getDouble("tongTienToiThieu"),
@@ -67,7 +68,7 @@ public class MaGiamGiaDAO {
                         rs.getString("maGG"),
                         rs.getString("code"),
                         rs.getDouble("giamGia"),
-                        rs.getString("kieuGiamGia"),
+                        KieuGiamGia.fromString(rs.getString("kieuGiamGia")),
                         rs.getDate("ngayBatDau").toLocalDate(),
                         rs.getDate("ngayKetThuc").toLocalDate(),
                         rs.getDouble("tongTienToiThieu"),
@@ -88,7 +89,7 @@ public class MaGiamGiaDAO {
 
             cs.setString(1, mg.getMaGG());
             cs.setDouble(2, mg.getGiamGia());
-            cs.setString(3, mg.getKieuGiamGia());
+            cs.setString(3, mg.getKieuGiamGia().toString());
             cs.setDate(4, Date.valueOf(mg.getNgayKetThuc()));
             cs.setString(5, mg.getMoTa());
             cs.setString(6, mg.getTrangThai());

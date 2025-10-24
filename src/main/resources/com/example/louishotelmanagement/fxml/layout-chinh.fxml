@@ -1,32 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TreeView?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
+<BorderPane fx:id="mainBorderPane" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/24"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.louishotelmanagement.controller.LayoutController">
+    <left>
+        <BorderPane style="-fx-background-color: #ffffff;" BorderPane.alignment="CENTER">
+            <top>
+                <!-- Logo Section -->
+                <VBox alignment="CENTER" spacing="12.0" BorderPane.alignment="CENTER">
+                    <Circle fill="#2196F3" radius="32.0" stroke="#1976D2" strokeWidth="2.0"/>
+                    <Label styleClass="logo-text" text="LOIUS HOTEL"/>
+                </VBox>
+            </top>
+            <bottom>
 
-<BorderPane fx:id="mainBorderPane" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.LayoutController" stylesheets="@../css/main.css">
-   <left>
-      <!-- Sidebar -->
-      <VBox prefWidth="250.0" styleClass="sidebar">
-         <padding>
-            <Insets bottom="20.0" left="16.0" right="16.0" top="20.0" />
-         </padding>
-         
-         <!-- Logo Section -->
-         <VBox alignment="CENTER" spacing="12.0">
-            <Circle fill="#2196F3" radius="32.0" stroke="#1976D2" strokeWidth="2.0" />
-            <Label styleClass="logo-text" text="LOIUS HOTEL" />
-         </VBox>
+                <!-- User Info Section -->
+                <VBox prefHeight="108.0" prefWidth="250.0" styleClass="user-section" BorderPane.alignment="CENTER">
+                    <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="14.0" prefWidth="243.0"
+                           styleClass="user-label" text="THÔNG TIN NGƯỜI DÙNG" textAlignment="CENTER"/>
+                    <VBox alignment="CENTER" spacing="4.0" styleClass="user-info">
+                        <Label fx:id="userInfoLabel" styleClass="user-name" text="admin (Admin)"/>
+                        <Button fx:id="logoutBtn" mnemonicParsing="false" prefHeight="32.0" prefWidth="200.0"
+                                style="-fx-background-color: #dc3545; -fx-background-radius: 5;" text="ĐĂNG XUẤT"
+                                textFill="WHITE">
+                            <font>
+                                <Font name="System Bold" size="12.0"/>
+                            </font>
+                        </Button>
+                    </VBox>
+                </VBox>
+            </bottom>
+            <center>
+                <!-- Sidebar -->
+                <VBox prefWidth="250.0" styleClass="sidebar" BorderPane.alignment="CENTER">
+                    <padding>
+                        <Insets bottom="20.0" left="16.0" right="16.0" top="20.0"/>
+                    </padding>
 
-         <!-- Menu Section -->
-         <VBox spacing="4.0" styleClass="menu-section">
-            <Label styleClass="menu-label" text="MENU" />
-            <TreeView fx:id="menuTree" prefHeight="586.0" prefWidth="218.0" stylesheets="@../css/treeview.css" />
-         </VBox>
+                    <!-- Menu Section -->
+                    <VBox spacing="4.0" styleClass="menu-section">
+                        <Label prefHeight="26.0" prefWidth="210.0" styleClass="menu-label" text="MENU"/>
+                        <TreeView fx:id="menuTree" prefHeight="500.0" prefWidth="218.0"
+                                  stylesheets="@../css/treeview.css"/>
+                    </VBox>
 
-      </VBox>
-   </left>
+                </VBox>
+            </center>
+        </BorderPane>
+    </left>
 </BorderPane>

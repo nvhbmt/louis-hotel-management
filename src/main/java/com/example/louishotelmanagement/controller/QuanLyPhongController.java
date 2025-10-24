@@ -5,7 +5,7 @@ import com.example.louishotelmanagement.dao.PhongDAO;
 import com.example.louishotelmanagement.model.LoaiPhong;
 import com.example.louishotelmanagement.model.Phong;
 import com.example.louishotelmanagement.model.TrangThaiPhong;
-import com.example.louishotelmanagement.utils.UIUtils;
+import com.example.louishotelmanagement.util.ThongBaoUtil;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -85,7 +85,7 @@ public class QuanLyPhongController implements Initializable {
             taiDuLieu();
 
         } catch (Exception e) {
-            UIUtils.hienThiThongBao("Lỗi", "Không thể kết nối cơ sở dữ liệu: " + e.getMessage());
+            ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể kết nối cơ sở dữ liệu: " + e.getMessage());
         }
     }
 
@@ -286,7 +286,7 @@ public class QuanLyPhongController implements Initializable {
             cbLocLoaiPhong.setItems(FXCollections.observableArrayList(danhSachLoaiPhong));
 
         } catch (SQLException e) {
-            UIUtils.hienThiThongBao("Lỗi", "Không thể tải danh sách loại phòng: " + e.getMessage());
+            ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể tải danh sách loại phòng: " + e.getMessage());
         }
     }
 
@@ -302,7 +302,7 @@ public class QuanLyPhongController implements Initializable {
             // Áp dụng filter hiện tại
             apDungFilter();
         } catch (SQLException e) {
-            UIUtils.hienThiThongBao("Lỗi", "Không thể tải dữ liệu phòng: " + e.getMessage());
+            ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể tải dữ liệu phòng: " + e.getMessage());
         }
     }
 
@@ -364,7 +364,7 @@ public class QuanLyPhongController implements Initializable {
             taiDuLieu();
 
         } catch (IOException e) {
-            UIUtils.hienThiThongBao("Lỗi", "Không thể mở form thêm phòng: " + e.getMessage());
+            ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể mở form thêm phòng: " + e.getMessage());
         }
     }
 
@@ -388,7 +388,7 @@ public class QuanLyPhongController implements Initializable {
             taiDuLieu();
 
         } catch (IOException e) {
-            UIUtils.hienThiThongBao("Lỗi", "Không thể mở form sửa phòng: " + e.getMessage());
+            ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể mở form sửa phòng: " + e.getMessage());
         }
     }
 
@@ -397,24 +397,24 @@ public class QuanLyPhongController implements Initializable {
 
         // Xác nhận xóa
         String message = "Bạn có chắc chắn muốn xóa phòng này?\nPhòng: " + phong.getMaPhong() + " - Tầng: " + phong.getTang();
-        if (UIUtils.hienThiXacNhan("Xác nhận xóa", message)) {
+        if (ThongBaoUtil.hienThiXacNhan("Xác nhận xóa", message)) {
             try {
                 // Kiểm tra xem phòng có đang được sử dụng không
                 if (phongDAO.kiemTraPhongDuocSuDung(phong.getMaPhong())) {
-                    UIUtils.hienThiThongBao("Lỗi", "Không thể xóa phòng này vì đang được sử dụng!");
+                    ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể xóa phòng này vì đang được sử dụng!");
                     return;
                 }
 
                 // Xóa phòng
                 if (phongDAO.xoaPhong(phong.getMaPhong())) {
-                    UIUtils.hienThiThongBao("Thành công", "Đã xóa phòng thành công!");
+                    ThongBaoUtil.hienThiThongBao("Thành công", "Đã xóa phòng thành công!");
                     taiDuLieu();
                 } else {
-                    UIUtils.hienThiThongBao("Lỗi", "Không thể xóa phòng!");
+                    ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể xóa phòng!");
                 }
 
             } catch (SQLException e) {
-                UIUtils.hienThiThongBao("Lỗi", "Lỗi khi xóa phòng: " + e.getMessage());
+                ThongBaoUtil.hienThiThongBao("Lỗi", "Lỗi khi xóa phòng: " + e.getMessage());
             }
         }
     }

@@ -1,0 +1,30 @@
+.lbThongTinChiTietPhong {
+    -fx-font-weight: 700;
+}
+/* Trạng thái: HOÀN THÀNH (HOAN_THANH) - Đã xong, thành công */
+.status-hoan-thanh {
+    /* Màu Xanh lá (Success) */
+    -fx-background-color: #d4edda;
+    -fx-text-fill: #155724;
+}
+
+/* Trạng thái: ĐÃ ĐẶT (DA_DAT) - Sắp diễn ra, cần chú ý */
+.status-da-dat {
+    /* Màu Vàng/Cam (Warning) */
+    -fx-background-color: #fff3cd;
+    -fx-text-fill: #856404;
+}
+
+/* Trạng thái: ĐANG SỬ DỤNG (DANG_SU_DUNG) - Đang hoạt động */
+.status-dang-su-dung {
+    /* Màu Xanh dương (Info) */
+    -fx-background-color: #cce5ff;
+    -fx-text-fill: #004085;
+}
+
+/* Trạng thái: ĐÃ HỦY (DA_HUY) - Không còn hiệu lực, đã kết thúc */
+.status-da-huy {
+    /* Màu Đỏ/Xám (Danger/Muted) */
+    -fx-background-color: #f8d7da; /* Đỏ nhạt */
+    -fx-text-fill: #721c24;        /* Đỏ đậm */
+}

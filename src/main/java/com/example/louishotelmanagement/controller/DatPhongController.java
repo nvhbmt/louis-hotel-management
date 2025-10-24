@@ -1,22 +1,26 @@
 package com.example.louishotelmanagement.controller;
 
-import com.dlsc.formsfx.model.structure.Element;
-import com.dlsc.formsfx.model.structure.Form;
-import com.dlsc.formsfx.model.structure.Group;
-import com.dlsc.formsfx.model.structure.StringField;
-import com.example.louishotelmanagement.dao.CTPhieuDatPhongDAO;
-import com.example.louishotelmanagement.dao.KhachHangDAO;
-import com.example.louishotelmanagement.dao.PhieuDatPhongDAO;
-import com.example.louishotelmanagement.dao.PhongDAO;
+import com.example.louishotelmanagement.dao.*;
 import com.example.louishotelmanagement.model.*;
+import com.example.louishotelmanagement.service.AuthService;
+import com.example.louishotelmanagement.util.ThongBaoUtil;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import org.kordamp.bootstrapfx.BootstrapFX;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.sql.SQLException;
@@ -25,7 +29,7 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.ResourceBundle;
 
-public class DatPhongController implements Initializable{
+public class DatPhongController implements Initializable, Refreshable{
 
     public ComboBox dsPhong;
     public ComboBox dsKhachHang;
@@ -38,64 +42,61 @@ public class DatPhongController implements Initializable{
     public PhieuDatPhongDAO pdpDao;
     public ArrayList<String> dsMaKH;
     @FXML
+    public Label SoPhongDaChon;
+    @FXML
+    public Label TongTien;
+    public Button handleThemKhachHang;
+    @FXML
+    private TableColumn<Phong, String> colMaPhong;
+    @FXML
+    private TableColumn<Phong, Integer> colTang;
+    @FXML
+    private TableColumn<Phong, TrangThaiPhong> colTrangThai;
+    @FXML
+    private TableColumn<Phong, String> colMoTa;
+    @FXML
+    private TableColumn<Phong, String> colTenLoaiPhong;
+    @FXML
+    private TableColumn<Phong, Double> colDonGia;
+    @FXML
+    public TableColumn<Phong, Void> colThaoTac;
+    @FXML
+    public TableColumn<Phong, Void> colDaChon;
+    @FXML
     private TableView<Phong> tablePhong;
-    @FXML
-    private TableColumn<Phong, String> maPhong;
-    @FXML
-    private TableColumn<Phong, Integer> tang;
-    @FXML
-    private TableColumn<Phong, String> trangThai;
-    @FXML
-    private TableColumn<Phong, String> moTa;
-    @FXML
-    private TableColumn<Phong, String> loaiPhong;
     private String maPhieu;
-    private CTPhieuDatPhongDAO ctpDao;
+    private CTHoaDonPhongDAO cthdpDao;
+    private HoaDonDAO hDao;
+    public ArrayList<Phong> listPhongDuocDat = new ArrayList<>();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Pdao = new PhongDAO();
         Kdao = new KhachHangDAO();
         pdpDao = new PhieuDatPhongDAO();
-        ctpDao = new CTPhieuDatPhongDAO();
-        maPhong.setCellValueFactory(new PropertyValueFactory<>("maPhong"));
-        tang.setCellValueFactory(new PropertyValueFactory<>("tang"));
-        trangThai.setCellValueFactory(new PropertyValueFactory<>("trangThai"));
-        moTa.setCellValueFactory(new PropertyValueFactory<>("moTa"));
-        loaiPhong.setCellValueFactory(new PropertyValueFactory<>("loaiPhong"));
+        cthdpDao = new CTHoaDonPhongDAO();
+        hDao = new HoaDonDAO();
+
         tablePhong.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         try{
-            layDsPhong();
-            setComboBoxPhong();
+            khoiTaoTableView();
             laydsKhachHang();
-            loadTable();
         }catch (SQLException e){
             e.printStackTrace();
         }
         dsKhachHang.getSelectionModel().selectFirst();
     }
-    public void setComboBoxPhong(){
-        dsPhong.getSelectionModel().selectFirst();
-    }
     public void laydsKhachHang() throws  SQLException{
+        dsKhachHang.getItems().clear();
         ArrayList<KhachHang> khs = Kdao.layDSKhachHang();
+        dsMaKH = new ArrayList<>();
         for(KhachHang khachHang : khs) {
             dsKhachHang.getItems().add(khachHang.getHoTen());
             dsMaKH.add(khachHang.getMaKH());
         }
     }
-    public void layDsPhong() throws SQLException {
-        ArrayList<Phong> phongs = Pdao.layDSPhongTrong();
-        for(Phong phong : phongs) {
-            dsPhong.getItems().add(phong.getMaPhong());
-        }
-    }
-    public void loadTable() throws SQLException {
-        tablePhong.getItems().clear();
-        ArrayList<Phong> phongs = Pdao.layDSPhongTrong();
-        ObservableList<Phong> dsPhong = FXCollections.observableArrayList(phongs);
-        tablePhong.setItems(dsPhong);
-    }
+
+
     public void showAlertError(String header,String message){
         Alert alert = new  Alert(Alert.AlertType.ERROR);
         alert.setTitle("Đã xảy ra lỗi");
@@ -114,51 +115,246 @@ public class DatPhongController implements Initializable{
         }
         return false;
     }
+    private void khoiTaoTableView() throws SQLException {
+        // Thiết lập các cột
+        colMaPhong.setCellValueFactory(new PropertyValueFactory<>("maPhong"));
+        colTang.setCellValueFactory(new PropertyValueFactory<>("tang"));
+        colTrangThai.setCellValueFactory(new PropertyValueFactory<>("trangThai"));
+        colTrangThai.setCellFactory(_ -> new TableCell<>() {
+            @Override
+            protected void updateItem(TrangThaiPhong item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                    getStyleClass().clear();
+                } else {
+                    setText(item.toString());
+                    setAlignment(Pos.TOP_CENTER);
+                    getStyleClass().clear();
+                    getStyleClass().add("status-trong");
+                }
+            }
+        });
+        colMoTa.setCellValueFactory(new PropertyValueFactory<>("moTa"));
+        colTenLoaiPhong.setCellValueFactory(cellData -> {
+            LoaiPhong loaiPhong = cellData.getValue().getLoaiPhong();
 
-    public void showAlert(String header,String message){
-        Alert alert = new  Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Thông báo");
-        alert.setHeaderText(header);
-        alert.setContentText(message);
-        alert.showAndWait();
+            // 2. Trả về StringBinding chứa Tên Loại.
+            // Nếu LoaiPhong không null, liên kết (bind) với thuộc tính TenLoai.
+            return loaiPhong != null ?
+                    javafx.beans.binding.Bindings.createStringBinding(loaiPhong::getTenLoai) :
+                    javafx.beans.binding.Bindings.createStringBinding(() -> ""); // Xử lý trường hợp null
+        });
+        colDonGia.setCellValueFactory(cellData -> {
+            LoaiPhong loaiPhong = cellData.getValue().getLoaiPhong();
+            return loaiPhong != null ?
+                    javafx.beans.binding.Bindings.createObjectBinding(loaiPhong::getDonGia) :
+                    javafx.beans.binding.Bindings.createObjectBinding(() -> -0.0);
+        });
+        colThaoTac.setCellFactory(_ -> new TableCell<>() {
+
+            private final Button btnThem = new Button("Thêm");
+
+            {
+                btnThem.getStyleClass().addAll("btn", "btn-xs", "btn-info", "btn-table-edit");
+
+
+                btnThem.setOnAction(_ -> {
+                    Phong phong = getTableView().getItems().get(getIndex());
+                    tablePhong.getSelectionModel().select(phong);
+                    boolean isContain = listPhongDuocDat.contains(phong);
+                    if (isContain) {
+                        listPhongDuocDat.remove(phong);
+                        SoPhongDaChon.setText(String.valueOf(listPhongDuocDat.size()));
+                        TongTien.setText(String.valueOf(TinhTongTien(listPhongDuocDat)));
+                    } else {
+                        listPhongDuocDat.add(phong);
+                        SoPhongDaChon.setText(String.valueOf(listPhongDuocDat.size()));
+                        TongTien.setText(String.valueOf(TinhTongTien(listPhongDuocDat)));
+                    }
+                    getTableView().refresh();
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    Phong phong = getTableView().getItems().get(getIndex());
+                    boolean isAdded = listPhongDuocDat.contains(phong);
+                    btnThem.getStyleClass().removeAll("btn", "btn-xs", "btn-info", "btn-table-add", "btn-danger", "btn-table-remove");
+                    if (isAdded) {
+                        btnThem.setText("Bỏ chọn");
+                        btnThem.getStyleClass().addAll("btn", "btn-danger", "btn-table-remove");
+                    } else {
+                        btnThem.setText("Thêm");
+                        btnThem.getStyleClass().addAll("btn", "btn-info", "btn-table-add");
+                    }
+                    HBox box = new HBox(10, btnThem);
+                    box.setAlignment(Pos.TOP_CENTER);
+                    setGraphic(box);
+                }
+            }
+        });
+        colDaChon.setCellFactory(_ -> new TableCell<>() {
+            private CheckBox checkBox = new CheckBox();
+            {
+
+            }
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                }else{
+                    Phong phong = getTableView().getItems().get(getIndex());
+                    boolean isChecked = listPhongDuocDat.contains(phong);
+                    checkBox.setSelected(isChecked);
+                    HBox box = new HBox(8, checkBox);
+                    box.setAlignment(Pos.CENTER);
+                    setGraphic(box);
+                }
+            }
+        });
+        // Thiết lập TableView
+        ArrayList<Phong> dsPhongTrong = Pdao.layDSPhongTrong();
+        ObservableList<Phong> observableListPhong = FXCollections.observableArrayList(dsPhongTrong);
+        tablePhong.setItems(observableListPhong);
+
+        // Cho phép chọn nhiều dòng
+        tablePhong.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
     }
-    public void DatPhong(KhachHang newKh,String maP,LoaiPhong LoaiP) throws SQLException {
-        PhieuDatPhong pdp = new PhieuDatPhong(maPhieu, LocalDate.now(),LocalDate.now(),ngayDi.getValue(),"Đã đặt","Khách đặt online",newKh.getMaKH(),"NV01");
+    public double TinhTongTien(ArrayList<Phong> ls){
+        double tongTien = 0;
+        for(Phong phong : ls){
+            tongTien += phong.getLoaiPhong().getDonGia();
+        }
+        return tongTien;
+    }
+        public void showAlert(String header,String message){
+            Alert alert = new  Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Thông báo");
+            alert.setHeaderText(header);
+            alert.setContentText(message);
+            alert.showAndWait();
+        }
+    public void DatPhong(KhachHang newKh,Phong p,String maPhieu) throws SQLException {
+        PhieuDatPhong pdp = new PhieuDatPhong(maPhieu, LocalDate.now(),ngayDen.getValue(),ngayDi.getValue(),TrangThaiPhieuDatPhong.DA_DAT,"Đặt trực tiếp tại quầy",newKh.getMaKH(),"NV01");
         pdpDao.themPhieuDatPhong(pdp);
-        CTPhieuDatPhong ctpdp = new CTPhieuDatPhong(maPhieu,maP,LocalDate.now(),ngayDi.getValue(), BigDecimal.valueOf(LoaiP.getDonGia()));
-        Pdao.capNhatTrangThaiPhong(maP,"Đã đặt");
-        ctpDao.themCTPhieuDatPhong(ctpdp);
-        showAlert("Thành Công","Bạn đã đặt phòng thành công");
+        AuthService authService = AuthService.getInstance();
+        String maNV = authService.getCurrentUser().getNhanVien().getMaNV();
+        HoaDon hd = new HoaDon(hDao.taoMaHoaDonTiepTheo(), LocalDate.now(),null,TrangThaiHoaDon.CHUA_THANH_TOAN,null,newKh.getMaKH(),maNV,null);
+        CTHoaDonPhong cthdp = new CTHoaDonPhong(hd.getMaHD(),pdp.getMaPhieu(),p.getMaPhong(),null,null,BigDecimal.valueOf(p.getLoaiPhong().getDonGia()));
+        Pdao.capNhatTrangThaiPhong(p.getMaPhong(),TrangThaiPhong.DA_DAT.toString());
+        cthdpDao.themCTHoaDonPhong(cthdp);
+    }
+    @Override
+    public void refreshData() throws SQLException { // 👈 Đổi tên từ refresh() sang refreshData()
+        laydsKhachHang();
+        dsKhachHang.getSelectionModel().selectFirst();
+        ngayDen.setValue(null);
+        ngayDi.setValue(null);
+        tablePhong.getSelectionModel().clearSelection();
+        SoPhongDaChon.setText(null);
+        TongTien.setText(null);
+        listPhongDuocDat.clear();
+        ArrayList<Phong> dsPhongTrong = Pdao.layDSPhongTrong();
+        ObservableList<Phong> observableListPhong = FXCollections.observableArrayList(dsPhongTrong);
+        tablePhong.setItems(observableListPhong);
+        tablePhong.refresh();
+    }
+    public void hienThiPhieuDatPhong(PhieuDatPhong pdp, ArrayList<Phong> dsPhong) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/phieu-dat-phong-pdf-view.fxml"));
+            Parent root = loader.load();
+
+            PhieuDatPhongPDFController controller = loader.getController();
+
+            // Truyền dữ liệu sang Controller mới
+            controller.setPhieuDatPhongData(pdp, dsPhong);
+
+
+            Stage stage = new Stage();
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
+            stage.setTitle("Phiếu Xác Nhận Đặt Phòng " + pdp.getMaPhieu());
+            stage.setScene(scene);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.show();
+        } catch (IOException e) {
+            ThongBaoUtil.hienThiThongBao("Lỗi giao diện", "Không thể tải giao diện phiếu xác nhận.");
+            e.printStackTrace();
+        }
     }
     public void handleDatPhong(ActionEvent actionEvent) throws SQLException {
         if(ngayDen.getValue() == null || ngayDi.getValue() == null) {
             showAlertError("KHÔNG ĐƯỢC ĐỂ TRỐNG DỮ LIỆU","Dữ liệu của ngày đến hoặc đi đã trống");
         }else{
-            if(ngayDen.getValue().isBefore(ngayDi.getValue())) {
-                showAlertError("XUẤT HIỆN LỖI NGÀY","Không được để ngày đến sau ngày đi");
+            if(ngayDen.getValue().isBefore(LocalDate.now())) {
+                ThongBaoUtil.hienThiLoi("Lỗi ngày đặt","kHông được chọn ngày trước hôm nay");
             }else{
-                Phong newPhong =  Pdao.layPhongTheoMa(dsPhong.getSelectionModel().getSelectedItem().toString());
-                String maP = newPhong.getMaPhong();
-                KhachHang newKh = Kdao.layKhachHangTheoMa(dsMaKH.get(dsKhachHang.getSelectionModel().getSelectedIndex()));
-                LoaiPhong LoaiP = newPhong.getLoaiPhong();
-                Random ran =  new Random();
-                do {
-                    maPhieu = "PD"+String.valueOf(ran.nextInt(90)+ran.nextInt(9));
-                }while(checkMaPhieu(maPhieu));
-                ArrayList<CTPhieuDatPhong> dsCTPhieuDatPhong = ctpDao.layDSCTPhieuDatPhongTheoPhong(maP);
-                if(dsCTPhieuDatPhong.size()!=0){
-                    CTPhieuDatPhong ctp = dsCTPhieuDatPhong.getLast();
-                    if(ctpDao.kiemTraPhongDaDuocDat(ctp.getMaPhong(),ngayDen.getValue(),ngayDi.getValue())) {
-                        showAlertError("Lỗi đặt phòng", "Phòng đã được đặt trong khoảng thời gian này");
-                        return;
-                    }else{
-                        DatPhong(newKh,maP,LoaiP);
-                    }
-                }else{
-                    DatPhong(newKh,maP,LoaiP);
-                }
 
+                if(ngayDen.getValue().isAfter(ngayDi.getValue())) {
+                    showAlertError("XUẤT HIỆN LỖI NGÀY","Không được để ngày đến sau ngày đi");
+                }else{
+                    KhachHang newKh = Kdao.layKhachHangTheoMa(dsMaKH.get(dsKhachHang.getSelectionModel().getSelectedIndex()));
+                    Random ran =  new Random();
+                    do {
+                        maPhieu = "PD"+String.valueOf(ran.nextInt(990)+ran.nextInt(9));
+                    }while(checkMaPhieu(maPhieu));
+                    for(Phong p:listPhongDuocDat){
+                        DatPhong(newKh,p,maPhieu);
+                    }
+                    ThongBaoUtil.hienThiThongBao("Thông báo","Đặt phòng thành công");
+                    PhieuDatPhong phieu = pdpDao.layPhieuDatPhongTheoMa(maPhieu);
+                    if(phieu != null){
+                        hienThiPhieuDatPhong(phieu,listPhongDuocDat);
+                    }
+                    refreshData();
+                }
             }
+
+        }
+
+
+
+    }
+
+    public void handleRefresh(ActionEvent actionEvent) throws SQLException {
+        refreshData();
+    }
+
+    public void handleThemKhachHang(ActionEvent actionEvent) {
+        try {
+            // 1. Tải FXML
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/them-khach-hang-form.fxml"));
+            Parent parent = loader.load();
+
+            // 2. Lấy Controller (nếu cần truyền dữ liệu hoặc gọi phương thức)
+            // ThemKhachHangDialogController controller = loader.getController();
+
+            // 3. Tạo Stage (Cửa sổ mới)
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Thêm Khách Hàng Mới");
+
+            // Cài đặt làm cửa sổ Modal (bắt buộc phải tương tác trước khi quay lại cửa sổ cũ)
+            // Lấy Stage hiện tại từ sự kiện nếu cần
+            // Stage ownerStage = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
+            // dialogStage.initOwner(ownerStage);
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
+
+            // 4. Thiết lập Scene và hiển thị
+            dialogStage.setScene(new Scene(parent));
+            dialogStage.showAndWait(); // showAndWait() sẽ chặn luồng cho đến khi hộp thoại đóng lại
+            refreshData();
+        } catch (IOException e) {
+            System.err.println("Lỗi khi tải FXML Thêm Khách Hàng: " + e.getMessage());
+            e.printStackTrace();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 }
