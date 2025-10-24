@@ -2,6 +2,7 @@ package com.example.louishotelmanagement.controller;
 
 import com.example.louishotelmanagement.dao.KhachHangDAO;
 import com.example.louishotelmanagement.model.KhachHang;
+import com.example.louishotelmanagement.model.TrangThaiKhachHang;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
@@ -68,7 +69,7 @@ public class ThemKhachHangDialogController implements Initializable {
         do {
             maKH = "KH" + ran.nextInt(90);
         } while (dsMaKh.contains(maKH));
-        KhachHang kh = new KhachHang(maKH, hoTenStr, soDTStr, emailStr, diaChiStr, ngaySinhDate, ghiChuStr, cccdStr);
+        KhachHang kh = new KhachHang(maKH, hoTenStr, soDTStr, emailStr, diaChiStr, ngaySinhDate, ghiChuStr, cccdStr, "", TrangThaiKhachHang.DA_DAT);
         kDao.themKhachHang(kh);
         ThongBaoUtil.hienThiThongBao("Thông báo", "Thêm khách hàng thành công");
         // Đóng cửa sổ hiện tại
