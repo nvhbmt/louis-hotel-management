@@ -74,13 +74,19 @@ GO
 -------------------------------------------------------------------
 -- 4. Khách hàng (KhachHang)
 -------------------------------------------------------------------
-PRINT N'Đang thêm dữ liệu bảng KhachHang...';
-INSERT INTO KhachHang (maKH, hoTen, soDT, email, diaChi, ngaySinh, ghiChu, CCCD) VALUES
-                                                                                     ('KH001', N'Nguyễn Thanh Tùng', '0912345678', 'tung.nguyen@company.com', N'Hà Nội', '1995-02-15', N'Khách doanh nghiệp, cần hóa đơn VAT', '012345678901'),
-                                                                                     ('KH002', N'Trần Thị Mai Hương', '0987654321', 'huong.tran@email.com', N'TP.HCM', '1998-06-22', N'Khách du lịch nước ngoài (đặt phòng VIP)', '012345678902'),
-                                                                                     ('KH003', N'Lê Văn Chiến', '0934567890', 'chien.le@web.com', N'Đà Nẵng', '2000-09-10', NULL, '012345678903'),
-                                                                                     ('KH004', N'Phạm Thị Yến', '0945678901', 'yen.pham@private.com', N'Hải Phòng', '1992-03-20', N'Khách quen, thích phòng tầng cao', '012345678904'),
-                                                                                     ('KH005', N'Hoàng Anh Dũng', '0956789012', 'dung.hoang@contact.com', N'Quảng Ninh', '1989-11-05', N'Thanh toán bằng thẻ tín dụng', '012345678905');
+INSERT INTO KhachHang
+(maKH, hoTen, soDT, email, diaChi, ngaySinh, ghiChu, CCCD, hangKhach, trangThai)
+VALUES
+                                                                        ('KH001', N'Nguyễn Thanh Tùng', '0912345678', 'tung.nguyen@company.com', N'Hà Nội', '1995-02-15', N'Khách doanh nghiệp, cần hóa đơn VAT', '012345678901', N'Khách doanh nghiệp', 'DANG_LUU_TRU'),
+                                                                        ('KH002', N'Trần Thị Mai Hương', '0987654321', 'huong.tran@email.com', N'TP.HCM', '1998-06-22', N'Khách du lịch nước ngoài (đặt phòng VIP)', '012345678902', N'Khách VIP', 'DA_DAT'),
+                                                                        ('KH003', N'Lê Văn Chiến', '0934567890', 'chien.le@web.com', N'Đà Nẵng', '2000-09-10', N'Khách ở lần đầu', '012345678903', N'Khách thường', 'CHECK_OUT'),
+                                                                        ('KH004', N'Phạm Thị Yến', '0945678901', 'yen.pham@private.com', N'Hải Phòng', '1992-03-20', N'Khách quen, thích phòng tầng cao', '012345678904', N'Khách quen', 'DANG_LUU_TRU'),
+                                                                        ('KH005', N'Hoàng Anh Dũng', '0956789012', 'dung.hoang@contact.com', N'Quảng Ninh', '1989-11-05', N'Thanh toán bằng thẻ tín dụng', '012345678905', N'Khách VIP', 'DA_DAT'),
+                                                                        ('KH006', N'Ngô Minh Quân', '0962345678', 'quan.ngo@email.com', N'Cần Thơ', '1996-08-14', N'Khách đặt qua ứng dụng', '012345678906', N'Khách thường', 'DANG_LUU_TRU'),
+                                                                        ('KH007', N'Đặng Thảo Nhi', '0973456789', 'nhi.dang@company.com', N'Bình Dương', '1999-01-09', N'Khách trẻ, hay đi công tác', '012345678907', N'Khách doanh nghiệp', 'CHECK_OUT'),
+                                                                        ('KH008', N'Tạ Đức Long', '0984567890', 'long.ta@hotel.com', N'Huế', '1993-12-30', N'Khách VIP lâu năm', '012345678908', N'Khách VIP', 'DANG_LUU_TRU'),
+                                                                        ('KH009', N'Vũ Quỳnh Anh', '0995678901', 'anh.vu@personal.com', N'Nha Trang', '1997-07-21', N'Khách nữ thân thiết, đặt phòng view biển', '012345678909', N'Khách quen', 'DA_DAT'),
+                                                                        ('KH010', N'Trịnh Quốc Hưng', '0906789012', 'hung.trinh@email.com', N'Hà Nội', '1991-10-01', N'Khách lâu năm, yêu cầu dịch vụ cao cấp', '012345678910', N'Khách VIP', 'CHECK_OUT');
 GO
 
 -------------------------------------------------------------------

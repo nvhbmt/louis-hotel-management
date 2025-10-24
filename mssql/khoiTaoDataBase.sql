@@ -24,14 +24,16 @@ CREATE TABLE Phong (
 
 -- Bảng khách hàng
 CREATE TABLE KhachHang (
-    maKH nvarchar(10) PRIMARY KEY,
-    hoTen NVARCHAR(100),
-    soDT NVARCHAR(15),
-    email NVARCHAR(100),
-    diaChi NVARCHAR(255),
-    ngaySinh DATE,
-    ghiChu NVARCHAR(255),
-    CCCD NVARCHAR(20)
+   maKH NVARCHAR(10) PRIMARY KEY,
+   hoTen NVARCHAR(100) NOT NULL,
+   soDT NVARCHAR(15) NOT NULL,
+   email NVARCHAR(100) NULL,
+   diaChi NVARCHAR(255) NULL,
+   ngaySinh DATE NULL,
+   ghiChu NVARCHAR(255) NULL,
+   CCCD NVARCHAR(20) NULL,
+   hangKhach NVARCHAR(50) DEFAULT N'Khách thường',  --(Khách VIP, Khách quen)
+   trangThai NVARCHAR(50) DEFAULT N'Đang lưu trú'   --(Enum TrangThaiKhachHang)
 );
 
 -- Bảng nhân viên
