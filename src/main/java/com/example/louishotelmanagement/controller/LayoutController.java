@@ -96,6 +96,12 @@ public class LayoutController implements Initializable {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
             Parent view = loader.load();
+//chuyen trang
+            Object controller = loader.getController();
+            if (controller instanceof PhongController) {
+                PhongController phongController = (PhongController) controller;
+                phongController.setContentSwitcher(this::loadFXML);
+            }
             mainBorderPane.setCenter(view);
         } catch (IOException e) {
             e.printStackTrace();
