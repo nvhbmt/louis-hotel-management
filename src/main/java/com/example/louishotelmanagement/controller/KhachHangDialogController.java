@@ -8,6 +8,8 @@ import com.example.louishotelmanagement.dao.KhachHangDAO;
 import com.example.louishotelmanagement.model.KhachHang;
 import com.example.louishotelmanagement.model.TrangThaiKhachHang;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -121,13 +123,17 @@ public class KhachHangDialogController implements Initializable {
                 )
                 .required("CCCD không được để trống");
 
-        hangKhachField = Field.ofSingleSelectionType(List.of("Khách VIP", "Khách quen", "Khách doanh nghiệp"))
+        ObservableList<String> dsHangKhach = FXCollections.observableArrayList("Khách VIP", "Khách quen", "Khách doanh nghiệp");
+        hangKhachField = Field.ofSingleSelectionType(dsHangKhach)
                 .label("Hạng khách")
                 .required("Vui lòng chọn hạng khách");
+        hangKhachField.selectionProperty().set(hangKhach);
 
-        trangThaiField = Field.ofSingleSelectionType(List.of("Đang lưu trú", "Check-out", "Đã đặt"))
+        ObservableList<String> dsTrangThai = FXCollections.observableArrayList("Đang lưu trú", "Đã đặt", "Check-out");
+        trangThaiField = Field.ofSingleSelectionType(dsTrangThai)
                 .label("Trạng thái")
                 .required("Vui lòng chọn trạng thái");
+        trangThaiField.selectionProperty().set(trangThai);
 
         form = Form.of(Group.of(maKHField, hoTenField, soDTField, emailField, diaChiField,
                         ngaySinhField, ghiChuField, cccdField, hangKhachField, trangThaiField))
@@ -159,17 +165,22 @@ public class KhachHangDialogController implements Initializable {
     public void setKhachHang(KhachHang kh) {
         if (kh == null) return;
 
-        maKHField.valueProperty().set(kh.getMaKH());
-        maKHField.editable(false);
-        hoTenField.valueProperty().set(kh.getHoTen());
-        soDTField.valueProperty().set(kh.getSoDT());
-        emailField.valueProperty().set(kh.getEmail());
-        diaChiField.valueProperty().set(kh.getDiaChi());
-        ngaySinhField.valueProperty().set(kh.getNgaySinh());
-        ghiChuField.valueProperty().set(kh.getGhiChu());
-        cccdField.valueProperty().set(kh.getCCCD());
-        hangKhachField.selectionProperty().set(kh.getHangKhach());
-        trangThaiField.selectionProperty().set(kh.getTrangThai().toString());
+        formContainer.getChildren().clear();
+
+        taoForm(
+                kh.getMaKH(),
+                kh.getHoTen(),
+                kh.getSoDT(),
+                kh.getEmail(),
+                kh.getDiaChi(),
+                kh.getNgaySinh(),
+                kh.getGhiChu(),
+                kh.getCCCD(),
+                kh.getHangKhach(),
+                kh.getTrangThai().getTenHienThi()
+        );
+
+        hienThiForm();
     }
 
     @FXML
