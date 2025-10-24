@@ -5,14 +5,13 @@ import com.example.louishotelmanagement.model.KhachHang;
 import com.example.louishotelmanagement.model.TrangThaiKhachHang;
 
 import java.sql.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class KhachHangDAO {
 
     // Thêm khách hàng
     public boolean themKhachHang(KhachHang khachHang) throws SQLException {
-        String sql = "{call sp_ThemKhachHang(?,?,?,?,?,?,?,?,?)}"; // thêm tham số trạng thái
+        String sql = "{call sp_ThemKhachHang(?,?,?,?,?,?,?,?,?,?)}"; // sửa thành 10 tham số
         try (Connection con = CauHinhDatabase.getConnection();
              CallableStatement cs = con.prepareCall(sql)) {
 
@@ -24,7 +23,8 @@ public class KhachHangDAO {
             cs.setObject(6, khachHang.getNgaySinh() != null ? Date.valueOf(khachHang.getNgaySinh()) : null);
             cs.setString(7, khachHang.getGhiChu());
             cs.setString(8, khachHang.getCCCD());
-            cs.setString(9, khachHang.getTrangThai().name()); // lưu enum dưới dạng String
+            cs.setString(9, khachHang.getHangKhach()); // thêm hangKhach
+            cs.setString(10, khachHang.getTrangThai().getTenHienThi()); // sửa thành getTenHienThi()
 
             return cs.executeUpdate() > 0;
         }
@@ -108,7 +108,7 @@ public class KhachHangDAO {
 
     // Cập nhật khách hàng
     public boolean capNhatKhachHang(KhachHang khachHang) throws SQLException {
-        String sql = "{call sp_CapNhatKhachHang(?,?,?,?,?,?,?,?,?)}"; // thêm trạng thái
+        String sql = "{call sp_CapNhatKhachHang(?,?,?,?,?,?,?,?,?,?)}"; // sửa thành 10 tham số
         try (Connection con = CauHinhDatabase.getConnection();
              CallableStatement cs = con.prepareCall(sql)) {
 
@@ -120,7 +120,8 @@ public class KhachHangDAO {
             cs.setObject(6, khachHang.getNgaySinh() != null ? Date.valueOf(khachHang.getNgaySinh()) : null);
             cs.setString(7, khachHang.getGhiChu());
             cs.setString(8, khachHang.getCCCD());
-            cs.setString(9, khachHang.getTrangThai().name());
+            cs.setString(9, khachHang.getHangKhach()); // thêm hangKhach
+            cs.setString(10, khachHang.getTrangThai().getTenHienThi()); // sửa thành getTenHienThi()
 
             return cs.executeUpdate() > 0;
         }
@@ -154,6 +155,24 @@ public class KhachHangDAO {
 
     // Mapping ResultSet -> KhachHang
     private KhachHang mapResultSetToKhachHang(ResultSet rs) throws SQLException {
+        String trangThaiStr = rs.getString("trangThai");
+        TrangThaiKhachHang trangThai;
+        
+        if (trangThaiStr != null) {
+            try {
+                // Thử parse bằng enum name trước (DANG_LUU_TRU, DA_DAT, CHECK_OUT)
+                trangThai = TrangThaiKhachHang.valueOf(trangThaiStr);
+            } catch (IllegalArgumentException e) {
+                // Nếu không được, thử parse bằng tiếng Việt (Đang lưu trú, Đã đặt, Check-out)
+                trangThai = TrangThaiKhachHang.fromString(trangThaiStr);
+                if (trangThai == null) {
+                    trangThai = TrangThaiKhachHang.DANG_LUU_TRU; // fallback
+                }
+            }
+        } else {
+            trangThai = TrangThaiKhachHang.DANG_LUU_TRU;
+        }
+        
         return new KhachHang(
                 rs.getString("maKH"),
                 rs.getString("hoTen"),
@@ -164,9 +183,7 @@ public class KhachHangDAO {
                 rs.getString("ghiChu"),
                 rs.getString("CCCD"),
                 rs.getString("hangKhach"),
-                rs.getString("trangThai") != null
-                        ? TrangThaiKhachHang.valueOf(rs.getString("trangThai"))
-                        : TrangThaiKhachHang.DANG_LUU_TRU
+                trangThai
         );
     }
 }

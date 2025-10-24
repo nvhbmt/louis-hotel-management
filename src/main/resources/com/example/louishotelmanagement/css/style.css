@@ -1,0 +1,26 @@
+/*
+ * SỬA LỖI FONT CHỮ BỊ THU NHỎ KHI NHẤN
+ */
+
+/* * Áp dụng cho các nút .btn-info của bạn
+ * khi bị nhấn (:pressed hoặc :armed)
+ */
+.btn-info:pressed,
+.btn-info:armed {
+    /* * Dùng !important để "ép" cỡ chữ phải giữ nguyên,
+     * chiến thắng style mặc định của JFoenix/JavaFX
+     */
+    -fx-font-size: 18px !important; /* <-- Hoặc cỡ chữ nào bạn muốn */
+
+    /* (Phần cũ) Giữ nguyên kích thước nút, cho chắc chắn */
+    -fx-scale-x: 1.0 !important;
+    -fx-scale-y: 1.0 !important;
+}
+
+/* (Dự phòng) Áp dụng cho tất cả JFXButton */
+.jfx-button:pressed,
+.jfx-button:armed {
+    -fx-font-size: 18px !important;
+    -fx-scale-x: 1.0 !important;
+    -fx-scale-y: 1.0 !important;
+}
