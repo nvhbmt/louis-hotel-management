@@ -18,8 +18,15 @@
                 cs.setString(1, ct.getMaHD());
                 cs.setString(2, ct.getMaPhieu());
                 cs.setString(3, ct.getMaPhong());
-                cs.setDate(4, Date.valueOf(ct.getNgayDen()));
-                cs.setDate(5, Date.valueOf(ct.getNgayDi()));
+                if (ct.getNgayDen() != null)
+                    cs.setDate(4, Date.valueOf(ct.getNgayDen()));
+                else
+                    cs.setNull(4, java.sql.Types.DATE);
+
+                if (ct.getNgayDi() != null)
+                    cs.setDate(5, Date.valueOf(ct.getNgayDi()));
+                else
+                    cs.setNull(5, java.sql.Types.DATE);
                 cs.setBigDecimal(6, ct.getGiaPhong());
                 return cs.executeUpdate() > 0;
             }

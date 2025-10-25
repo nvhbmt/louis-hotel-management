@@ -4,7 +4,7 @@
 -- ================================================
 
 -- 1. Thêm khách hàng mới
-CREATE OR ALTER PROCEDURE sp_ThemKhachHang
+CREATE PROCEDURE sp_ThemKhachHang
     @maKH NVARCHAR(20),
     @hoTen NVARCHAR(100),
     @soDT NVARCHAR(15),
@@ -23,7 +23,7 @@ END;
 GO
 
 -- 2. Lấy danh sách khách hàng
-CREATE OR ALTER PROCEDURE sp_LayDSKhachHang
+CREATE PROCEDURE sp_LayDSKhachHang
 AS
 BEGIN
     SELECT * FROM KhachHang;
@@ -31,7 +31,7 @@ END;
 GO
 
 -- 3. Lấy khách hàng theo mã
-CREATE OR ALTER PROCEDURE sp_LayKhachHangTheoMa
+CREATE PROCEDURE sp_LayKhachHangTheoMa
 @maKH NVARCHAR(20)
 AS
 BEGIN
@@ -40,7 +40,7 @@ END;
 GO
 
 -- 4. Tìm kiếm khách hàng theo tên
-CREATE OR ALTER PROCEDURE sp_TimKiemKhachHangTheoTen
+CREATE PROCEDURE sp_TimKiemKhachHangTheoTen
 @ten NVARCHAR(100)
 AS
 BEGIN
@@ -50,7 +50,7 @@ END;
 GO
 
 -- 5. Tìm kiếm khách hàng theo số điện thoại
-CREATE OR ALTER PROCEDURE sp_TimKiemKhachHangTheoSDT
+CREATE PROCEDURE sp_TimKiemKhachHangTheoSDT
 @soDT NVARCHAR(15)
 AS
 BEGIN
@@ -60,7 +60,7 @@ END;
 GO
 
 -- 6. Tìm kiếm khách hàng theo CCCD
-CREATE OR ALTER PROCEDURE sp_TimKiemKhachHangTheoCCCD
+CREATE PROCEDURE sp_TimKiemKhachHangTheoCCCD
 @CCCD NVARCHAR(20)
 AS
 BEGIN
@@ -70,7 +70,7 @@ END;
 GO
 
 -- 7. Cập nhật khách hàng
-CREATE OR ALTER PROCEDURE sp_CapNhatKhachHang
+CREATE PROCEDURE sp_CapNhatKhachHang
     @maKH NVARCHAR(20),
     @hoTen NVARCHAR(100),
     @soDT NVARCHAR(15),
@@ -98,7 +98,7 @@ END;
 GO
 
 -- 8. Xóa khách hàng
-CREATE OR ALTER PROCEDURE sp_XoaKhachHang
+CREATE PROCEDURE sp_XoaKhachHang
 @maKH NVARCHAR(20)
 AS
 BEGIN
@@ -106,13 +106,3 @@ BEGIN
 END;
 GO
 
--- 9. Kiểm tra khách hàng được sử dụng (VD: có vé đã đặt)
-CREATE OR ALTER PROCEDURE sp_KiemTraKhachHangDuocSuDung
-@maKH NVARCHAR(20)
-AS
-BEGIN
-    SELECT COUNT(*) AS count
-    FROM Ve
-    WHERE maKH = @maKH;
-END;
-GO

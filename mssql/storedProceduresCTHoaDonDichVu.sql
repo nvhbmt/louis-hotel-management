@@ -3,7 +3,7 @@
 -- =============================================
 
 -- 1️⃣ Thêm chi tiết dịch vụ
-CREATE OR ALTER PROCEDURE sp_ThemCTHoaDonDichVu
+CREATE PROCEDURE sp_ThemCTHoaDonDichVu
     @maHD NVARCHAR(10),
     @maPhieuDV NVARCHAR(10),
     @maDV NVARCHAR(10),
@@ -18,7 +18,7 @@ END;
 GO
 
 -- 2️⃣ Cập nhật số lượng hoặc đơn giá
-CREATE OR ALTER PROCEDURE sp_CapNhatCTHoaDonDichVu
+CREATE PROCEDURE sp_CapNhatCTHoaDonDichVu
     @maHD NVARCHAR(10),
     @maDV NVARCHAR(10),
     @soLuong INT,
@@ -34,7 +34,7 @@ END;
 GO
 
 -- 3️⃣ Xóa chi tiết dịch vụ
-CREATE OR ALTER PROCEDURE sp_XoaCTHoaDonDichVu
+CREATE PROCEDURE sp_XoaCTHoaDonDichVu
     @maHD NVARCHAR(10),
     @maDV NVARCHAR(10)
 AS
@@ -46,7 +46,7 @@ END;
 GO
 
 -- 4️⃣ Lấy danh sách chi tiết dịch vụ theo hóa đơn
-CREATE OR ALTER PROCEDURE sp_LayCTHoaDonDichVuTheoMaHD
+CREATE PROCEDURE sp_LayCTHoaDonDichVuTheoMaHD
 @maHD NVARCHAR(10)
 AS
 BEGIN
@@ -58,7 +58,7 @@ END;
 GO
 
 -- 5️⃣ Tính tổng tiền dịch vụ của hóa đơn
-CREATE OR ALTER PROCEDURE sp_TinhTongTienDichVu
+CREATE PROCEDURE sp_TinhTongTienDichVu
 @maHD NVARCHAR(10)
 AS
 BEGIN

@@ -3,7 +3,7 @@
 -- ================================================
 
 -- 1. Lấy toàn bộ danh sách mã giảm giá
-CREATE OR ALTER PROCEDURE sp_LayDSMaGiamGia
+CREATE PROCEDURE sp_LayDSMaGiamGia
 AS
 BEGIN
     SELECT maGG,
@@ -21,7 +21,7 @@ END
 GO
 
 -- 2. Lấy danh sách mã giảm giá đang hoạt động
-CREATE OR ALTER PROCEDURE sp_LayMaGiamGiaDangHoatDong
+CREATE PROCEDURE sp_LayMaGiamGiaDangHoatDong
 AS
 BEGIN
     SELECT *
@@ -32,16 +32,16 @@ END
 GO
 
 -- 3. Thêm mã giảm giá mới
-CREATE OR ALTER PROCEDURE sp_ThemMaGiamGia @maGG NVARCHAR(10), -- Mã giảm giá
-                                           @code NVARCHAR(50), -- Code giảm giá
-                                           @giamGia DECIMAL(18, 2), -- Giá trị giảm
-                                           @kieuGiamGia NVARCHAR(10), -- Kiểu giảm (PERCENT / AMOUNT)
-                                           @ngayBatDau DATE, -- Ngày bắt đầu
-                                           @ngayKetThuc DATE, -- Ngày kết thúc
-                                           @tongTienToiThieu DECIMAL(18, 2), -- Tổng tiền tối thiểu để áp dụng
-                                           @moTa NVARCHAR(255), -- Mô tả
-                                           @trangThai NVARCHAR(50), -- Trạng thái (Đang diễn ra / Hết hạn)
-                                           @maNV NVARCHAR(10) -- Nhân viên tạo mã
+CREATE PROCEDURE sp_ThemMaGiamGia @maGG NVARCHAR(10), -- Mã giảm giá
+                                  @code NVARCHAR(50), -- Code giảm giá
+                                  @giamGia DECIMAL(18, 2), -- Giá trị giảm
+                                  @kieuGiamGia NVARCHAR(10), -- Kiểu giảm (PERCENT / AMOUNT)
+                                  @ngayBatDau DATE, -- Ngày bắt đầu
+                                  @ngayKetThuc DATE, -- Ngày kết thúc
+                                  @tongTienToiThieu DECIMAL(18, 2), -- Tổng tiền tối thiểu để áp dụng
+                                  @moTa NVARCHAR(255), -- Mô tả
+                                  @trangThai NVARCHAR(50), -- Trạng thái (Đang diễn ra / Hết hạn)
+                                  @maNV NVARCHAR(10) -- Nhân viên tạo mã
 AS
 BEGIN
     INSERT INTO MaGiamGia(maGG, code, giamGia, kieuGiamGia, ngayBatDau, ngayKetThuc,
@@ -52,12 +52,12 @@ END
 GO
 
 -- 4. Cập nhật mã giảm giá
-CREATE OR ALTER PROCEDURE sp_CapNhatMaGiamGia @maGG NVARCHAR(10), -- Mã giảm giá
-                                              @giamGia DECIMAL(18, 2), -- Giá trị giảm
-                                              @kieuGiamGia NVARCHAR(10), -- Kiểu giảm
-                                              @ngayKetThuc DATE, -- Ngày kết thúc mới
-                                              @moTa NVARCHAR(255), -- Mô tả mới
-                                              @trangThai NVARCHAR(50) -- Trạng thái mới
+CREATE PROCEDURE sp_CapNhatMaGiamGia @maGG NVARCHAR(10), -- Mã giảm giá
+                                     @giamGia DECIMAL(18, 2), -- Giá trị giảm
+                                     @kieuGiamGia NVARCHAR(10), -- Kiểu giảm
+                                     @ngayKetThuc DATE, -- Ngày kết thúc mới
+                                     @moTa NVARCHAR(255), -- Mô tả mới
+                                     @trangThai NVARCHAR(50) -- Trạng thái mới
 AS
 BEGIN
     UPDATE MaGiamGia
@@ -71,7 +71,7 @@ END
 GO
 
 -- 5. Xóa mã giảm giá
-CREATE OR ALTER PROCEDURE sp_XoaMaGiamGia @maGG NVARCHAR(10) -- Mã giảm giá cần xóa
+CREATE PROCEDURE sp_XoaMaGiamGia @maGG NVARCHAR(10) -- Mã giảm giá cần xóa
 AS
 BEGIN
     DELETE

@@ -235,7 +235,7 @@ public class PhongController implements Initializable {
         if (switcher != null) switcher.switchContent("/com/example/louishotelmanagement/fxml/nhan-phong-view.fxml");
     }
     @FXML private void moDatPhong(ActionEvent actionEvent) {
-        if (switcher != null) switcher.switchContent("/com->/com/example/louishotelmanagement/fxml/nhan-phong-view.fxml");
+        if (switcher != null) switcher.switchContent("/com/example/louishotelmanagement/fxml/dat-phong-view.fxml");
     }
     @FXML private void moDatTT(ActionEvent actionEvent) {
         if (switcher != null) switcher.switchContent("/com/example/louishotelmanagement/fxml/dat-phong-truc-tiep-view.fxml");
@@ -244,7 +244,7 @@ public class PhongController implements Initializable {
         if (switcher != null) switcher.switchContent("/com/example/louishotelmanagement/fxml/doi-phong-view.fxml");
     }
     @FXML private void moHuy(ActionEvent actionEvent) {
-        if (switcher != null) switcher.switchContent("/com/example/louishotelmanagement/fxml/huy-phong-view.fxml");
+        if (switcher != null) switcher.switchContent("/com/example/louishotelmanagement/fxml/huy-dat-phong-view.fxml");
     }
     @FXML private void moDichVu(ActionEvent actionEvent) {
         if (switcher != null) switcher.switchContent("/com/example/louishotelmanagement/fxml/dat-dich-vu-view.fxml");

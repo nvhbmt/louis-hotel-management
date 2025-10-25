@@ -1,7 +1,7 @@
 -- =============================================
 -- 1. Thêm phiếu đặt phòng
 -- =============================================
-CREATE OR ALTER PROCEDURE sp_ThemPhieuDatPhong
+CREATE PROCEDURE sp_ThemPhieuDatPhong
     @maPhieu NVARCHAR(10),
     @ngayDat DATE = NULL,
     @ngayDen DATE = NULL,
@@ -21,7 +21,7 @@ GO
 -- =============================================
 -- 2. Lấy danh sách tất cả phiếu đặt phòng
 -- =============================================
-CREATE OR ALTER PROCEDURE sp_LayDSPhieuDatPhong
+CREATE PROCEDURE sp_LayDSPhieuDatPhong
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -34,7 +34,7 @@ GO
 -- =============================================
 -- 3. Lấy phiếu đặt phòng theo mã
 -- =============================================
-CREATE OR ALTER PROCEDURE sp_LayPhieuDatPhongTheoMa
+CREATE PROCEDURE sp_LayPhieuDatPhongTheoMa
 @maPhieu NVARCHAR(10)
 AS
 BEGIN
@@ -48,7 +48,7 @@ GO
 -- =============================================
 -- 4. Lấy danh sách phiếu đặt phòng theo khách hàng
 -- =============================================
-CREATE OR ALTER PROCEDURE sp_LayDSPhieuDatPhongTheoKhachHang
+CREATE PROCEDURE sp_LayDSPhieuDatPhongTheoKhachHang
 @maKH NVARCHAR(10)
 AS
 BEGIN
@@ -63,7 +63,7 @@ GO
 -- =============================================
 -- 5. Lấy danh sách phiếu đặt phòng theo nhân viên
 -- =============================================
-CREATE OR ALTER PROCEDURE sp_LayDSPhieuDatPhongTheoNhanVien
+CREATE PROCEDURE sp_LayDSPhieuDatPhongTheoNhanVien
 @maNV NVARCHAR(10)
 AS
 BEGIN
@@ -78,7 +78,7 @@ GO
 -- =============================================
 -- 6. Lấy danh sách phiếu đặt phòng theo trạng thái
 -- =============================================
-CREATE OR ALTER PROCEDURE sp_LayDSPhieuDatPhongTheoTrangThai
+CREATE PROCEDURE sp_LayDSPhieuDatPhongTheoTrangThai
 @trangThai NVARCHAR(50)
 AS
 BEGIN
@@ -93,7 +93,7 @@ GO
 -- =============================================
 -- 7. Lấy danh sách phiếu đặt phòng trong khoảng thời gian
 -- =============================================
-CREATE OR ALTER PROCEDURE sp_LayDSPhieuDatPhongTrongKhoangThoiGian
+CREATE PROCEDURE sp_LayDSPhieuDatPhongTrongKhoangThoiGian
     @ngayBatDau DATE,
     @ngayKetThuc DATE
 AS
@@ -109,7 +109,7 @@ GO
 -- =============================================
 -- 8. Cập nhật toàn bộ thông tin phiếu đặt phòng
 -- =============================================
-CREATE OR ALTER PROCEDURE sp_CapNhatPhieuDatPhong
+CREATE PROCEDURE sp_CapNhatPhieuDatPhong
     @maPhieu NVARCHAR(10),
     @ngayDat DATE = NULL,
     @ngayDen DATE = NULL,
@@ -136,7 +136,7 @@ GO
 -- =============================================
 -- 9. Cập nhật trạng thái phiếu đặt phòng
 -- =============================================
-CREATE OR ALTER PROCEDURE sp_CapNhatTrangThaiPhieuDatPhong
+CREATE PROCEDURE sp_CapNhatTrangThaiPhieuDatPhong
     @maPhieu NVARCHAR(10),
     @trangThai NVARCHAR(50)
 AS
@@ -151,7 +151,7 @@ GO
 -- =============================================
 -- 10. Xóa phiếu đặt phòng
 -- =============================================
-CREATE OR ALTER PROCEDURE sp_XoaPhieuDatPhong
+CREATE PROCEDURE sp_XoaPhieuDatPhong
 @maPhieu NVARCHAR(10)
 AS
 BEGIN

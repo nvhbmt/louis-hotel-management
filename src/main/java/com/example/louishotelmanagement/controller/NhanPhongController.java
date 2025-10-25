@@ -146,12 +146,13 @@ public class NhanPhongController implements Initializable {
                 for (CTHoaDonPhong ctpdp : dsCTHoaDonPhong) {
                     if ((Objects.equals(phieuDatPhongDAO.layPhieuDatPhongTheoMa(ctpdp.getMaPhieu()).getMaKH(), dsMaKH.get(dsKhachHang.getSelectionModel().getSelectedIndex()))) && (phieuDatPhongDAO.layPhieuDatPhongTheoMa(ctpdp.getMaPhieu()).getNgayDat().isEqual(ngayDat.getValue()))) {
                         maPhieu.setText(ctpdp.getMaPhieu());
+                        PhieuDatPhong phieu = phieuDatPhongDAO.layPhieuDatPhongTheoMa(maPhieu.getText());
                         maPhong.setText(String.valueOf(ctpdp.getMaPhong()));
                         tang.setText(String.valueOf(phongDAO.layPhongTheoMa(ctpdp.getMaPhong()).getTang()));
                         KhachHang kh = khachHangDAO.layKhachHangTheoMa(dsMaKH.get(dsKhachHang.getSelectionModel().getSelectedIndex()));
                         hoTen.setText(kh.getHoTen());
-                        ngayDen.setValue(ctpdp.getNgayDen());
-                        ngayDi.setValue(ctpdp.getNgayDi());
+                        ngayDen.setValue(phieu.getNgayDen());
+                        ngayDi.setValue(phieu.getNgayDi());
                         pTam = phieuDatPhongDAO.layPhieuDatPhongTheoMa(ctpdp.getMaPhieu());
                         check = true;
                         break;

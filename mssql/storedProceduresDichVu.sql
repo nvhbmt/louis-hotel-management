@@ -10,12 +10,12 @@ GO
 -- =============================================
 
 -- Thêm dịch vụ
-CREATE OR ALTER PROCEDURE sp_ThemDichVu @maDV NVARCHAR(10),
-                                        @tenDV NVARCHAR(100),
-                                        @soLuong INT,
-                                        @donGia DECIMAL(18, 2),
-                                        @moTa NVARCHAR(255) = NULL,
-                                        @conKinhDoanh BIT = 1
+CREATE PROCEDURE sp_ThemDichVu @maDV NVARCHAR(10),
+                               @tenDV NVARCHAR(100),
+                               @soLuong INT,
+                               @donGia DECIMAL(18, 2),
+                               @moTa NVARCHAR(255) = NULL,
+                               @conKinhDoanh BIT = 1
 AS
 BEGIN
     -- 1. KIỂM TRA MÃ DỊCH VỤ (NOT NULL và Tồn Tại)
@@ -103,12 +103,12 @@ GO
 
 
 -- Cập nhật dịch vụ
-CREATE OR ALTER PROCEDURE sp_CapNhatDichVu @maDV NVARCHAR(10),
-                                           @tenDV NVARCHAR(100),
-                                           @soLuong INT,
-                                           @donGia DECIMAL(18, 2),
-                                           @moTa NVARCHAR(255) = NULL,
-                                           @conKinhDoanh BIT
+CREATE PROCEDURE sp_CapNhatDichVu @maDV NVARCHAR(10),
+                                  @tenDV NVARCHAR(100),
+                                  @soLuong INT,
+                                  @donGia DECIMAL(18, 2),
+                                  @moTa NVARCHAR(255) = NULL,
+                                  @conKinhDoanh BIT
 AS
 BEGIN
     -- 1. KIỂM TRA MÃ DỊCH VỤ CÓ TỒN TẠI KHÔNG (Ràng buộc quan trọng nhất cho UPDATE)
@@ -164,7 +164,7 @@ BEGIN
     SELECT N'Cập nhật dịch vụ thành công.' AS Result
 END
 GO
-CREATE OR ALTER PROCEDURE sp_LayTatCaDichVu @chiLayConKinhDoanh BIT = NULL -- NULL: Lấy tất cả; 1: Đang kinh doanh; 0: Đã ngừng kinh doanh
+CREATE PROCEDURE sp_LayTatCaDichVu @chiLayConKinhDoanh BIT = NULL -- NULL: Lấy tất cả; 1: Đang kinh doanh; 0: Đã ngừng kinh doanh
 AS
 BEGIN
     SELECT maDV,
@@ -180,18 +180,18 @@ END
 GO
 
 -- Lấy mã dịch vụ tiếp theo
-CREATE OR ALTER PROCEDURE sp_LayMaDichVuTiepTheo @maDichVuTiepTheo NVARCHAR(10) OUTPUT
+CREATE PROCEDURE sp_LayMaDichVuTiepTheo @maDichVuTiepTheo NVARCHAR(10) OUTPUT
 AS
 BEGIN
     DECLARE @maxSo INT = 0;
-    
+
     -- Lấy số lớn nhất từ các mã dịch vụ hiện có
     SELECT @maxSo = ISNULL(MAX(CAST(SUBSTRING(maDV, 3, LEN(maDV) - 2) AS INT)), 0)
     FROM DichVu
-    WHERE maDV LIKE 'DV%' 
+    WHERE maDV LIKE 'DV%'
       AND LEN(maDV) = 5
       AND ISNUMERIC(SUBSTRING(maDV, 3, 3)) = 1;
-    
+
     -- Tạo mã dịch vụ tiếp theo
     SET @maDichVuTiepTheo = 'DV' + RIGHT('000' + CAST(@maxSo + 1 AS VARCHAR(3)), 3);
 END

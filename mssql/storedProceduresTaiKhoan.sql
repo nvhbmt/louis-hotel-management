@@ -3,7 +3,7 @@
 -- ================================================
 
 -- 1. Lấy danh sách tài khoản
-CREATE OR ALTER PROCEDURE sp_LayDSTaiKhoan
+CREATE PROCEDURE sp_LayDSTaiKhoan
 AS
 BEGIN
     SELECT maTK, maNV, tenDangNhap, matKhauHash, quyen, trangThai
@@ -12,12 +12,12 @@ END
 GO
 
 -- 2. Thêm tài khoản mới
-CREATE OR ALTER PROCEDURE sp_ThemTaiKhoan @maTK NVARCHAR(10), -- Mã tài khoản
-                                          @maNV NVARCHAR(10), -- Mã nhân viên (nếu có)
-                                          @tenDangNhap NVARCHAR(50), -- Tên đăng nhập
-                                          @matKhauHash NVARCHAR(255), -- Mật khẩu đã hash
-                                          @quyen NVARCHAR(50), -- Quyền (Manager, Staff)
-                                          @trangThai BIT -- Trạng thái (1 = Hoạt động, 0 = Khóa)
+CREATE PROCEDURE sp_ThemTaiKhoan @maTK NVARCHAR(10), -- Mã tài khoản
+                                 @maNV NVARCHAR(10), -- Mã nhân viên (nếu có)
+                                 @tenDangNhap NVARCHAR(50), -- Tên đăng nhập
+                                 @matKhauHash NVARCHAR(255), -- Mật khẩu đã hash
+                                 @quyen NVARCHAR(50), -- Quyền (Manager, Staff)
+                                 @trangThai BIT -- Trạng thái (1 = Hoạt động, 0 = Khóa)
 AS
 BEGIN
     INSERT INTO TaiKhoan(maTK, maNV, tenDangNhap, matKhauHash, quyen, trangThai)
@@ -26,12 +26,12 @@ END
 GO
 
 -- 3. Cập nhật thông tin tài khoản
-CREATE OR ALTER PROCEDURE sp_CapNhatTaiKhoan @maTK NVARCHAR(10),
-                                             @maNV NVARCHAR(10),
-                                             @tenDangNhap NVARCHAR(50),
-                                             @matKhauHash NVARCHAR(255),
-                                             @quyen NVARCHAR(50),
-                                             @trangThai BIT
+CREATE PROCEDURE sp_CapNhatTaiKhoan @maTK NVARCHAR(10),
+                                    @maNV NVARCHAR(10),
+                                    @tenDangNhap NVARCHAR(50),
+                                    @matKhauHash NVARCHAR(255),
+                                    @quyen NVARCHAR(50),
+                                    @trangThai BIT
 AS
 BEGIN
     UPDATE TaiKhoan
@@ -45,8 +45,8 @@ END
 GO
 
 -- 4. Đổi mật khẩu
-CREATE OR ALTER PROCEDURE sp_DoiMatKhau @maTK NVARCHAR(10),
-                                        @matKhauHash NVARCHAR(255)
+CREATE PROCEDURE sp_DoiMatKhau @maTK NVARCHAR(10),
+                               @matKhauHash NVARCHAR(255)
 AS
 BEGIN
     UPDATE TaiKhoan
@@ -56,7 +56,7 @@ END
 GO
 
 -- 5. Xóa tài khoản
-CREATE OR ALTER PROCEDURE sp_XoaTaiKhoan @maTK NVARCHAR(10)
+CREATE PROCEDURE sp_XoaTaiKhoan @maTK NVARCHAR(10)
 AS
 BEGIN
     DELETE FROM TaiKhoan WHERE maTK = @maTK;
@@ -64,7 +64,7 @@ END
 GO
 
 -- 5.1. Tìm tài khoản theo tên đăng nhập
-CREATE OR ALTER PROCEDURE sp_TimTaiKhoanTheoTenDangNhap @tenDangNhap NVARCHAR(50)
+CREATE PROCEDURE sp_TimTaiKhoanTheoTenDangNhap @tenDangNhap NVARCHAR(50)
 AS
 BEGIN
     SELECT maTK, maNV, tenDangNhap, matKhauHash, quyen, trangThai
@@ -74,8 +74,8 @@ END
 GO
 
 -- 6. Kiểm tra đăng nhập (Login)
-CREATE OR ALTER PROCEDURE sp_DangNhapTaiKhoan @tenDangNhap NVARCHAR(50),
-                                      @matKhauHash NVARCHAR(255)
+CREATE PROCEDURE sp_DangNhapTaiKhoan @tenDangNhap NVARCHAR(50),
+                                     @matKhauHash NVARCHAR(255)
 AS
 BEGIN
     SELECT maTK, maNV, tenDangNhap, matKhauHash, quyen, trangThai

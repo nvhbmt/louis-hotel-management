@@ -226,6 +226,8 @@ public class DatPhongTaiQuayController implements Initializable,Refreshable {
     public void refreshData() throws SQLException { // 👈 Đổi tên từ refresh() sang refreshData()
         laydsKhachHang();
         dsKhachHang.getSelectionModel().selectFirst();
+        AuthService authService = AuthService.getInstance();
+        maNhanVien.setText(authService.getCurrentUser().getNhanVien().getMaNV());
         ngayDi.setValue(null);
         tablePhong.getSelectionModel().clearSelection();
         SoPhongDaChon.setText(null);
@@ -256,11 +258,12 @@ public class DatPhongTaiQuayController implements Initializable,Refreshable {
         return false;
     }
     public void DatPhong(KhachHang newKh,Phong p,String maPhieu) throws SQLException {
-        PhieuDatPhong pdp = new PhieuDatPhong(maPhieu, LocalDate.now(),LocalDate.now(),ngayDi.getValue(),TrangThaiPhieuDatPhong.DA_DAT,"Đặt trực tiếp tại quầy",newKh.getMaKH(),"NV01");
-        pdpDao.themPhieuDatPhong(pdp);
         AuthService authService = AuthService.getInstance();
         String maNV = authService.getCurrentUser().getNhanVien().getMaNV();
+        PhieuDatPhong pdp = new PhieuDatPhong(maPhieu, LocalDate.now(),LocalDate.now(),ngayDi.getValue(),TrangThaiPhieuDatPhong.DA_DAT,"Đặt trực tiếp tại quầy",newKh.getMaKH(),maNV);
+        pdpDao.themPhieuDatPhong(pdp);
         HoaDon hd = new HoaDon(hDao.taoMaHoaDonTiepTheo(), LocalDate.now(),null,TrangThaiHoaDon.CHUA_THANH_TOAN,null,newKh.getMaKH(),maNV,null);
+        hDao.themHoaDon(hd);
         CTHoaDonPhong cthdp = new CTHoaDonPhong(hd.getMaHD(),pdp.getMaPhieu(),p.getMaPhong(),null,null,BigDecimal.valueOf(p.getLoaiPhong().getDonGia()));
         Pdao.capNhatTrangThaiPhong(p.getMaPhong(),TrangThaiPhong.DA_DAT.toString());
         cthdpDao.themCTHoaDonPhong(cthdp);

@@ -139,19 +139,6 @@ public class KhachHangDAO {
         }
     }
 
-    // Kiểm tra khách hàng có được sử dụng không
-    public boolean kiemTraKhachHangDuocSuDung(String maKH) throws SQLException {
-        String sql = "{call sp_KiemTraKhachHangDuocSuDung(?)}";
-
-        try (Connection con = CauHinhDatabase.getConnection();
-             CallableStatement cs = con.prepareCall(sql)) {
-
-            cs.setString(1, maKH);
-            try (ResultSet rs = cs.executeQuery()) {
-                return rs.next() && rs.getInt("count") > 0;
-            }
-        }
-    }
 
     // Mapping ResultSet -> KhachHang
     private KhachHang mapResultSetToKhachHang(ResultSet rs) throws SQLException {

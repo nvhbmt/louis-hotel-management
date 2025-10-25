@@ -79,7 +79,7 @@
                                         <Insets left="10.0" right="10.0" />
                                     </HBox.margin>
                                 </ImageView>
-                                <TextField fx:id="maNhanVien" editable="false" prefHeight="30.0" prefWidth="609.0" promptText="Tên nhân viên đang đăng nhập" style="-fx-control-inner-background: #f0f0f0;" />
+                                <TextField fx:id="maNhanVien" editable="false" prefHeight="30.0" prefWidth="609.0" style="-fx-control-inner-background: #f0f0f0;" />
                             </children>
                         </HBox>
 

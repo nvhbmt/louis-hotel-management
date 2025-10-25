@@ -13,19 +13,20 @@ import java.util.List;
 
 public class HoaDonDAO {
 
-    // 🔹 Sinh mã hóa đơn tiếp theo bằng store procedure
+    // 🔹 Sinh mã hóa đơn tiếp theo bằng stored procedure
     public String taoMaHoaDonTiepTheo() throws SQLException {
-        String sql = "{CALL sp_TaoMaHoaDonTiepTheo(?)}";
+        String sql = "{CALL sp_TaoMaHoaDonTiepTheo()}"; // ❌ Bỏ dấu (?)
         try (Connection conn = CauHinhDatabase.getConnection();
              CallableStatement cs = conn.prepareCall(sql);
              ResultSet rs = cs.executeQuery()) {
 
             if (rs.next()) {
-                return rs.getString("maMoi");
+                return rs.getString("maHDMoi"); // ✅ Tên cột đúng với SP của bạn
             }
         }
         return null;
     }
+
 
     // 🔹 Thêm hóa đơn mới
     public boolean themHoaDon(HoaDon hd) throws SQLException {
@@ -36,7 +37,11 @@ public class HoaDonDAO {
 
             ps.setString(1, hd.getMaHD());
             ps.setDate(2, Date.valueOf(hd.getNgayLap()));
-            ps.setString(3, hd.getPhuongThuc().toString());
+            if(hd.getPhuongThuc()!=null){
+                ps.setString(3, hd.getPhuongThuc().toString());
+            }else{
+                ps.setNull(3,Types.NULL);
+            }
             ps.setBigDecimal(4, hd.getTongTien() != null ? hd.getTongTien() : BigDecimal.ZERO);
             ps.setString(5, hd.getMaKH());
             ps.setString(6, hd.getMaNV());
