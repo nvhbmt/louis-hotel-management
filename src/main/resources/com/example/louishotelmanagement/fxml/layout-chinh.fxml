@@ -45,12 +45,8 @@
                     <padding>
                         <Insets bottom="20.0" left="16.0" right="16.0" top="20.0" />
                     </padding>
-
-                    <!-- Menu Section -->
-                    <VBox spacing="4.0" styleClass="menu-section">
-                        <Label prefHeight="26.0" prefWidth="210.0" styleClass="menu-label" text="MENU" />
-                        <TreeView fx:id="menuTree" prefHeight="500.0" prefWidth="218.0" stylesheets="@../css/tree-view.css" />
-                    </VBox>
+                     <Label prefHeight="26.0" prefWidth="210.0" styleClass="menu-label" text="MENU" />
+                     <TreeView fx:id="menuTree" stylesheets="@../css/tree-view.css" VBox.vgrow="ALWAYS" />
 
                 </VBox>
             </center>

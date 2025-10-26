@@ -15,9 +15,10 @@ AS
 BEGIN
     SELECT
         FORMAT(hd.ngayLap, 'dd/MM/yyyy') as ngay,
-        ISNULL(SUM(cthd.thanhTien), 0) as tongTien
+        ISNULL(SUM(cthdp.thanhTien), 0) + ISNULL(SUM(cthddv.thanhTien), 0) as tongTien
     FROM HoaDon hd
-             LEFT JOIN CTHoaDon cthd ON hd.maHD = cthd.maHD
+        LEFT JOIN CTHoaDonPhong cthdp ON hd.maHD = cthdp.maHD
+        LEFT JOIN CTHoaDonDichVu cthddv ON hd.maHD = cthddv.maHD
     WHERE hd.ngayLap BETWEEN @tuNgay AND @denNgay
     GROUP BY hd.ngayLap
     ORDER BY hd.ngayLap;
@@ -28,14 +29,15 @@ GO
 -- 2. Lấy doanh thu theo tuần
 -- ================================================
 CREATE PROCEDURE sp_LayDoanhThuTheoTuan
-@nam INT
+    @nam INT
 AS
 BEGIN
     SELECT
         N'Tuần ' + CAST(DATEPART(WEEK, hd.ngayLap) AS NVARCHAR(2)) as tuan,
-        ISNULL(SUM(cthd.thanhTien), 0) as tongTien
+        ISNULL(SUM(cthdp.thanhTien), 0) + ISNULL(SUM(cthddv.thanhTien), 0) as tongTien
     FROM HoaDon hd
-             LEFT JOIN CTHoaDon cthd ON hd.maHD = cthd.maHD
+        LEFT JOIN CTHoaDonPhong cthdp ON hd.maHD = cthdp.maHD
+        LEFT JOIN CTHoaDonDichVu cthddv ON hd.maHD = cthddv.maHD
     WHERE YEAR(hd.ngayLap) = @nam
     GROUP BY DATEPART(WEEK, hd.ngayLap)
     ORDER BY DATEPART(WEEK, hd.ngayLap);
@@ -46,14 +48,15 @@ GO
 -- 3. Lấy doanh thu theo tháng
 -- ================================================
 CREATE PROCEDURE sp_LayDoanhThuTheoThang
-@nam INT
+    @nam INT
 AS
 BEGIN
     SELECT
         N'Tháng ' + CAST(MONTH(hd.ngayLap) AS NVARCHAR(2)) as thang,
-        ISNULL(SUM(cthd.thanhTien), 0) as tongTien
+        ISNULL(SUM(cthdp.thanhTien), 0) + ISNULL(SUM(cthddv.thanhTien), 0) as tongTien
     FROM HoaDon hd
-             LEFT JOIN CTHoaDon cthd ON hd.maHD = cthd.maHD
+        LEFT JOIN CTHoaDonPhong cthdp ON hd.maHD = cthdp.maHD
+        LEFT JOIN CTHoaDonDichVu cthddv ON hd.maHD = cthddv.maHD
     WHERE YEAR(hd.ngayLap) = @nam
     GROUP BY MONTH(hd.ngayLap)
     ORDER BY MONTH(hd.ngayLap);
@@ -69,9 +72,10 @@ CREATE PROCEDURE sp_LayTongDoanhThu
 AS
 BEGIN
     SELECT
-        ISNULL(SUM(cthd.thanhTien), 0) as tongDoanhThu
+        ISNULL(SUM(cthdp.thanhTien), 0) + ISNULL(SUM(cthddv.thanhTien), 0) as tongDoanhThu
     FROM HoaDon hd
-             LEFT JOIN CTHoaDon cthd ON hd.maHD = cthd.maHD
+        LEFT JOIN CTHoaDonPhong cthdp ON hd.maHD = cthdp.maHD
+        LEFT JOIN CTHoaDonDichVu cthddv ON hd.maHD = cthddv.maHD
     WHERE hd.ngayLap BETWEEN @tuNgay AND @denNgay;
 END;
 GO
@@ -86,15 +90,14 @@ AS
 BEGIN
     SELECT
         lp.tenLoai as loaiPhong,
-        ISNULL(SUM(cthd.thanhTien), 0) as tongTien
+        ISNULL(SUM(cthdp.thanhTien), 0) as tongTien
     FROM HoaDon hd
-             LEFT JOIN CTHoaDon cthd ON hd.maHD = cthd.maHD
-             LEFT JOIN Phong p ON cthd.maPhong = p.maPhong
-             LEFT JOIN LoaiPhong lp ON p.maLoaiPhong = lp.maLoaiPhong
+        LEFT JOIN CTHoaDonPhong cthdp ON hd.maHD = cthdp.maHD
+        LEFT JOIN Phong p ON cthdp.maPhong = p.maPhong
+        LEFT JOIN LoaiPhong lp ON p.maLoaiPhong = lp.maLoaiPhong
     WHERE hd.ngayLap BETWEEN @tuNgay AND @denNgay
-      AND cthd.loai = 'Phong'
     GROUP BY lp.tenLoai
-    ORDER BY SUM(cthd.thanhTien) DESC;
+    ORDER BY SUM(cthdp.thanhTien) DESC;
 END;
 GO
 
@@ -102,7 +105,7 @@ GO
 -- 6. Lấy số lượng đặt phòng theo tháng
 -- ================================================
 CREATE PROCEDURE sp_LaySoLuongDatPhongTheoThang
-@nam INT
+    @nam INT
 AS
 BEGIN
     SELECT
@@ -139,15 +142,14 @@ AS
 BEGIN
     SELECT
         dv.tenDV as tenDichVu,
-        ISNULL(SUM(cthd.soLuong), 0) as tongSoLuong,
-        ISNULL(SUM(cthd.thanhTien), 0) as tongTien
+        ISNULL(SUM(cthddv.soLuong), 0) as tongSoLuong,
+        ISNULL(SUM(cthddv.thanhTien), 0) as tongTien
     FROM HoaDon hd
-             LEFT JOIN CTHoaDon cthd ON hd.maHD = cthd.maHD
-             LEFT JOIN DichVu dv ON cthd.maDV = dv.maDV
+        LEFT JOIN CTHoaDonDichVu cthddv ON hd.maHD = cthddv.maHD
+        LEFT JOIN DichVu dv ON cthddv.maDV = dv.maDV
     WHERE hd.ngayLap BETWEEN @tuNgay AND @denNgay
-      AND cthd.loai = 'DichVu'
     GROUP BY dv.tenDV
-    ORDER BY SUM(cthd.thanhTien) DESC;
+    ORDER BY SUM(cthddv.thanhTien) DESC;
 END;
 GO
 
@@ -155,7 +157,7 @@ GO
 -- 9. Thống kê khách hàng theo tháng
 -- ================================================
 CREATE PROCEDURE sp_ThongKeKhachHangTheoThang
-@nam INT
+    @nam INT
 AS
 BEGIN
     SELECT
@@ -177,30 +179,31 @@ AS
 BEGIN
     SELECT
         (SELECT COUNT(*)
-         FROM Phong) as tongSoPhong,
+        FROM Phong) as tongSoPhong,
         (SELECT COUNT(*)
-         FROM Phong
-         WHERE trangThai = N'Trống') as phongTrong,
+        FROM Phong
+        WHERE trangThai = N'Trống') as phongTrong,
         (SELECT COUNT(*)
-         FROM Phong
-         WHERE trangThai = N'Đang sử dụng') as phongDangSuDung,
+        FROM Phong
+        WHERE trangThai = N'Đang sử dụng') as phongDangSuDung,
         (SELECT COUNT(*)
-         FROM Phong
-         WHERE trangThai = N'Đã đặt') as phongDaDat,
+        FROM Phong
+        WHERE trangThai = N'Đã đặt') as phongDaDat,
         (SELECT COUNT(*)
-         FROM Phong
-         WHERE trangThai = N'Bảo trì') as phongBaoTri,
+        FROM Phong
+        WHERE trangThai = N'Bảo trì') as phongBaoTri,
         (SELECT COUNT(*)
-         FROM KhachHang) as tongKhachHang,
+        FROM KhachHang) as tongKhachHang,
         (SELECT COUNT(*)
-         FROM LoaiPhong) as tongLoaiPhong,
+        FROM LoaiPhong) as tongLoaiPhong,
         (SELECT COUNT(*)
-         FROM PhieuDatPhong
-         WHERE YEAR(ngayDat) = YEAR(GETDATE())) as datPhongTrongNam,
-        (SELECT ISNULL(SUM(cthd.thanhTien), 0)
-         FROM HoaDon hd
-                  LEFT JOIN CTHoaDon cthd ON hd.maHD = cthd.maHD
-         WHERE YEAR(hd.ngayLap) = YEAR(GETDATE())) as doanhThuTrongNam;
+        FROM PhieuDatPhong
+        WHERE YEAR(ngayDat) = YEAR(GETDATE())) as datPhongTrongNam,
+        (SELECT ISNULL(SUM(cthdp.thanhTien), 0) + ISNULL(SUM(cthddv.thanhTien), 0)
+        FROM HoaDon hd
+            LEFT JOIN CTHoaDonPhong cthdp ON hd.maHD = cthdp.maHD
+            LEFT JOIN CTHoaDonDichVu cthddv ON hd.maHD = cthddv.maHD
+        WHERE YEAR(hd.ngayLap) = YEAR(GETDATE())) as doanhThuTrongNam;
 END;
 GO
 
@@ -216,13 +219,13 @@ BEGIN
         p.maPhong,
         lp.tenLoai,
         COUNT(ctpdp.maPhong) as soLanDat,
-        ISNULL(SUM(cthd.thanhTien), 0) as tongDoanhThu
+        ISNULL(SUM(cthdp.thanhTien), 0) as tongDoanhThu
     FROM Phong p
-             LEFT JOIN LoaiPhong lp ON p.maLoaiPhong = lp.maLoaiPhong
-             LEFT JOIN CTPhieuDatPhong ctpdp ON p.maPhong = ctpdp.maPhong
-             LEFT JOIN PhieuDatPhong pdp ON ctpdp.maPhieu = pdp.maPhieu
-             LEFT JOIN HoaDon hd ON pdp.maPhieu = hd.maPhieu
-             LEFT JOIN CTHoaDon cthd ON hd.maHD = cthd.maHD AND cthd.maPhong = p.maPhong
+        LEFT JOIN LoaiPhong lp ON p.maLoaiPhong = lp.maLoaiPhong
+        LEFT JOIN CTPhieuDatPhong ctpdp ON p.maPhong = ctpdp.maPhong
+        LEFT JOIN PhieuDatPhong pdp ON ctpdp.maPhieu = pdp.maPhieu
+        LEFT JOIN HoaDon hd ON pdp.maPhieu = hd.maPhieu
+        LEFT JOIN CTHoaDonPhong cthdp ON hd.maHD = cthdp.maHD AND cthdp.maPhong = p.maPhong
     WHERE pdp.ngayDat BETWEEN @tuNgay AND @denNgay
     GROUP BY p.maPhong, lp.tenLoai
     ORDER BY COUNT(ctpdp.maPhong) DESC;
@@ -240,13 +243,14 @@ BEGIN
     SELECT
         nv.hoTen as tenNhanVien,
         COUNT(hd.maHD) as soHoaDon,
-        ISNULL(SUM(cthd.thanhTien), 0) as tongDoanhThu
+        ISNULL(SUM(cthdp.thanhTien), 0) + ISNULL(SUM(cthddv.thanhTien), 0) as tongDoanhThu
     FROM NhanVien nv
-             LEFT JOIN HoaDon hd ON nv.maNV = hd.maNV
-             LEFT JOIN CTHoaDon cthd ON hd.maHD = cthd.maHD
+        LEFT JOIN HoaDon hd ON nv.maNV = hd.maNV
+        LEFT JOIN CTHoaDonPhong cthdp ON hd.maHD = cthdp.maHD
+        LEFT JOIN CTHoaDonDichVu cthddv ON hd.maHD = cthddv.maHD
     WHERE hd.ngayLap BETWEEN @tuNgay AND @denNgay
     GROUP BY nv.maNV, nv.hoTen
-    ORDER BY SUM(cthd.thanhTien) DESC;
+    ORDER BY SUM(cthdp.thanhTien) + SUM(cthddv.thanhTien) DESC;
 END;
 GO
 
@@ -263,10 +267,11 @@ BEGIN
         mgg.giamGia,
         mgg.kieuGiamGia,
         COUNT(hd.maHD) as soLanSuDung,
-        ISNULL(SUM(cthd.thanhTien), 0) as tongDoanhThu
+        ISNULL(SUM(cthdp.thanhTien), 0) + ISNULL(SUM(cthddv.thanhTien), 0) as tongDoanhThu
     FROM MaGiamGia mgg
-             LEFT JOIN HoaDon hd ON mgg.maGG = hd.maGG
-             LEFT JOIN CTHoaDon cthd ON hd.maHD = cthd.maHD
+        LEFT JOIN HoaDon hd ON mgg.maGG = hd.maGG
+        LEFT JOIN CTHoaDonPhong cthdp ON hd.maHD = cthdp.maHD
+        LEFT JOIN CTHoaDonDichVu cthddv ON hd.maHD = cthddv.maHD
     WHERE hd.ngayLap BETWEEN @tuNgay AND @denNgay
     GROUP BY mgg.maGG, mgg.code, mgg.giamGia, mgg.kieuGiamGia
     ORDER BY COUNT(hd.maHD) DESC;
@@ -284,12 +289,11 @@ BEGIN
     SELECT
         p.tang,
         COUNT(DISTINCT p.maPhong) as soPhong,
-        ISNULL(SUM(cthd.thanhTien), 0) as tongDoanhThu
+        ISNULL(SUM(cthdp.thanhTien), 0) as tongDoanhThu
     FROM Phong p
-             LEFT JOIN CTHoaDon cthd ON p.maPhong = cthd.maPhong
-             LEFT JOIN HoaDon hd ON cthd.maHD = hd.maHD
+        LEFT JOIN CTHoaDonPhong cthdp ON p.maPhong = cthdp.maPhong
+        LEFT JOIN HoaDon hd ON cthdp.maHD = hd.maHD
     WHERE hd.ngayLap BETWEEN @tuNgay AND @denNgay
-      AND cthd.loai = 'Phong'
     GROUP BY p.tang
     ORDER BY p.tang;
 END;

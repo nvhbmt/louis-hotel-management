@@ -38,8 +38,6 @@ public class MenuData {
         dichVuGroup.getChildren().addAll(List.of(
                 new TreeItem<>(new MenuItemModel("Quản lý dịch vụ", "mdi2c-coffee",
                         "/com/example/louishotelmanagement/fxml/quan-ly-dich-vu-view.fxml")),
-                new TreeItem<>(new MenuItemModel("Thêm dịch vụ", "mdi2p-plus-circle",
-                        "/com/example/louishotelmanagement/fxml/them-dich-vu.fxml")),
                 new TreeItem<>(new MenuItemModel("Cung cấp dịch vụ", "mdi2h-handshake",
                         "/com/example/louishotelmanagement/fxml/cung-cap-dich-vu.fxml")),
                 new TreeItem<>(new MenuItemModel("Hủy dịch vụ", "mdi2c-close-circle",

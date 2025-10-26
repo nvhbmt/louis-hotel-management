@@ -38,7 +38,7 @@
                                 <Region HBox.hgrow="ALWAYS" />
                                 <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
                                     <children>
-                                        <Button fx:id="btnThemKhachHang" mnemonicParsing="false" prefHeight="37.0" prefWidth="144.0" styleClass="btn-them-khach-hang" text="➕ Thêm Khách Hàng">
+                                        <Button fx:id="btnThemKhachHang" mnemonicParsing="false" prefHeight="37.0" prefWidth="144.0" styleClass="btn-them" text="➕ Thêm Khách Hàng">
                                             <font>
                                                 <Font name="System Bold" size="12.0" />
                                             </font>
