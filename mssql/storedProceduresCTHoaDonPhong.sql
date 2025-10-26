@@ -1,6 +1,6 @@
 -- =========================================================
 -- KHỞI TẠO LẠI CÁC STORES PROCEDURES MỚI
--- (Sử dụng dbo.CTHoaDonPhong)
+-- (Sử dụng CTHoaDonPhong)
 -- =========================================================
 
 -- 1. sp_ThemCTHoaDonPhong (Thêm mới)
@@ -14,19 +14,21 @@ CREATE PROCEDURE sp_ThemCTHoaDonPhong
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO dbo.CTHoaDonPhong (maHD, maPhieu, maPhong, ngayDen, ngayDi, giaPhong)
-    VALUES (@maHD, @maPhieu, @maPhong, @ngayDen, @ngayDi, @giaPhong);
+    INSERT INTO CTHoaDonPhong
+        (maHD, maPhieu, maPhong, ngayDen, ngayDi, giaPhong)
+    VALUES
+        (@maHD, @maPhieu, @maPhong, @ngayDen, @ngayDi, @giaPhong);
 END
 GO
 
 -- 2. SP_SelectCTHoaDonPhongByMaPhieu (Lấy theo Mã Phiếu)
 CREATE PROCEDURE SP_SelectCTHoaDonPhongByMaPhieu
-@maPhieu NVARCHAR(10)
+    @maPhieu NVARCHAR(10)
 AS
 BEGIN
     SET NOCOUNT ON;
     SELECT maHD, maPhieu, maPhong, ngayDen, ngayDi, giaPhong
-    FROM dbo.CTHoaDonPhong
+    FROM CTHoaDonPhong
     WHERE maPhieu = @maPhieu;
 END
 GO
@@ -39,7 +41,7 @@ CREATE PROCEDURE sp_CapNhatNgayDenThucTe
 AS
 BEGIN
     SET NOCOUNT ON;
-    UPDATE dbo.CTHoaDonPhong
+    UPDATE CTHoaDonPhong
     SET ngayDen = @ngayDen
     WHERE maHD = @maHD AND maPhong = @maPhong;
 END
@@ -53,7 +55,7 @@ CREATE PROCEDURE sp_CapNhatNgayDiThucTe
 AS
 BEGIN
     SET NOCOUNT ON;
-    UPDATE dbo.CTHoaDonPhong
+    UPDATE CTHoaDonPhong
     SET ngayDi = @ngayDi
     WHERE maHD = @maHD AND maPhong = @maPhong;
 END
@@ -68,7 +70,7 @@ CREATE PROCEDURE sp_CapNhatMaPhongVaGia
 AS
 BEGIN
     SET NOCOUNT ON;
-    UPDATE dbo.CTHoaDonPhong
+    UPDATE CTHoaDonPhong
     SET maPhong = @maPhongMoi,
         giaPhong = @giaPhongMoi
     WHERE maPhieu = @maPhieu AND maPhong = @maPhongCu;
@@ -77,24 +79,24 @@ GO
 
 -- 6. sp_GetCTHoaDonPhongTheoMaPhong (Lấy theo Mã Phòng)
 CREATE PROCEDURE sp_GetCTHoaDonPhongTheoMaPhong
-@maPhong NVARCHAR(10)
+    @maPhong NVARCHAR(10)
 AS
 BEGIN
     SET NOCOUNT ON;
     SELECT maHD, maPhieu, maPhong, ngayDen, ngayDi, giaPhong
-    FROM dbo.CTHoaDonPhong
+    FROM CTHoaDonPhong
     WHERE maPhong = @maPhong;
 END
 GO
 
 -- 7. sp_GetCTHoaDonPhongTheoMaHD (Lấy theo Mã Hóa Đơn)
 CREATE PROCEDURE sp_GetCTHoaDonPhongTheoMaHD
-@maHD NVARCHAR(10)
+    @maHD NVARCHAR(10)
 AS
 BEGIN
     SET NOCOUNT ON;
     SELECT maHD, maPhieu, maPhong, ngayDen, ngayDi, giaPhong
-    FROM dbo.CTHoaDonPhong
+    FROM CTHoaDonPhong
     WHERE maHD = @maHD;
 END
 GO
@@ -102,14 +104,14 @@ GO
 -- 8. sp_TinhTongTienPhongTheoHD (Tính Tổng Tiền Phòng)
 -- Lưu ý: Logic tính tổng tiền đơn giản: (Số ngày * Giá phòng)
 CREATE PROCEDURE sp_TinhTongTienPhongTheoHD
-@maHD NVARCHAR(10)
+    @maHD NVARCHAR(10)
 AS
 BEGIN
     SET NOCOUNT ON;
     SELECT SUM(
                    DATEDIFF(day, ISNULL(ngayDen, GETDATE()), ISNULL(ngayDi, GETDATE())) * giaPhong
            ) AS TongTien
-    FROM dbo.CTHoaDonPhong
+    FROM CTHoaDonPhong
     WHERE maHD = @maHD;
 END
 GO
@@ -121,7 +123,7 @@ CREATE PROCEDURE sp_XoaCTHoaDonPhong
 AS
 BEGIN
     SET NOCOUNT ON;
-    DELETE FROM dbo.CTHoaDonPhong
+    DELETE FROM CTHoaDonPhong
     WHERE maHD = @maHD AND maPhong = @maPhong;
 END
 GO

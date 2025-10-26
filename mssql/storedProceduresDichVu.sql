@@ -22,34 +22,29 @@ BEGIN
     IF @maDV IS NULL OR LTRIM(RTRIM(@maDV)) = ''
         BEGIN
             RAISERROR (N'Mã dịch vụ không được để trống.', 16, 1)
-            RETURN
         END
 
     IF EXISTS (SELECT 1 FROM DichVu WHERE maDV = @maDV)
         BEGIN
             RAISERROR (N'Mã dịch vụ đã tồn tại. Vui lòng chọn mã khác.', 16, 1)
-            RETURN
         END
 
     -- 2. KIỂM TRA TÊN DỊCH VỤ (NOT NULL)
     IF @tenDV IS NULL OR LTRIM(RTRIM(@tenDV)) = ''
         BEGIN
             RAISERROR (N'Tên dịch vụ không được để trống.', 16, 1)
-            RETURN
         END
 
     -- 3. KIỂM TRA SỐ LƯỢNG (NOT NULL và >= 0)
     IF @soLuong IS NULL OR @soLuong < 0
         BEGIN
             RAISERROR (N'Số lượng phải là một số nguyên không âm (>= 0).', 16, 1)
-            RETURN
         END
 
     -- 4. KIỂM TRA ĐƠN GIÁ (NOT NULL và >= 0)
     IF @donGia IS NULL OR @donGia < 0.00
         BEGIN
             RAISERROR (N'Đơn giá phải là một giá trị tiền tệ không âm (>= 0).', 16, 1)
-            RETURN
         END
 
     -- 5. KIỂM TRA TRẠNG THÁI KINH DOANH (NOT NULL)
@@ -57,7 +52,6 @@ BEGIN
         BEGIN
             -- Mặc dù đã có giá trị mặc định, nên kiểm tra nếu người dùng truyền NULL rõ ràng
             RAISERROR (N'Trạng thái kinh doanh không được để trống.', 16, 1)
-            RETURN
         END
 
     -- THỰC HIỆN THÊM DỮ LIỆU NẾU TẤT CẢ ĐỀU HỢP LỆ
@@ -76,7 +70,6 @@ BEGIN
     IF NOT EXISTS (SELECT 1 FROM DichVu WHERE maDV = @maDV)
         BEGIN
             RAISERROR (N'Không tìm thấy mã dịch vụ để xóa/ngừng kinh doanh.', 16, 1)
-            RETURN
         END
 
     UPDATE DichVu
@@ -99,41 +92,35 @@ BEGIN
     IF @maDV IS NULL OR LTRIM(RTRIM(@maDV)) = ''
         BEGIN
             RAISERROR (N'Mã dịch vụ không được để trống khi cập nhật.', 16, 1)
-            RETURN
         END
 
     IF NOT EXISTS (SELECT 1 FROM DichVu WHERE maDV = @maDV)
         BEGIN
             RAISERROR (N'Không tìm thấy mã dịch vụ này để cập nhật.', 16, 1)
-            RETURN
         END
 
     -- 2. KIỂM TRA TÊN DỊCH VỤ (NOT NULL)
     IF @tenDV IS NULL OR LTRIM(RTRIM(@tenDV)) = ''
         BEGIN
             RAISERROR (N'Tên dịch vụ không được để trống.', 16, 1)
-            RETURN
         END
 
     -- 3. KIỂM TRA SỐ LƯỢNG (NOT NULL và >= 0)
     IF @soLuong IS NULL OR @soLuong < 0
         BEGIN
             RAISERROR (N'Số lượng phải là một số nguyên không âm (>= 0).', 16, 1)
-            RETURN
         END
 
     -- 4. KIỂM TRA ĐƠN GIÁ (NOT NULL và >= 0)
     IF @donGia IS NULL OR @donGia < 0.00
         BEGIN
             RAISERROR (N'Đơn giá phải là một giá trị tiền tệ không âm (>= 0).', 16, 1)
-            RETURN
         END
 
     -- 5. KIỂM TRA TRẠNG THÁI KINH DOANH (NOT NULL)
     IF @conKinhDoanh IS NULL
         BEGIN
             RAISERROR (N'Trạng thái kinh doanh không được để trống.', 16, 1)
-            RETURN
         END
 
     -- THỰC HIỆN CẬP NHẬT DỮ LIỆU NẾU TẤT CẢ ĐỀU HỢP LỆ
