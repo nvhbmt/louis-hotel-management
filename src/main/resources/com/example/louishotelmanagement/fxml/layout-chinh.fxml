@@ -49,7 +49,7 @@
                     <!-- Menu Section -->
                     <VBox spacing="4.0" styleClass="menu-section">
                         <Label prefHeight="26.0" prefWidth="210.0" styleClass="menu-label" text="MENU" />
-                        <TreeView fx:id="menuTree" prefHeight="500.0" prefWidth="218.0" stylesheets="@../css/treeview.css" />
+                        <TreeView fx:id="menuTree" prefHeight="500.0" prefWidth="218.0" stylesheets="@../css/tree-view.css" />
                     </VBox>
 
                 </VBox>
