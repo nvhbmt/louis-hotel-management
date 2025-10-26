@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane stylesheets="@../css/TrangChu.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.TrangChuController">
+<BorderPane stylesheets="@../css/trang-chu.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.TrangChuController">
    <center>
       <StackPane style="-fx-background-color: #f8f9fa;" styleClass="container">
          <VBox alignment="CENTER" prefHeight="864.0" prefWidth="1014.4" spacing="16.0" style="-fx-padding: 40;">

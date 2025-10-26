@@ -60,3 +60,26 @@
 .margin-top-10 {
     -fx-margin-top: 10px;
 }
+
+.btn-table-add {
+    -fx-padding: 2 4 2 4;
+    -fx-max-height: 5px;
+    -fx-min-width: 40px;
+    -fx-pref-width: 70px;
+}
+
+.btn-table-remove {
+    -fx-padding: 2 4 2 4;
+    -fx-max-height: 5px;
+    -fx-min-width: 40px;
+    -fx-pref-width: 70px;
+}
+
+.label-thong-ke-dat-phong {
+    -fx-font-weight: 700;
+}
+
+.status-trong {
+    -fx-background-color: #d4edda;
+    -fx-text-fill: #155724;
+}

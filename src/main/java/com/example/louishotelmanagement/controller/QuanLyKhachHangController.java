@@ -92,8 +92,9 @@ public class QuanLyKhachHangController implements Initializable {
         // Hạng khách
         ObservableList<String> dsHang = FXCollections.observableArrayList(
                 "Tất cả hạng",
-                "Khách VIP",
+                "Khách thường",
                 "Khách quen",
+                "Khách VIP",
                 "Khách doanh nghiệp"
         );
         cmbHang.setItems(dsHang);

@@ -18,7 +18,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="rootPane" stylesheets="@../css/main.css, @../css/quan-ly-khach-hang.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.QuanLyDichVuController">
+<BorderPane fx:id="rootPane" stylesheets="@../css/main.css, @../css/quan-ly-dich-vu.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.QuanLyDichVuController">
     <center>
         <VBox alignment="TOP_CENTER" prefHeight="800.0" prefWidth="950.0" spacing="15.0" styleClass="main-content" VBox.vgrow="ALWAYS">
             <children>
@@ -38,7 +38,7 @@
                                 <Region HBox.hgrow="ALWAYS" />
                                 <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
                                     <children>
-                                        <Button fx:id="btnThemDichVu" onAction="#handleThemDichVu"  mnemonicParsing="false" prefHeight="37.0" prefWidth="144.0" styleClass="btn-them-khach-hang" text="➕ Thêm Dịch Vụ">
+                                        <Button fx:id="btnThemDichVu" onAction="#handleThemDichVu"  mnemonicParsing="false" prefHeight="37.0" prefWidth="144.0" styleClass="btn-them" text="➕ Thêm Dịch Vụ">
                                             <font>
                                                 <Font name="System Bold" size="12.0" />
                                             </font>

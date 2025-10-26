@@ -1,20 +1,23 @@
-/* NhanPhong.css - Phiên bản Tinh chỉnh */
+/* nhan-phong.css - Phiên bản Tinh chỉnh */
 
 /* --- Nền chung cho toàn bộ BorderPane (Background) --- */
 .root {
-    -fx-background-color: #F8F8F8; /* Màu nền rất nhạt */
+    -fx-background-color: #F8F8F8;
+    /* Màu nền rất nhạt */
 }
 
 /* --- Tiêu đề trang (Nhận phòng) --- */
 .header-title {
     -fx-font-weight: bold;
     -fx-font-size: 26px;
-    -fx-text-fill: #1C315E; /* Màu xanh navy đậm */
+    -fx-text-fill: #1C315E;
+    /* Màu xanh navy đậm */
     -fx-padding: 10px 0 0 0;
 }
 
 .header-icon {
-    -fx-fit-height: 40; /* Kích thước icon cân đối */
+    -fx-fit-height: 40;
+    /* Kích thước icon cân đối */
     -fx-fit-width: 40;
 }
 
@@ -35,21 +38,26 @@
 
 /* --- HBox chứa input --- */
 .input-row {
-    -fx-alignment: CENTER; /* CĂN GIỮA TOÀN BỘ HBOX */
+    -fx-alignment: CENTER;
+    /* CĂN GIỮA TOÀN BỘ HBOX */
 }
 
 /* --- Label mô tả input --- */
 .input-label {
     -fx-font-size: 16px;
     -fx-text-fill: #555555;
-    -fx-pref-width: 150px; /* CỐ ĐỊNH CHIỀU RỘNG LABEL */
+    -fx-pref-width: 150px;
+    /* CỐ ĐỊNH CHIỀU RỘNG LABEL */
     -fx-font-weight: 500;
 }
 
 /* --- TextField, ComboBox, DatePicker (Input Fields) --- */
-.text-field, .combo-box, .date-picker > .text-field {
+.text-field,
+.combo-box,
+.date-picker>.text-field {
     -fx-pref-height: 38px;
-    -fx-pref-width: 500px; /* CỐ ĐỊNH CHIỀU RỘNG INPUT cho gọn gàng */
+    -fx-pref-width: 500px;
+    /* CỐ ĐỊNH CHIỀU RỘNG INPUT cho gọn gàng */
     -fx-border-color: #E0E0E0;
     -fx-border-width: 1px;
     -fx-border-radius: 6px;
@@ -57,10 +65,16 @@
     -fx-background-color: white;
     -fx-padding: 0 10px;
 }
-.combo-box, .date-picker {
-    -fx-pref-width: 500px; /* Cố định chiều rộng DatePicker và ComboBox */
+
+.combo-box,
+.date-picker {
+    -fx-pref-width: 500px;
+    /* Cố định chiều rộng DatePicker và ComboBox */
 }
-.text-field:focused, .combo-box:focused, .date-picker > .text-field:focused {
+
+.text-field:focused,
+.combo-box:focused,
+.date-picker>.text-field:focused {
     -fx-border-color: #007bff;
     -fx-border-width: 2px;
 }
@@ -73,9 +87,10 @@
     -fx-padding: 10px 30px;
     -fx-border-radius: 8px;
     -fx-background-radius: 8px;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 1);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 5, 0, 0, 1);
     -fx-cursor: hand;
 }
+
 .button-base:hover {
     -fx-opacity: 0.9;
 }
@@ -99,21 +114,27 @@
     -fx-padding: 30px;
     -fx-border-radius: 12px;
     -fx-background-radius: 12px;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 15, 0, 0, 0);
-    -fx-pref-width: 480px; /* Chiều rộng cố định của Box */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 15, 0, 0, 0);
+    -fx-pref-width: 480px;
+    /* Chiều rộng cố định của Box */
 }
 
 /* --- Căn chỉnh Label và TextField trong Box --- */
 .room-details-box .label {
     -fx-font-size: 16px;
     -fx-text-fill: #555555;
-    -fx-pref-width: 120px; /* Cố định chiều rộng Label trong box */
+    -fx-pref-width: 120px;
+    /* Cố định chiều rộng Label trong box */
 }
-.room-details-box > HBox {
+
+.room-details-box>HBox {
     -fx-alignment: CENTER_LEFT;
     -fx-spacing: 20px;
     -fx-padding: 5px 0;
 }
-.room-details-box .text-field, .room-details-box .date-picker {
-    -fx-pref-width: 250px; /* Cố định chiều rộng Input trong box */
+
+.room-details-box .text-field,
+.room-details-box .date-picker {
+    -fx-pref-width: 250px;
+    /* Cố định chiều rộng Input trong box */
 }
