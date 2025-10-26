@@ -53,7 +53,7 @@ public class QuanLyDichVuController implements Initializable {
     @FXML
     private TableColumn<DichVu, String> colMoTa;
     @FXML
-    private TableColumn<DichVu, String> colTrangThai;
+    private TableColumn<DichVu, Boolean> colTrangThai;
     @FXML
     public TableColumn<DichVu, Void> colThaoTac;
 
@@ -124,9 +124,7 @@ public class QuanLyDichVuController implements Initializable {
         colMoTa.setCellValueFactory(new PropertyValueFactory<>("moTa"));
 
         // Cột trạng thái hiển thị văn bản dựa trên conKinhDoanh
-        colTrangThai.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(
-                cellData.getValue().isConKinhDoanh() ? "Đang kinh doanh" : "Ngừng kinh doanh"
-        ));
+        colTrangThai.setCellValueFactory(new PropertyValueFactory<>("conKinhDoanh"));
 
         // Cột đơn giá với định dạng tiền tệ
         colDonGia.setCellFactory(_ -> new TableCell<>() {
@@ -144,20 +142,17 @@ public class QuanLyDichVuController implements Initializable {
         // Cột trạng thái kinh doanh
         colTrangThai.setCellFactory(_ -> new TableCell<>() {
             @Override
-            protected void updateItem(String item, boolean empty) {
+            protected void updateItem(Boolean item, boolean empty) {
                 super.updateItem(item, empty);
+                getStyleClass().clear();
                 if (empty || item == null) {
                     setText(null);
-                    getStyleClass().removeAll("status-active", "status-inactive");
                 } else {
-                    DichVu dichVu = getTableView().getItems().get(getIndex());
-                    if (dichVu.isConKinhDoanh()) {
+                    if (item) {
                         setText("Đang kinh doanh");
-                        getStyleClass().removeAll("status-active", "status-inactive");
                         getStyleClass().add("status-active");
                     } else {
                         setText("Ngừng kinh doanh");
-                        getStyleClass().removeAll("status-active", "status-inactive");
                         getStyleClass().add("status-inactive");
                     }
                 }
@@ -237,7 +232,7 @@ public class QuanLyDichVuController implements Initializable {
     private void taiDuLieu() {
         try {
             // Lấy danh sách dịch vụ từ database
-            dsDichVu = dichVuDAO.layTatCaDichVu(null);
+            dsDichVu = dichVuDAO.layTatCaDichVu(true);
 
             danhSachDichVu.clear();
             danhSachDichVu.addAll(dsDichVu);

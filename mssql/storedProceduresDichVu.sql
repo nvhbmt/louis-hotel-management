@@ -68,22 +68,6 @@ BEGIN
 END
 GO
 
--- Lấy danh sách tất cả dịch vụ
-CREATE PROCEDURE sp_LayTatCaDichVu @chiLayConKinhDoanh BIT = NULL -- NULL để lấy tất cả, 1 để lấy các dịch vụ đang KD, 0 để lấy dịch vụ đã ngừng KD
-AS
-BEGIN
-    SELECT maDV,
-           tenDV,
-           soLuong,
-           donGia,
-           moTa,
-           conKinhDoanh
-    FROM DichVu
-    WHERE (@chiLayConKinhDoanh IS NULL OR conKinhDoanh = @chiLayConKinhDoanh)
-    ORDER BY maDV
-END
-GO
-
 -- Lấy xóa phòng đánh dấu ngừng kinh doanh
 CREATE PROCEDURE sp_XoaDichVu @maDV NVARCHAR(10)
 AS
