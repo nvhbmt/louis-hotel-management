@@ -11,7 +11,6 @@ CREATE PROCEDURE sp_ThemCTHoaDonDichVu
     @donGia DECIMAL(18,2)
 AS
 BEGIN
-    SET NOCOUNT ON;
     INSERT INTO CTHoaDonDichVu(maHD, maPhieuDV, maDV, soLuong, donGia)
     VALUES (@maHD, @maPhieuDV, @maDV, @soLuong, @donGia);
 END;

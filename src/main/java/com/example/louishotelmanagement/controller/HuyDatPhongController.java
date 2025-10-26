@@ -10,10 +10,16 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -41,16 +47,14 @@ public class HuyDatPhongController implements Initializable, Refreshable {
     public TableColumn<PhieuDatPhong, String> colTenKhachHang;
     @FXML
     public TableColumn<PhieuDatPhong, String> colMaNhanVien;
-    public TextField txtMaPhong;
-    public TextField txtLoaiPhong;
-    public TextField txtTang;
-    public TextField txtTrangThai;
-    public TextField txtMoTa;
-    public TextField txtDonGia;
     public KhachHangDAO kDao;
     public PhongDAO phDao;
     public PhieuDatPhongDAO pDao;
     public CTHoaDonPhongDAO cthdpDao;
+    public ComboBox dsKhachHang;
+    public TextField txtMaPhieu;
+    public TextField txtSoPhong;
+    public ArrayList<String> dsMaKH = new ArrayList<>();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -59,7 +63,15 @@ public class HuyDatPhongController implements Initializable, Refreshable {
         cthdpDao = new CTHoaDonPhongDAO();
         phDao = new PhongDAO();
         try {
+            laydsKhachHang();
             KhoiTaoTableView();
+            dsKhachHang.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
+                try{
+                    BangPhieuTheoKhachHang();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            });
             tablePhieu.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
                 if (newValue != null) {
                     try {
@@ -73,7 +85,21 @@ public class HuyDatPhongController implements Initializable, Refreshable {
             throw new RuntimeException(e);
         }
     }
-
+    public void BangPhieuTheoKhachHang() throws SQLException {
+        tablePhieu.getItems().clear();
+        ArrayList<PhieuDatPhong> dsPhieu = pDao.layDSPhieuDatPhongTheoKhachHang(dsMaKH.get(dsKhachHang.getSelectionModel().getSelectedIndex()));
+        ObservableList<PhieuDatPhong> observableListPhieu = FXCollections.observableArrayList(dsPhieu);
+        tablePhieu.setItems(observableListPhieu);
+    }
+    public void laydsKhachHang() throws  SQLException{
+        dsKhachHang.getItems().clear();
+        ArrayList<KhachHang> khs = kDao.layDSKhachHang();
+        dsMaKH = new ArrayList<>();
+        for(KhachHang khachHang : khs) {
+            dsKhachHang.getItems().add(khachHang.getHoTen());
+            dsMaKH.add(khachHang.getMaKH());
+        }
+    }
     public void KhoiTaoTableView() throws SQLException {
         colMaPhieu.setCellValueFactory(new PropertyValueFactory<>("maPhieu"));
         colNgayDat.setCellValueFactory(new PropertyValueFactory<>("ngayDat"));
@@ -150,12 +176,8 @@ public class HuyDatPhongController implements Initializable, Refreshable {
             PhieuDatPhong phieuTam = (PhieuDatPhong) tablePhieu.getSelectionModel().getSelectedItem();
             ArrayList<CTHoaDonPhong> dsCTP = cthdpDao.getCTHoaDonPhongTheoMaPhieu(phieuTam.getMaPhieu());
             Phong pTam = phDao.layPhongTheoMa(dsCTP.getLast().getMaPhong());
-            txtMaPhong.setText(pTam.getMaPhong());
-            txtLoaiPhong.setText(pTam.getLoaiPhong().getTenLoai());
-            txtTang.setText(String.valueOf(pTam.getTang()));
-            txtTrangThai.setText(phieuTam.getTrangThai().toString());
-            txtDonGia.setText(String.valueOf(pTam.getLoaiPhong().getDonGia()));
-            txtMoTa.setText(pTam.getMoTa());
+            txtMaPhieu.setText(phieuTam.getMaPhieu());
+            txtSoPhong.setText(String.valueOf(cthdpDao.getCTHoaDonPhongTheoMaPhieu(phieuTam.getMaPhieu()).size()));
         }
     }
 
@@ -215,11 +237,59 @@ public class HuyDatPhongController implements Initializable, Refreshable {
     public void refreshData() throws SQLException {
         searchTextField.setText("");
         KhoiTaoTableView();
-        txtMaPhong.setText(null);
-        txtLoaiPhong.setText(null);
-        txtMoTa.setText(null);
-        txtTang.setText(null);
-        txtDonGia.setText(null);
-        txtTrangThai.setText(null);
+        txtMaPhieu.setText(null);
+        txtSoPhong.setText(null);
+    }
+
+    // Trong com.example.louishotelmanagement.controller.HuyDatPhongController.java
+
+    public void handleXemChiTiet(ActionEvent actionEvent) {
+        // 1. Lấy phiếu đặt phòng được chọn
+        PhieuDatPhong selectedPhieu = (PhieuDatPhong) tablePhieu.getSelectionModel().getSelectedItem();
+
+        if (selectedPhieu == null) {
+            ThongBaoUtil.hienThiLoi("Lỗi", "Vui lòng chọn một phiếu đặt phòng để xem chi tiết.");
+            return;
+        }
+
+        try {
+            // 2. Lấy danh sách chi tiết phòng (CTHoaDonPhong) từ DAO
+            ArrayList<CTHoaDonPhong> dsCTP = cthdpDao.getCTHoaDonPhongTheoMaPhieu(selectedPhieu.getMaPhieu());
+
+            if (dsCTP.isEmpty()) {
+                ThongBaoUtil.hienThiLoi("Thông báo", "Phiếu này không chứa thông tin chi tiết phòng nào.");
+                return;
+            }
+
+            // 3. Load FXML của màn hình chi tiết
+            // Đảm bảo đường dẫn FXML là chính xác theo cấu trúc dự án của bạn!
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/ChiTietPhongTrongPhieuView.fxml"));
+            Parent root = loader.load();
+
+            // 4. Truy cập Controller của màn hình mới
+            ChiTietPhongTrongPhieuController chiTietController = loader.getController();
+
+            // 5. Truyền dữ liệu sang Controller mới
+            // Hàm setChiTietData sẽ lấy MaPhieu và danh sách CTHoaDonPhong để hiển thị
+            chiTietController.setChiTietData(selectedPhieu.getMaPhieu(), dsCTP);
+
+            // 6. Tạo Stage và hiển thị
+            Stage stage = new Stage();
+            stage.setTitle("Chi Tiết Phòng Đặt - Phiếu " + selectedPhieu.getMaPhieu());
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL); // Chặn tương tác với cửa sổ cha
+            stage.showAndWait(); // Hiển thị và chờ người dùng đóng cửa sổ
+
+        } catch (IOException e) {
+            // Lỗi khi không tìm thấy hoặc không load được file FXML
+            ThongBaoUtil.hienThiLoi("Lỗi mở màn hình", "Không tìm thấy file FXML Chi Tiết Phòng hoặc lỗi tải: " + e.getMessage());
+            System.err.println("Lỗi FXML: ");
+            e.printStackTrace();
+        } catch (SQLException e) {
+            // Lỗi xảy ra khi truy vấn DB trong quá trình lấy chi tiết phòng
+            ThongBaoUtil.hienThiLoi("Lỗi dữ liệu", "Lỗi khi truy xuất chi tiết phòng: " + e.getMessage());
+            System.err.println("Lỗi SQL: ");
+            e.printStackTrace();
+        }
     }
 }

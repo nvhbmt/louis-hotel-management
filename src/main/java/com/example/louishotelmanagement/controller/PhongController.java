@@ -250,6 +250,9 @@ public class PhongController implements Initializable {
         if (switcher != null) switcher.switchContent("/com/example/louishotelmanagement/fxml/dat-dich-vu-view.fxml");
     }
     @FXML private void moThanhToan(ActionEvent actionEvent) {
+        if (switcher != null) switcher.switchContent("/com/example/louishotelmanagement/fxml/thanh-toan-view.fxml");
+    }
+    @FXML private void moTraPhong(ActionEvent actionEvent) {
         if (switcher != null) switcher.switchContent("/com/example/louishotelmanagement/fxml/huy-phong-view.fxml");
     }
 }

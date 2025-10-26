@@ -1,5 +1,6 @@
 package com.example.louishotelmanagement.model;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class PhieuDatPhong {
@@ -11,6 +12,7 @@ public class PhieuDatPhong {
     private String ghiChu;
     private String maKH;
     private String maNV;
+    private BigDecimal tienCoc;
 
     public PhieuDatPhong() {
         this.maPhieu = "";
@@ -21,9 +23,10 @@ public class PhieuDatPhong {
         this.trangThai = null;
         this.maKH = "";
         this.maNV = "";
+        this.tienCoc = null;
     }
 
-    public PhieuDatPhong(String maPhieu, LocalDate ngayDat, LocalDate ngayDen, LocalDate ngayDi, TrangThaiPhieuDatPhong trangThai, String ghiChu, String maKH, String maNV) {
+    public PhieuDatPhong(String maPhieu, LocalDate ngayDat, LocalDate ngayDen, LocalDate ngayDi, TrangThaiPhieuDatPhong trangThai, String ghiChu, String maKH, String maNV,BigDecimal tienCoc) {
         this.maPhieu = maPhieu;
         this.ngayDat = ngayDat;
         this.ngayDen = ngayDen;
@@ -32,6 +35,7 @@ public class PhieuDatPhong {
         this.ghiChu = ghiChu;
         this.maKH = maKH;
         this.maNV = maNV;
+        this.tienCoc = tienCoc;
     }
 
     public PhieuDatPhong(String maPhieu) {
@@ -43,6 +47,7 @@ public class PhieuDatPhong {
         this.ghiChu = "";
         this.maKH = "";
         this.maNV = "";
+        this.tienCoc = null;
     }
 
     public String getMaPhieu() {
@@ -108,7 +113,12 @@ public class PhieuDatPhong {
     public void setMaNV(String maNV) {
         this.maNV = maNV;
     }
-
+    public BigDecimal getTienCoc() {
+        return tienCoc;
+    }
+    public void setTienCoc(BigDecimal tienCoc) {
+        this.tienCoc = tienCoc;
+    }
     @Override
     public String toString() {
         return "PhieuDatPhong{" +

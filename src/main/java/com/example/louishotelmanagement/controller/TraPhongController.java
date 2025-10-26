@@ -1,10 +1,8 @@
 package com.example.louishotelmanagement.controller;
 
-import com.example.louishotelmanagement.dao.CTHoaDonPhongDAO;
-import com.example.louishotelmanagement.dao.KhachHangDAO;
-import com.example.louishotelmanagement.dao.PhieuDatPhongDAO;
-import com.example.louishotelmanagement.dao.PhongDAO;
+import com.example.louishotelmanagement.dao.*;
 import com.example.louishotelmanagement.model.*;
+import com.example.louishotelmanagement.util.ThongBaoUtil;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -14,9 +12,10 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
-public class TraPhongController implements Initializable{
+public class TraPhongController implements Initializable,Refreshable{
 
     public Button btnCheck;
     public DatePicker ngayDi;
@@ -27,19 +26,17 @@ public class TraPhongController implements Initializable{
     public PhongDAO phDao;
     public CTHoaDonPhongDAO cthdpDao;
     public PhieuDatPhongDAO phieuDatPhongDAO;
-    public TextField ngayTraPhong;
+    public DatePicker ngayTraPhong;
     public TextField hoTen;
     public TextField maPhieuThue;
     public TextField ngayDen;
     public TextField soLuongPhong;
     public Label lblCheDo;
     public Button btnXemChiTiet;
-    public TextField tongTienPhong;
-    public TextField tienDichVu;
-    public TextField giamGia;
-    public TextField tongCong;
     private ArrayList<String> dsMaKH = new ArrayList<>();
     private ArrayList<PhieuDatPhong> dspdp;
+    private HoaDonDAO hdDao;
+    private List<CTHoaDonPhong> listCTHoaDonPhong = new ArrayList<>();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -47,13 +44,13 @@ public class TraPhongController implements Initializable{
         phDao = new PhongDAO();
         cthdpDao = new CTHoaDonPhongDAO();
         phieuDatPhongDAO = new PhieuDatPhongDAO();
+        hdDao = new HoaDonDAO();
         try{
             laydsKhachHang();
             dsKhachHang.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
                 if(newValue!=null){
                     try {
                         laydsPhongTheoKhachHang();
-                        dsPhong.getSelectionModel().selectFirst();
                     } catch (SQLException e) {
                         throw new RuntimeException(e);
                     }
@@ -89,7 +86,33 @@ public class TraPhongController implements Initializable{
         }
     }
     public void handleCheck(javafx.event.ActionEvent actionEvent) throws SQLException {
-
+        if(dsPhong.getSelectionModel().getSelectedItem()==null&&dsPhong.getItems().size()!=0){
+            CTHoaDonPhong cthdp = cthdpDao.getDSCTHoaDonPhongTheoMaPhong(dsPhong.getItems().get(0).toString()).getLast();
+            listCTHoaDonPhong = new ArrayList<>();
+            listCTHoaDonPhong = cthdpDao.getCTHoaDonPhongTheoMaHD(cthdp.getMaHD());
+            if(cthdp!=null){
+                hoTen.setText(dsKhachHang.getSelectionModel().getSelectedItem().toString());
+                maPhieuThue.setText(cthdp.getMaPhieu());
+                ngayDen.setText(cthdp.getNgayDen().toString());
+                soLuongPhong.setText(String.valueOf(listCTHoaDonPhong.size()));
+                lblCheDo.setText("Chế độ: Đang chọn tất cả phòng");
+            }else{
+                ThongBaoUtil.hienThiLoi("Lỗi kiểm tra","Không tìm thấy bất kì chi tiết hóa đơn phòng nào");
+            }
+        }else{
+            CTHoaDonPhong cthdp = cthdpDao.getDSCTHoaDonPhongTheoMaPhong(dsPhong.getSelectionModel().getSelectedItem().toString()).getLast();
+            listCTHoaDonPhong = new ArrayList<>();
+            listCTHoaDonPhong = cthdpDao.getCTHoaDonPhongTheoMaHD(cthdp.getMaHD());
+            if(cthdp!=null){
+                hoTen.setText(dsKhachHang.getSelectionModel().getSelectedItem().toString());
+                maPhieuThue.setText(cthdp.getMaPhieu());
+                ngayDen.setText(cthdp.getNgayDen().toString());
+                soLuongPhong.setText(String.valueOf(listCTHoaDonPhong.size()));
+                lblCheDo.setText("Chế độ: Đang chọn tất cả phòng");
+            }else{
+                ThongBaoUtil.hienThiLoi("Lỗi kiểm tra","Không tìm thấy bất kì chi tiết hóa đơn phòng nào");
+            }
+        }
     }
 
     public void handleTraPhong(ActionEvent actionEvent) throws SQLException {
@@ -98,5 +121,11 @@ public class TraPhongController implements Initializable{
 
 
     public void handleXemChiTiet(ActionEvent actionEvent) {
+    }
+
+    @Override
+    public void refreshData() throws SQLException, Exception {
+        laydsKhachHang();
+        laydsPhongTheoKhachHang();
     }
 }

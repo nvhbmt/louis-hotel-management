@@ -57,7 +57,7 @@ CREATE TABLE TaiKhoan (
     FOREIGN KEY (maNV) REFERENCES NhanVien(maNV)
 );
 
--- Phiếu đặt phòng
+-- Phiếu đặt phòng (Updated CREATE TABLE with tienCoc)
 CREATE TABLE PhieuDatPhong (
     maPhieu nvarchar(10) PRIMARY KEY,
     ngayDat DATE,
@@ -67,9 +67,11 @@ CREATE TABLE PhieuDatPhong (
     ghiChu NVARCHAR(255),
     maKH nvarchar(10),
     maNV nvarchar(10),
+    tienCoc DECIMAL(18, 2) NULL, -- Trường tiền cọc đã được thêm vào
     FOREIGN KEY (maKH) REFERENCES KhachHang(maKH),
     FOREIGN KEY (maNV) REFERENCES NhanVien(maNV)
 );
+GO
 -- Bảng dịch vụ
 CREATE TABLE DichVu (
     maDV nvarchar(10) PRIMARY KEY,

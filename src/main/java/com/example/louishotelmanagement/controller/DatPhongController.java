@@ -281,22 +281,89 @@ public class DatPhongController implements Initializable, Refreshable{
             e.printStackTrace();
         }
     }
+    // Đặt lớp này bên trong DatPhongController (có thể là một private static inner class)
+    private static class TienCocResult {
+        public final BigDecimal tienCoc;
+        public final String phuongThucTT;
+        public TienCocResult(BigDecimal tienCoc, String phuongThucTT) {
+            this.tienCoc = tienCoc;
+            this.phuongThucTT = phuongThucTT;
+        }
+    }
+
+    /**
+     * Hiển thị màn hình xác nhận tiền cọc và lấy kết quả.
+     */
+    // Trong com.example.louishotelmanagement.controller.DatPhongController.java
+
+    private TienCocResult hienThiTienCocDialog(double tongTienPhong) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/tien-coc-dialog.fxml"));
+        Parent root = loader.load();
+
+        TienCocDialogController controller = loader.getController();
+        controller.setTongTien(tongTienPhong);
+
+        Stage stage = new Stage();
+        stage.setTitle("Xác Nhận Tiền Cọc");
+
+        // 💡 THAY ĐỔI LỚN: Thiết lập kích thước tối thiểu/ban đầu cho Scene
+        Scene scene = new Scene(root, 450, 650); // Tăng chiều cao lên 650
+
+        stage.setScene(scene);
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.showAndWait();
+
+        if (controller.isConfirmed()) {
+            return new TienCocResult(controller.getTienCoc(), controller.getPhuongThucTT());
+        } else {
+            return null; // Trả về null nếu người dùng Hủy
+        }
+    }
+
     public void handleDatPhong(ActionEvent actionEvent) throws SQLException {
-        // ... (Kiểm tra ngày tháng)
+        // 0. KIỂM TRA ĐIỀU KIỆN BAN ĐẦU
+        if (listPhongDuocDat.isEmpty() || ngayDen.getValue() == null || ngayDi.getValue() == null) {
+            ThongBaoUtil.hienThiLoi("Lỗi", "Vui lòng chọn phòng và nhập đầy đủ ngày đến/ngày đi.");
+            return;
+        }
 
-        KhachHang newKh = Kdao.layKhachHangTheoMa(dsMaKH.get(dsKhachHang.getSelectionModel().getSelectedIndex()));
-
-        // 1. TẠO MÃ PHIẾU DUY NHẤT
-        Random ran = new Random();
-        do {
-            maPhieu = "PD" + String.valueOf(ran.nextInt(990) + ran.nextInt(9));
-        } while (checkMaPhieu(maPhieu));
+        // 1. GỌI DIALOG TIỀN CỌC
+        double tongTienPhong = TinhTongTien(listPhongDuocDat);
+        TienCocResult result;
+        try {
+            result = hienThiTienCocDialog(tongTienPhong);
+            if (result == null) {
+                ThongBaoUtil.hienThiThongBao("Thông báo", "Đã hủy bỏ thao tác đặt phòng.");
+                return;
+            }
+        } catch (IOException e) {
+            ThongBaoUtil.hienThiLoi("Lỗi giao diện", "Không thể mở màn hình xác nhận tiền cọc.");
+            e.printStackTrace();
+            return;
+        }
 
         // 2. TẠO VÀ LƯU PHIẾU ĐẶT PHÒNG GỐC (CHỈ 1 LẦN)
         AuthService authService = AuthService.getInstance();
+        KhachHang newKh = Kdao.layKhachHangTheoMa(dsMaKH.get(dsKhachHang.getSelectionModel().getSelectedIndex()));
         String maNV = authService.getCurrentUser().getNhanVien().getMaNV();
+        String maPhieuMoi = pdpDao.sinhMaPhieuTiepTheo();
 
-        PhieuDatPhong pdp = new PhieuDatPhong(maPhieu, LocalDate.now(), ngayDen.getValue(), ngayDi.getValue(), TrangThaiPhieuDatPhong.DA_DAT, "Đặt trực tiếp tại quầy", newKh.getMaKH(), maNV);
+        // Ghi chú sẽ là phương thức thanh toán
+        String ghiChu = "Đặt trước (" + result.phuongThucTT + ")";
+
+        PhieuDatPhong pdp = new PhieuDatPhong(
+                maPhieuMoi,
+                LocalDate.now(),
+                ngayDen.getValue(),
+                ngayDi.getValue(),
+                TrangThaiPhieuDatPhong.DA_DAT,
+                ghiChu,
+                newKh.getMaKH(),
+                maNV,
+                null
+        );
+        pdp.setTienCoc(result.tienCoc); // Gán tiền cọc đã nhập từ dialog
+
         pdpDao.themPhieuDatPhong(pdp); // 👈 LƯU PHIẾU GỐC
 
         // 3. TẠO VÀ LƯU HÓA ĐƠN GỐC (CHỈ 1 LẦN)
@@ -305,12 +372,14 @@ public class DatPhongController implements Initializable, Refreshable{
 
         // 4. LẶP QUA TỪNG PHÒNG ĐỂ TẠO CHI TIẾT VÀ CẬP NHẬT TRẠNG THÁI
         for (Phong p : listPhongDuocDat) {
-            // Gọi hàm để xử lý CHI TIẾT ĐẶT PHÒNG
             ThemChiTietPhong(pdp, hd, p);
         }
 
-        ThongBaoUtil.hienThiThongBao("Thông báo", "Đặt phòng thành công");
-        PhieuDatPhong phieu = pdpDao.layPhieuDatPhongTheoMa(maPhieu);
+        ThongBaoUtil.hienThiThongBao("Thông báo", "Đặt phòng thành công. Tiền cọc: " + result.tienCoc + " VND (" + result.phuongThucTT + ")");
+
+        this.maPhieu = maPhieuMoi;
+
+        PhieuDatPhong phieu = pdpDao.layPhieuDatPhongTheoMa(this.maPhieu);
         if (phieu != null) {
             hienThiPhieuDatPhong(phieu, listPhongDuocDat);
         }
