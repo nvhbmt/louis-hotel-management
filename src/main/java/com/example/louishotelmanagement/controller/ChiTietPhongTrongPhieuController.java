@@ -5,15 +5,16 @@ import com.example.louishotelmanagement.dao.PhongDAO;
 import com.example.louishotelmanagement.model.CTHoaDonPhong;
 import com.example.louishotelmanagement.model.LoaiPhong;
 import com.example.louishotelmanagement.model.Phong;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
@@ -24,45 +25,82 @@ import java.util.ResourceBundle;
 
 public class ChiTietPhongTrongPhieuController implements Initializable {
 
-    @FXML
-    private Label lblMaPhieu;
-    @FXML
-    private TableView<Phong> tblChiTietPhong;
-    @FXML
-    private TableColumn<Phong, String> colMaPhong;
-    @FXML
-    private TableColumn<Phong, String> colTenLoaiPhong;
-    @FXML
-    private TableColumn<Phong, Double> colGia;
+    @FXML private Label lblMaPhieu;
+    @FXML private TableView<Phong> tblChiTietPhong;
+    @FXML private TableColumn<Phong, String> colMaPhong;
+    @FXML private TableColumn<Phong, String> colTenLoaiPhong;
+    @FXML private TableColumn<Phong, Double> colGia;
+    @FXML private TableColumn<Phong, Integer> colTang;
 
-    // 💡 KHAI BÁO MỚI: Thêm cột cho Tầng
-    @FXML
-    private TableColumn<Phong, Integer> colTang; // Kiểu Integer cho tầng
+    // 💡 KHAI BÁO MỚI CHO VÙNG THÔNG TIN CHI TIẾT
+    @FXML private Label lblChiTietMaPhong;
+    @FXML private Label lblChiTietTang;
+    @FXML private Label lblChiTietTrangThai;
+    @FXML private Label lblChiTietLoaiPhong;
+    @FXML private Label lblChiTietGia;
+    @FXML private TextArea txtChiTietMoTa;
+
 
     private PhongDAO phDao = new PhongDAO();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         colMaPhong.setCellValueFactory(new PropertyValueFactory<>("maPhong"));
+
+        // Sửa lỗi binding cũ và sử dụng SimpleStringProperty
         colTenLoaiPhong.setCellValueFactory(cellData -> {
             LoaiPhong loaiPhong = cellData.getValue().getLoaiPhong();
-
-            // 2. Trả về StringBinding chứa Tên Loại.
-            // Nếu LoaiPhong không null, liên kết (bind) với thuộc tính TenLoai.
             return loaiPhong != null ?
-                    javafx.beans.binding.Bindings.createStringBinding(loaiPhong::getTenLoai) :
-                    javafx.beans.binding.Bindings.createStringBinding(() -> ""); // Xử lý trường hợp null
+                    new SimpleStringProperty(loaiPhong.getTenLoai()) :
+                    new SimpleStringProperty("");
         });
         colGia.setCellValueFactory(cellData -> {
             LoaiPhong loaiPhong = cellData.getValue().getLoaiPhong();
             return loaiPhong != null ?
-                    javafx.beans.binding.Bindings.createObjectBinding(loaiPhong::getDonGia) :
-                    javafx.beans.binding.Bindings.createObjectBinding(() -> -0.0);
+                    Bindings.createObjectBinding(loaiPhong::getDonGia) :
+                    Bindings.createObjectBinding(() -> 0.0);
         });
+        colTang.setCellValueFactory(new PropertyValueFactory<>("tang"));
 
-        // 💡 THAY ĐỔI: Thiết lập CellValueFactory cho cột Tầng
-        colTang.setCellValueFactory(new PropertyValueFactory<>("tang")); // Lấy giá trị từ trường 'tang' trong đối tượng Phong
+        // 💡 THAY ĐỔI: THÊM LISTENER KHI CHỌN DÒNG
+        tblChiTietPhong.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Phong>() {
+            @Override
+            public void changed(ObservableValue<? extends Phong> observable, Phong oldValue, Phong newValue) {
+                // Gọi hàm hiển thị chi tiết khi có dòng được chọn
+                loadChiTietPhong(newValue);
+            }
+        });
     }
+
+    /**
+     * Phương thức cập nhật thông tin chi tiết của phòng được chọn
+     */
+    private void loadChiTietPhong(Phong phong) {
+        if (phong != null) {
+            lblChiTietMaPhong.setText(phong.getMaPhong());
+            lblChiTietTang.setText(String.valueOf(phong.getTang()));
+            lblChiTietTrangThai.setText(phong.getTrangThai() != null ? phong.getTrangThai().toString() : "N/A");
+
+            LoaiPhong lp = phong.getLoaiPhong();
+            if (lp != null) {
+                lblChiTietLoaiPhong.setText(lp.getTenLoai());
+                lblChiTietGia.setText(String.format("%,.0f VND", lp.getDonGia()));
+            } else {
+                lblChiTietLoaiPhong.setText("Không rõ");
+                lblChiTietGia.setText("0 VND");
+            }
+            txtChiTietMoTa.setText(phong.getMoTa());
+        } else {
+            // Xóa thông tin khi không có dòng nào được chọn
+            lblChiTietMaPhong.setText("");
+            lblChiTietTang.setText("");
+            lblChiTietTrangThai.setText("");
+            lblChiTietLoaiPhong.setText("");
+            lblChiTietGia.setText("");
+            txtChiTietMoTa.setText("");
+        }
+    }
+
 
     /**
      * Phương thức nhận dữ liệu từ Controller cha và hiển thị.
@@ -72,26 +110,26 @@ public class ChiTietPhongTrongPhieuController implements Initializable {
 
         ArrayList<Phong> dsPhong = new ArrayList<>();
         for (CTHoaDonPhong ctp : dsCTP) {
-            // Lấy thông tin chi tiết của phòng
             Phong phong = phDao.layPhongTheoMa(ctp.getMaPhong());
             if (phong != null) {
-                // Bạn có thể cần gán thêm TenLoaiPhong và Gia cho đối tượng Phong
-                // từ các DAO khác nếu nó không có sẵn.
-                // Ví dụ: phong.setTenLoaiPhong(phDao.layTenLoaiPhong(phong.getMaLoaiPhong()));
                 dsPhong.add(phong);
             }
         }
 
         ObservableList<Phong> observableListPhong = FXCollections.observableArrayList(dsPhong);
         tblChiTietPhong.setItems(observableListPhong);
+
+        // Tự động chọn dòng đầu tiên để load chi tiết lần đầu
+        if (!dsPhong.isEmpty()) {
+            tblChiTietPhong.getSelectionModel().selectFirst();
+        } else {
+            loadChiTietPhong(null);
+        }
     }
 
     @FXML
     private void handleClose() {
-        // Lấy Stage (cửa sổ) hiện tại từ bất kỳ thành phần nào trong Scene
         Stage stage = (Stage) lblMaPhieu.getScene().getWindow();
-
-        // Đóng Stage
         stage.close();
     }
 }
