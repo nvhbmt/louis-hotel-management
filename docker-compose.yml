@@ -10,4 +10,6 @@ services:
             SA_PASSWORD: 'SApassword@123'
             MSSQL_PID: 'Developer'
             MSSQL_DISABLE_TLS: 'true'
+        volumes:
+            - ./mssql:/scripts
         restart: unless-stopped

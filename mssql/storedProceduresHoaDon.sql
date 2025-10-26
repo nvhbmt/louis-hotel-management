@@ -15,8 +15,10 @@ CREATE PROCEDURE sp_ThemHoaDon
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO dbo.HoaDon (maHD, ngayLap, phuongThuc, tongTien, maKH, maNV, maGG, trangThai)
-    VALUES (@maHD, @ngayLap, @phuongThuc, @tongTien, @maKH, @maNV, @maGG, @trangThai);
+    INSERT INTO HoaDon
+        (maHD, ngayLap, phuongThuc, tongTien, maKH, maNV, maGG, trangThai)
+    VALUES
+        (@maHD, @ngayLap, @phuongThuc, @tongTien, @maKH, @maNV, @maGG, @trangThai);
 END;
 GO
 
@@ -33,7 +35,7 @@ CREATE PROCEDURE sp_SuaHoaDon
 AS
 BEGIN
     SET NOCOUNT ON;
-    UPDATE dbo.HoaDon
+    UPDATE HoaDon
     SET ngayLap = @ngayLap,
         phuongThuc = @phuongThuc,
         tongTien = @tongTien,
@@ -47,11 +49,11 @@ GO
 
 -- 3. Xóa hóa đơn
 CREATE PROCEDURE sp_XoaHoaDon
-@maHD NVARCHAR(10)
+    @maHD NVARCHAR(10)
 AS
 BEGIN
     SET NOCOUNT ON;
-    DELETE FROM dbo.HoaDon WHERE maHD = @maHD;
+    DELETE FROM HoaDon WHERE maHD = @maHD;
 END;
 GO
 
@@ -60,17 +62,20 @@ CREATE PROCEDURE sp_LayDanhSachHoaDon
 AS
 BEGIN
     SET NOCOUNT ON;
-    SELECT * FROM dbo.HoaDon;
+    SELECT *
+    FROM HoaDon;
 END;
 GO
 
 -- 5. Tìm hóa đơn theo mã
 CREATE PROCEDURE sp_TimHoaDonTheoMa
-@maHD NVARCHAR(10)
+    @maHD NVARCHAR(10)
 AS
 BEGIN
     SET NOCOUNT ON;
-    SELECT * FROM dbo.HoaDon WHERE maHD = @maHD;
+    SELECT *
+    FROM HoaDon
+    WHERE maHD = @maHD;
 END;
 GO
 
@@ -93,12 +98,12 @@ BEGIN
         SET @maMoi = 'HD001';
     ELSE
         BEGIN
-            -- Lấy phần số từ mã cũ (ví dụ HD005 → 5)
-            SET @so = CAST(SUBSTRING(@maCu, 3, LEN(@maCu) - 2) AS INT) + 1;
+        -- Lấy phần số từ mã cũ (ví dụ HD005 → 5)
+        SET @so = CAST(SUBSTRING(@maCu, 3, LEN(@maCu) - 2) AS INT) + 1;
 
-            -- Sinh mã mới với 3 chữ số, thêm 0 phía trước nếu cần
-            SET @maMoi = 'HD' + RIGHT('000' + CAST(@so AS NVARCHAR(3)), 3);
-        END
+        -- Sinh mã mới với 3 chữ số, thêm 0 phía trước nếu cần
+        SET @maMoi = 'HD' + RIGHT('000' + CAST(@so AS NVARCHAR(3)), 3);
+    END
 
     -- 🔹 Trả kết quả ra
     SELECT @maMoi AS maHDMoi;
