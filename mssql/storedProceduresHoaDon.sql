@@ -22,7 +22,31 @@ BEGIN
     VALUES (@maHD, @ngayLap, @phuongThuc, @tongTien, @maKH, @maNV, @maGG, @trangThai);
 END;
 GO
+-- =============================================
+-- sp_TimHoaDonTheoMa
+-- Tìm và trả về toàn bộ thông tin hóa đơn dựa trên mã
+-- =============================================
+CREATE PROCEDURE sp_TimHoaDonTheoMa
+@maHD NVARCHAR(10)
+AS
+BEGIN
+    SET NOCOUNT ON;
 
+    SELECT
+        maHD,
+        ngayLap,
+        phuongThuc,
+        trangThai,
+        tongTien,
+        maKH,
+        maNV,
+        maGG
+    FROM
+        HoaDon
+    WHERE
+        maHD = @maHD;
+END;
+GO
 -- 2. Sửa hóa đơn
 CREATE PROCEDURE sp_SuaHoaDon @maHD NVARCHAR(10),
                               @ngayLap DATE,

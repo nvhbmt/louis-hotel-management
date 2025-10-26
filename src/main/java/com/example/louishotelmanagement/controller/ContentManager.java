@@ -67,6 +67,10 @@ public class ContentManager {
         if (controller instanceof TrangChuController) {
             ((TrangChuController) controller).setContentSwitcher(switcher);
         }
+        if (controller instanceof TraPhongController) {
+            // "this" là chính LayoutController/ContentManager, phải triển khai ContentSwitcher
+            ((TraPhongController) controller).setContentSwitcher(switcher);
+        }
         if (controller instanceof Refreshable) {
             try {
                 ((Refreshable) controller).refreshData();

@@ -122,22 +122,31 @@ public class HoaDonDAO {
 
     // 🔹 Tìm hóa đơn theo mã
     public HoaDon timHoaDonTheoMa(String maHD) throws SQLException {
-        String sql = "SELECT * FROM HoaDon WHERE maHD = ?";
-        try (Connection conn = CauHinhDatabase.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        // 💡 THAY ĐỔI: Gọi Stored Procedure
+        String sql = "{CALL sp_TimHoaDonTheoMa(?)}";
 
-            ps.setString(1, maHD);
-            try (ResultSet rs = ps.executeQuery()) {
+        try (Connection conn = CauHinhDatabase.getConnection();
+             CallableStatement cs = conn.prepareCall(sql)) {
+
+            cs.setString(1, maHD);
+
+            try (ResultSet rs = cs.executeQuery()) {
                 if (rs.next()) {
                     HoaDon hd = new HoaDon();
                     hd.setMaHD(rs.getString("maHD"));
-                    hd.setNgayLap(rs.getDate("ngayLap").toLocalDate());
+
+                    // Lấy ngày lập và kiểm tra null
+                    Date ngayLapDate = rs.getDate("ngayLap");
+                    hd.setNgayLap(ngayLapDate != null ? ngayLapDate.toLocalDate() : null);
+
+                    // Lấy các trường còn lại
                     hd.setPhuongThuc(PhuongThucThanhToan.fromString(rs.getString("phuongThuc")));
                     hd.setTongTien(rs.getBigDecimal("tongTien"));
                     hd.setMaKH(rs.getString("maKH"));
                     hd.setMaNV(rs.getString("maNV"));
                     hd.setMaGG(rs.getString("maGG"));
                     hd.setTrangThai(TrangThaiHoaDon.fromString(rs.getString("trangThai")));
+
                     return hd;
                 }
             }

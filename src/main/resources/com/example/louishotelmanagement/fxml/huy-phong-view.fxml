@@ -83,7 +83,7 @@
                     </HBox>
                 </VBox>
 
-                <HBox alignment="CENTER" prefHeight="420.0" prefWidth="880.0" spacing="20.0">
+                <HBox alignment="CENTER" prefHeight="420.0" prefWidth="880.0" spacing="20.0" style="-fx-background-color: white;">
                     <children>
                         <VBox alignment="TOP_CENTER" prefHeight="379.0" prefWidth="649.0" spacing="10.0" style="-fx-background-color: white; -fx-padding: 15; -fx-border-radius: 10; -fx-background-radius: 10;">
                             <Label style="-fx-font-size: 24px;-fx-font-weight: 700" text="Thông tin Phiếu thuê">
@@ -109,7 +109,7 @@
                             <HBox alignment="CENTER" prefHeight="35.0" prefWidth="440.0">
                                 <children>
                                     <Label prefWidth="120.0" style="-fx-font-size: 16px" text="Ngày Check-in:" />
-                                    <TextField fx:id="ngayDen" editable="false" prefHeight="30.0" prefWidth="446.0" />
+                           <DatePicker fx:id="ngayDen" prefHeight="30.0" prefWidth="446.0" />
                                 </children>
                             </HBox>
 
@@ -120,7 +120,7 @@
                                 </children>
                             </HBox>
 
-                            <Button fx:id="btnXemChiTiet" disable="true" mnemonicParsing="false" onAction="#handleXemChiTiet" prefHeight="30.0" prefWidth="250.0" style="-fx-background-color: #F0A000;-fx-text-fill: white;-fx-font-size: 16px" text="Xem chi tiết từng phòng" />
+                            <Button fx:id="btnXemChiTiet" mnemonicParsing="false" onAction="#handleXemChiTiet" prefHeight="30.0" prefWidth="250.0" style="-fx-background-color: #F0A000;-fx-text-fill: white;-fx-font-size: 16px" text="Xem chi tiết từng phòng" />
                         </VBox>
                     </children>
                     <VBox.margin>
@@ -145,7 +145,7 @@
         </HBox>
     </bottom>
    <top>
-      <VBox prefHeight="112.0" prefWidth="1014.0" BorderPane.alignment="CENTER">
+      <VBox prefHeight="112.0" prefWidth="1014.0" style="-fx-background-color: white;" BorderPane.alignment="CENTER">
          <children>
               <Label alignment="TOP_LEFT" style="-fx-font-weight: 900;-fx-font-size: 25px" text="Trả phòng">
                   <graphic>

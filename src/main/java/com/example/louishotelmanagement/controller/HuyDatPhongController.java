@@ -56,6 +56,7 @@ public class HuyDatPhongController implements Initializable, Refreshable {
     public TextField txtSoPhong;
     public ArrayList<String> dsMaKH = new ArrayList<>();
 
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         kDao = new KhachHangDAO();
