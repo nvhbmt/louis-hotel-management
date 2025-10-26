@@ -9,7 +9,7 @@ GO
 -- Stored Procedures cho bảng Dịch vụ
 -- =============================================
 --THÊM PHIẾU
-CREATE OR ALTER PROCEDURE sp_ThemPhieuDV
+CREATE PROCEDURE sp_ThemPhieuDV
     @maPhieuDV NVARCHAR(10),
     @maHD NVARCHAR(10),
     @maNV NVARCHAR(10),
@@ -60,7 +60,7 @@ BEGIN
 END
 GO
 --CẬP NHẬT
-CREATE OR ALTER PROCEDURE sp_CapNhatPhieuDV
+CREATE PROCEDURE sp_CapNhatPhieuDV
     @maPhieuDV NVARCHAR(10),
     @ghiChu NVARCHAR(255) = NULL
 AS
@@ -81,7 +81,7 @@ BEGIN
 END
 GO
 --XÓA
-CREATE OR ALTER PROCEDURE sp_XoaPhieuDV
+CREATE PROCEDURE sp_XoaPhieuDV
 @maPhieuDV NVARCHAR(10)
 AS
 BEGIN
@@ -102,7 +102,7 @@ BEGIN
 END
 GO
 --Lấy DS
-CREATE OR ALTER PROCEDURE sp_LayTatCaPhieuDV
+CREATE PROCEDURE sp_LayTatCaPhieuDV
 @maHD NVARCHAR(10) = NULL -- Tham số tùy chọn để lọc theo Hóa Đơn
 AS
 BEGIN

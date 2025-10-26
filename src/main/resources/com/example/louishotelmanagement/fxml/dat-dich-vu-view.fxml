@@ -24,92 +24,93 @@
             </VBox>
         </VBox>
     </top>
-   <center>
-          <VBox maxWidth="1054.0" prefHeight="774.0" prefWidth="1054.0" spacing="20.0" style="-fx-background-color: white; -fx-padding: 30; -fx-border-color: #ced4da; -fx-border-radius: 8;" BorderPane.alignment="CENTER">
-              <children>
-                  <Label alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="51.0" prefWidth="992.0" style="-fx-font-size: 24px; -fx-font-weight: bold;" text="Lập Phiếu Dịch Vụ" textFill="#2c3e50">
-               <font>
-                  <Font size="24.0" />
-               </font>
-            </Label>
+    <center>
+        <VBox maxWidth="1.7976931348623157E308" prefHeight="774.0" prefWidth="1054.0" spacing="20.0" style="-fx-background-color: white; -fx-padding: 30; -fx-border-color: #ced4da; -fx-border-radius: 8;" BorderPane.alignment="CENTER">
+            <children>
+                <Label alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="51.0" prefWidth="992.0" style="-fx-font-size: 24px; -fx-font-weight: bold;" text="Lập Phiếu Dịch Vụ" textFill="#2c3e50">
+                    <font>
+                        <Font size="24.0" />
+                    </font>
+                </Label>
 
-                  <GridPane hgap="15.0" vgap="20.0">
-                      <columnConstraints>
-                          <javafx.scene.layout.ColumnConstraints hgrow="SOMETIMES" maxWidth="150.0" minWidth="100.0" prefWidth="120.0" />
-                          <javafx.scene.layout.ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="250.0" />
-                      </columnConstraints>
-                      <children>
-                          <Label text="Danh sách phòng" GridPane.rowIndex="1" />
-                          <ComboBox fx:id="cboMaPhong" prefHeight="26.0" prefWidth="220.0" promptText="Chọn phòng theo khách hàng" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                <GridPane hgap="15.0" vgap="10.0">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="150.0" minWidth="100.0" prefWidth="120.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="250.0" />
+                    </columnConstraints>
+                    <children>
+                        <Label text="Danh sách phòng" GridPane.rowIndex="1" />
+                        <ComboBox fx:id="dsPhong" prefHeight="26.0" prefWidth="220.0" promptText="Chọn phòng theo khách hàng" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
-                          <Label text="Nhân Viên Lập:" GridPane.rowIndex="2" />
+                        <Label text="Nhân Viên Lập:" GridPane.rowIndex="2" />
 
-                          <Label text="Ngày Lập:" GridPane.rowIndex="3" />
-                          <TextField fx:id="txtNgayLap" disable="true" text="Hệ thống tự động" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <Label text="Ngày Lập:" GridPane.rowIndex="3" />
+                        <TextField fx:id="txtNgayLap" disable="true" text="Hệ thống tự động" GridPane.columnIndex="1" GridPane.rowIndex="3" />
 
-                          <Label text="Mã Phiếu Tạm:" GridPane.rowIndex="4" />
-                          <TextField fx:id="txtMaPhieuTam" disable="true" promptText="Tạo tự động khi xác nhận" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                  <Label prefWidth="62.0" text="Khách hàng" />
-                  <ComboBox prefHeight="26.0" prefWidth="220.0" promptText="Chọn khách hàng" GridPane.columnIndex="1" />
-                  <TextField opacity="0.82" prefHeight="26.0" prefWidth="270.0" promptText="Hệ thống tự động nhập" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                      </children>
-               <rowConstraints>
-                  <RowConstraints minHeight="10.0" prefHeight="50.0" />
-                  <RowConstraints />
-                  <RowConstraints />
-                  <RowConstraints />
-                  <RowConstraints />
-               </rowConstraints>
-                  </GridPane>
+                        <Label text="Mã Phiếu Tạm:" GridPane.rowIndex="4" />
+                        <TextField fx:id="txtMaPhieuTam" disable="true" promptText="Tạo tự động khi xác nhận" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                        <Label prefWidth="62.0" text="Khách hàng" />
+                        <ComboBox fx:id="dsKhachHang" prefHeight="26.0" prefWidth="220.0" promptText="Chọn khách hàng" GridPane.columnIndex="1" />
+                        <TextField opacity="0.82" prefHeight="26.0" prefWidth="270.0" promptText="Hệ thống tự động nhập" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                    </children>
+                    <rowConstraints>
+                        <RowConstraints minHeight="10.0" prefHeight="50.0" />
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                    </rowConstraints>
+                </GridPane>
 
-                  <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Danh Sách Dịch Vụ" />
+                <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Danh Sách Dịch Vụ" />
 
-                  <VBox spacing="10.0">
-                      <TableView fx:id="tblChiTietTam" prefHeight="200.0" prefWidth="550.0">
-                          <columns>
-                              <TableColumn fx:id="colDVMa" prefWidth="100.0" text="Mã DV" />
-                              <TableColumn fx:id="colDVTen" prefWidth="200.0" text="Tên Dịch Vụ" />
-                              <TableColumn fx:id="colDVSL" prefWidth="80.0" text="Số lượng" />
-                              <TableColumn fx:id="colDVGia" prefWidth="100.0" text="Đơn Giá" />
-                          </columns>
-                          <columnResizePolicy>
-                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                          </columnResizePolicy>
-                      </TableView>
+                <VBox spacing="10.0" VBox.vgrow="ALWAYS"> <TableView fx:id="tblChiTietTam" prefHeight="600.0" prefWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colDVMa" prefWidth="100.0" text="Mã DV" />
+                        <TableColumn fx:id="colDVTen" prefWidth="200.0" text="Tên Dịch Vụ" />
+                        <TableColumn fx:id="colDVSL" prefWidth="80.0" text="Số lượng" />
+                        <TableColumn fx:id="colDVGia" prefWidth="100.0" text="Đơn Giá" />
+                        <TableColumn fx:id="colDVMoTa" prefWidth="250.0" text="Mô tả" />
+                        <TableColumn fx:id="colDVConKinhDoanh" prefWidth="150.0" text="Còn kinh doanh" />
+                    </columns>
+                    <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                    </columnResizePolicy>
+                </TableView>
 
-                      <HBox alignment="CENTER_LEFT" spacing="10.0" style="-fx-padding: 10 0 0 0;">
-                          <Label prefWidth="70.0" text="Dịch Vụ:" />
-                          <ComboBox fx:id="cboDichVu" prefWidth="200.0" promptText="Chọn Dịch Vụ" HBox.hgrow="ALWAYS" />
-                          <Label prefWidth="60.0" text="Số Lượng:" />
-                          <TextField fx:id="txtSoLuong" prefWidth="80.0" promptText="1" />
-                          <Button fx:id="btnThemDV" mnemonicParsing="false" onAction="#handleThemDichVu" style="-fx-background-color: #28a745; -fx-text-fill: white;" text="Thêm" />
-                          <Button fx:id="btnXoaDV" mnemonicParsing="false" onAction="#handleXoaDichVu" style="-fx-background-color: #dc3545; -fx-text-fill: white;" text="Xóa" />
-                      </HBox>
-                  </VBox>
+                    <HBox alignment="CENTER_LEFT" spacing="10.0" style="-fx-padding: 10 0 0 0;">
+                        <Label prefWidth="70.0" text="Dịch Vụ:" />
+                        <ComboBox fx:id="cboDichVu" prefWidth="200.0" promptText="Chọn Dịch Vụ" HBox.hgrow="ALWAYS" />
+                        <Label prefWidth="60.0" text="Số Lượng:" />
+                        <TextField fx:id="txtSoLuong" prefWidth="80.0" promptText="1" />
+                        <Button fx:id="btnThemDV" mnemonicParsing="false" onAction="#handleThemDichVu" style="-fx-background-color: #28a745; -fx-text-fill: white;" text="Thêm" />
+                        <Button fx:id="btnXoaDV" mnemonicParsing="false" onAction="#handleXoaDichVu" style="-fx-background-color: #dc3545; -fx-text-fill: white;" text="Xóa" />
+                    </HBox>
+                </VBox>
 
-                  <Label text="Ghi Chú Phiếu DV:" />
-                  <TextArea fx:id="txtGhiChu" prefHeight="60.0" promptText="Ghi chú cho phiếu dịch vụ (tùy chọn)" />
-            <VBox fx:id="dsDichVuDaDat" prefHeight="154.0" prefWidth="992.0">
-               <children>
-                  <Label style="-fx-font-weight: bold;" text="Những dịch vụ đã đặt:">
-                     <font>
-                        <Font size="16.0" />
-                     </font>
-                  </Label>
-               </children>
-            </VBox>
+                <Label text="Ghi Chú Phiếu DV:" />
+                <TextArea fx:id="txtGhiChu" prefHeight="60.0" promptText="Ghi chú cho phiếu dịch vụ (tùy chọn)" />
+                <VBox fx:id="dsDichVuDaDat" prefHeight="154.0" prefWidth="992.0">
+                    <children>
+                        <Label style="-fx-font-weight: bold;" text="Những dịch vụ đã đặt:">
+                            <font>
+                                <Font size="16.0" />
+                            </font>
+                        </Label>
+                    </children>
+                </VBox>
 
-                  <HBox alignment="CENTER_RIGHT" spacing="20.0" style="-fx-padding: 10 0 0 0;">
-                      <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="TỔNG TIỀN TẠM TÍNH:" />
-                      <Label fx:id="lblTongTienTam" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #198754;" text="0 VNĐ" />
-                  </HBox>
-            <HBox alignment="CENTER" prefHeight="37.0" prefWidth="1021.0">
-               <children>
-      
+                <HBox alignment="CENTER_RIGHT" spacing="20.0" style="-fx-padding: 10 0 0 0;">
+                    <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="TỔNG TIỀN TẠM TÍNH:" />
+                    <Label fx:id="lblTongTienTam" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #198754;" text="0 VNĐ" />
+                </HBox>
+                <HBox alignment="CENTER" prefHeight="37.0" prefWidth="1021.0">
+                    <children>
+
                         <Button fx:id="btnXacNhanLapPhieu" alignment="CENTER" mnemonicParsing="false" onAction="#handleXacNhanLapPhieu" prefHeight="37.0" prefWidth="271.0" style="-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" text="XÁC NHẬN LẬP PHIẾU" />
-               </children>
-            </HBox>
-              </children>
-          </VBox>
-   </center>
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </center>
 </BorderPane>

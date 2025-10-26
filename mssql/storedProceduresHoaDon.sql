@@ -3,7 +3,7 @@
 -- =============================================
 
 -- 1. Thêm hóa đơn
-CREATE OR ALTER PROCEDURE sp_ThemHoaDon
+CREATE PROCEDURE sp_ThemHoaDon
     @maHD NVARCHAR(10),
     @ngayLap DATE,
     @phuongThuc NVARCHAR(50),
@@ -21,7 +21,7 @@ END;
 GO
 
 -- 2. Sửa hóa đơn
-CREATE OR ALTER PROCEDURE sp_SuaHoaDon
+CREATE PROCEDURE sp_SuaHoaDon
     @maHD NVARCHAR(10),
     @ngayLap DATE,
     @phuongThuc NVARCHAR(50),
@@ -46,7 +46,7 @@ END;
 GO
 
 -- 3. Xóa hóa đơn
-CREATE OR ALTER PROCEDURE sp_XoaHoaDon
+CREATE PROCEDURE sp_XoaHoaDon
 @maHD NVARCHAR(10)
 AS
 BEGIN
@@ -56,7 +56,7 @@ END;
 GO
 
 -- 4. Lấy danh sách hóa đơn
-CREATE OR ALTER PROCEDURE sp_LayDanhSachHoaDon
+CREATE PROCEDURE sp_LayDanhSachHoaDon
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -65,7 +65,7 @@ END;
 GO
 
 -- 5. Tìm hóa đơn theo mã
-CREATE OR ALTER PROCEDURE sp_TimHoaDonTheoMa
+CREATE PROCEDURE sp_TimHoaDonTheoMa
 @maHD NVARCHAR(10)
 AS
 BEGIN
@@ -75,26 +75,38 @@ END;
 GO
 
 -- 6. Sinh mã hóa đơn tự động (HD001, HD002, ...)
-CREATE OR ALTER PROCEDURE sp_TaoMaHoaDonMoi
+CREATE PROCEDURE sp_TaoMaHoaDonTiepTheo
 AS
 BEGIN
-    DECLARE @maMoi NVARCHAR(10);
+    SET NOCOUNT ON;
+
+    DECLARE @maCu NVARCHAR(10);
     DECLARE @so INT;
+    DECLARE @maMoi NVARCHAR(10);
 
-    SELECT @so = MAX(CAST(SUBSTRING(maHD, 3, LEN(maHD)) AS INT)) FROM HoaDon;
+    -- 🔹 Lấy mã hóa đơn lớn nhất hiện tại
+    SELECT @maCu = MAX(maHD)
+    FROM HoaDon;
 
-    IF @so IS NULL
-        SET @so = 1;
+    -- 🔹 Nếu chưa có hóa đơn nào thì gán là HD001
+    IF @maCu IS NULL
+        SET @maMoi = 'HD001';
     ELSE
-        SET @so = @so + 1;
+        BEGIN
+            -- Lấy phần số từ mã cũ (ví dụ HD005 → 5)
+            SET @so = CAST(SUBSTRING(@maCu, 3, LEN(@maCu) - 2) AS INT) + 1;
 
-    SET @maMoi = 'HD' + RIGHT('000' + CAST(@so AS NVARCHAR(3)), 3);
+            -- Sinh mã mới với 3 chữ số, thêm 0 phía trước nếu cần
+            SET @maMoi = 'HD' + RIGHT('000' + CAST(@so AS NVARCHAR(3)), 3);
+        END
+
+    -- 🔹 Trả kết quả ra
     SELECT @maMoi AS maHDMoi;
 END;
-GO
+GO;
 
 -- 7. Cập nhật trạng thái hóa đơn
-CREATE OR ALTER PROCEDURE sp_CapNhatTrangThaiHoaDon
+CREATE PROCEDURE sp_CapNhatTrangThaiHoaDon
     @maHD NVARCHAR(10),
     @trangThaiMoi NVARCHAR(50)
 AS
