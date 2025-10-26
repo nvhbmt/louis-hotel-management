@@ -2,6 +2,9 @@
 -- Store Procedure: Quản lý Nhân viên
 -- ================================================
 
+USE QuanLyKhachSan;
+GO
+
 -- 1. Lấy toàn bộ danh sách nhân viên
 CREATE PROCEDURE sp_LayDSNhanVien
 AS
