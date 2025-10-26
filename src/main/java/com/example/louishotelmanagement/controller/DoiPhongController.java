@@ -13,8 +13,10 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
@@ -29,19 +31,18 @@ public class DoiPhongController implements Initializable,Refreshable {
     public ComboBox dsKhachHang;
     public ComboBox dsPhongHienTai;
     public ComboBox dsPhong;
-    public TextField maNV;
     public TableView tablePhong;
     public Button btnDoiPhong;
     @FXML
-    private TableColumn maPhong;
+    private TableColumn<Phong, String> maPhong;
     @FXML
-    private TableColumn tang;
+    private TableColumn<Phong, Integer> tang;
     @FXML
-    private TableColumn trangThai;
+    private TableColumn<Phong, TrangThaiPhong> trangThai;
     @FXML
-    private TableColumn moTa;
+    private TableColumn<Phong, String> moTa;
     @FXML
-    private TableColumn loaiPhong;
+    private TableColumn<Phong, String> loaiPhong;
     private PhongDAO Pdao;
     private KhachHangDAO Kdao;
     private PhieuDatPhongDAO pdpDao;
@@ -55,12 +56,6 @@ public class DoiPhongController implements Initializable,Refreshable {
         Kdao = new KhachHangDAO();
         pdpDao = new PhieuDatPhongDAO();
         cthdpDao = new CTHoaDonPhongDAO();
-        maPhong.setCellValueFactory(new PropertyValueFactory<>("maPhong"));
-        tang.setCellValueFactory(new PropertyValueFactory<>("tang"));
-        trangThai.setCellValueFactory(new PropertyValueFactory<>("trangThai"));
-        moTa.setCellValueFactory(new PropertyValueFactory<>("moTa"));
-        loaiPhong.setCellValueFactory(new PropertyValueFactory<>("loaiPhong"));
-        tablePhong.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         VBox.setVgrow(tablePhong, Priority.ALWAYS);
         try {
             laydsKhachHang();
@@ -68,8 +63,7 @@ public class DoiPhongController implements Initializable,Refreshable {
             dsKhachHang.getSelectionModel().selectFirst();
             dsPhong.getSelectionModel().selectFirst();
             laydsPhongTheoKhachHang();
-            loadTable();
-
+            khoiTaoTableView();
             dsKhachHang.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue != null) {
                     try {
@@ -91,13 +85,44 @@ public class DoiPhongController implements Initializable,Refreshable {
         }
 
     }
+    private void khoiTaoTableView() throws SQLException {
+        // Thiết lập các cột
+        maPhong.setCellValueFactory(new PropertyValueFactory<>("maPhong"));
+        tang.setCellValueFactory(new PropertyValueFactory<>("tang"));
+        trangThai.setCellValueFactory(new PropertyValueFactory<>("trangThai"));
+        trangThai.setCellFactory(_ -> new TableCell<>() {
+            @Override
+            protected void updateItem(TrangThaiPhong item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                    getStyleClass().clear();
+                } else {
+                    setText(item.toString());
+                    setAlignment(Pos.TOP_CENTER);
+                    getStyleClass().clear();
+                    getStyleClass().add("status-trong");
+                }
+            }
+        });
+        moTa.setCellValueFactory(new PropertyValueFactory<>("moTa"));
+        loaiPhong.setCellValueFactory(cellData -> {
+            LoaiPhong loaiPhong = cellData.getValue().getLoaiPhong();
 
-    public void loadTable() throws SQLException {
-        tablePhong.getItems().clear();
-        ArrayList<Phong> phongs = Pdao.layDSPhongTrong();
-        ObservableList<Phong> dsPhong = FXCollections.observableArrayList(phongs);
-        tablePhong.setItems(dsPhong);
+            // 2. Trả về StringBinding chứa Tên Loại.
+            // Nếu LoaiPhong không null, liên kết (bind) với thuộc tính TenLoai.
+            return loaiPhong != null ?
+                    javafx.beans.binding.Bindings.createStringBinding(loaiPhong::getTenLoai) :
+                    javafx.beans.binding.Bindings.createStringBinding(() -> ""); // Xử lý trường hợp null
+        });
 
+        // Thiết lập TableView
+        ArrayList<Phong> dsPhongTrong = Pdao.layDSPhongTrong();
+        ObservableList<Phong> observableListPhong = FXCollections.observableArrayList(dsPhongTrong);
+        tablePhong.setItems(observableListPhong);
+
+        // Cho phép chọn nhiều dòng
+        tablePhong.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
     }
 
     public void laydsKhachHang() throws SQLException {
@@ -163,8 +188,6 @@ public class DoiPhongController implements Initializable,Refreshable {
         layDsPhong();
         dsPhong.getSelectionModel().selectFirst();
         dsKhachHang.getSelectionModel().selectFirst();
-        loadTable();
-        AuthService authService = AuthService.getInstance();
-        maNV.setText(authService.getCurrentUser().getNhanVien().getMaNV());
+        khoiTaoTableView();
     }
 }

@@ -196,3 +196,41 @@ BEGIN
     SET @maDichVuTiepTheo = 'DV' + RIGHT('000' + CAST(@maxSo + 1 AS VARCHAR(3)), 3);
 END
 GO
+
+-- TÊN PROCEDURE: sp_CapNhatSoLuongTonKho
+-- MỤC ĐÍCH: Cập nhật số lượng tồn kho (soLuong) của một dịch vụ.
+
+CREATE PROCEDURE sp_CapNhatSoLuongTonKho
+    @maDV NVARCHAR(10),       -- Mã Dịch Vụ cần cập nhật
+    @soLuongMoi INT           -- Số lượng tồn kho mới
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE DichVu
+    SET
+        soLuong = @soLuongMoi
+    WHERE
+        maDV = @maDV;
+
+    -- Trả về số dòng bị ảnh hưởng (0 hoặc 1)
+    SELECT @@ROWCOUNT;
+END
+GO
+
+CREATE PROCEDURE sp_TimDichVuTheoMa
+@MaDV NVARCHAR(10)
+AS
+BEGIN
+    SELECT
+        maDV,
+        tenDV,
+        soLuong,
+        donGia,
+        moTa,
+        conKinhDoanh
+    FROM
+        DichVu
+    WHERE
+        maDV = @MaDV;
+END

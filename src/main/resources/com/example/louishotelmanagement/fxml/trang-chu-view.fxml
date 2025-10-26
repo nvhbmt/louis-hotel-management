@@ -7,13 +7,13 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.TrangChuController">
+<BorderPane stylesheets="@../css/TrangChu.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.TrangChuController">
    <center>
-      <StackPane style="-fx-background-color: #f8f9fa;">
-         <VBox alignment="CENTER" maxWidth="720.0" spacing="16.0" style="-fx-padding: 40;">
-            <Label style="-fx-font-size: 32px; -fx-font-weight: bold;" text="Louis Hotel Management" textFill="#2c3e50" />
-            <Label style="-fx-font-size: 14px;" text="Giải pháp quản lý khách sạn hiện đại: đặt phòng, quản lý phòng, khách hàng và báo cáo." textFill="#7f8c8d" wrapText="true" />
-            <Label style="-fx-font-size: 14px;" text="Tối ưu quy trình vận hành và theo dõi hiệu suất theo thời gian thực." textFill="#7f8c8d" wrapText="true" />
+      <StackPane style="-fx-background-color: #f8f9fa;" styleClass="container">
+         <VBox alignment="CENTER" prefHeight="864.0" prefWidth="1014.4" spacing="16.0" style="-fx-padding: 40;">
+            <Label styleClass="Title" text="Louis Hotel Management" textFill="#2c3e50" />
+            <Label styleClass="description" text="Giải pháp quản lý khách sạn hiện đại: đặt phòng, quản lý phòng, khách hàng và báo cáo." textFill="#7f8c8d" wrapText="true" />
+            <Label styleClass="description" text="Tối ưu quy trình vận hành và theo dõi hiệu suất theo thời gian thực." textFill="#7f8c8d" wrapText="true" />
             <HBox alignment="CENTER" spacing="12.0" style="-fx-padding: 12 0 0 0;">
                <Button onAction="#moQuanLyPhong" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 16;" text="Quản lý phòng" />
                <Button onAction="#moQuanLyDichVu" style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 16;" text="Quản Lý Dịch Vụ" />

@@ -17,8 +17,8 @@
 
 <BorderPane xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.DatDichVuController">
     <top>
-        <VBox style="-fx-background-color: #f8f9fa; -fx-padding: 30 10 10 10;">
-            <VBox spacing="5.0">
+        <VBox prefHeight="58.0" prefWidth="1054.0" style="-fx-background-color: #f8f9fa; -fx-padding: 30 10 10 10;">
+            <VBox prefHeight="46.0" prefWidth="1034.0" spacing="5.0">
                 <Label style="-fx-font-size: 28px; -fx-font-weight: bold;" text="Đặt Dịch Vụ" textFill="#2c3e50" />
                 <Label style="-fx-font-size: 14px;" text="Thực hiện yêu cầu dịch vụ cho khách hàng" textFill="#7f8c8d" />
             </VBox>
@@ -33,7 +33,7 @@
                     </font>
                 </Label>
 
-                <GridPane hgap="15.0" vgap="10.0">
+                <GridPane hgap="15.0" vgap="15.0">
                     <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="150.0" minWidth="100.0" prefWidth="120.0" />
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="250.0" />
@@ -43,20 +43,12 @@
                         <ComboBox fx:id="dsPhong" prefHeight="26.0" prefWidth="220.0" promptText="Chọn phòng theo khách hàng" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
                         <Label text="Nhân Viên Lập:" GridPane.rowIndex="2" />
-
-                        <Label text="Ngày Lập:" GridPane.rowIndex="3" />
-                        <TextField fx:id="txtNgayLap" disable="true" text="Hệ thống tự động" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-
-                        <Label text="Mã Phiếu Tạm:" GridPane.rowIndex="4" />
-                        <TextField fx:id="txtMaPhieuTam" disable="true" promptText="Tạo tự động khi xác nhận" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                         <Label prefWidth="62.0" text="Khách hàng" />
                         <ComboBox fx:id="dsKhachHang" prefHeight="26.0" prefWidth="220.0" promptText="Chọn khách hàng" GridPane.columnIndex="1" />
-                        <TextField opacity="0.82" prefHeight="26.0" prefWidth="270.0" promptText="Hệ thống tự động nhập" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <TextField fx:id="maNV" opacity="0.82" prefHeight="26.0" prefWidth="270.0" promptText="Hệ thống tự động nhập" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                     </children>
                     <rowConstraints>
                         <RowConstraints minHeight="10.0" prefHeight="50.0" />
-                        <RowConstraints />
-                        <RowConstraints />
                         <RowConstraints />
                         <RowConstraints />
                     </rowConstraints>
@@ -84,7 +76,6 @@
                         <Label prefWidth="60.0" text="Số Lượng:" />
                         <TextField fx:id="txtSoLuong" prefWidth="80.0" promptText="1" />
                         <Button fx:id="btnThemDV" mnemonicParsing="false" onAction="#handleThemDichVu" style="-fx-background-color: #28a745; -fx-text-fill: white;" text="Thêm" />
-                        <Button fx:id="btnXoaDV" mnemonicParsing="false" onAction="#handleXoaDichVu" style="-fx-background-color: #dc3545; -fx-text-fill: white;" text="Xóa" />
                     </HBox>
                 </VBox>
 

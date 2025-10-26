@@ -25,6 +25,31 @@ public class DichVuDAO {
 
         }
     }
+    public DichVu timDichVuTheoMa(String maDV) throws Exception {
+        DichVu dichVu = null;
+        // Giả sử bạn có stored procedure tên là sp_TimDichVuTheoMa
+        String sql = "{CALL sp_TimDichVuTheoMa(?)}";
+
+        try (Connection con = CauHinhDatabase.getConnection();
+             CallableStatement stmt = con.prepareCall(sql)) {
+
+            stmt.setString(1, maDV);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    dichVu = new DichVu(
+                            rs.getString("maDV"),
+                            rs.getString("tenDV"),
+                            rs.getInt("soLuong"),
+                            rs.getDouble("donGia"),
+                            rs.getString("moTa"),
+                            rs.getBoolean("conKinhDoanh")
+                    );
+                }
+            }
+        }
+        return dichVu; // Trả về DichVu hoặc null nếu không tìm thấy
+    }
     // CẬP NHẬT DỊCH VỤ
     public boolean capNhatDichVu(DichVu dichVu) throws Exception {
         String sql = "{CALL sp_CapNhatDichVu(?,?,?,?,?,?)}";
@@ -88,6 +113,40 @@ public class DichVuDAO {
             cs.execute();
 
             return cs.getString(1);
+        }
+    }
+    // ⚙️ Cập nhật số lượng tồn kho của dịch vụ
+    public boolean capNhatSoLuongTonKho(String maDV, int soLuongMoi) throws Exception {
+        String sql = "{CALL sp_CapNhatSoLuongTonKho(?, ?)}";
+
+        try (Connection con = CauHinhDatabase.getConnection();
+             CallableStatement stmt = con.prepareCall(sql)) {
+
+            stmt.setString(1, maDV);
+            stmt.setInt(2, soLuongMoi);
+
+            // THAY THẾ: return stmt.executeUpdate() > 0;
+            // Bằng:
+
+            // Sử dụng execute() để xử lý cả Result Set và Update Count
+            boolean hadResults = stmt.execute();
+
+            // Lặp qua tất cả các kết quả (Result Set và Update Count)
+            while (true) {
+                if (hadResults) {
+                    // Xử lý Result Set nếu cần (ví dụ: stmt.getResultSet().close();)
+                } else {
+                    if (stmt.getUpdateCount() == -1) {
+                        break; // Không còn kết quả nào nữa
+                    }
+                    // Có thể kiểm tra: return stmt.getUpdateCount() > 0;
+                }
+                hadResults = stmt.getMoreResults();
+            }
+            return true; // Giả định thành công nếu không có Exception
+
+            // Hoặc đơn giản hơn, nếu chắc chắn SP chỉ là UPDATE:
+            // return stmt.executeUpdate() > 0; // Và sửa SP
         }
     }
 }

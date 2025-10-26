@@ -68,3 +68,46 @@ BEGIN
     WHERE maHD = @maHD;
 END;
 GO
+-- Tìm CTHoaDonDichVu theo mã HD và mã DV
+CREATE PROCEDURE sp_TimCTHDDVTheoMaHDMaDV
+    -- Sử dụng NVARCHAR(10) chính xác như định nghĩa cột
+    @MaHD NVARCHAR(10),
+    @MaDV NVARCHAR(10)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        maHD,
+        maPhieuDV,
+        maDV,
+        soLuong,
+        donGia,
+        thanhTien
+    FROM
+        dbo.CTHoaDonDichVu
+    WHERE
+      -- Sử dụng LTRIM/RTRIM để loại bỏ khoảng trắng thừa nếu có,
+      -- tăng cường khả năng tìm kiếm chính xác
+        maHD = LTRIM(RTRIM(@MaHD)) AND maDV = LTRIM(RTRIM(@MaDV));
+END
+GO
+-- Cập nhật số lượng dịch vụ trong CTHoaDonDichVu
+CREATE PROCEDURE sp_CapNhatSoLuongCTHDDV
+    @MaHD NVARCHAR(10),
+    @MaDV NVARCHAR(10),
+    @SoLuongMoi INT
+AS
+BEGIN
+    -- KHÔNG DÙNG SET NOCOUNT ON;
+
+    UPDATE dbo.CTHoaDonDichVu
+    SET
+        soLuong = @SoLuongMoi
+    WHERE
+        maHD = LTRIM(RTRIM(@MaHD)) AND maDV = LTRIM(RTRIM(@MaDV));
+
+    -- BẮT BUỘC TRẢ VỀ SỐ DÒNG BỊ ẢNH HƯỞNG NHƯ MỘT RESULT SET
+    SELECT @@ROWCOUNT;
+END
+GO

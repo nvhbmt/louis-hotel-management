@@ -2,7 +2,8 @@ package com.example.louishotelmanagement.model;
 
 public enum TrangThaiHoaDon {
     DA_THANH_TOAN("Đã thanh toán"),
-    CHUA_THANH_TOAN("Chưa thanh toán");
+    CHUA_THANH_TOAN("Chưa thanh toán"),
+    DA_HUY("Đã hủy");
 
     private final String trangThai;
 
