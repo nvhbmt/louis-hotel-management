@@ -124,4 +124,29 @@ public class PhieuDichVuDAO {
         }
         return list;
     }
+    // --- 5. LẤY MÃ PHIẾU DỊCH VỤ TIẾP THEO - Gọi sp_LayMaPhieuDVTiepTheo ---
+    /**
+     * Lấy mã phiếu dịch vụ tiếp theo để sử dụng khi thêm mới.
+     * @return Mã phiếu dịch vụ tiếp theo (ví dụ: PDV001)
+     */
+    public String layMaPhieuDichVuTiepTheo() throws Exception {
+        // Gọi SP với 1 tham số OUTPUT
+        String sql = "{CALL sp_LayMaPhieuDVTiepTheo(?)}";
+
+        try (Connection con = CauHinhDatabase.getConnection();
+             CallableStatement cs = con.prepareCall(sql)) {
+
+            // Đăng ký tham số 1 là tham số đầu ra (OUTPUT) kiểu chuỗi
+            cs.registerOutParameter(1, java.sql.Types.NVARCHAR);
+
+            // Thực thi stored procedure
+            cs.execute();
+
+            // Lấy giá trị trả về từ tham số OUTPUT
+            return cs.getString(1);
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi lấy mã phiếu dịch vụ tiếp theo: " + e.getMessage());
+            throw new Exception("Lấy mã phiếu dịch vụ tiếp theo thất bại: " + e.getMessage());
+        }
+    }
 }

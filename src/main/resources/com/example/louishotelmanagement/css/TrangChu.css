@@ -1,0 +1,16 @@
+.container{
+    -fx-background-image: url("../image/TrangChu3.png");
+    -fx-background-size: cover;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center center;
+}
+.Title{
+    -fx-text-fill: #FFD700;
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+}
+.description {
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}

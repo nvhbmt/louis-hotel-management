@@ -70,7 +70,7 @@ public class ContentManager {
         if (controller instanceof Refreshable) {
             try {
                 ((Refreshable) controller).refreshData();
-            } catch (SQLException e) {
+            } catch (Exception e) {
                 System.err.println("Lỗi khi refreshData: " + e.getMessage());
                 // Xử lý lỗi SQL nếu cần
             }

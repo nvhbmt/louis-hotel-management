@@ -63,6 +63,7 @@ public class CTHoaDonDichVu {
     }
 
     public BigDecimal getThanhTien() {
+        this.thanhTien = tinhThanhTien();
         return thanhTien;
     }
 

@@ -120,3 +120,43 @@ BEGIN
         ngayLap DESC, maPhieuDV
 END
 GO
+
+-- TÊN PROCEDURE: sp_LayMaPhieuDVTiepTheo
+-- MỤC ĐÍCH: Tự động tạo mã phiếu dịch vụ tiếp theo
+-- Giả định bảng PhieuDichVu có cột maPhieuDV NVARCHAR(10)
+
+CREATE PROCEDURE sp_LayMaPhieuDVTiepTheo
+@maDVTiepTheo NVARCHAR(10) OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    -- Khai báo biến tạm thời để lưu mã lớn nhất
+    DECLARE @maLonNhat NVARCHAR(10);
+    DECLARE @soTiepTheo INT;
+
+    -- 1. Tìm mã lớn nhất hiện có với tiền tố "PDV"
+    SELECT @maLonNhat = MAX(maPhieuDV)
+    FROM PhieuDichVu
+    WHERE maPhieuDV LIKE 'PDV%';
+
+    -- 2. Xử lý logic tạo mã
+    IF @maLonNhat IS NULL
+        BEGIN
+            -- Chưa có PDV nào, bắt đầu từ 1
+            SET @soTiepTheo = 1;
+        END
+    ELSE
+        BEGIN
+            -- Lấy phần số của mã lớn nhất (ví dụ: từ 'PDV015' lấy ra 15)
+            -- Tăng lên 1
+            -- Chú ý: SUBSTRING bắt đầu từ vị trí 4 ('P'='1', 'D'='2', 'V'='3', '0'='4')
+            SET @soTiepTheo = CAST(SUBSTRING(@maLonNhat, 4, LEN(@maLonNhat) - 3) AS INT) + 1;
+        END
+
+    -- 3. Định dạng lại thành 'PDV' + số (với 3 chữ số đệm 0)
+    SET @maDVTiepTheo = 'PDV' + RIGHT('00' + CAST(@soTiepTheo AS NVARCHAR(3)), 3);
+
+    -- Giá trị được trả về thông qua tham số OUTPUT
+END
+GO
