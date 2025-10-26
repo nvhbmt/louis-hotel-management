@@ -1,16 +1,18 @@
+USE QuanLyKhachSan;
+GO
+
 -- =============================================
 -- 1. Thêm phiếu đặt phòng
 -- =============================================
-CREATE PROCEDURE sp_ThemPhieuDatPhong
-    @maPhieu NVARCHAR(10),
-    @ngayDat DATE = NULL,
-    @ngayDen DATE = NULL,
-    @ngayDi DATE = NULL,
-    @trangThai NVARCHAR(50),
-    @ghiChu NVARCHAR(255) = NULL,
-    @maKH NVARCHAR(10),
-    @maNV NVARCHAR(10),
-    @tienCoc DECIMAL(18, 2) = 0.00 -- THÊM THAM SỐ TIỀN CỌC
+CREATE PROCEDURE sp_ThemPhieuDatPhong @maPhieu NVARCHAR(10),
+                                      @ngayDat DATE = NULL,
+                                      @ngayDen DATE = NULL,
+                                      @ngayDi DATE = NULL,
+                                      @trangThai NVARCHAR(50),
+                                      @ghiChu NVARCHAR(255) = NULL,
+                                      @maKH NVARCHAR(10),
+                                      @maNV NVARCHAR(10),
+                                      @tienCoc DECIMAL(18, 2) = 0.00 -- THÊM THAM SỐ TIỀN CỌC
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -54,7 +56,15 @@ CREATE PROCEDURE sp_LayDSPhieuDatPhong
 AS
 BEGIN
     SET NOCOUNT ON;
-    SELECT maPhieu, ngayDat, ngayDen, ngayDi, trangThai, ghiChu, maKH, maNV, tienCoc -- THÊM tienCoc
+    SELECT maPhieu,
+           ngayDat,
+           ngayDen,
+           ngayDi,
+           trangThai,
+           ghiChu,
+           maKH,
+           maNV,
+           tienCoc -- THÊM tienCoc
     FROM PhieuDatPhong
     ORDER BY ngayDat DESC;
 END;
@@ -63,12 +73,19 @@ GO
 -- =============================================
 -- 3. Lấy phiếu đặt phòng theo mã
 -- =============================================
-CREATE PROCEDURE sp_LayPhieuDatPhongTheoMa
-@maPhieu NVARCHAR(10)
+CREATE PROCEDURE sp_LayPhieuDatPhongTheoMa @maPhieu NVARCHAR(10)
 AS
 BEGIN
     SET NOCOUNT ON;
-    SELECT maPhieu, ngayDat, ngayDen, ngayDi, trangThai, ghiChu, maKH, maNV, tienCoc -- THÊM tienCoc
+    SELECT maPhieu,
+           ngayDat,
+           ngayDen,
+           ngayDi,
+           trangThai,
+           ghiChu,
+           maKH,
+           maNV,
+           tienCoc -- THÊM tienCoc
     FROM PhieuDatPhong
     WHERE maPhieu = @maPhieu;
 END;
@@ -77,12 +94,19 @@ GO
 -- =============================================
 -- 4. Lấy danh sách phiếu đặt phòng theo khách hàng
 -- =============================================
-CREATE PROCEDURE sp_LayDSPhieuDatPhongTheoKhachHang
-@maKH NVARCHAR(10)
+CREATE PROCEDURE sp_LayDSPhieuDatPhongTheoKhachHang @maKH NVARCHAR(10)
 AS
 BEGIN
     SET NOCOUNT ON;
-    SELECT maPhieu, ngayDat, ngayDen, ngayDi, trangThai, ghiChu, maKH, maNV, tienCoc -- THÊM tienCoc
+    SELECT maPhieu,
+           ngayDat,
+           ngayDen,
+           ngayDi,
+           trangThai,
+           ghiChu,
+           maKH,
+           maNV,
+           tienCoc -- THÊM tienCoc
     FROM PhieuDatPhong
     WHERE maKH = @maKH
     ORDER BY ngayDat DESC;
@@ -92,12 +116,19 @@ GO
 -- =============================================
 -- 5. Lấy danh sách phiếu đặt phòng theo nhân viên
 -- =============================================
-CREATE PROCEDURE sp_LayDSPhieuDatPhongTheoNhanVien
-@maNV NVARCHAR(10)
+CREATE PROCEDURE sp_LayDSPhieuDatPhongTheoNhanVien @maNV NVARCHAR(10)
 AS
 BEGIN
     SET NOCOUNT ON;
-    SELECT maPhieu, ngayDat, ngayDen, ngayDi, trangThai, ghiChu, maKH, maNV, tienCoc -- THÊM tienCoc
+    SELECT maPhieu,
+           ngayDat,
+           ngayDen,
+           ngayDi,
+           trangThai,
+           ghiChu,
+           maKH,
+           maNV,
+           tienCoc -- THÊM tienCoc
     FROM PhieuDatPhong
     WHERE maNV = @maNV
     ORDER BY ngayDat DESC;
@@ -107,12 +138,19 @@ GO
 -- =============================================
 -- 6. Lấy danh sách phiếu đặt phòng theo trạng thái
 -- =============================================
-CREATE PROCEDURE sp_LayDSPhieuDatPhongTheoTrangThai
-@trangThai NVARCHAR(50)
+CREATE PROCEDURE sp_LayDSPhieuDatPhongTheoTrangThai @trangThai NVARCHAR(50)
 AS
 BEGIN
     SET NOCOUNT ON;
-    SELECT maPhieu, ngayDat, ngayDen, ngayDi, trangThai, ghiChu, maKH, maNV, tienCoc -- THÊM tienCoc
+    SELECT maPhieu,
+           ngayDat,
+           ngayDen,
+           ngayDi,
+           trangThai,
+           ghiChu,
+           maKH,
+           maNV,
+           tienCoc -- THÊM tienCoc
     FROM PhieuDatPhong
     WHERE trangThai = @trangThai
     ORDER BY ngayDat DESC;
@@ -122,13 +160,20 @@ GO
 -- =============================================
 -- 7. Lấy danh sách phiếu đặt phòng trong khoảng thời gian
 -- =============================================
-CREATE PROCEDURE sp_LayDSPhieuDatPhongTrongKhoangThoiGian
-    @ngayBatDau DATE,
-    @ngayKetThuc DATE
+CREATE PROCEDURE sp_LayDSPhieuDatPhongTrongKhoangThoiGian @ngayBatDau DATE,
+                                                          @ngayKetThuc DATE
 AS
 BEGIN
     SET NOCOUNT ON;
-    SELECT maPhieu, ngayDat, ngayDen, ngayDi, trangThai, ghiChu, maKH, maNV, tienCoc -- THÊM tienCoc
+    SELECT maPhieu,
+           ngayDat,
+           ngayDen,
+           ngayDi,
+           trangThai,
+           ghiChu,
+           maKH,
+           maNV,
+           tienCoc -- THÊM tienCoc
     FROM PhieuDatPhong
     WHERE ngayDat BETWEEN @ngayBatDau AND @ngayKetThuc
     ORDER BY ngayDat DESC;
@@ -138,28 +183,27 @@ GO
 -- =============================================
 -- 8. Cập nhật toàn bộ thông tin phiếu đặt phòng
 -- =============================================
-CREATE PROCEDURE sp_CapNhatPhieuDatPhong
-    @maPhieu NVARCHAR(10),
-    @ngayDat DATE = NULL,
-    @ngayDen DATE = NULL,
-    @ngayDi DATE = NULL,
-    @trangThai NVARCHAR(50),
-    @ghiChu NVARCHAR(255) = NULL,
-    @maKH NVARCHAR(10),
-    @maNV NVARCHAR(10),
-    @tienCoc DECIMAL(18, 2) = NULL -- THÊM THAM SỐ TIỀN CỌC
+CREATE PROCEDURE sp_CapNhatPhieuDatPhong @maPhieu NVARCHAR(10),
+                                         @ngayDat DATE = NULL,
+                                         @ngayDen DATE = NULL,
+                                         @ngayDi DATE = NULL,
+                                         @trangThai NVARCHAR(50),
+                                         @ghiChu NVARCHAR(255) = NULL,
+                                         @maKH NVARCHAR(10),
+                                         @maNV NVARCHAR(10),
+                                         @tienCoc DECIMAL(18, 2) = NULL -- THÊM THAM SỐ TIỀN CỌC
 AS
 BEGIN
     SET NOCOUNT ON;
     UPDATE PhieuDatPhong
-    SET ngayDat = @ngayDat,
-        ngayDen = @ngayDen,
-        ngayDi = @ngayDi,
+    SET ngayDat   = @ngayDat,
+        ngayDen   = @ngayDen,
+        ngayDi    = @ngayDi,
         trangThai = @trangThai,
-        ghiChu = @ghiChu,
-        maKH = @maKH,
-        maNV = @maNV,
-        tienCoc = @tienCoc -- CẬP NHẬT TIỀN CỌC
+        ghiChu    = @ghiChu,
+        maKH      = @maKH,
+        maNV      = @maNV,
+        tienCoc   = @tienCoc -- CẬP NHẬT TIỀN CỌC
     WHERE maPhieu = @maPhieu;
 END;
 GO
@@ -167,9 +211,8 @@ GO
 -- =============================================
 -- 9. Cập nhật trạng thái phiếu đặt phòng (Giữ nguyên)
 -- =============================================
-CREATE PROCEDURE sp_CapNhatTrangThaiPhieuDatPhong
-    @maPhieu NVARCHAR(10),
-    @trangThai NVARCHAR(50)
+CREATE PROCEDURE sp_CapNhatTrangThaiPhieuDatPhong @maPhieu NVARCHAR(10),
+                                                  @trangThai NVARCHAR(50)
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -182,12 +225,12 @@ GO
 -- =============================================
 -- 10. Xóa phiếu đặt phòng (Giữ nguyên)
 -- =============================================
-CREATE PROCEDURE sp_XoaPhieuDatPhong
-@maPhieu NVARCHAR(10)
+CREATE PROCEDURE sp_XoaPhieuDatPhong @maPhieu NVARCHAR(10)
 AS
 BEGIN
     SET NOCOUNT ON;
-    DELETE FROM PhieuDatPhong
+    DELETE
+    FROM PhieuDatPhong
     WHERE maPhieu = @maPhieu;
 END;
 GO

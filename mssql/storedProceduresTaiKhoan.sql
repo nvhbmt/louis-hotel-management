@@ -2,6 +2,9 @@
 -- Store Procedure: Quản lý Tài Khoản
 -- ================================================
 
+USE QuanLyKhachSan;
+GO
+
 -- 1. Lấy danh sách tài khoản
 CREATE PROCEDURE sp_LayDSTaiKhoan
 AS
@@ -35,11 +38,11 @@ CREATE PROCEDURE sp_CapNhatTaiKhoan @maTK NVARCHAR(10),
 AS
 BEGIN
     UPDATE TaiKhoan
-    SET maNV         = @maNV,
-        tenDangNhap  = @tenDangNhap,
-        matKhauHash  = @matKhauHash,
-        quyen        = @quyen,
-        trangThai    = @trangThai
+    SET maNV        = @maNV,
+        tenDangNhap = @tenDangNhap,
+        matKhauHash = @matKhauHash,
+        quyen       = @quyen,
+        trangThai   = @trangThai
     WHERE maTK = @maTK;
 END
 GO

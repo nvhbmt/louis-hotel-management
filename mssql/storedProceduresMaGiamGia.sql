@@ -2,6 +2,9 @@
 -- Store Procedure: Quản lý Mã Giảm Giá
 -- ================================================
 
+USE QuanLyKhachSan;
+GO
+
 -- 1. Lấy toàn bộ danh sách mã giảm giá
 CREATE PROCEDURE sp_LayDSMaGiamGia
 AS
