@@ -65,7 +65,7 @@ public class QuanLyDichVuController implements Initializable {
     private DichVuDAO dichVuDAO;
     private ObservableList<DichVu> danhSachDichVu;
     private ObservableList<DichVu> danhSachDichVuFiltered;
-    private ArrayList<DichVu> dsDichVu;
+    private List<DichVu> dsDichVu;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -237,7 +237,7 @@ public class QuanLyDichVuController implements Initializable {
     private void taiDuLieu() {
         try {
             // Lấy danh sách dịch vụ từ database
-            dsDichVu = dichVuDAO.layTatCaDichVu();
+            dsDichVu = dichVuDAO.layTatCaDichVu(null);
 
             danhSachDichVu.clear();
             danhSachDichVu.addAll(dsDichVu);
