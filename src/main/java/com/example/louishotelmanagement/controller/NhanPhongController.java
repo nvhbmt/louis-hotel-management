@@ -171,7 +171,8 @@ public class NhanPhongController implements Initializable {
             phongDAO.capNhatTrangThaiPhong(maPhong.getText(), "Đang sử dụng");
             PhieuDatPhong pdp = phieuDatPhongDAO.layPhieuDatPhongTheoMa(maPhieu.getText());
             phieuDatPhongDAO.capNhatTrangThaiPhieuDatPhong(pdp.getMaPhieu(), "Đang sử dụng");
-            ctHoaDondao.capNhatNgayDenThucTe(pTam.getMaPhieu(), maPhong.getText(), LocalDate.now());
+            CTHoaDonPhong ctHoaDonPhong = ctHoaDondao.getDSCTHoaDonPhongTheoMaPhong(dsPhong.getSelectionModel().getSelectedItem().toString()).getLast();
+            ctHoaDondao.capNhatNgayDenThucTe( ctHoaDonPhong.getMaHD(),maPhong.getText(), LocalDate.now());
             ThongBaoUtil.hienThiThongBao("Thành công", "Bạn đã nhận phòng thành công");
             dsPhong.getItems().remove(dsPhong.getSelectionModel().getSelectedIndex());
             dsPhong.getSelectionModel().selectFirst();

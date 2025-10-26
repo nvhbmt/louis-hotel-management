@@ -257,39 +257,82 @@ public class DatPhongTaiQuayController implements Initializable,Refreshable {
         }
         return false;
     }
-    public void DatPhong(KhachHang newKh,Phong p,String maPhieu) throws SQLException {
-        AuthService authService = AuthService.getInstance();
-        String maNV = authService.getCurrentUser().getNhanVien().getMaNV();
-        PhieuDatPhong pdp = new PhieuDatPhong(maPhieu, LocalDate.now(),LocalDate.now(),ngayDi.getValue(),TrangThaiPhieuDatPhong.DA_DAT,"Đặt trực tiếp tại quầy",newKh.getMaKH(),maNV);
-        pdpDao.themPhieuDatPhong(pdp);
-        HoaDon hd = new HoaDon(hDao.taoMaHoaDonTiepTheo(), LocalDate.now(),null,TrangThaiHoaDon.CHUA_THANH_TOAN,null,newKh.getMaKH(),maNV,null);
-        hDao.themHoaDon(hd);
-        CTHoaDonPhong cthdp = new CTHoaDonPhong(hd.getMaHD(),pdp.getMaPhieu(),p.getMaPhong(),null,null,BigDecimal.valueOf(p.getLoaiPhong().getDonGia()));
-        Pdao.capNhatTrangThaiPhong(p.getMaPhong(),TrangThaiPhong.DA_DAT.toString());
+    // Trong DatPhongController.java
+
+    // ❗ HÀM DATPHONG CŨ ĐÃ BỊ LOẠI BỎ logic tạo phiếu/hóa đơn chính.
+// Nó chỉ còn xử lý việc tạo Chi tiết và cập nhật trạng thái phòng.
+    public void ThemChiTietPhong(PhieuDatPhong pdp, HoaDon hd, Phong p) throws SQLException {
+        CTHoaDonPhong cthdp = new CTHoaDonPhong(
+                hd.getMaHD(),
+                pdp.getMaPhieu(),
+                p.getMaPhong(),
+                LocalDate.now(), // ngayDen: Sử dụng ngayDen của pdp nếu cần, hoặc null nếu chỉ dùng NgayNhanPhong
+                null, // ngayDi: Sử dụng ngayDi của pdp nếu cần, hoặc null nếu chỉ dùng NgayTraPhong
+                BigDecimal.valueOf(p.getLoaiPhong().getDonGia())
+        );
+        // Cập nhật trạng thái phòng thành ĐÃ ĐẶT (DA_DAT)
+        Pdao.capNhatTrangThaiPhong(p.getMaPhong(), TrangThaiPhong.DA_DAT.toString());
         cthdpDao.themCTHoaDonPhong(cthdp);
     }
 
+// -------------------------------------------------------------
+
     public void handleDatPhong(ActionEvent actionEvent) throws SQLException {
-        if(ngayDi.getValue()==null) {
-            showAlertError("Lỗi ngày","Không được bỏ trống ngày đi");
-        }else{
-            if(ngayDi.getValue().isAfter(LocalDate.now())||ngayDi.getValue().isEqual(LocalDate.now())){
-                KhachHang newKh = Kdao.layKhachHangTheoMa(dsMaKH.get(dsKhachHang.getSelectionModel().getSelectedIndex()));
-                Random ran =  new Random();
-                do {
-                    maPhieu = "PD"+String.valueOf(ran.nextInt(990)+ran.nextInt(9));
-                }while(checkMaPhieu(maPhieu));
-                for(Phong p:listPhongDuocDat){
-                    DatPhong(newKh,p,maPhieu);
-                }
-                refreshData();
-                showAlert("Thành Công","Bạn đã đặt phòng thành công");
-            }else{
-                showAlertError("lỖI NGÀY","không được chọn ngày đi trước ngày hôm nay");
-            }
+        if (ngayDi.getValue() == null) {
+            showAlertError("Lỗi ngày", "Không được bỏ trống ngày đi");
+            return;
         }
 
+        if (ngayDi.getValue().isAfter(LocalDate.now()) || ngayDi.getValue().isEqual(LocalDate.now())) {
 
+            KhachHang newKh = Kdao.layKhachHangTheoMa(dsMaKH.get(dsKhachHang.getSelectionModel().getSelectedIndex()));
+
+            // 1. TẠO MÃ PHIẾU DUY NHẤT
+            Random ran = new Random();
+            do {
+                maPhieu = "PD" + String.valueOf(ran.nextInt(990) + ran.nextInt(9));
+            } while (checkMaPhieu(maPhieu));
+
+            AuthService authService = AuthService.getInstance();
+            String maNV = authService.getCurrentUser().getNhanVien().getMaNV();
+
+            // 2. TẠO VÀ LƯU PHIẾU ĐẶT PHÒNG GỐC (CHỈ 1 LẦN)
+            PhieuDatPhong pdp = new PhieuDatPhong(
+                    maPhieu,
+                    LocalDate.now(),           // Ngay Lap
+                    LocalDate.now(),           // Ngay Den (dự kiến/thực tế đặt)
+                    ngayDi.getValue(),         // Ngay Di
+                    TrangThaiPhieuDatPhong.DANG_SU_DUNG, // 👈 Trạng thái phải là ĐÃ ĐẶT (DA_DAT)
+                    "Đặt trực tiếp tại quầy",
+                    newKh.getMaKH(),
+                    maNV
+            );
+            pdpDao.themPhieuDatPhong(pdp);
+
+            // 3. TẠO VÀ LƯU HÓA ĐƠN GỐC (CHỈ 1 LẦN)
+            HoaDon hd = new HoaDon(
+                    hDao.taoMaHoaDonTiepTheo(),
+                    LocalDate.now(),
+                    null,
+                    TrangThaiHoaDon.CHUA_THANH_TOAN,
+                    null,
+                    newKh.getMaKH(),
+                    maNV,
+                    null
+            );
+            hDao.themHoaDon(hd);
+
+            // 4. LẶP VÀ TẠO CHI TIẾT CHO TỪNG PHÒNG
+            for (Phong p : listPhongDuocDat) {
+                ThemChiTietPhong(pdp, hd, p); // Gọi hàm xử lý chi tiết
+            }
+
+            refreshData();
+            showAlert("Thành Công", "Bạn đã đặt phòng thành công");
+
+        } else {
+            showAlertError("LỖI NGÀY", "Không được chọn ngày đi trước ngày hôm nay");
+        }
     }
 
     public void handleRefresh(ActionEvent actionEvent) throws SQLException {

@@ -33,7 +33,7 @@
                                     <Insets right="30.0" />
                                 </HBox.margin>
                             </Label>
-                            <ComboBox fx:id="dsKhachHang" onAction="#handleKhachHangSelected" prefHeight="30.0" prefWidth="670.0" />
+                            <ComboBox fx:id="dsKhachHang" prefHeight="30.0" prefWidth="670.0" />
                         </children>
                     </HBox>
                     <HBox alignment="CENTER" prefHeight="37.0" prefWidth="880.0">
@@ -59,7 +59,7 @@
                                     <Insets right="30.0" />
                                 </HBox.margin>
                             </Label>
-                            <TextField fx:id="ngayTraPhong" editable="true" prefHeight="30.0" prefWidth="670.0" promptText="Ngày hiện tại hoặc ngày trả thực tế" />
+                            <TextField fx:id="ngayTraPhong" editable="false" prefHeight="30.0" prefWidth="670.0" promptText="Ngày hiện tại hoặc ngày trả thực tế" />
                         </children>
                     </HBox>
                     <HBox alignment="CENTER" prefHeight="49.0" prefWidth="880.0">
@@ -146,6 +146,9 @@
                                     <Label prefWidth="140.0" style="-fx-font-size: 20px; -fx-font-weight: bold;" text="TỔNG CỘNG:" />
                                     <TextField fx:id="tongCong" editable="false" prefHeight="30.0" prefWidth="280.0" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: red;" />
                                 </children>
+                        <VBox.margin>
+                           <Insets bottom="10.0" />
+                        </VBox.margin>
                             </HBox>
                         </VBox>
                     </children>

@@ -175,7 +175,7 @@ public class DatDichVuController implements Initializable,Refreshable {
         CTHoaDonPhong cthdp = cthddphongDao.getDSCTHoaDonPhongTheoMaPhong(dsPhong.getSelectionModel().getSelectedItem().toString()).getLast();
         PhieuDatPhong phieuDatPhong = phieuDatPhongDAO.layPhieuDatPhongTheoMa(cthdp.getMaPhieu());
 
-        if (phieuDatPhong.getNgayDi().isAfter(LocalDate.now())) {
+        if (phieuDatPhong.getNgayDi().isAfter(LocalDate.now())&&phieuDatPhong.getTrangThai().equals(TrangThaiPhieuDatPhong.DANG_SU_DUNG)) {
 
             // Setup và lưu Phiếu Dịch Vụ chính
             AuthService auth = AuthService.getInstance();
