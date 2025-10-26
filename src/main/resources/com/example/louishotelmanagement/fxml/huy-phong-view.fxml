@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
@@ -36,6 +37,19 @@
                             <ComboBox fx:id="dsKhachHang" prefHeight="30.0" prefWidth="670.0" />
                         </children>
                     </HBox>
+               <HBox alignment="CENTER" prefHeight="37.0" prefWidth="880.0">
+                  <children>
+                     <Label prefWidth="137.6" text="Phiếu">
+                        <font>
+                           <Font size="18.0" />
+                        </font>
+                        <HBox.margin>
+                           <Insets right="30.0" />
+                        </HBox.margin>
+                     </Label>
+                     <ComboBox fx:id="dsPhieu" prefHeight="30.0" prefWidth="670.0" promptText="Danh sách phiếu theo khách hàng" />
+                  </children>
+               </HBox>
                     <HBox alignment="CENTER" prefHeight="37.0" prefWidth="880.0">
                         <children>
                             <Label prefWidth="137.6" text="Phòng thuê">
@@ -46,7 +60,7 @@
                                     <Insets right="30.0" />
                                 </HBox.margin>
                             </Label>
-                            <ComboBox fx:id="dsPhong" prefHeight="30.0" prefWidth="670.0" promptText="Chọn 1 phòng hoặc Tất cả phòng" />
+                            <ComboBox fx:id="dsPhong" prefHeight="30.0" prefWidth="670.0" promptText="Tất cả phòng của phiếu" />
                         </children>
                     </HBox>
                     <HBox alignment="CENTER" prefHeight="37.0" prefWidth="880.0">
@@ -59,7 +73,7 @@
                                     <Insets right="30.0" />
                                 </HBox.margin>
                             </Label>
-                            <TextField fx:id="ngayTraPhong" editable="false" prefHeight="30.0" prefWidth="670.0" promptText="Ngày hiện tại hoặc ngày trả thực tế" />
+                     <DatePicker fx:id="ngayTraPhong" prefHeight="26.0" prefWidth="670.0" />
                         </children>
                     </HBox>
                     <HBox alignment="CENTER" prefHeight="49.0" prefWidth="880.0">
@@ -71,7 +85,7 @@
 
                 <HBox alignment="CENTER" prefHeight="420.0" prefWidth="880.0" spacing="20.0">
                     <children>
-                        <VBox alignment="TOP_CENTER" prefHeight="400.0" prefWidth="480.0" spacing="10.0" style="-fx-background-color: white; -fx-padding: 15; -fx-border-radius: 10; -fx-background-radius: 10;">
+                        <VBox alignment="TOP_CENTER" prefHeight="379.0" prefWidth="649.0" spacing="10.0" style="-fx-background-color: white; -fx-padding: 15; -fx-border-radius: 10; -fx-background-radius: 10;">
                             <Label style="-fx-font-size: 24px;-fx-font-weight: 700" text="Thông tin Phiếu thuê">
                                 <VBox.margin>
                                     <Insets bottom="5.0" />
@@ -81,75 +95,32 @@
                             <HBox alignment="CENTER" prefHeight="35.0" prefWidth="440.0">
                                 <children>
                                     <Label prefWidth="120.0" style="-fx-font-size: 16px" text="Họ và tên KH:" />
-                                    <TextField fx:id="hoTen" editable="false" prefHeight="30.0" prefWidth="300.0" />
+                                    <TextField fx:id="hoTen" editable="false" prefHeight="30.0" prefWidth="446.0" />
                                 </children>
                             </HBox>
 
                             <HBox alignment="CENTER" prefHeight="35.0" prefWidth="440.0">
                                 <children>
                                     <Label prefWidth="120.0" style="-fx-font-size: 16px" text="Mã phiếu thuê:" />
-                                    <TextField fx:id="maPhieuThue" editable="false" prefHeight="30.0" prefWidth="300.0" />
+                                    <TextField fx:id="maPhieuThue" editable="false" prefHeight="30.0" prefWidth="446.0" />
                                 </children>
                             </HBox>
 
                             <HBox alignment="CENTER" prefHeight="35.0" prefWidth="440.0">
                                 <children>
                                     <Label prefWidth="120.0" style="-fx-font-size: 16px" text="Ngày Check-in:" />
-                                    <TextField fx:id="ngayDen" editable="false" prefHeight="30.0" prefWidth="300.0" />
+                                    <TextField fx:id="ngayDen" editable="false" prefHeight="30.0" prefWidth="446.0" />
                                 </children>
                             </HBox>
 
                             <HBox alignment="CENTER" prefHeight="35.0" prefWidth="440.0">
                                 <children>
                                     <Label prefWidth="120.0" style="-fx-font-size: 16px" text="Số lượng phòng:" />
-                                    <TextField fx:id="soLuongPhong" editable="false" prefHeight="30.0" prefWidth="300.0" />
+                                    <TextField fx:id="soLuongPhong" editable="false" prefHeight="30.0" prefWidth="446.0" />
                                 </children>
                             </HBox>
-
-                            <Label fx:id="lblCheDo" style="-fx-font-size: 14px; -fx-font-weight: 700; -fx-text-fill: blue;" text="Chế độ: Đang chọn 1 phòng">
-                                <VBox.margin>
-                                    <Insets bottom="10.0" />
-                                </VBox.margin>
-                            </Label>
 
                             <Button fx:id="btnXemChiTiet" disable="true" mnemonicParsing="false" onAction="#handleXemChiTiet" prefHeight="30.0" prefWidth="250.0" style="-fx-background-color: #F0A000;-fx-text-fill: white;-fx-font-size: 16px" text="Xem chi tiết từng phòng" />
-                        </VBox>
-
-                        <VBox alignment="TOP_CENTER" prefHeight="400.0" prefWidth="480.0" spacing="10.0" style="-fx-background-color: white; -fx-padding: 15; -fx-border-radius: 10; -fx-background-radius: 10;">
-                            <Label style="-fx-font-size: 24px;-fx-font-weight: 700" text="Tổng chi phí hóa đơn">
-                                <VBox.margin>
-                                    <Insets bottom="5.0" />
-                                </VBox.margin>
-                            </Label>
-
-                            <HBox alignment="CENTER" prefHeight="35.0" prefWidth="440.0">
-                                <children>
-                                    <Label prefWidth="140.0" style="-fx-font-size: 16px" text="Tổng tiền phòng:" />
-                                    <TextField fx:id="tongTienPhong" editable="false" prefHeight="30.0" prefWidth="280.0" style="-fx-font-weight: bold;" />
-                                </children>
-                            </HBox>
-                            <HBox alignment="CENTER" prefHeight="35.0" prefWidth="440.0">
-                                <children>
-                                    <Label prefWidth="140.0" style="-fx-font-size: 16px" text="Tiền dịch vụ:" />
-                                    <TextField fx:id="tienDichVu" editable="false" prefHeight="30.0" prefWidth="280.0" style="-fx-font-weight: bold;" />
-                                </children>
-                            </HBox>
-                            <HBox alignment="CENTER" prefHeight="35.0" prefWidth="440.0">
-                                <children>
-                                    <Label prefWidth="140.0" style="-fx-font-size: 16px" text="Giảm giá/Phụ phí:" />
-                                    <TextField fx:id="giamGia" editable="false" prefHeight="30.0" prefWidth="280.0" />
-                                </children>
-                            </HBox>
-
-                            <HBox alignment="CENTER" prefHeight="35.0" prefWidth="440.0" style="-fx-border-color: black; -fx-border-width: 0 0 1 0;">
-                                <children>
-                                    <Label prefWidth="140.0" style="-fx-font-size: 20px; -fx-font-weight: bold;" text="TỔNG CỘNG:" />
-                                    <TextField fx:id="tongCong" editable="false" prefHeight="30.0" prefWidth="280.0" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: red;" />
-                                </children>
-                        <VBox.margin>
-                           <Insets bottom="10.0" />
-                        </VBox.margin>
-                            </HBox>
                         </VBox>
                     </children>
                     <VBox.margin>

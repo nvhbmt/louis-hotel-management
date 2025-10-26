@@ -259,7 +259,6 @@ public class DatPhongTaiQuayController implements Initializable,Refreshable {
     }
     // Trong DatPhongController.java
 
-    // ❗ HÀM DATPHONG CŨ ĐÃ BỊ LOẠI BỎ logic tạo phiếu/hóa đơn chính.
 // Nó chỉ còn xử lý việc tạo Chi tiết và cập nhật trạng thái phòng.
     public void ThemChiTietPhong(PhieuDatPhong pdp, HoaDon hd, Phong p) throws SQLException {
         CTHoaDonPhong cthdp = new CTHoaDonPhong(
@@ -287,25 +286,21 @@ public class DatPhongTaiQuayController implements Initializable,Refreshable {
 
             KhachHang newKh = Kdao.layKhachHangTheoMa(dsMaKH.get(dsKhachHang.getSelectionModel().getSelectedIndex()));
 
-            // 1. TẠO MÃ PHIẾU DUY NHẤT
-            Random ran = new Random();
-            do {
-                maPhieu = "PD" + String.valueOf(ran.nextInt(990) + ran.nextInt(9));
-            } while (checkMaPhieu(maPhieu));
 
             AuthService authService = AuthService.getInstance();
             String maNV = authService.getCurrentUser().getNhanVien().getMaNV();
 
             // 2. TẠO VÀ LƯU PHIẾU ĐẶT PHÒNG GỐC (CHỈ 1 LẦN)
             PhieuDatPhong pdp = new PhieuDatPhong(
-                    maPhieu,
+                    pdpDao.sinhMaPhieuTiepTheo(),
                     LocalDate.now(),           // Ngay Lap
                     LocalDate.now(),           // Ngay Den (dự kiến/thực tế đặt)
                     ngayDi.getValue(),         // Ngay Di
                     TrangThaiPhieuDatPhong.DANG_SU_DUNG, // 👈 Trạng thái phải là ĐÃ ĐẶT (DA_DAT)
-                    "Đặt trực tiếp tại quầy",
+                    "Đặt trực tiếp",
                     newKh.getMaKH(),
-                    maNV
+                    maNV,
+                    null
             );
             pdpDao.themPhieuDatPhong(pdp);
 

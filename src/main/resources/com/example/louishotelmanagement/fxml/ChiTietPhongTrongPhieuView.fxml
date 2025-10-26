@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="TOP_CENTER" spacing="15.0" xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.example.louishotelmanagement.controller.ChiTietPhongTrongPhieuController">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+    </padding>
+
+    <Label fx:id="lblMaPhieu" text="Chi Tiết Phòng Đặt">
+        <font>
+            <Font name="System Bold" size="18.0" />
+        </font>
+    </Label>
+
+    <TableView fx:id="tblChiTietPhong" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="colTang" prefWidth="80.0" text="Tầng" />
+
+            <TableColumn fx:id="colMaPhong" prefWidth="120.0" text="Mã Phòng" />
+            <TableColumn fx:id="colTenLoaiPhong" prefWidth="250.0" text="Loại Phòng" />
+            <TableColumn fx:id="colGia" prefWidth="150.0" text="Giá / Đêm" />
+        </columns>
+        <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+        </columnResizePolicy>
+    </TableView>
+
+    <Button mnemonicParsing="false" onAction="#handleClose" text="Đóng" />
+</VBox>

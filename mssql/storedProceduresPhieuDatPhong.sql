@@ -9,12 +9,41 @@ CREATE PROCEDURE sp_ThemPhieuDatPhong
     @trangThai NVARCHAR(50),
     @ghiChu NVARCHAR(255) = NULL,
     @maKH NVARCHAR(10),
-    @maNV NVARCHAR(10)
+    @maNV NVARCHAR(10),
+    @tienCoc DECIMAL(18, 2) = 0.00 -- THÊM THAM SỐ TIỀN CỌC
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO PhieuDatPhong(maPhieu, ngayDat, ngayDen, ngayDi, trangThai, ghiChu, maKH, maNV)
-    VALUES (@maPhieu, @ngayDat, @ngayDen, @ngayDi, @trangThai, @ghiChu, @maKH, @maNV);
+    INSERT INTO PhieuDatPhong(maPhieu, ngayDat, ngayDen, ngayDi, trangThai, ghiChu, maKH, maNV, tienCoc)
+    VALUES (@maPhieu, @ngayDat, @ngayDen, @ngayDi, @trangThai, @ghiChu, @maKH, @maNV, @tienCoc);
+END;
+GO
+
+-- =============================================
+-- sp_SinhMaPhieuDatPhongTiepTheo (Giữ nguyên logic)
+-- =============================================
+CREATE PROCEDURE sp_SinhMaPhieuDatPhongTiepTheo
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @maPhieuCuoi NVARCHAR(10);
+    DECLARE @soMoi INT;
+    DECLARE @maMoi NVARCHAR(10);
+
+    SELECT @maPhieuCuoi = MAX(maPhieu) FROM PhieuDatPhong;
+
+    IF @maPhieuCuoi IS NULL
+        BEGIN
+            SET @maMoi = 'PD001';
+        END
+    ELSE
+        BEGIN
+            SET @soMoi = CAST(SUBSTRING(@maPhieuCuoi, 4, LEN(@maPhieuCuoi) - 3) AS INT) + 1;
+            SET @maMoi = 'PD' + RIGHT('000' + CAST(@soMoi AS NVARCHAR(3)), 3);
+        END
+
+    SELECT @maMoi AS maPhieuMoi;
 END;
 GO
 
@@ -25,7 +54,7 @@ CREATE PROCEDURE sp_LayDSPhieuDatPhong
 AS
 BEGIN
     SET NOCOUNT ON;
-    SELECT maPhieu, ngayDat, ngayDen, ngayDi, trangThai, ghiChu, maKH, maNV
+    SELECT maPhieu, ngayDat, ngayDen, ngayDi, trangThai, ghiChu, maKH, maNV, tienCoc -- THÊM tienCoc
     FROM PhieuDatPhong
     ORDER BY ngayDat DESC;
 END;
@@ -39,7 +68,7 @@ CREATE PROCEDURE sp_LayPhieuDatPhongTheoMa
 AS
 BEGIN
     SET NOCOUNT ON;
-    SELECT maPhieu, ngayDat, ngayDen, ngayDi, trangThai, ghiChu, maKH, maNV
+    SELECT maPhieu, ngayDat, ngayDen, ngayDi, trangThai, ghiChu, maKH, maNV, tienCoc -- THÊM tienCoc
     FROM PhieuDatPhong
     WHERE maPhieu = @maPhieu;
 END;
@@ -53,7 +82,7 @@ CREATE PROCEDURE sp_LayDSPhieuDatPhongTheoKhachHang
 AS
 BEGIN
     SET NOCOUNT ON;
-    SELECT maPhieu, ngayDat, ngayDen, ngayDi, trangThai, ghiChu, maKH, maNV
+    SELECT maPhieu, ngayDat, ngayDen, ngayDi, trangThai, ghiChu, maKH, maNV, tienCoc -- THÊM tienCoc
     FROM PhieuDatPhong
     WHERE maKH = @maKH
     ORDER BY ngayDat DESC;
@@ -68,7 +97,7 @@ CREATE PROCEDURE sp_LayDSPhieuDatPhongTheoNhanVien
 AS
 BEGIN
     SET NOCOUNT ON;
-    SELECT maPhieu, ngayDat, ngayDen, ngayDi, trangThai, ghiChu, maKH, maNV
+    SELECT maPhieu, ngayDat, ngayDen, ngayDi, trangThai, ghiChu, maKH, maNV, tienCoc -- THÊM tienCoc
     FROM PhieuDatPhong
     WHERE maNV = @maNV
     ORDER BY ngayDat DESC;
@@ -83,7 +112,7 @@ CREATE PROCEDURE sp_LayDSPhieuDatPhongTheoTrangThai
 AS
 BEGIN
     SET NOCOUNT ON;
-    SELECT maPhieu, ngayDat, ngayDen, ngayDi, trangThai, ghiChu, maKH, maNV
+    SELECT maPhieu, ngayDat, ngayDen, ngayDi, trangThai, ghiChu, maKH, maNV, tienCoc -- THÊM tienCoc
     FROM PhieuDatPhong
     WHERE trangThai = @trangThai
     ORDER BY ngayDat DESC;
@@ -99,7 +128,7 @@ CREATE PROCEDURE sp_LayDSPhieuDatPhongTrongKhoangThoiGian
 AS
 BEGIN
     SET NOCOUNT ON;
-    SELECT maPhieu, ngayDat, ngayDen, ngayDi, trangThai, ghiChu, maKH, maNV
+    SELECT maPhieu, ngayDat, ngayDen, ngayDi, trangThai, ghiChu, maKH, maNV, tienCoc -- THÊM tienCoc
     FROM PhieuDatPhong
     WHERE ngayDat BETWEEN @ngayBatDau AND @ngayKetThuc
     ORDER BY ngayDat DESC;
@@ -117,7 +146,8 @@ CREATE PROCEDURE sp_CapNhatPhieuDatPhong
     @trangThai NVARCHAR(50),
     @ghiChu NVARCHAR(255) = NULL,
     @maKH NVARCHAR(10),
-    @maNV NVARCHAR(10)
+    @maNV NVARCHAR(10),
+    @tienCoc DECIMAL(18, 2) = NULL -- THÊM THAM SỐ TIỀN CỌC
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -128,13 +158,14 @@ BEGIN
         trangThai = @trangThai,
         ghiChu = @ghiChu,
         maKH = @maKH,
-        maNV = @maNV
+        maNV = @maNV,
+        tienCoc = @tienCoc -- CẬP NHẬT TIỀN CỌC
     WHERE maPhieu = @maPhieu;
 END;
 GO
 
 -- =============================================
--- 9. Cập nhật trạng thái phiếu đặt phòng
+-- 9. Cập nhật trạng thái phiếu đặt phòng (Giữ nguyên)
 -- =============================================
 CREATE PROCEDURE sp_CapNhatTrangThaiPhieuDatPhong
     @maPhieu NVARCHAR(10),
@@ -149,7 +180,7 @@ END;
 GO
 
 -- =============================================
--- 10. Xóa phiếu đặt phòng
+-- 10. Xóa phiếu đặt phòng (Giữ nguyên)
 -- =============================================
 CREATE PROCEDURE sp_XoaPhieuDatPhong
 @maPhieu NVARCHAR(10)
