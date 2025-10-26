@@ -222,9 +222,9 @@ BEGIN
         ISNULL(SUM(cthdp.thanhTien), 0) as tongDoanhThu
     FROM Phong p
         LEFT JOIN LoaiPhong lp ON p.maLoaiPhong = lp.maLoaiPhong
-        LEFT JOIN CTPhieuDatPhong ctpdp ON p.maPhong = ctpdp.maPhong
+        LEFT JOIN CTHoaDonPhong ctpdp ON p.maPhong = ctpdp.maPhong
         LEFT JOIN PhieuDatPhong pdp ON ctpdp.maPhieu = pdp.maPhieu
-        LEFT JOIN HoaDon hd ON pdp.maPhieu = hd.maPhieu
+        LEFT JOIN HoaDon hd ON pdp.maPhieu = hd.maHD
         LEFT JOIN CTHoaDonPhong cthdp ON hd.maHD = cthdp.maHD AND cthdp.maPhong = p.maPhong
     WHERE pdp.ngayDat BETWEEN @tuNgay AND @denNgay
     GROUP BY p.maPhong, lp.tenLoai
@@ -309,9 +309,10 @@ AS
 BEGIN
     SELECT
         COUNT(*) as tongSoDatPhong,
-        SUM(CASE WHEN trangThai = N'Hủy' THEN 1 ELSE 0 END) as soPhongHuy,
-        CAST(SUM(CASE WHEN trangThai = N'Hủy' THEN 1 ELSE 0 END) * 100.0 / COUNT(*) AS DECIMAL(5,2)) as tyLeHuy
-    FROM PhieuDatPhong
-    WHERE ngayDat BETWEEN @tuNgay AND @denNgay;
+        SUM(CASE WHEN pdp.trangThai = N'Hủy' THEN 1 ELSE 0 END) as soPhongHuy,
+        CAST(SUM(CASE WHEN pdp.trangThai = N'Hủy' THEN 1 ELSE 0 END) * 100.0 / COUNT(*) AS DECIMAL(5,2)) as tyLeHuy
+    FROM CTHoaDonPhong cthdp
+        INNER JOIN PhieuDatPhong pdp ON cthdp.maPhieu = pdp.maPhieu
+    WHERE pdp.ngayDat BETWEEN @tuNgay AND @denNgay;
 END;
 GO

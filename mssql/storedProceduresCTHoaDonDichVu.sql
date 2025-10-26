@@ -12,8 +12,10 @@ CREATE PROCEDURE sp_ThemCTHoaDonDichVu
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO CTHoaDonDichVu(maHD, maPhieuDV, maDV, soLuong, donGia)
-    VALUES (@maHD, @maPhieuDV, @maDV, @soLuong, @donGia);
+    INSERT INTO CTHoaDonDichVu
+        (maHD, maPhieuDV, maDV, soLuong, donGia)
+    VALUES
+        (@maHD, @maPhieuDV, @maDV, @soLuong, @donGia);
 END;
 GO
 
@@ -47,7 +49,7 @@ GO
 
 -- 4️⃣ Lấy danh sách chi tiết dịch vụ theo hóa đơn
 CREATE PROCEDURE sp_LayCTHoaDonDichVuTheoMaHD
-@maHD NVARCHAR(10)
+    @maHD NVARCHAR(10)
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -59,7 +61,7 @@ GO
 
 -- 5️⃣ Tính tổng tiền dịch vụ của hóa đơn
 CREATE PROCEDURE sp_TinhTongTienDichVu
-@maHD NVARCHAR(10)
+    @maHD NVARCHAR(10)
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -85,7 +87,7 @@ BEGIN
         donGia,
         thanhTien
     FROM
-        dbo.CTHoaDonDichVu
+        CTHoaDonDichVu
     WHERE
       -- Sử dụng LTRIM/RTRIM để loại bỏ khoảng trắng thừa nếu có,
       -- tăng cường khả năng tìm kiếm chính xác
@@ -101,7 +103,7 @@ AS
 BEGIN
     -- KHÔNG DÙNG SET NOCOUNT ON;
 
-    UPDATE dbo.CTHoaDonDichVu
+    UPDATE CTHoaDonDichVu
     SET
         soLuong = @SoLuongMoi
     WHERE
