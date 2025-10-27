@@ -31,14 +31,21 @@
                             <children>
                                 <VBox prefHeight="53.0" prefWidth="487.0" HBox.hgrow="ALWAYS">
                                     <children>
-                                        <Label styleClass="main-header" text="Quản Lý Mã Giảm Giá" />
+                                        <Label styleClass="main-header" text="Quản Lý Mã Giảm Giá">
+                                 <graphic>
+                                    <ImageView fitHeight="67.0" fitWidth="77.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../image/coupon.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic></Label>
                                         <Label prefHeight="20.0" prefWidth="450.0" styleClass="main-subtitle" text="Quản lý các mã giảm giá và khuyến mãi trong khách sạn" />
                                     </children>
                                 </VBox>
                                 <Region HBox.hgrow="ALWAYS" />
                                 <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
                                     <children>
-                                        <Button onAction="#handleThemMaGiamGia" mnemonicParsing="false" prefHeight="37.0" prefWidth="144.0" styleClass="btn-them-khach-hang" text="➕ Thêm mã giảm giá">
+                                        <Button mnemonicParsing="false" onAction="#handleThemMaGiamGia" prefHeight="37.0" prefWidth="144.0" styleClass="btn-them-khach-hang" text="➕ Thêm mã giảm giá">
                                             <font>
                                                 <Font name="System Bold" size="12.0" />
                                             </font>
@@ -129,11 +136,11 @@
                     <children>
                         <TextField fx:id="txtTimKiem" maxWidth="Infinity" prefHeight="41.0" prefWidth="200.0" promptText="Nhập mã giảm giá..." style="-fx-border-color: #B0C4DE; -fx-border-radius: 15; -fx-background-radius: 15;" styleClass="form-field" HBox.hgrow="ALWAYS" />
 
-                        <ComboBox fx:id="cbKieuGiamGia" onAction="#handleLocKieuGiamGia" maxWidth="Infinity" prefHeight="41.0" prefWidth="150.0" promptText="Tất cả kiểu giảm giá" style="-fx-background-radius: 15; -fx-background-color: #F5F9FF; -fx-border-color: #B0C4DE; -fx-border-radius: 15;" styleClass="hover-effect" HBox.hgrow="ALWAYS" />
+                        <ComboBox fx:id="cbKieuGiamGia" maxWidth="Infinity" onAction="#handleLocKieuGiamGia" prefHeight="41.0" prefWidth="150.0" promptText="Tất cả kiểu giảm giá" style="-fx-background-radius: 15; -fx-background-color: #F5F9FF; -fx-border-color: #B0C4DE; -fx-border-radius: 15;" styleClass="hover-effect" HBox.hgrow="ALWAYS" />
 
-                        <ComboBox fx:id="cbTrangThai" onAction="#handleLocTrangThai" maxWidth="Infinity" prefHeight="41.0" prefWidth="150.0" promptText="Tất cả trạng thái" style="-fx-background-radius: 15; -fx-background-color: #F5F9FF; -fx-border-color: #B0C4DE; -fx-border-radius: 15;" styleClass="hover-effect" HBox.hgrow="ALWAYS" />
+                        <ComboBox fx:id="cbTrangThai" maxWidth="Infinity" onAction="#handleLocTrangThai" prefHeight="41.0" prefWidth="150.0" promptText="Tất cả trạng thái" style="-fx-background-radius: 15; -fx-background-color: #F5F9FF; -fx-border-color: #B0C4DE; -fx-border-radius: 15;" styleClass="hover-effect" HBox.hgrow="ALWAYS" />
 
-                        <Button fx:id="btnLamMoi" onAction="#handleLamMoi" maxWidth="Infinity" mnemonicParsing="false" prefHeight="37.0" prefWidth="150.0" styleClass="btn-lam-moi" text="🔄 Làm Mới" HBox.hgrow="ALWAYS">
+                        <Button fx:id="btnLamMoi" maxWidth="Infinity" mnemonicParsing="false" onAction="#handleLamMoi" prefHeight="37.0" prefWidth="150.0" styleClass="btn-lam-moi" text="🔄 Làm Mới" HBox.hgrow="ALWAYS">
                             <font>
                                 <Font name="System Bold" size="12.0" />
                             </font>

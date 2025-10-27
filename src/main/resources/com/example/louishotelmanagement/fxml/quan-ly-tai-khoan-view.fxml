@@ -7,6 +7,8 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -14,7 +16,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane fx:id="rootPane" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.QuanLyTaiKhoanController">
+<BorderPane fx:id="rootPane" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.QuanLyTaiKhoanController">
     <center>
         <!-- Main Content Area -->
         <VBox prefHeight="800.0" prefWidth="950.0" spacing="20.0" styleClass="main-content">
@@ -31,7 +33,14 @@
                <children>
                         <VBox prefHeight="53.0" prefWidth="487.0">
                             <children>
-                                <Label styleClass="main-header" text="Quản Lý Tài Khoản" />
+                                <Label styleClass="main-header" text="Quản Lý Tài Khoản">
+                           <graphic>
+                              <ImageView fitHeight="65.0" fitWidth="68.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../image/user.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic></Label>
                                 <Label prefHeight="20.0" prefWidth="450.0" styleClass="main-subtitle" text="Quản lý tài khoản đăng nhập của nhân viên" />
                             </children>
                         </VBox>
@@ -62,26 +71,78 @@
                 <children>
                     <VBox prefHeight="200.0" prefWidth="100.0" styleClass="stat-card-border">
                         <children>
-                            <Label styleClass="stat-label" text="Tổng số tài khoản" />
-                            <Label fx:id="lblTongTaiKhoan" styleClass="stat-value" text="0" />
+                     <HBox prefHeight="100.0" prefWidth="200.0">
+                        <children>
+                           <VBox prefHeight="200.0" prefWidth="126.0">
+                              <children>
+                                        <Label styleClass="stat-label" text="Tổng số tài khoản" />
+                                        <Label fx:id="lblTongTaiKhoan" styleClass="stat-value" text="0" />
+                              </children>
+                           </VBox>
+                           <ImageView fitHeight="60.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true">
+                              <image>
+                                 <Image url="@../image/profile.png" />
+                              </image>
+                           </ImageView>
+                        </children>
+                     </HBox>
                         </children>
                     </VBox>
                     <VBox layoutX="10.0" layoutY="-27.0" prefHeight="200.0" prefWidth="100.0" styleClass="stat-card-border" GridPane.columnIndex="1">
                         <children>
-                            <Label styleClass="stat-label" text="Tài khoản hoạt động" />
-                            <Label fx:id="lblTaiKhoanHoatDong" styleClass="stat-value" text="0" />
+                     <HBox prefHeight="100.0" prefWidth="200.0">
+                        <children>
+                           <VBox prefHeight="200.0" prefWidth="126.0">
+                              <children>
+                                        <Label styleClass="stat-label" text="Tài khoản hoạt động" />
+                                        <Label fx:id="lblTaiKhoanHoatDong" styleClass="stat-value" text="0" />
+                              </children>
+                           </VBox>
+                           <ImageView fitHeight="60.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true">
+                              <image>
+                                 <Image url="@../image/accountant.png" />
+                              </image>
+                           </ImageView>
+                        </children>
+                     </HBox>
                         </children>
                     </VBox>
                     <VBox layoutX="238.0" layoutY="-27.0" prefHeight="200.0" prefWidth="100.0" styleClass="stat-card-border" GridPane.columnIndex="2">
                         <children>
-                            <Label styleClass="stat-label" text="Tài khoản bị khóa" />
-                            <Label fx:id="lblTaiKhoanBiKhoa" styleClass="stat-value" text="0" />
+                     <HBox prefHeight="100.0" prefWidth="200.0">
+                        <children>
+                           <VBox prefHeight="200.0" prefWidth="126.0">
+                              <children>
+                                        <Label styleClass="stat-label" text="Tài khoản bị khóa" />
+                                        <Label fx:id="lblTaiKhoanBiKhoa" styleClass="stat-value" text="0" />
+                              </children>
+                           </VBox>
+                           <ImageView fitHeight="60.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true">
+                              <image>
+                                 <Image url="@../image/ban.png" />
+                              </image>
+                           </ImageView>
+                        </children>
+                     </HBox>
                         </children>
                     </VBox>
                     <VBox layoutX="10.0" layoutY="-27.0" prefHeight="200.0" prefWidth="100.0" styleClass="stat-card-border" GridPane.columnIndex="3">
                         <children>
-                            <Label styleClass="stat-label" text="Tài khoản Manager" />
-                            <Label fx:id="lblTaiKhoanManager" styleClass="stat-value" text="0" />
+                     <HBox prefHeight="100.0" prefWidth="200.0">
+                        <children>
+                           <VBox prefHeight="200.0" prefWidth="126.0">
+                              <children>
+                                        <Label styleClass="stat-label" text="Tài khoản Manager" />
+                                        <Label fx:id="lblTaiKhoanManager" styleClass="stat-value" text="0" />
+                              </children>
+                           </VBox>
+                           <ImageView fitHeight="60.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true">
+                              <image>
+                                 <Image url="@../image/steward.png" />
+                              </image>
+                           </ImageView>
+                        </children>
+                     </HBox>
                         </children>
                     </VBox>
                 </children>
