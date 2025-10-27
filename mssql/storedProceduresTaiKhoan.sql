@@ -88,3 +88,21 @@ BEGIN
       AND trangThai = 'Hoạt động';
 END
 GO
+
+-- 7. Lấy mã tài khoản tiếp theo
+CREATE PROCEDURE sp_LayMaTKTiepTheo @maTKTiepTheo NVARCHAR(10) OUTPUT
+AS
+BEGIN
+    DECLARE @maxSo INT = 0;
+
+    -- Lấy số lớn nhất từ các mã TK hiện có
+    SELECT @maxSo = ISNULL(MAX(CAST(SUBSTRING(maTK, 3, LEN(maTK) - 2) AS INT)), 0)
+    FROM TaiKhoan
+    WHERE maTK LIKE 'TK%'
+      AND LEN(maTK) >= 3
+      AND ISNUMERIC(SUBSTRING(maTK, 3, LEN(maTK) - 2)) = 1;
+
+    -- Tạo mã TK tiếp theo
+    SET @maTKTiepTheo = 'TK' + RIGHT('000' + CAST(@maxSo + 1 AS VARCHAR(3)), 3);
+END
+GO

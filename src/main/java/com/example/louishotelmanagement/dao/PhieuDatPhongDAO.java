@@ -4,7 +4,6 @@ import com.example.louishotelmanagement.config.CauHinhDatabase;
 import com.example.louishotelmanagement.model.PhieuDatPhong;
 import com.example.louishotelmanagement.model.TrangThaiPhieuDatPhong;
 
-import java.math.BigDecimal;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;

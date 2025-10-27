@@ -31,7 +31,14 @@
                             <children>
                                 <VBox prefHeight="53.0" prefWidth="487.0" HBox.hgrow="ALWAYS">
                                     <children>
-                                        <Label styleClass="main-header" text="Quản Lý Khách Hàng" />
+                                        <Label styleClass="main-header" text="Quản Lý Khách Hàng">
+                                 <graphic>
+                                    <ImageView fitHeight="64.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../image/detective.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic></Label>
                                         <Label prefHeight="20.0" prefWidth="450.0" styleClass="main-subtitle" text="Quản lý thông tin khách hàng đã và đang sử dụng dịch vụ khách sạn" />
                                     </children>
                                 </VBox>
