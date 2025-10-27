@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="864.0" prefWidth="1014.4" stylesheets="@../css/nhan-phong.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.NhanPhongController">
+<BorderPane prefHeight="864.0" prefWidth="1014.4" stylesheets="@../css/nhan-phong.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.NhanPhongController">
     <center>
         <VBox styleClass="info-section" BorderPane.alignment="CENTER">
             <children>
@@ -105,36 +105,36 @@
         </VBox>
     </center>
     <bottom>
-        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="880.0" BorderPane.alignment="CENTER">
+        <HBox alignment="CENTER" prefHeight="108.0" prefWidth="1014.0" BorderPane.alignment="CENTER">
             <children>
                 <Button fx:id="btnNhanPhong" onAction="#handleNhanPhong" styleClass="button-base" text="Nhận phòng" />
             </children>
         </HBox>
     </bottom>
-   <top>
-      <VBox prefHeight="101.0" prefWidth="1014.0" BorderPane.alignment="CENTER">
-         <children>
-              <Label styleClass="header-title" text="Nhận phòng">
-                  <graphic>
-                      <ImageView pickOnBounds="true" preserveRatio="true" styleClass="header-icon">
-                          <image>
-                              <Image url="@../image/suitcases.png" />
-                          </image>
-                      </ImageView>
-                  </graphic>
-               <VBox.margin>
-                  <Insets bottom="10.0" />
-               </VBox.margin>
-              </Label>
-            <Label text="Thực hiện chức năng nhận phòng cho khách" textFill="#7f8c8d">
-               <font>
-                  <Font size="14.0" />
-               </font>
-               <VBox.margin>
-                  <Insets left="40.0" />
-               </VBox.margin>
-            </Label>
-         </children>
-      </VBox>
-   </top>
+    <top>
+        <VBox prefHeight="86.0" prefWidth="1014.0" BorderPane.alignment="CENTER">
+            <children>
+                <Label styleClass="header-title" text="Nhận phòng">
+                    <graphic>
+                        <ImageView pickOnBounds="true" preserveRatio="true" styleClass="header-icon">
+                            <image>
+                                <Image url="@../image/suitcases.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                    <VBox.margin>
+                        <Insets bottom="10.0" />
+                    </VBox.margin>
+                </Label>
+                <Label text="Thực hiện chức năng nhận phòng cho khách" textFill="#7f8c8d">
+                    <font>
+                        <Font size="14.0" />
+                    </font>
+                    <VBox.margin>
+                        <Insets left="40.0" />
+                    </VBox.margin>
+                </Label>
+            </children>
+        </VBox>
+    </top>
 </BorderPane>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
@@ -7,6 +8,8 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -17,10 +20,23 @@
 
 <BorderPane xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.DatDichVuController">
     <top>
-        <VBox prefHeight="58.0" prefWidth="1054.0" style="-fx-background-color: #f8f9fa; -fx-padding: 30 10 10 10;">
-            <VBox prefHeight="46.0" prefWidth="1034.0" spacing="5.0">
-                <Label style="-fx-font-size: 28px; -fx-font-weight: bold;" text="Đặt Dịch Vụ" textFill="#2c3e50" />
-                <Label style="-fx-font-size: 14px;" text="Thực hiện yêu cầu dịch vụ cho khách hàng" textFill="#7f8c8d" />
+        <VBox prefHeight="58.0" prefWidth="1054.0" style="-fx-background-color: #f8f9fa; -fx-padding: 30 10 10 10;" BorderPane.alignment="TOP_LEFT">
+            <VBox prefHeight="137.0" prefWidth="1034.0" spacing="5.0">
+                <Label style="-fx-font-size: 28px; -fx-font-weight: bold;" text="Đặt Dịch Vụ" textFill="#2c3e50">
+               <graphic>
+                  <ImageView fitHeight="66.0" fitWidth="72.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../image/desk-bell.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin></Label>
+                <Label style="-fx-font-size: 14px;" text="Thực hiện yêu cầu dịch vụ cho khách hàng" textFill="#7f8c8d">
+               <VBox.margin>
+                  <Insets left="70.0" />
+               </VBox.margin></Label>
             </VBox>
         </VBox>
     </top>
@@ -31,6 +47,13 @@
                     <font>
                         <Font size="24.0" />
                     </font>
+               <graphic>
+                  <ImageView fitHeight="33.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../image/receipt_service.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
                 </Label>
 
                 <GridPane hgap="15.0" vgap="15.0">

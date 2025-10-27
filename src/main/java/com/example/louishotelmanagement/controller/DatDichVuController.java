@@ -377,5 +377,6 @@ public class DatDichVuController implements Initializable,Refreshable {
         maPhieuDV = pdvDao.layMaPhieuDichVuTiepTheo();
         capNhatDSDichVuDaDatUI();
         capNhatTongTienTam();
+        txtGhiChu.setText(null);
     }
 }
