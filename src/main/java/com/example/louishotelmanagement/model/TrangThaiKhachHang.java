@@ -23,6 +23,6 @@ public enum TrangThaiKhachHang {
                 }
             }
         }
-        return null; // hoặc ném exception nếu muốn
+        return null;
     }
 }
