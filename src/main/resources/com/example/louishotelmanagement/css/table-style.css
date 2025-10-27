@@ -1,0 +1,32 @@
+/*Background đầu cột*/
+.table-view .column-header-background {
+    -fx-background-color: transparent;
+    -fx-border-color: #b0c4de;
+    -fx-border-width: 1 1 1 1;
+}
+
+.table-view .column-header {
+    -fx-pref-height: 40px;
+    -fx-background-color: #E0FFFF;
+    -fx-border-color: #b0c4de;
+    -fx-border-width: 0.5 0.5 0.5 0.5;
+}
+
+/*Text của đầu cột*/
+.table-view .column-header .label {
+    -fx-font-weight: bold;
+    -fx-alignment: CENTER;
+    -fx-text-fill: #2a2a2a;
+    -fx-font-size: 13px;
+}
+
+/*hover*/
+.table-view .column-header:hover {
+    -fx-background-color: #B2FFFF;
+    -fx-cursor: hand;
+}
+
+/*Chỉnh chiều cao của cell*/
+.table-row-cell {
+    -fx-padding: 6 0 6 0;
+}

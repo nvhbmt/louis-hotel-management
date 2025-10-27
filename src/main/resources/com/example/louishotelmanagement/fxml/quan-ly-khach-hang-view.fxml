@@ -18,7 +18,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="rootPane" stylesheets="@../css/main.css, @../css/quan-ly-khach-hang.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.QuanLyKhachHangController">
+<BorderPane fx:id="rootPane" stylesheets="@../css/main.css, @../css/quan-ly-khach-hang.css, @../css/table-style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.QuanLyKhachHangController">
     <center>
         <VBox alignment="TOP_CENTER" prefHeight="800.0" prefWidth="950.0" spacing="15.0" styleClass="main-content" VBox.vgrow="ALWAYS">
             <children>

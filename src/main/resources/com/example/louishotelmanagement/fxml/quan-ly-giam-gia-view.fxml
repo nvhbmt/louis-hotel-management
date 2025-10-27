@@ -18,7 +18,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="rootPane" stylesheets="@../css/main.css, @../css/quan-ly-khach-hang.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.QuanLyGiamGiaController">
+<BorderPane fx:id="rootPane" stylesheets="@../css/main.css, @../css/quan-ly-khach-hang.css, @../css/table-style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.QuanLyGiamGiaController">
     <center>
         <VBox alignment="TOP_CENTER" prefHeight="800.0" prefWidth="950.0" spacing="15.0" styleClass="main-content" VBox.vgrow="ALWAYS">
             <children>
@@ -149,12 +149,12 @@
                             </columnResizePolicy>
                             <columns>
                                 <TableColumn fx:id="colMaGG" maxWidth="Infinity" minWidth="80.0" prefWidth="98.0" text="Mã Giảm Giá" />
-                                <TableColumn fx:id="colCode" maxWidth="Infinity" minWidth="120.0" prefWidth="143.0" text="Code" />
+                                <TableColumn fx:id="colCode" maxWidth="Infinity" minWidth="100.0" prefWidth="143.0" text="Code" />
                                 <TableColumn fx:id="colGiamGia" maxWidth="Infinity" minWidth="100.0" prefWidth="127.0" text="Giá Trị" />
                                 <TableColumn fx:id="colKieuGiamGia" maxWidth="Infinity" minWidth="97.0" prefWidth="97.0" text="Kiểu" />
                                 <TableColumn fx:id="colNgayBatDau" maxWidth="Infinity" prefWidth="86.0" text="Ngày Bắt Đầu" />
                                 <TableColumn fx:id="colNgayKetThuc" maxWidth="Infinity" minWidth="89.0" prefWidth="107.0" text="Ngày Kết Thúc" />
-                                <TableColumn fx:id="colTongTienToiThieu" maxWidth="Infinity" minWidth="89.0" prefWidth="108.0" text="Tổng Tiền Tối Thiểu" />
+                                <TableColumn fx:id="colTongTienToiThieu" maxWidth="Infinity" minWidth="129.0" prefWidth="108.0" text="Tổng Tiền Tối Thiểu" />
                                 <TableColumn fx:id="colTrangThai" maxWidth="Infinity" minWidth="125.0" prefWidth="103.0" text="Trạng Thái" />
                                 <TableColumn fx:id="colMoTa" maxWidth="Infinity" minWidth="175.0" prefWidth="303.0" text="Mô Tả" />
                                 <TableColumn fx:id="colThaoTac" maxWidth="Infinity" minWidth="150.0" prefWidth="203.0" text="Thao Tác" />

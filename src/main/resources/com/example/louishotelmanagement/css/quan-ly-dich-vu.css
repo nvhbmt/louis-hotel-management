@@ -67,7 +67,7 @@
 
 /* Price formatting in table cells */
 .table-cell {
-    -fx-alignment: CENTER_RIGHT;
+    -fx-alignment: CENTER-LEFT;
 }
 
 /* Service status indicators */
