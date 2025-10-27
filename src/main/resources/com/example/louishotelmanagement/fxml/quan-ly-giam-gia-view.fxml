@@ -33,7 +33,7 @@
                                     <children>
                                         <Label styleClass="main-header" text="Quản Lý Mã Giảm Giá">
                                  <graphic>
-                                    <ImageView fitHeight="67.0" fitWidth="77.0" pickOnBounds="true" preserveRatio="true">
+                                    <ImageView fitHeight="64.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
                                           <Image url="@../image/coupon.png" />
                                        </image>
