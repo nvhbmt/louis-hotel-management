@@ -12,11 +12,12 @@ import javafx.scene.control.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-
+import javafx.util.StringConverter;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -82,6 +83,42 @@ public class TraPhongController implements Initializable,Refreshable{
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void khoiTaoDinhDangNgay() {
+        // Định dạng ngày tháng mong muốn (ví dụ: 25/10/2025)
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        // Tạo StringConverter tùy chỉnh cho DatePicker
+        StringConverter<LocalDate> converter = new StringConverter<>() {
+            @Override
+            public String toString(LocalDate date) {
+                // Chuyển LocalDate sang String để hiển thị
+                return (date != null) ? formatter.format(date) : "";
+            }
+
+            @Override
+            public LocalDate fromString(String string) {
+                // Chuyển String nhập vào (hoặc từ FXML) sang LocalDate
+                if (string != null && !string.isEmpty()) {
+                    try {
+                        return LocalDate.parse(string, formatter);
+                    } catch (java.time.format.DateTimeParseException e) {
+                        // Xử lý lỗi nếu người dùng nhập sai định dạng
+                        System.err.println("Lỗi định dạng ngày: " + string);
+                        return null;
+                    }
+                }
+                return null;
+            }
+        };
+
+        // Áp dụng converter cho cả hai DatePicker
+        ngayDi.setConverter(converter);
+        ngayDen.setConverter(converter);
+
+        // *Tùy chọn:* Đảm bảo DatePicker có thể hiển thị ngày hôm nay nếu người dùng chưa chọn
+        // ngayDen.setValue(LocalDate.now());
     }
     public void laydsKhachHang() throws  SQLException{
         ArrayList<KhachHang> khs = khDao.layDSKhachHang();
