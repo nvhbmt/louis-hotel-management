@@ -7,6 +7,8 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -21,7 +23,14 @@
       <VBox prefHeight="634.0" prefWidth="851.0" spacing="20.0" style="-fx-background-color: #f8f9fa; box-border-radius: 15%; -fx-padding: 10 15 10 15;" BorderPane.alignment="CENTER">
          <!-- Header -->
          <VBox spacing="5.0">
-            <Label style="-fx-font-size: 28px; -fx-font-weight: bold;" text="Phòng" textFill="#2c3e50" />
+            <Label style="-fx-font-size: 28px; -fx-font-weight: bold;" text="Phòng" textFill="#2c3e50">
+               <graphic>
+                  <ImageView fitHeight="63.0" fitWidth="66.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../image/interior-design.png" />
+                     </image>
+                  </ImageView>
+               </graphic></Label>
             <Label style="-fx-font-size: 14px;" text="Màn hình chính các chức năng phòng" textFill="#7f8c8d" />
          </VBox>
          <GridPane hgap="20.0" prefHeight="80.0">
@@ -37,58 +46,110 @@
             <children>
                <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" style="-fx-border-radius: 10; -fx-border-color: black;">
                   <children>
-                     <Label prefHeight="28.0" prefWidth="106.0" text="Tổng phòng">
-                        <font>
-                           <Font name="System Bold" size="18.0" />
-                        </font>
-                     </Label>
-                     <Label fx:id="lblTongPhong" text="0">
-                        <font>
-                           <Font size="14.0" />
-                        </font>
-                     </Label>
+                     <HBox prefHeight="100.0" prefWidth="200.0">
+                        <children>
+                           <VBox prefHeight="200.0" prefWidth="200.0">
+                              <children>
+                                 <Label prefHeight="28.0" prefWidth="106.0" text="Tổng phòng">
+                                    <font>
+                                       <Font name="System Bold" size="18.0" />
+                                    </font>
+                                 </Label>
+                                 <Label fx:id="lblTongPhong" text="0">
+                                    <font>
+                                       <Font size="14.0" />
+                                    </font>
+                                 </Label>
+                              </children>
+                           </VBox>
+                           <ImageView fitHeight="60.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true">
+                              <image>
+                                 <Image url="@../image/double-bed.png" />
+                              </image>
+                           </ImageView>
+                        </children>
+                     </HBox>
                   </children>
                </VBox>
                <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" style="-fx-border-color: black; -fx-border-radius: 10;" GridPane.columnIndex="1">
                   <children>
-                     <Label text="Phòng Trống">
-                        <font>
-                           <Font name="System Bold" size="18.0" />
-                        </font>
-                     </Label>
-                     <Label fx:id="lblPhongTrong" text="0">
-                        <font>
-                           <Font size="14.0" />
-                        </font>
-                     </Label>
+                     <HBox prefHeight="100.0" prefWidth="200.0">
+                        <children>
+                           <VBox prefHeight="200.0" prefWidth="200.0">
+                              <children>
+                                 <Label text="Phòng Trống">
+                                    <font>
+                                       <Font name="System Bold" size="18.0" />
+                                    </font>
+                                 </Label>
+                                 <Label fx:id="lblPhongTrong" text="0">
+                                    <font>
+                                       <Font size="14.0" />
+                                    </font>
+                                 </Label>
+                              </children>
+                           </VBox>
+                           <ImageView fitHeight="60.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true">
+                              <image>
+                                 <Image url="@../image/door-open.png" />
+                              </image>
+                           </ImageView>
+                        </children>
+                     </HBox>
                   </children>
                </VBox>
                <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" style="-fx-border-color: black; -fx-border-radius: 10;" GridPane.columnIndex="2">
                   <children>
-                     <Label text="Phòng sử dụng">
-                        <font>
-                           <Font name="System Bold" size="18.0" />
-                        </font>
-                     </Label>
-                     <Label fx:id="lblPhongSuDung" text="0">
-                        <font>
-                           <Font size="14.0" />
-                        </font>
-                     </Label>
+                     <HBox prefHeight="100.0" prefWidth="200.0">
+                        <children>
+                           <VBox prefHeight="200.0" prefWidth="200.0">
+                              <children>
+                                 <Label text="Phòng sử dụng">
+                                    <font>
+                                       <Font name="System Bold" size="18.0" />
+                                    </font>
+                                 </Label>
+                                 <Label fx:id="lblPhongSuDung" text="0">
+                                    <font>
+                                       <Font size="14.0" />
+                                    </font>
+                                 </Label>
+                              </children>
+                           </VBox>
+                           <ImageView fitHeight="60.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true">
+                              <image>
+                                 <Image url="@../image/key-chain.png" />
+                              </image>
+                           </ImageView>
+                        </children>
+                     </HBox>
                   </children>
                </VBox>
                <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" style="-fx-border-color: black; -fx-border-radius: 10;" GridPane.columnIndex="3">
                   <children>
-                     <Label text="Bảo trì">
-                        <font>
-                           <Font name="System Bold" size="18.0" />
-                        </font>
-                     </Label>
-                     <Label fx:id="lblPhongBaoTri" text="0">
-                        <font>
-                           <Font size="14.0" />
-                        </font>
-                     </Label>
+                     <HBox prefHeight="100.0" prefWidth="200.0">
+                        <children>
+                           <VBox prefHeight="200.0" prefWidth="200.0">
+                              <children>
+                                 <Label text="Bảo trì">
+                                    <font>
+                                       <Font name="System Bold" size="18.0" />
+                                    </font>
+                                 </Label>
+                                 <Label fx:id="lblPhongBaoTri" text="0">
+                                    <font>
+                                       <Font size="14.0" />
+                                    </font>
+                                 </Label>
+                              </children>
+                           </VBox>
+                           <ImageView fitHeight="60.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true">
+                              <image>
+                                 <Image url="@../image/maintenance.png" />
+                              </image>
+                           </ImageView>
+                        </children>
+                     </HBox>
                   </children>
                </VBox>
             </children>

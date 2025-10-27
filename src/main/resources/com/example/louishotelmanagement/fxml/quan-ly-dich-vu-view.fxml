@@ -31,14 +31,21 @@
                             <children>
                                 <VBox prefHeight="53.0" prefWidth="487.0" HBox.hgrow="ALWAYS">
                                     <children>
-                                        <Label styleClass="main-header" text="Quản Lý Dịch Vụ" />
+                                        <Label styleClass="main-header" text="Quản Lý Dịch Vụ">
+                                 <graphic>
+                                    <ImageView fitHeight="63.0" fitWidth="74.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../image/client.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic></Label>
                                         <Label prefHeight="20.0" prefWidth="450.0" styleClass="main-subtitle" text="Quản lý thông tin và trạng thái của dịch vụ trong khách sạn" />
                                     </children>
                                 </VBox>
                                 <Region HBox.hgrow="ALWAYS" />
                                 <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
                                     <children>
-                                        <Button fx:id="btnThemDichVu" onAction="#handleThemDichVu"  mnemonicParsing="false" prefHeight="37.0" prefWidth="144.0" styleClass="btn-them" text="➕ Thêm Dịch Vụ">
+                                        <Button fx:id="btnThemDichVu" mnemonicParsing="false" onAction="#handleThemDichVu" prefHeight="37.0" prefWidth="144.0" styleClass="btn-them" text="➕ Thêm Dịch Vụ">
                                             <font>
                                                 <Font name="System Bold" size="12.0" />
                                             </font>
@@ -131,7 +138,7 @@
 
                         <ComboBox fx:id="cbTrangThaiKinhDoanh" maxWidth="Infinity" prefHeight="41.0" prefWidth="150.0" promptText="Tất cả trạng thái" style="-fx-background-radius: 15; -fx-background-color: #F5F9FF; -fx-border-color: #B0C4DE; -fx-border-radius: 15;" styleClass="hover-effect" HBox.hgrow="ALWAYS" />
 
-                        <Button onAction="#handleLamMoi" maxWidth="Infinity" mnemonicParsing="false" prefHeight="37.0" prefWidth="150.0" styleClass="btn-lam-moi" text="🔄 Làm Mới" HBox.hgrow="ALWAYS">
+                        <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#handleLamMoi" prefHeight="37.0" prefWidth="150.0" styleClass="btn-lam-moi" text="🔄 Làm Mới" HBox.hgrow="ALWAYS">
                             <font>
                                 <Font name="System Bold" size="12.0" />
                             </font>
