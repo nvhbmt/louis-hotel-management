@@ -26,6 +26,7 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.ResourceBundle;
 
@@ -46,6 +47,8 @@ public class DatPhongController implements Initializable, Refreshable{
     @FXML
     public Label TongTien;
     public Button handleThemKhachHang;
+    public ComboBox<Integer> cbTang;
+    public ComboBox<LoaiPhong> cbLocLoaiPhong;
     @FXML
     private TableColumn<Phong, String> colMaPhong;
     @FXML
@@ -68,6 +71,9 @@ public class DatPhongController implements Initializable, Refreshable{
     private CTHoaDonPhongDAO cthdpDao;
     private HoaDonDAO hDao;
     public ArrayList<Phong> listPhongDuocDat = new ArrayList<>();
+    private ObservableList<Phong> danhSachPhong;
+    private ObservableList<Phong> danhSachPhongFiltered;
+    private LoaiPhongDAO loaiPhongDAO;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -76,11 +82,15 @@ public class DatPhongController implements Initializable, Refreshable{
         pdpDao = new PhieuDatPhongDAO();
         cthdpDao = new CTHoaDonPhongDAO();
         hDao = new HoaDonDAO();
-
+        loaiPhongDAO = new LoaiPhongDAO();
         tablePhong.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         try{
+
+            khoiTaoDuLieu();
             khoiTaoTableView();
+            khoiTaoComboBox();
             laydsKhachHang();
+            taiDuLieu();
         }catch (SQLException e){
             e.printStackTrace();
         }
@@ -97,24 +107,6 @@ public class DatPhongController implements Initializable, Refreshable{
     }
 
 
-    public void showAlertError(String header,String message){
-        Alert alert = new  Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Đã xảy ra lỗi");
-        alert.setHeaderText(header);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-    public boolean checkMaPhieu(String maPhieu) throws SQLException {
-        ArrayList<PhieuDatPhong> dsPhieuDatPhong = pdpDao.layDSPhieuDatPhong();
-        ArrayList<String> dsMaPhieu = new ArrayList<>();
-        for(PhieuDatPhong pdph : dsPhieuDatPhong) {
-            dsMaPhieu.add(pdph.getMaPhieu());
-        }
-        if(dsMaPhieu.contains(maPhieu)) {
-            return true;
-        }
-        return false;
-    }
     private void khoiTaoTableView() throws SQLException {
         // Thiết lập các cột
         colMaPhong.setCellValueFactory(new PropertyValueFactory<>("maPhong"));
@@ -219,13 +211,115 @@ public class DatPhongController implements Initializable, Refreshable{
                 }
             }
         });
-        // Thiết lập TableView
-        ArrayList<Phong> dsPhongTrong = Pdao.layDSPhongTrong();
-        ObservableList<Phong> observableListPhong = FXCollections.observableArrayList(dsPhongTrong);
-        tablePhong.setItems(observableListPhong);
-
-        // Cho phép chọn nhiều dòng
+        tablePhong.setItems(danhSachPhongFiltered);
         tablePhong.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+    }
+    private void khoiTaoDuLieu() {
+        danhSachPhong = FXCollections.observableArrayList();
+        danhSachPhongFiltered = FXCollections.observableArrayList();
+    }
+    private void taiDuLieu() {
+        try {
+            // Lấy danh sách phòng từ database
+            List<Phong> dsPhong = Pdao.layDSPhongTrong();
+
+            danhSachPhong.clear();
+            danhSachPhong.addAll(dsPhong);
+
+            // Áp dụng filter hiện tại
+            apDungFilter();
+        } catch (SQLException e) {
+            ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể tải dữ liệu phòng: " + e.getMessage());
+        }
+    }
+    private void apDungFilter() {
+        danhSachPhongFiltered.clear();
+
+        List<Phong> filtered = danhSachPhong.stream()
+                .filter(phong -> {
+                    // Filter theo tầng
+                    Integer tangFilter = cbTang.getValue();
+                    if (tangFilter != null && (phong.getTang() == null || !phong.getTang().equals(tangFilter))) {
+                        return false;
+                    }
+
+                    // Filter theo loại phòng
+                    LoaiPhong loaiPhongFilter = cbLocLoaiPhong.getValue();
+                    return loaiPhongFilter == null || (phong.getLoaiPhong() != null &&
+                            phong.getLoaiPhong().getMaLoaiPhong().equals(loaiPhongFilter.getMaLoaiPhong()));
+                })
+                .toList();
+
+        danhSachPhongFiltered.addAll(filtered);
+    }
+    private void khoiTaoComboBox() {
+        // Khởi tạo ComboBox tầng
+        List<Integer> danhSachTang = new ArrayList<>();
+        for (int i = 1; i <= 10; i++) {
+            danhSachTang.add(i);
+        }
+        cbTang.setItems(FXCollections.observableArrayList(danhSachTang));
+        cbTang.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(Integer item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText("Chọn tầng");
+                } else {
+                    setText("Tầng " + item);
+                }
+            }
+        });
+        cbTang.setCellFactory(_ -> new ListCell<>() {
+            @Override
+            protected void updateItem(Integer item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText("Chọn tầng");
+                } else {
+                    setText("Tầng " + item);
+                }
+            }
+        });
+
+
+        // Khởi tạo ComboBox loại phòng để filter
+        khoiTaoComboBoxLoaiPhong();
+    }
+    private void khoiTaoComboBoxLoaiPhong() {
+        try {
+            List<LoaiPhong> danhSachLoaiPhong = loaiPhongDAO.layDSLoaiPhong();
+
+            // Thiết lập ComboBox để hiển thị tên loại phòng
+            cbLocLoaiPhong.setCellFactory(_ -> new ListCell<>() {
+                @Override
+                protected void updateItem(LoaiPhong item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty || item == null) {
+                        setText("Chọn loại phòng");
+                    } else {
+                        setText(item.getTenLoai());
+                    }
+                }
+            });
+
+            cbLocLoaiPhong.setButtonCell(new ListCell<>() {
+                @Override
+                protected void updateItem(LoaiPhong item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty || item == null) {
+                        setText("Chọn loại phòng");
+                    } else {
+                        setText(item.getTenLoai());
+                    }
+                }
+            });
+
+            cbLocLoaiPhong.setItems(FXCollections.observableArrayList(danhSachLoaiPhong));
+
+        } catch (SQLException e) {
+            ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể tải danh sách loại phòng: " + e.getMessage());
+        }
     }
     public double TinhTongTien(ArrayList<Phong> ls){
         double tongTien = 0;
@@ -253,10 +347,9 @@ public class DatPhongController implements Initializable, Refreshable{
         SoPhongDaChon.setText(null);
         TongTien.setText(null);
         listPhongDuocDat.clear();
-        ArrayList<Phong> dsPhongTrong = Pdao.layDSPhongTrong();
-        ObservableList<Phong> observableListPhong = FXCollections.observableArrayList(dsPhongTrong);
-        tablePhong.setItems(observableListPhong);
-        tablePhong.refresh();
+        cbTang.setValue(null);
+        cbLocLoaiPhong.setValue(null);
+        taiDuLieu();
     }
     public void hienThiPhieuDatPhong(PhieuDatPhong pdp, ArrayList<Phong> dsPhong) {
         try {
@@ -281,7 +374,7 @@ public class DatPhongController implements Initializable, Refreshable{
             e.printStackTrace();
         }
     }
-    // Đặt lớp này bên trong DatPhongController (có thể là một private static inner class)
+    // Tạo 1 private static inner class để dễ sử dụng các thuộc tính mới
     private static class TienCocResult {
         public final BigDecimal tienCoc;
         public final String phuongThucTT;
@@ -306,8 +399,8 @@ public class DatPhongController implements Initializable, Refreshable{
         Stage stage = new Stage();
         stage.setTitle("Xác Nhận Tiền Cọc");
 
-        // 💡 THAY ĐỔI LỚN: Thiết lập kích thước tối thiểu/ban đầu cho Scene
-        Scene scene = new Scene(root, 450, 650); // Tăng chiều cao lên 650
+        //Thiết lập kích thước tối thiểu/ban đầu cho Scene
+        Scene scene = new Scene(root, 450, 650);
 
         stage.setScene(scene);
         stage.initModality(Modality.APPLICATION_MODAL);
@@ -433,5 +526,13 @@ public class DatPhongController implements Initializable, Refreshable{
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+    @FXML
+    private void handleLocTang() {
+        apDungFilter();
+    }
+    @FXML
+    private void handleLocLoaiPhong() {
+        apDungFilter();
     }
 }

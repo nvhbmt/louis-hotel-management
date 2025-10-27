@@ -243,7 +243,7 @@
                            </HBox>
                            <HBox alignment="CENTER" layoutX="40.0" layoutY="180.0" prefHeight="74.0" prefWidth="140.0">
                               <children>
-                                 <Button fx:id="btnHuy" mnemonicParsing="false" onAction="#moHuy" prefHeight="40.0" prefWidth="132.0" style="-fx-background-color: #6F84DA;" text="Hủy đặt" textFill="WHITE" />
+                                 <Button fx:id="btnHuy" mnemonicParsing="false" onAction="#moHuy" prefHeight="40.0" prefWidth="132.0" style="-fx-background-color: #6F84DA;" text="Hủy đặt phòng" textFill="WHITE" />
                               </children>
                            </HBox>
                            <HBox alignment="CENTER" layoutX="40.0" layoutY="218.0" prefHeight="74.0" prefWidth="140.0">

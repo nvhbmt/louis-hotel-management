@@ -126,6 +126,24 @@
                                 <DatePicker fx:id="ngayDi" prefHeight="30.0" prefWidth="609.0" promptText="Chọn ngày trả phòng" />
                             </children>
                         </HBox>
+                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <ComboBox fx:id="cbTang" onAction="#handleLocTang" prefWidth="150.0" promptText="Chọn tầng">
+                           <HBox.margin>
+                              <Insets right="20.0" />
+                           </HBox.margin>
+                        </ComboBox>
+                        <ComboBox fx:id="cbLocLoaiPhong" onAction="#handleLocLoaiPhong" prefHeight="26.0" prefWidth="173.0" promptText="Chọn loại phòng">
+                           <HBox.margin>
+                              <Insets right="20.0" />
+                           </HBox.margin>
+                        </ComboBox>
+                              <Button mnemonicParsing="false" onAction="#handleRefresh" prefHeight="35.0" prefWidth="150.0" style="-fx-background-color: #198754; -fx-text-fill: white;" text="Làm mới" />
+                     </children>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                  </HBox>
                     </children>
                     <VBox.margin>
                         <Insets bottom="20.0" />
@@ -208,7 +226,6 @@
                 <HBox alignment="CENTER" prefHeight="50.0" prefWidth="1014.0" spacing="20.0">
                     <children>
                         <Button fx:id="btnDatPhong" mnemonicParsing="false" onAction="#handleDatPhong" prefHeight="35.0" prefWidth="150.0" style="-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-weight: bold;" text="Xác nhận đặt" textAlignment="CENTER" />
-                        <Button mnemonicParsing="false" onAction="#handleRefresh" prefHeight="35.0" prefWidth="150.0" style="-fx-background-color: #198754; -fx-text-fill: white;" text="Làm mới" />
                     </children>
                     <VBox.margin>
                         <Insets bottom="10.0" />
