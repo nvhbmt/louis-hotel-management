@@ -39,7 +39,7 @@ public class MenuData {
                 new TreeItem<>(new MenuItemModel("Quản lý dịch vụ", "mdi2c-coffee",
                         "/com/example/louishotelmanagement/fxml/quan-ly-dich-vu-view.fxml")),
                 new TreeItem<>(new MenuItemModel("Cung cấp dịch vụ", "mdi2h-handshake",
-                        "/com/example/louishotelmanagement/fxml/cung-cap-dich-vu.fxml")),
+                        "/com/example/louishotelmanagement/fxml/dat-dich-vu-view.fxml")),
                 new TreeItem<>(new MenuItemModel("Hủy dịch vụ", "mdi2c-close-circle",
                         "/com/example/louishotelmanagement/fxml/huy-dich-vu.fxml"))
         ));

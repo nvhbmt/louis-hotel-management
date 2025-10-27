@@ -246,17 +246,6 @@ public class DatPhongTaiQuayController implements Initializable,Refreshable {
         alert.showAndWait();
     }
 
-    public boolean checkMaPhieu(String maPhieu) throws SQLException {
-        ArrayList<PhieuDatPhong> dsPhieuDatPhong = pdpDao.layDSPhieuDatPhong();
-        ArrayList<String> dsMaPhieu = new ArrayList<>();
-        for(PhieuDatPhong pdph : dsPhieuDatPhong) {
-            dsMaPhieu.add(pdph.getMaPhieu());
-        }
-        if(dsMaPhieu.contains(maPhieu)) {
-            return true;
-        }
-        return false;
-    }
     // Trong DatPhongController.java
 
 // Nó chỉ còn xử lý việc tạo Chi tiết và cập nhật trạng thái phòng.
@@ -277,8 +266,8 @@ public class DatPhongTaiQuayController implements Initializable,Refreshable {
 // -------------------------------------------------------------
 
     public void handleDatPhong(ActionEvent actionEvent) throws SQLException {
-        if (ngayDi.getValue() == null) {
-            showAlertError("Lỗi ngày", "Không được bỏ trống ngày đi");
+        if (listPhongDuocDat.isEmpty()&&ngayDi.getValue() == null) {
+            showAlertError("Lỗi ngày", "Không được vui lòng không bỏ bất kì thông tin nào");
             return;
         }
 

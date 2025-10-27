@@ -13,31 +13,71 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="864.0" prefWidth="1014.4" stylesheets="@../css/doi-phong.css, @../css/dat-phong.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.DoiPhongController">
+<BorderPane prefHeight="864.0" prefWidth="1014.4" stylesheets="@../css/doi-phong.css, @../css/dat-phong.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.DoiPhongController">
     <center>
         <VBox alignment="TOP_CENTER" prefHeight="474.0" prefWidth="922.0" BorderPane.alignment="CENTER">
             <children>
 
-                <Label styleClass="section-heading" text="Thông tin đổi phòng" />
+                <Label styleClass="section-heading" text="Thông tin đổi phòng">
+               <graphic>
+                  <ImageView fitHeight="53.0" fitWidth="57.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../image/hotel_key.png" />
+                     </image>
+                  </ImageView>
+               </graphic></Label>
 
                 <HBox styleClass="input-row">
                     <children>
-                        <Label styleClass="input-label" text="Khách hàng" />
-                        <ComboBox fx:id="dsKhachHang" styleClass="combo-box" />
+                        <Label alignment="TOP_LEFT" contentDisplay="CENTER" prefHeight="46.0" prefWidth="75.0" styleClass="input-label" text="Khách hàng" />
+                  <ImageView fitHeight="32.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../image/detective.png" />
+                     </image>
+                     <HBox.margin>
+                        <Insets bottom="20.0" />
+                     </HBox.margin>
+                  </ImageView>
+                        <ComboBox fx:id="dsKhachHang" styleClass="combo-box">
+                     <HBox.margin>
+                        <Insets bottom="20.0" />
+                     </HBox.margin></ComboBox>
                     </children>
                 </HBox>
 
                 <HBox styleClass="input-row">
                     <children>
                         <Label styleClass="input-label" text="Phòng hiện tại" />
-                        <ComboBox fx:id="dsPhongHienTai" styleClass="combo-box" />
+                  <ImageView fitHeight="34.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../image/double-bed.png" />
+                     </image>
+                     <HBox.margin>
+                        <Insets bottom="20.0" />
+                     </HBox.margin>
+                  </ImageView>
+                        <ComboBox fx:id="dsPhongHienTai" styleClass="combo-box">
+                     <HBox.margin>
+                        <Insets bottom="20.0" />
+                     </HBox.margin></ComboBox>
                     </children>
                 </HBox>
 
                 <HBox styleClass="input-row">
                     <children>
-                        <Label styleClass="input-label" text="Phòng muốn đổi" />
-                        <ComboBox fx:id="dsPhong" styleClass="combo-box" />
+                        <Label prefHeight="28.0" styleClass="input-label" text="Phòng muốn đổi" />
+                  <ImageView fitHeight="34.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../image/double-bed.png" />
+                     </image>
+                     <HBox.margin>
+                        <Insets bottom="20.0" />
+                     </HBox.margin>
+                  </ImageView>
+                        <ComboBox fx:id="dsPhong" styleClass="combo-box">
+                     <HBox.margin>
+                        <Insets bottom="20.0" />
+                     </HBox.margin></ComboBox>
                     </children>
                     <VBox.margin>
                         <Insets bottom="30.0" />
