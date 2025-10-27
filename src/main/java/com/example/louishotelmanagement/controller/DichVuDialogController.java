@@ -158,13 +158,16 @@ public class DichVuDialogController implements Initializable {
         if (dichVu == null) return;
 
         // Set values
-        maDVField.valueProperty().set(dichVu.getMaDV());
-        maDVField.editable(false);
-        tenDVField.valueProperty().set(dichVu.getTenDV());
-        soLuongField.valueProperty().set(dichVu.getSoLuong());
-        donGiaField.valueProperty().set(dichVu.getDonGia());
-        moTaField.valueProperty().set(dichVu.getMoTa());
-        conKinhDoanhField.valueProperty().set(dichVu.isConKinhDoanh());
+        formContainer.getChildren().clear();
+        taoForm(
+                dichVu.getMaDV(),
+                dichVu.getTenDV(),
+                dichVu.getSoLuong(),
+                dichVu.getDonGia(),
+                dichVu.getMoTa(),
+                dichVu.isConKinhDoanh()
+        );
+        hienThiForm();
     }
 
     @FXML
