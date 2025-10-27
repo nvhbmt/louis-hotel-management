@@ -41,6 +41,8 @@ public class DangNhapController implements Initializable {
         taiKhoanDAO = new TaiKhoanDAO();
         authService = AuthService.getInstance();
         
+        matKhauField.setText("manager123");
+        tenDangNhapField.setText("manager");
         setupEventHandlers();
     }
     
