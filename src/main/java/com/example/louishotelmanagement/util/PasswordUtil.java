@@ -63,7 +63,7 @@ public class PasswordUtil {
     }
 
     public static void main(String[] args) {
-        System.out.printf("hash : " + hashPassword("manager123"));
+        System.out.printf("hash manager123: " + hashPassword("manager123"));
         System.out.printf("hash staff123: " + hashPassword("staff123"));
     }
 }

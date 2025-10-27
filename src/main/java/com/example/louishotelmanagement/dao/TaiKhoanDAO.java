@@ -16,11 +16,10 @@ public class TaiKhoanDAO {
              CallableStatement cs = con.prepareCall(sql)) {
             ResultSet rs = cs.executeQuery();
             NhanVienDAO nhanVienDAO = new NhanVienDAO();
-            
+
             while (rs.next()) {
                 // Load đầy đủ thông tin nhân viên
                 NhanVien nhanVien = nhanVienDAO.timNhanVienTheoMa(rs.getString("maNV"));
-                
                 TaiKhoan tk = new TaiKhoan(
                         rs.getString("maTK"),
                         nhanVien != null ? nhanVien : new NhanVien(rs.getString("maNV")),
@@ -36,19 +35,15 @@ public class TaiKhoanDAO {
     }
 
     public String layMaTKTiepTheo() throws SQLException {
-        String sql = "SELECT TOP 1 maTK FROM TaiKhoan ORDER BY maTK DESC";
+        String sql = "{call sp_LayMaTKTiepTheo(?)}";
         try (Connection con = CauHinhDatabase.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                String maTKCuoi = rs.getString("maTK");
-                // Tách số từ mã TK cuối cùng (VD: TK003 -> 3)
-                int soCuoi = Integer.parseInt(maTKCuoi.substring(2));
-                int soMoi = soCuoi + 1;
-                return String.format("TK%03d", soMoi);
-            } else {
-                return "TK001"; // Nếu chưa có tài khoản nào
-            }
+             CallableStatement cs = con.prepareCall(sql)) {
+            
+            cs.registerOutParameter(1, Types.NVARCHAR);
+            cs.execute();
+            
+            String maTKTiepTheo = cs.getString(1);
+            return maTKTiepTheo;
         }
     }
 
@@ -115,7 +110,7 @@ public class TaiKhoanDAO {
                 // Load đầy đủ thông tin nhân viên
                 NhanVienDAO nhanVienDAO = new NhanVienDAO();
                 NhanVien nhanVien = nhanVienDAO.timNhanVienTheoMa(rs.getString("maNV"));
-                
+
                 return new TaiKhoan(
                         rs.getString("maTK"),
                         nhanVien != null ? nhanVien : new NhanVien(rs.getString("maNV")),
@@ -137,9 +132,13 @@ public class TaiKhoanDAO {
             cs.setString(1, tenDangNhap);
             ResultSet rs = cs.executeQuery();
             if (rs.next()) {
+                // Load đầy đủ thông tin nhân viên
+                NhanVienDAO nhanVienDAO = new NhanVienDAO();
+                NhanVien nhanVien = nhanVienDAO.timNhanVienTheoMa(rs.getString("maNV"));
+
                 return new TaiKhoan(
                         rs.getString("maTK"),
-                        new NhanVien(rs.getString("maNV")),
+                        nhanVien != null ? nhanVien : new NhanVien(rs.getString("maNV")),
                         rs.getString("tenDangNhap"),
                         rs.getString("matKhauHash"),
                         rs.getString("quyen"),

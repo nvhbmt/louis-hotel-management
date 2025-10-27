@@ -45,9 +45,9 @@ public class LayoutController implements Initializable, ContentSwitcher {
     
     private void setupUserInfo() {
         if (authService.isLoggedIn()) {
-            String userName = authService.getCurrentUserName();
-            String userRole = authService.getCurrentUserRole();
-            userInfoLabel.setText(userName + " (" + userRole + ")");
+            String hoTen = authService.getCurrentUser().getNhanVien().getHoTen();
+            String userRole = authService.getCurrentUserRole() == "manager" ? "Quản lý" : "Nhân viên";
+            userInfoLabel.setText(hoTen + " (" + userRole + ")");
         }
         
         logoutBtn.setOnAction(_ -> handleLogout());
