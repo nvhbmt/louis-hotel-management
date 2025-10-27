@@ -9,6 +9,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.util.StringConverter;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
@@ -25,7 +26,9 @@ import java.math.BigDecimal;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.ResourceBundle;
 
@@ -63,6 +66,11 @@ public class DatPhongTaiQuayController implements Initializable,Refreshable {
     private ArrayList<Phong> listPhongDuocDat;
     private HoaDonDAO hDao;
     private CTHoaDonPhongDAO cthdpDao;
+    private ObservableList<Phong> danhSachPhong;
+    private ObservableList<Phong> danhSachPhongFiltered;
+    private LoaiPhongDAO loaiPhongDAO;
+    public ComboBox<Integer> cbTang;
+    public ComboBox<LoaiPhong> cbLocLoaiPhong;
 
 
     @Override
@@ -74,14 +82,53 @@ public class DatPhongTaiQuayController implements Initializable,Refreshable {
         hDao = new HoaDonDAO();
         cthdpDao =  new CTHoaDonPhongDAO();
         listPhongDuocDat = new ArrayList<>();
+        loaiPhongDAO =  new LoaiPhongDAO();
         tablePhong.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         try {
+                khoiTaoDuLieu();
                 khoiTaoTableView();
+                khoiTaoComboBox();
+                khoiTaoDinhDangNgay();
                 laydsKhachHang();
+                taiDuLieu();
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
             dsKhachHang.getSelectionModel().selectFirst();
+    }
+    private void khoiTaoDinhDangNgay() {
+        // Định dạng ngày tháng mong muốn (ví dụ: 25/10/2025)
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        // Tạo StringConverter tùy chỉnh cho DatePicker
+        StringConverter<LocalDate> converter = new StringConverter<>() {
+            @Override
+            public String toString(LocalDate date) {
+                // Chuyển LocalDate sang String để hiển thị
+                return (date != null) ? formatter.format(date) : "";
+            }
+
+            @Override
+            public LocalDate fromString(String string) {
+                // Chuyển String nhập vào (hoặc từ FXML) sang LocalDate
+                if (string != null && !string.isEmpty()) {
+                    try {
+                        return LocalDate.parse(string, formatter);
+                    } catch (java.time.format.DateTimeParseException e) {
+                        // Xử lý lỗi nếu người dùng nhập sai định dạng
+                        System.err.println("Lỗi định dạng ngày: " + string);
+                        return null;
+                    }
+                }
+                return null;
+            }
+        };
+
+        // Áp dụng converter cho cả hai DatePicker
+        ngayDi.setConverter(converter);
+
+        // *Tùy chọn:* Đảm bảo DatePicker có thể hiển thị ngày hôm nay nếu người dùng chưa chọn
+        // ngayDen.setValue(LocalDate.now());
     }
     private void khoiTaoTableView() throws SQLException {
         // Thiết lập các cột
@@ -191,12 +238,117 @@ public class DatPhongTaiQuayController implements Initializable,Refreshable {
 
 
         // Thiết lập TableView
-        ArrayList<Phong> dsPhongTrong = Pdao.layDSPhongTrong();
-        ObservableList<Phong> observableListPhong = FXCollections.observableArrayList(dsPhongTrong);
-        tablePhong.setItems(observableListPhong);
+        tablePhong.setItems(danhSachPhongFiltered);
 
         // Cho phép chọn nhiều dòng
         tablePhong.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+    }
+    private void khoiTaoDuLieu() {
+        danhSachPhong = FXCollections.observableArrayList();
+        danhSachPhongFiltered = FXCollections.observableArrayList();
+    }
+    private void taiDuLieu() {
+        try {
+            // Lấy danh sách phòng từ database
+            List<Phong> dsPhong = Pdao.layDSPhongTrong();
+
+            danhSachPhong.clear();
+            danhSachPhong.addAll(dsPhong);
+
+            // Áp dụng filter hiện tại
+            apDungFilter();
+        } catch (SQLException e) {
+            ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể tải dữ liệu phòng: " + e.getMessage());
+        }
+    }
+    private void apDungFilter() {
+        danhSachPhongFiltered.clear();
+
+        List<Phong> filtered = danhSachPhong.stream()
+                .filter(phong -> {
+                    // Filter theo tầng
+                    Integer tangFilter = cbTang.getValue();
+                    if (tangFilter != null && (phong.getTang() == null || !phong.getTang().equals(tangFilter))) {
+                        return false;
+                    }
+
+                    // Filter theo loại phòng
+                    LoaiPhong loaiPhongFilter = cbLocLoaiPhong.getValue();
+                    return loaiPhongFilter == null || (phong.getLoaiPhong() != null &&
+                            phong.getLoaiPhong().getMaLoaiPhong().equals(loaiPhongFilter.getMaLoaiPhong()));
+                })
+                .toList();
+
+        danhSachPhongFiltered.addAll(filtered);
+    }
+    private void khoiTaoComboBox() {
+        // Khởi tạo ComboBox tầng
+        List<Integer> danhSachTang = new ArrayList<>();
+        for (int i = 1; i <= 10; i++) {
+            danhSachTang.add(i);
+        }
+        cbTang.setItems(FXCollections.observableArrayList(danhSachTang));
+        cbTang.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(Integer item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText("Chọn tầng");
+                } else {
+                    setText("Tầng " + item);
+                }
+            }
+        });
+        cbTang.setCellFactory(_ -> new ListCell<>() {
+            @Override
+            protected void updateItem(Integer item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText("Chọn tầng");
+                } else {
+                    setText("Tầng " + item);
+                }
+            }
+        });
+
+
+        // Khởi tạo ComboBox loại phòng để filter
+        khoiTaoComboBoxLoaiPhong();
+    }
+    private void khoiTaoComboBoxLoaiPhong() {
+        try {
+            List<LoaiPhong> danhSachLoaiPhong = loaiPhongDAO.layDSLoaiPhong();
+
+            // Thiết lập ComboBox để hiển thị tên loại phòng
+            cbLocLoaiPhong.setCellFactory(_ -> new ListCell<>() {
+                @Override
+                protected void updateItem(LoaiPhong item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty || item == null) {
+                        setText("Chọn loại phòng");
+                    } else {
+                        setText(item.getTenLoai());
+                    }
+                }
+            });
+
+            cbLocLoaiPhong.setButtonCell(new ListCell<>() {
+                @Override
+                protected void updateItem(LoaiPhong item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty || item == null) {
+                        setText("Chọn loại phòng");
+                    } else {
+                        setText(item.getTenLoai());
+                    }
+                }
+            });
+
+            cbLocLoaiPhong.setItems(FXCollections.observableArrayList(danhSachLoaiPhong));
+
+        } catch (SQLException e) {
+            ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể tải danh sách loại phòng: " + e.getMessage());
+        }
     }
 
     public double TinhTongTien(ArrayList<Phong> ls){
@@ -233,17 +385,9 @@ public class DatPhongTaiQuayController implements Initializable,Refreshable {
         SoPhongDaChon.setText(null);
         TongTien.setText(null);
         listPhongDuocDat.clear();
-        ArrayList<Phong> dsPhongTrong = Pdao.layDSPhongTrong();
-        ObservableList<Phong> observableListPhong = FXCollections.observableArrayList(dsPhongTrong);
-        tablePhong.setItems(observableListPhong);
-        tablePhong.refresh();
-    }
-    public void showAlert(String header,String message){
-        Alert alert = new  Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Thông báo");
-        alert.setHeaderText(header);
-        alert.setContentText(message);
-        alert.showAndWait();
+        cbTang.setValue(null);
+        cbLocLoaiPhong.setValue(null);
+        taiDuLieu();
     }
 
     // Trong DatPhongController.java
@@ -312,7 +456,7 @@ public class DatPhongTaiQuayController implements Initializable,Refreshable {
             }
 
             refreshData();
-            showAlert("Thành Công", "Bạn đã đặt phòng thành công");
+            ThongBaoUtil.hienThiThongBao("Thành Công", "Bạn đã đặt phòng thành công");
 
         } else {
             showAlertError("LỖI NGÀY", "Không được chọn ngày đi trước ngày hôm nay");
@@ -341,5 +485,13 @@ public class DatPhongTaiQuayController implements Initializable,Refreshable {
             ThongBaoUtil.hienThiThongBao("Lỗi", e.getMessage());
             e.printStackTrace();
         }
+    }
+    @FXML
+    private void handleLocTang() {
+        apDungFilter();
+    }
+    @FXML
+    private void handleLocLoaiPhong() {
+        apDungFilter();
     }
 }

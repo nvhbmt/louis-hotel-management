@@ -1,9 +1,6 @@
 package com.example.louishotelmanagement.controller;
 
-import com.example.louishotelmanagement.dao.CTHoaDonPhongDAO;
-import com.example.louishotelmanagement.dao.KhachHangDAO;
-import com.example.louishotelmanagement.dao.PhieuDatPhongDAO;
-import com.example.louishotelmanagement.dao.PhongDAO;
+import com.example.louishotelmanagement.dao.*;
 import com.example.louishotelmanagement.model.*;
 import com.example.louishotelmanagement.service.AuthService;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
@@ -25,6 +22,7 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class DoiPhongController implements Initializable,Refreshable {
@@ -33,6 +31,8 @@ public class DoiPhongController implements Initializable,Refreshable {
     public ComboBox dsPhong;
     public TableView tablePhong;
     public Button btnDoiPhong;
+    public ComboBox<Integer> cbTang;
+    public ComboBox<LoaiPhong> cbLocLoaiPhong;
     @FXML
     private TableColumn<Phong, String> maPhong;
     @FXML
@@ -49,6 +49,9 @@ public class DoiPhongController implements Initializable,Refreshable {
     private CTHoaDonPhongDAO cthdpDao;
     private ArrayList<String> dsMaKH;
     public ArrayList<PhieuDatPhong> dspdp;
+    private LoaiPhongDAO loaiPhongDAO;
+    private ObservableList<Phong> danhSachPhong;
+    private ObservableList<Phong> danhSachPhongFiltered;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -56,14 +59,13 @@ public class DoiPhongController implements Initializable,Refreshable {
         Kdao = new KhachHangDAO();
         pdpDao = new PhieuDatPhongDAO();
         cthdpDao = new CTHoaDonPhongDAO();
+        loaiPhongDAO = new LoaiPhongDAO();
         VBox.setVgrow(tablePhong, Priority.ALWAYS);
         try {
-            laydsKhachHang();
-            layDsPhong();
-            dsKhachHang.getSelectionModel().selectFirst();
-            dsPhong.getSelectionModel().selectFirst();
-            laydsPhongTheoKhachHang();
+            khoiTaoDuLieu();
             khoiTaoTableView();
+            khoiTaoComboBox();
+            taiDuLieu();
             dsKhachHang.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue != null) {
                     try {
@@ -117,12 +119,117 @@ public class DoiPhongController implements Initializable,Refreshable {
         });
 
         // Thiết lập TableView
-        ArrayList<Phong> dsPhongTrong = Pdao.layDSPhongTrong();
-        ObservableList<Phong> observableListPhong = FXCollections.observableArrayList(dsPhongTrong);
-        tablePhong.setItems(observableListPhong);
+        tablePhong.setItems(danhSachPhongFiltered);
 
         // Cho phép chọn nhiều dòng
         tablePhong.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+    }
+    private void khoiTaoDuLieu() {
+        danhSachPhong = FXCollections.observableArrayList();
+        danhSachPhongFiltered = FXCollections.observableArrayList();
+    }
+    private void taiDuLieu() {
+        try {
+            // Lấy danh sách phòng từ database
+            List<Phong> dsPhong = Pdao.layDSPhongTrong();
+
+            danhSachPhong.clear();
+            danhSachPhong.addAll(dsPhong);
+
+            // Áp dụng filter hiện tại
+            apDungFilter();
+        } catch (SQLException e) {
+            ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể tải dữ liệu phòng: " + e.getMessage());
+        }
+    }
+    private void apDungFilter() {
+        danhSachPhongFiltered.clear();
+
+        List<Phong> filtered = danhSachPhong.stream()
+                .filter(phong -> {
+                    // Filter theo tầng
+                    Integer tangFilter = cbTang.getValue();
+                    if (tangFilter != null && (phong.getTang() == null || !phong.getTang().equals(tangFilter))) {
+                        return false;
+                    }
+
+                    // Filter theo loại phòng
+                    LoaiPhong loaiPhongFilter = cbLocLoaiPhong.getValue();
+                    return loaiPhongFilter == null || (phong.getLoaiPhong() != null &&
+                            phong.getLoaiPhong().getMaLoaiPhong().equals(loaiPhongFilter.getMaLoaiPhong()));
+                })
+                .toList();
+
+        danhSachPhongFiltered.addAll(filtered);
+    }
+    private void khoiTaoComboBox() {
+        // Khởi tạo ComboBox tầng
+        List<Integer> danhSachTang = new ArrayList<>();
+        for (int i = 1; i <= 10; i++) {
+            danhSachTang.add(i);
+        }
+        cbTang.setItems(FXCollections.observableArrayList(danhSachTang));
+        cbTang.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(Integer item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText("Chọn tầng");
+                } else {
+                    setText("Tầng " + item);
+                }
+            }
+        });
+        cbTang.setCellFactory(_ -> new ListCell<>() {
+            @Override
+            protected void updateItem(Integer item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText("Chọn tầng");
+                } else {
+                    setText("Tầng " + item);
+                }
+            }
+        });
+
+
+        // Khởi tạo ComboBox loại phòng để filter
+        khoiTaoComboBoxLoaiPhong();
+    }
+    private void khoiTaoComboBoxLoaiPhong() {
+        try {
+            List<LoaiPhong> danhSachLoaiPhong = loaiPhongDAO.layDSLoaiPhong();
+
+            // Thiết lập ComboBox để hiển thị tên loại phòng
+            cbLocLoaiPhong.setCellFactory(_ -> new ListCell<>() {
+                @Override
+                protected void updateItem(LoaiPhong item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty || item == null) {
+                        setText("Chọn loại phòng");
+                    } else {
+                        setText(item.getTenLoai());
+                    }
+                }
+            });
+
+            cbLocLoaiPhong.setButtonCell(new ListCell<>() {
+                @Override
+                protected void updateItem(LoaiPhong item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty || item == null) {
+                        setText("Chọn loại phòng");
+                    } else {
+                        setText(item.getTenLoai());
+                    }
+                }
+            });
+
+            cbLocLoaiPhong.setItems(FXCollections.observableArrayList(danhSachLoaiPhong));
+
+        } catch (SQLException e) {
+            ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể tải danh sách loại phòng: " + e.getMessage());
+        }
     }
 
     public void laydsKhachHang() throws SQLException {
@@ -132,6 +239,7 @@ public class DoiPhongController implements Initializable,Refreshable {
             dsKhachHang.getItems().add(khachHang.getHoTen());
             dsMaKH.add(khachHang.getMaKH());
         }
+        dsKhachHang.getSelectionModel().selectFirst();
     }
 
     public void laydsPhongTheoKhachHang() throws SQLException {
@@ -181,6 +289,7 @@ public class DoiPhongController implements Initializable,Refreshable {
 
     @Override
     public void refreshData() throws SQLException {
+        laydsKhachHang();
         dsPhongHienTai.getItems().clear();
         laydsPhongTheoKhachHang();
         dsPhongHienTai.getSelectionModel().selectFirst();
@@ -188,6 +297,20 @@ public class DoiPhongController implements Initializable,Refreshable {
         layDsPhong();
         dsPhong.getSelectionModel().selectFirst();
         dsKhachHang.getSelectionModel().selectFirst();
-        khoiTaoTableView();
+        cbTang.setValue(null);
+        cbLocLoaiPhong.setValue(null);
+        taiDuLieu();
+    }
+    @FXML
+    private void handleLocTang() {
+        apDungFilter();
+    }
+    @FXML
+    private void handleLocLoaiPhong() {
+        apDungFilter();
+    }
+
+    public void handleRefresh(ActionEvent actionEvent) throws SQLException {
+        refreshData();
     }
 }
