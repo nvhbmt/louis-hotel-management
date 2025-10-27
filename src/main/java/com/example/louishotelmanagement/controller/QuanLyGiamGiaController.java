@@ -278,7 +278,7 @@ public class QuanLyGiamGiaController implements Initializable {
         });
 
         // Khởi tạo ComboBox trạng thái
-        List<String> danhSachTrangThai = List.of("Hoạt động", "Hết hạn", "Chưa bắt đầu", "Tạm dừng");
+        List<String> danhSachTrangThai = List.of("Đang diễn ra", "Hết hạn", "Chưa diễn ra", "Tạm dừng");
         cbTrangThai.setItems(FXCollections.observableArrayList(danhSachTrangThai));
         cbTrangThai.setButtonCell(new ListCell<>() {
             @Override
@@ -308,6 +308,27 @@ public class QuanLyGiamGiaController implements Initializable {
         try {
             // Lấy danh sách mã giảm giá từ database
             List<MaGiamGia> dsMaGiamGia = maGiamGiaDAO.layDSMaGiamGia();
+
+            LocalDate ngayHienTai = LocalDate.now();
+
+            for (MaGiamGia mg : dsMaGiamGia) {
+                LocalDate batDau = mg.getNgayBatDau();
+                LocalDate ketThuc = mg.getNgayKetThuc();
+
+                if (ketThuc.isBefore(ngayHienTai)) {
+                    mg.setTrangThai("Hết hạn");
+                }
+                else if (batDau.isAfter(ngayHienTai)) {
+                    mg.setTrangThai("Chưa diễn ra");
+                }
+                else if ((batDau.isBefore(ngayHienTai) || batDau.isEqual(ngayHienTai)) &&
+                        (ketThuc.isAfter(ngayHienTai) || ketThuc.isEqual(ngayHienTai))) {
+                    mg.setTrangThai("Đang diễn ra");
+                }
+
+                // Cập nhật xuống DB nếu thay đổi
+                maGiamGiaDAO.capNhatMaGiamGia(mg);
+            }
 
             danhSachMaGiamGia.clear();
             danhSachMaGiamGia.addAll(dsMaGiamGia);

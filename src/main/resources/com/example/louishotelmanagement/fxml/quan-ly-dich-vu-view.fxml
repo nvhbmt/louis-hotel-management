@@ -78,11 +78,11 @@
                             </HBox>
                         </VBox>
 
-                        <!-- Ô 2: Đang hoạt động -->
+                        <!-- Ô 2: Đang kinh doanh -->
                         <VBox styleClass="stat-box" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS">
                             <HBox alignment="CENTER_LEFT" spacing="15">
                                 <VBox alignment="CENTER_LEFT" spacing="15" HBox.hgrow="ALWAYS">
-                                    <Label styleClass="stat-title" text="Đang hoạt động" />
+                                    <Label styleClass="stat-title" text="Đang kinh doanh" />
                                     <Label fx:id="lblSoDichVuConKinhDoanh" styleClass="stat-number" text="15" />
                                 </VBox>
                                 <ImageView fitHeight="45" fitWidth="45" preserveRatio="true">
