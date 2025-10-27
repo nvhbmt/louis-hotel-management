@@ -49,8 +49,7 @@ VALUES
 ('P502', 5, N'Trống', N'Phòng Suite tầng 5, view thành phố', 'LP005');
 GO
 
--------------------------------------------------------------------
--- 3. NhanVien (Nhân viên)
+---------------------------------------------
 -------------------------------------------------------------------
 PRINT N'-- 3. Đang thêm dữ liệu bảng NhanVien...';
 INSERT INTO NhanVien (maNV, hoTen, soDT, diaChi, chucVu, ngaySinh)
@@ -83,7 +82,8 @@ VALUES ('KH001', N'Nguyễn Thanh Tùng', '0912345678', 'tung.nguyen@company.com
         N'Khách du lịch nước ngoài (đặt phòng VIP)', '012345678902', N'Khách VIP', 'DA_DAT'),
        ('KH003', N'Lê Văn Chiến', '0934567890', 'chien.le@web.com', N'Đà Nẵng', '2000-09-10', N'Khách ở lần đầu',
         '012345678903', N'Khách thường', 'CHECK_OUT'),
-       ('KH004', N'Phạm Thị Yến', '0945678901', 'yen.pham@private.com', N'Hải Phòng', '1992-03-20',
+       ('KH004', N'Phạm Thị Yến', '0945678901', 'yen.ph----------------------
+-- 3. NhanVien (Nhân viên)am@private.com', N'Hải Phòng', '1992-03-20',
         N'Khách quen, thích phòng tầng cao', '012345678904', N'Khách quen', 'DANG_LUU_TRU'),
        ('KH005', N'Hoàng Anh Dũng', '0956789012', 'dung.hoang@contact.com', N'Quảng Ninh', '1989-11-05',
         N'Thanh toán bằng thẻ tín dụng', '012345678905', N'Khách VIP', 'DA_DAT'),
