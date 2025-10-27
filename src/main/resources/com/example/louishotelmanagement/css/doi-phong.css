@@ -50,7 +50,6 @@
 /* --- ComboBox (Input Fields) --- */
 .combo-box {
     -fx-pref-height: 38px;
-    -fx-pref-width: 500px;
     /* CỐ ĐỊNH CHIỀU RỘNG INPUT */
     -fx-border-color: #E0E0E0;
     -fx-border-width: 1px;

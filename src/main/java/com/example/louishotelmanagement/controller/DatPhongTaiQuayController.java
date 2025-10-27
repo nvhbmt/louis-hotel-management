@@ -87,6 +87,7 @@ public class DatPhongTaiQuayController implements Initializable,Refreshable {
                 khoiTaoTableView();
                 khoiTaoComboBox();
                 laydsKhachHang();
+                taiDuLieu();
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
