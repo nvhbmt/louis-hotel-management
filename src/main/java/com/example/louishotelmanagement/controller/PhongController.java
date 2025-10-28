@@ -4,14 +4,13 @@ import com.example.louishotelmanagement.dao.PhongDAO;
 import com.example.louishotelmanagement.model.LoaiPhong;
 import com.example.louishotelmanagement.model.Phong;
 import com.example.louishotelmanagement.model.TrangThaiPhong;
-
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
-import javafx.event.ActionEvent; // Sửa import đúng
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -28,19 +27,32 @@ import java.util.ResourceBundle;
 public class PhongController implements Initializable {
 
     // --- FXML Components ---
-    @FXML private Label tieuDeLabel;
-    @FXML private Button btnNhanPhong, btnDatTT, btnDoiPhong, btnHuyDat, btnDichVu, btnThanhToan;
-    @FXML private ComboBox<String> cbxTang;
-    @FXML private ComboBox<String> cbxTrangThai; // THÊM MỚI
-    @FXML private TableView<Phong> tableViewPhong;
-    @FXML private TableColumn<Phong, String> maPhong;
-    @FXML private TableColumn<Phong, String> loaiPhong;
-    @FXML private TableColumn<Phong, Double> donGia; // Sửa thành BigDecimal
-    @FXML private TableColumn<Phong, TrangThaiPhong> trangThai;
-    @FXML private Label lblTongPhong;
-    @FXML private Label lblPhongTrong;
-    @FXML private Label lblPhongSuDung;
-    @FXML private Label lblPhongBaoTri;
+    @FXML
+    private Label tieuDeLabel;
+    @FXML
+    private Button btnNhanPhong, btnDatTT, btnDoiPhong, btnHuyDat, btnDichVu, btnThanhToan;
+    @FXML
+    private ComboBox<String> cbxTang;
+    @FXML
+    private ComboBox<String> cbxTrangThai; // THÊM MỚI
+    @FXML
+    private TableView<Phong> tableViewPhong;
+    @FXML
+    private TableColumn<Phong, String> maPhong;
+    @FXML
+    private TableColumn<Phong, String> loaiPhong;
+    @FXML
+    private TableColumn<Phong, Double> donGia; // Sửa thành BigDecimal
+    @FXML
+    private TableColumn<Phong, TrangThaiPhong> trangThai;
+    @FXML
+    private Label lblTongPhong;
+    @FXML
+    private Label lblPhongTrong;
+    @FXML
+    private Label lblPhongSuDung;
+    @FXML
+    private Label lblPhongBaoTri;
 
     // --- Data and DAO ---
     private PhongDAO phongDAO;
@@ -87,6 +99,7 @@ public class PhongController implements Initializable {
         // Định dạng tiền tệ cho cột Đơn Giá (Sửa thành BigDecimal)
         donGia.setCellFactory(column -> new TableCell<Phong, Double>() {
             private final NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+
             @Override
             protected void updateItem(Double item, boolean empty) {
                 super.updateItem(item, empty);
@@ -222,6 +235,7 @@ public class PhongController implements Initializable {
         lblPhongSuDung.setText(String.valueOf(soSuDung));
         lblPhongBaoTri.setText(String.valueOf(soBaoTri));
     }
+
     @FXML
     private void handleLamMoi(ActionEvent event) {
         // 1. Đặt lại giá trị của 2 ComboBox về mặc định
@@ -232,6 +246,7 @@ public class PhongController implements Initializable {
         // (Việc này cũng sẽ tự động cập nhật thống kê)
         taiBang();
     }
+
     // --- Các phương thức chuyển trang (giữ nguyên) ---
     private ContentSwitcher switcher;
 
@@ -239,28 +254,44 @@ public class PhongController implements Initializable {
         this.switcher = switcher;
     }
 
-    @FXML private void moNhanPhong(ActionEvent actionEvent) {
+    @FXML
+    private void moNhanPhong(ActionEvent actionEvent) {
         if (switcher != null) switcher.switchContent("/com/example/louishotelmanagement/fxml/nhan-phong-view.fxml");
     }
-    @FXML private void moDatPhong(ActionEvent actionEvent) {
+
+    @FXML
+    private void moDatPhong(ActionEvent actionEvent) {
         if (switcher != null) switcher.switchContent("/com/example/louishotelmanagement/fxml/dat-phong-view.fxml");
     }
-    @FXML private void moDatTT(ActionEvent actionEvent) {
-        if (switcher != null) switcher.switchContent("/com/example/louishotelmanagement/fxml/dat-phong-truc-tiep-view.fxml");
+
+    @FXML
+    private void moDatTT(ActionEvent actionEvent) {
+        if (switcher != null)
+            switcher.switchContent("/com/example/louishotelmanagement/fxml/dat-phong-truc-tiep-view.fxml");
     }
-    @FXML private void moDoiPhong(ActionEvent actionEvent) {
+
+    @FXML
+    private void moDoiPhong(ActionEvent actionEvent) {
         if (switcher != null) switcher.switchContent("/com/example/louishotelmanagement/fxml/doi-phong-view.fxml");
     }
-    @FXML private void moHuy(ActionEvent actionEvent) {
-        if (switcher != null) switcher.switchContent("/com/example/louishotelmanagement/fxml/huy-phong-view.fxml");
+
+    @FXML
+    private void moHuy(ActionEvent actionEvent) {
+        if (switcher != null) switcher.switchContent("/com/example/louishotelmanagement/fxml/tra-phong-view.fxml");
     }
-    @FXML private void moDichVu(ActionEvent actionEvent) {
+
+    @FXML
+    private void moDichVu(ActionEvent actionEvent) {
         if (switcher != null) switcher.switchContent("/com/example/louishotelmanagement/fxml/dat-dich-vu-view.fxml");
     }
-    @FXML private void moHuyDat(ActionEvent actionEvent) {
+
+    @FXML
+    private void moHuyDat(ActionEvent actionEvent) {
         if (switcher != null) switcher.switchContent("/com/example/louishotelmanagement/fxml/huy-dat-phong-view.fxml");
     }
-    @FXML private void moThanhToan(ActionEvent actionEvent) {
+
+    @FXML
+    private void moThanhToan(ActionEvent actionEvent) {
         if (switcher != null) switcher.switchContent("/com/example/louishotelmanagement/fxml/thanh-toan-view.fxml");
     }
 }
