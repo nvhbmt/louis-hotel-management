@@ -108,4 +108,30 @@ public class MaGiamGiaDAO {
             return cs.executeUpdate() > 0;
         }
     }
+    //laymgg
+    public MaGiamGia layMaGiamGiaThepMa(String maGG) throws SQLException {
+        String sql = "{call sp_LayMaGiamGiaTheoMa(?)}";
+        try (Connection con = CauHinhDatabase.getConnection();
+             CallableStatement cs = con.prepareCall(sql)) {
+
+            cs.setString(1, maGG);
+            try (ResultSet rs = cs.executeQuery()) {
+                if (rs.next()) {
+                    return new MaGiamGia(
+                            rs.getString("maGG"),
+                            rs.getString("code"),
+                            rs.getDouble("giamGia"),
+                            KieuGiamGia.fromString(rs.getString("kieuGiamGia")),
+                            rs.getDate("ngayBatDau").toLocalDate(),
+                            rs.getDate("ngayKetThuc").toLocalDate(),
+                            rs.getDouble("tongTienToiThieu"),
+                            rs.getString("moTa"),
+                            rs.getString("trangThai"),
+                            rs.getString("maNV")
+                    );
+                }
+            }
+        }
+        return null;
+    }
 }

@@ -6,7 +6,6 @@
     <file url="file://$PROJECT_DIR$/mssql/storedProceduresCTHoaDonDichVu.sql" dialect="TSQL" />
     <file url="file://$PROJECT_DIR$/mssql/storedProceduresCTHoaDonPhong.sql" dialect="TSQL" />
     <file url="file://$PROJECT_DIR$/mssql/storedProceduresDichVu.sql" dialect="TSQL" />
-    <file url="file://$PROJECT_DIR$/mssql/storedProceduresHoaDon.sql" dialect="TSQL" />
     <file url="file://$PROJECT_DIR$/mssql/storedProceduresKhachHang.sql" dialect="TSQL" />
     <file url="file://$PROJECT_DIR$/mssql/storedProceduresMaGiamGia.sql" dialect="TSQL" />
     <file url="file://$PROJECT_DIR$/mssql/storedProceduresNhanVien.sql" dialect="TSQL" />

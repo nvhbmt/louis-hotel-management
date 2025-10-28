@@ -11,10 +11,10 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>23</maven.compiler.source>
-        <maven.compiler.target>23</maven.compiler.target>
+        <maven.compiler.source>25</maven.compiler.source>
+        <maven.compiler.target>25</maven.compiler.target>
         <junit.version>5.10.0</junit.version>
-        <javafx.version>23.0.1</javafx.version>
+        <javafx.version>25</javafx.version>
         <javafx.platform>win</javafx.platform> <!-- đổi thành linux / mac nếu cần -->
     </properties>
 
@@ -23,13 +23,13 @@
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
-            <version>${javafx.version}</version>
+            <version>25</version>
             <classifier>${javafx.platform}</classifier>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
-            <version>${javafx.version}</version>
+            <version>25</version>
             <classifier>${javafx.platform}</classifier>
         </dependency>
         <dependency>
@@ -47,19 +47,19 @@
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-media</artifactId>
-            <version>${javafx.version}</version>
+            <version>25</version>
             <classifier>${javafx.platform}</classifier>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-web</artifactId>
-            <version>${javafx.version}</version>
+            <version>25</version>
             <classifier>${javafx.platform}</classifier>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-swing</artifactId>
-            <version>${javafx.version}</version>
+            <version>25</version>
             <classifier>${javafx.platform}</classifier>
         </dependency>
 
