@@ -1,186 +1,142 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.VBox?>
-
-<BorderPane fx:id="rootPane" stylesheets="@../css/main.css, @../css/quan-ly-phong.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.LoaiPhongController">
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<BorderPane fx:id="rootPane" prefHeight="864.0" prefWidth="1273.0"
+            stylesheets="@../css/main.css, @../css/quan-ly-phong.css" xmlns="http://javafx.com/javafx/24"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.louishotelmanagement.controller.LoaiPhongController">
+    <padding>
+        <Insets bottom="32.0" left="32.0" right="32.0" top="32.0"/>
+    </padding>
     <center>
         <!-- Main Content Area -->
-        <VBox prefHeight="800.0" prefWidth="950.0" spacing="20.0" styleClass="main-content">
-            <!-- Header -->
-            <VBox prefHeight="44.0" prefWidth="918.0" spacing="5.0">
+        <VBox prefHeight="800.0" prefWidth="950.0" spacing="32.0" BorderPane.alignment="CENTER">
             <GridPane>
-               <columnConstraints>
-                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-               </columnConstraints>
-               <rowConstraints>
-                  <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-               </rowConstraints>
-               <children>
-                        <VBox prefHeight="60.0" prefWidth="254.0">
-                            <children>
-                                <Label styleClass="main-header" text="Quản Lý Loại Phòng">
-                           <graphic>
-                              <ImageView fitHeight="70.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../image/interior-design.png" />
-                                 </image>
-                              </ImageView>
-                           </graphic></Label>
-                                <Label prefHeight="20.0" prefWidth="450.0" styleClass="main-subtitle" text="Quản lý thông tin và giá cả các loại phòng trong khách sạn" />
-                            </children>
-                        </VBox>
-                        <HBox alignment="TOP_RIGHT" prefHeight="37.0" prefWidth="146.0" spacing="16.0" GridPane.columnIndex="1">
-                            <children>
-                                <Button fx:id="btnThemLoaiPhong" alignment="CENTER_RIGHT" contentDisplay="RIGHT" onAction="#handleThemLoaiPhong" styleClass="btn-success" text="➕ Thêm Loại Phòng" />
-                            </children>
-                        </HBox>
-               </children>
-               <VBox.margin>
-                  <Insets bottom="32.0" />
-               </VBox.margin>
-            </GridPane>
-                <VBox.margin>
-                    <Insets bottom="40.0" />
-                </VBox.margin>
-            </VBox>
-            <GridPane hgap="20.0">
                 <columnConstraints>
-                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
                 </columnConstraints>
                 <rowConstraints>
-                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    <RowConstraints vgrow="SOMETIMES"/>
                 </rowConstraints>
                 <children>
-                    <VBox prefHeight="200.0" prefWidth="100.0" styleClass="stat-card-border">
+                    <HBox spacing="16.0">
                         <children>
-            
-                        <!-- Control Panel -->
-                        <HBox alignment="CENTER_LEFT" spacing="15.0">
+                            <ImageView fitHeight="72.0" fitWidth="72.0" pickOnBounds="true" preserveRatio="true">
+                                <image>
+                                    <Image url="@../image/interior-design.png"/>
+                                </image>
+                            </ImageView>
+                            <VBox>
+                                <children>
+                                    <Label styleClass="main-header" text="Quản Lý Loại Phòng"/>
+                                    <Label prefHeight="20.0" prefWidth="450.0" styleClass="main-subtitle"
+                                           text="Quản lý thông tin và giá cả các loại phòng trong khách sạn"/>
+                                </children>
+                            </VBox>
+                        </children>
+                    </HBox>
+                    <HBox alignment="CENTER_RIGHT" prefHeight="72.0" prefWidth="0.0" spacing="16.0"
+                          GridPane.columnIndex="1">
                         <children>
-                           <VBox prefHeight="61.0" prefWidth="121.0">
-                              <children>
-                                        <Label styleClass="stat-label" text="Tổng số loại phòng" />
-                                        <Label fx:id="lblTongSoLoaiPhong" styleClass="stat-value" text="0" />
-                              </children>
-                           </VBox>
-                           <ImageView fitHeight="60.0" fitWidth="71.0" pickOnBounds="true" preserveRatio="true">
-                              <image>
-                                 <Image url="@../image/living-room.png" />
-                              </image>
-                           </ImageView>
+                            <Button fx:id="btnThemLoaiPhong" alignment="CENTER_RIGHT" contentDisplay="RIGHT"
+                                    onAction="#handleThemLoaiPhong" prefHeight="40.0" styleClass="btn-them"
+                                    text="➕ Thêm Loại Phòng"/>
                         </children>
-                     </HBox>
-                        </children>
-                    </VBox>
-                    <VBox layoutX="10.0" layoutY="-27.0" prefHeight="200.0" prefWidth="100.0" styleClass="stat-card-border" GridPane.columnIndex="1">
-                        <children>
-                     <HBox alignment="CENTER_LEFT" spacing="15.0">
-                        <children>
-                           <VBox prefHeight="200.0" prefWidth="100.0">
-                              <children>
-                                        <Label styleClass="stat-label" text="Giá thấp nhất" />
-                                        <Label fx:id="lblGiaThapNhat" styleClass="stat-value" text="0 VNĐ" />
-                              </children>
-                           </VBox>
-                           <ImageView fitHeight="60.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true">
-                              <image>
-                                 <Image url="@../image/dining-table.png" />
-                              </image>
-                           </ImageView>
-                        </children>
-                     </HBox>
-                        </children>
-                    </VBox>
-                    <VBox layoutX="238.0" layoutY="-27.0" prefHeight="200.0" prefWidth="100.0" styleClass="stat-card-border" GridPane.columnIndex="2">
-                        <children>
-                     <HBox alignment="CENTER_LEFT" spacing="15.0">
-                        <children>
-                           <VBox prefHeight="200.0" prefWidth="100.0">
-                              <children>
-                                        <Label styleClass="stat-label" text="Giá cao nhất" />
-                                        <Label fx:id="lblGiaCaoNhat" styleClass="stat-value" text="0 VNĐ" />
-                              </children>
-                           </VBox>
-                           <ImageView fitHeight="60.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true">
-                              <image>
-                                 <Image url="@../image/bed.png" />
-                              </image>
-                           </ImageView>
-                        </children>
-                     </HBox>
-                        </children>
-                    </VBox>
-                    <VBox layoutX="10.0" layoutY="-27.0" prefHeight="200.0" prefWidth="100.0" styleClass="stat-card-border" GridPane.columnIndex="3">
-                        <children>
-                     <HBox alignment="CENTER_LEFT" spacing="15.0">
-                        <children>
-                           <VBox prefHeight="200.0" prefWidth="100.0">
-                              <children>
-                                        <Label styleClass="stat-label" text="Giá trung bình" />
-                                        <Label fx:id="lblGiaTrungBinh" styleClass="stat-value" text="0 VNĐ" />
-                              </children>
-                           </VBox>
-                           <ImageView fitHeight="60.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true">
-                              <image>
-                                 <Image url="@../image/double-bed_avg.png" />
-                              </image>
-                           </ImageView>
-                        </children>
-                     </HBox>
-                        </children>
-                    </VBox>
+                    </HBox>
                 </children>
                 <VBox.margin>
-                    <Insets bottom="20.0" />
+                    <Insets/>
                 </VBox.margin>
+            </GridPane>
+            <GridPane hgap="20.0">
+                <columnConstraints>
+                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                </columnConstraints>
+                <rowConstraints>
+                    <RowConstraints maxHeight="100.0" vgrow="SOMETIMES"/>
+                </rowConstraints>
+                <VBox styleClass="stat-box" GridPane.columnIndex="0">
+                    <HBox alignment="CENTER_LEFT" spacing="16">
+                        <VBox alignment="CENTER_LEFT" spacing="10" HBox.hgrow="ALWAYS">
+                            <Label styleClass="stat-title" text="Tổng số loại phòng"/>
+                            <Label fx:id="lblTongSoLoaiPhong" styleClass="stat-number" text="0"/>
+                        </VBox>
+                        <ImageView fitHeight="45" fitWidth="45" pickOnBounds="true" preserveRatio="true">
+                            <Image url="@../image/living-room.png"/>
+                        </ImageView>
+                    </HBox>
+                </VBox>
+                <VBox styleClass="stat-box" GridPane.columnIndex="1">
+                    <HBox alignment="CENTER_LEFT" spacing="16">
+                        <VBox alignment="CENTER_LEFT" spacing="10" HBox.hgrow="ALWAYS">
+                            <Label styleClass="stat-title" text="Giá thấp nhất"/>
+                            <Label fx:id="lblGiaThapNhat" styleClass="stat-number" text="0"/>
+                        </VBox>
+                        <ImageView fitHeight="45" fitWidth="45" pickOnBounds="true" preserveRatio="true">
+                            <Image url="@../image/dining-table.png"/>
+                        </ImageView>
+                    </HBox>
+                </VBox>
+                <VBox styleClass="stat-box" GridPane.columnIndex="2">
+                    <HBox alignment="CENTER_LEFT" spacing="16">
+                        <VBox alignment="CENTER_LEFT" spacing="10" HBox.hgrow="ALWAYS">
+                            <Label styleClass="stat-title" text="Giá cao nhất"/>
+                            <Label fx:id="lblGiaCaoNhat" styleClass="stat-number" text="0"/>
+                        </VBox>
+                        <ImageView fitHeight="45" fitWidth="45" pickOnBounds="true" preserveRatio="true">
+                            <Image url="@../image/bed.png"/>
+                        </ImageView>
+                    </HBox>
+                </VBox>
+                <VBox styleClass="stat-box" GridPane.columnIndex="3">
+                    <HBox alignment="CENTER_LEFT" spacing="16">
+                        <VBox alignment="CENTER_LEFT" spacing="10" HBox.hgrow="ALWAYS">
+                            <Label styleClass="stat-title" text="Giá trung bình"/>
+                            <Label fx:id="lblGiaTrungBinh" styleClass="stat-number" text="0"/>
+                        </VBox>
+                        <ImageView fitHeight="45" fitWidth="45" pickOnBounds="true" preserveRatio="true">
+                            <Image url="@../image/double-bed_avg.png"/>
+                        </ImageView>
+                    </HBox>
+                </VBox>
             </GridPane>
 
             <!-- Search and Filter Panel -->
             <HBox alignment="CENTER_LEFT" spacing="15.0">
-                <TextField fx:id="txtTimKiem" onKeyReleased="#handleTimKiem" prefHeight="33.0" prefWidth="239.0" promptText="Nhập mã loại phòng hoặc tên..." styleClass="form-field" />
-                <ComboBox fx:id="cbLocGia" onAction="#handleLocGia" prefHeight="41.0" prefWidth="165.0" promptText="Tất cả khoảng giá" styleClass="form-field" />
-                <Button fx:id="btnLamMoi" onAction="#handleLamMoi" prefHeight="37.0" prefWidth="121.0" styleClass="btn-info" text="🔄 Làm Mới" />
+                <TextField fx:id="txtTimKiem" onKeyReleased="#handleTimKiem" prefHeight="40.0" prefWidth="239.0"
+                           promptText="Nhập mã loại phòng hoặc tên..." styleClass="form-field" HBox.hgrow="ALWAYS"/>
+                <ComboBox fx:id="cbLocGia" onAction="#handleLocGia" prefHeight="41.0" prefWidth="165.0"
+                          promptText="Tất cả khoảng giá" styleClass="form-field"/>
+                <Button fx:id="btnLamMoi" onAction="#handleLamMoi" prefHeight="37.0" prefWidth="121.0"
+                        styleClass="btn-info" text="🔄 Làm Mới"/>
             </HBox>
 
             <!-- Table View -->
-            <VBox prefHeight="561.0" prefWidth="890.0" styleClass="table-container">
-                <TableView fx:id="tableViewLoaiPhong" prefHeight="576.0" prefWidth="850.0" styleClass="table-view">
+            <VBox prefHeight="561.0" prefWidth="890.0" styleClass="table-container" VBox.vgrow="ALWAYS">
+                <TableView fx:id="tableViewLoaiPhong" prefHeight="576.0" prefWidth="850.0" styleClass="table-view"
+                           VBox.vgrow="ALWAYS">
                     <columns>
-                        <TableColumn fx:id="colMaLoaiPhong" prefWidth="120.0" text="Mã Loại Phòng" />
-                        <TableColumn fx:id="colTenLoai" prefWidth="150.0" text="Tên Loại Phòng" />
-                        <TableColumn fx:id="colDonGia" prefWidth="120.0" text="Đơn Giá" />
-                        <TableColumn fx:id="colMoTa" prefWidth="300.0" text="Mô Tả" />
-                        <TableColumn fx:id="colThaoTac" minWidth="0.0" prefWidth="140.0" text="Thao tác" />
+                        <TableColumn fx:id="colMaLoaiPhong" prefWidth="120.0" text="Mã Loại Phòng"/>
+                        <TableColumn fx:id="colTenLoai" prefWidth="150.0" text="Tên Loại Phòng"/>
+                        <TableColumn fx:id="colDonGia" prefWidth="120.0" text="Đơn Giá"/>
+                        <TableColumn fx:id="colMoTa" prefWidth="300.0" text="Mô Tả"/>
+                        <TableColumn fx:id="colThaoTac" minWidth="0.0" prefWidth="140.0" text="Thao tác"/>
                     </columns>
                     <padding>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
                     </padding>
-               <columnResizePolicy>
-                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-               </columnResizePolicy>
+                    <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                    </columnResizePolicy>
                 </TableView>
             </VBox>
         </VBox>
     </center>
-   <padding>
-      <Insets bottom="32.0" left="32.0" right="32.0" top="32.0" />
-   </padding>
 </BorderPane>

@@ -13,51 +13,51 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="rootPane" stylesheets="@../css/main.css, @../css/quan-ly-dich-vu.css, @../css/table-style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.QuanLyDichVuController">
+<BorderPane fx:id="rootPane" stylesheets="@../css/main.css, @../css/quan-ly-dich-vu.css, @../css/table-style.css" xmlns="http://javafx.com/javafx/24" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.QuanLyDichVuController">
     <center>
-        <VBox alignment="TOP_CENTER" prefHeight="800.0" prefWidth="950.0" spacing="15.0" styleClass="main-content" VBox.vgrow="ALWAYS">
+        <VBox alignment="TOP_CENTER" prefHeight="800.0" prefWidth="950.0" spacing="32.0" VBox.vgrow="ALWAYS">
             <children>
-                <VBox prefHeight="44.0" prefWidth="918.0" spacing="5.0">
-                    <VBox.margin>
-                        <Insets bottom="10.0" />
-                    </VBox.margin>
-                    <children>
-                        <HBox prefHeight="22.0" prefWidth="890.0" HBox.hgrow="ALWAYS">
-                            <children>
-                                <VBox prefHeight="53.0" prefWidth="487.0" HBox.hgrow="ALWAYS">
-                                    <children>
-                                        <Label styleClass="main-header" text="Quản Lý Dịch Vụ">
-                                 <graphic>
-                                    <ImageView fitHeight="64.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@../image/client.png" />
-                                       </image>
-                                    </ImageView>
-                                 </graphic></Label>
+            <GridPane>
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <HBox spacing="16.0">
+                     <children>
+                        <ImageView fitHeight="72.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../image/client.png" />
+                           </image>
+                        </ImageView>
+                        <VBox>
+                           <children>
+                                        <Label styleClass="main-header" text="Quản Lý Dịch Vụ" />
                                         <Label prefHeight="20.0" prefWidth="450.0" styleClass="main-subtitle" text="Quản lý thông tin và trạng thái của dịch vụ trong khách sạn" />
-                                    </children>
-                                </VBox>
-                                <Region HBox.hgrow="ALWAYS" />
-                                <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
-                                    <children>
-                                        <Button fx:id="btnThemDichVu" mnemonicParsing="false" onAction="#handleThemDichVu" prefHeight="37.0" prefWidth="144.0" styleClass="btn-them" text="➕ Thêm Dịch Vụ">
-                                            <font>
-                                                <Font name="System Bold" size="12.0" />
-                                            </font>
-                                        </Button>
-                                    </children>
-                                </HBox>
-                            </children>
-                        </HBox>
-                    </children>
-                </VBox>
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+                          <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="5.0" GridPane.columnIndex="1">
+                              <children>
+                                  <Button fx:id="btnThemDichVu" mnemonicParsing="false" onAction="#handleThemDichVu" prefHeight="37.0" prefWidth="144.0" styleClass="btn-them" text="➕ Thêm Dịch Vụ">
+                                      <font>
+                                          <Font name="System Bold" size="12.0" />
+                                      </font>
+                                  </Button>
+                              </children>
+                          </HBox>
+               </children>
+            </GridPane>
 
-                <GridPane alignment="TOP_CENTER" hgap="20" prefHeight="150.0" prefWidth="890.0" HBox.hgrow="ALWAYS" VBox.vgrow="NEVER">
+                <GridPane alignment="TOP_CENTER" hgap="20" prefHeight="100.0" prefWidth="890.0" HBox.hgrow="ALWAYS" VBox.vgrow="NEVER">
                     <columnConstraints>
                         <ColumnConstraints hgrow="ALWAYS" percentWidth="25" />
                         <ColumnConstraints hgrow="ALWAYS" percentWidth="25" />
@@ -66,7 +66,7 @@
                     </columnConstraints>
 
                     <rowConstraints>
-                        <RowConstraints maxHeight="150" minHeight="100" prefHeight="120" valignment="TOP" vgrow="ALWAYS" />
+                        <RowConstraints maxHeight="100.0" minHeight="100" prefHeight="120" valignment="TOP" vgrow="ALWAYS" />
                     </rowConstraints>
 
                     <children>
@@ -170,4 +170,7 @@
             </children>
         </VBox>
     </center>
+   <padding>
+      <Insets bottom="32.0" left="32.0" right="32.0" top="32.0" />
+   </padding>
 </BorderPane>
