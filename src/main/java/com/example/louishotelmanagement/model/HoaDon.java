@@ -12,6 +12,10 @@ public class HoaDon {
     private String maKH;
     private String maNV;
     private String maGG; // Có thể null
+    private KhachHang khachHang;
+
+    private String soPhong;
+    private LocalDate ngayCheckOut;
 
     // Constructor không tham số
     public HoaDon() {
@@ -32,6 +36,7 @@ public class HoaDon {
         this.maKH = maKH;
         this.maNV = maNV;
         this.maGG = maGG;
+        this.khachHang = new KhachHang();
     }
 
     // Getters & Setters
@@ -97,6 +102,30 @@ public class HoaDon {
 
     public void setTrangThai(TrangThaiHoaDon trangThai) {
         this.trangThai = trangThai;
+    }
+
+    public KhachHang getKhachHang() {
+        return khachHang;
+    }
+
+    public void setKhachHang(KhachHang khachHang) {
+        this.khachHang = khachHang;
+    }
+
+    public String getSoPhong() {
+        return soPhong;
+    }
+
+    public void setSoPhong(String soPhong) {
+        this.soPhong = soPhong;
+    }
+
+    public LocalDate getNgayCheckOut() {
+        return ngayCheckOut;
+    }
+
+    public void setNgayCheckOut(LocalDate ngayCheckOut) {
+        this.ngayCheckOut = ngayCheckOut;
     }
 
     @Override

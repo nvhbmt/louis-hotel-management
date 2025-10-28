@@ -17,7 +17,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
-import java.math.BigDecimal; // Sửa import đúng
 import java.net.URL;
 import java.sql.SQLException;
 import java.text.NumberFormat;
@@ -53,16 +52,16 @@ public class PhongController implements Initializable {
         phongDAO = new PhongDAO();
         System.out.println("Phong page initialized");
 
-        configureTable();
-        setupComboBoxes();
-        setupFiltering(); // Thiết lập bộ lọc tự động
-        loadTableData();
+        cauHinhBang();
+        cauHinhCBX();
+        cauHinhLoc(); // Thiết lập bộ lọc tự động
+        taiBang();
     }
 
     /**
      * Cấu hình cột, định dạng ô, và gán danh sách đã lọc cho TableView.
      */
-    private void configureTable() {
+    private void cauHinhBang() {
         // 1. Khởi tạo danh sách gốc
         phongObservableList = FXCollections.observableArrayList();
         // 2. Tạo FilteredList để "gói" danh sách gốc
@@ -126,7 +125,7 @@ public class PhongController implements Initializable {
     /**
      * Tải dữ liệu từ CSDL và cập nhật thống kê.
      */
-    public void loadTableData() {
+    public void taiBang() {
         try {
             ArrayList<Phong> dsPhong = phongDAO.layDSPhong();
             phongObservableList.clear();
@@ -140,7 +139,7 @@ public class PhongController implements Initializable {
     /**
      * Khởi tạo dữ liệu cho cả hai ComboBox (Tầng và Trạng Thái).
      */
-    private void setupComboBoxes() {
+    private void cauHinhCBX() {
         // --- Setup ComboBox Tầng ---
         ObservableList<String> danhSachTang = FXCollections.observableArrayList();
         danhSachTang.add("Tất cả các tầng"); // Thêm tùy chọn "Tất cả"
@@ -168,7 +167,7 @@ public class PhongController implements Initializable {
      * Thiết lập bộ lọc tự động. Bảng sẽ tự lọc lại
      * mỗi khi giá trị trong cbxTang hoặc cbxTrangThai thay đổi.
      */
-    private void setupFiltering() {
+    private void cauHinhLoc() {
         filteredPhongList.predicateProperty().bind(Bindings.createObjectBinding(() -> {
             String tangDaChon = cbxTang.getValue();
             String trangThaiDaChon = cbxTrangThai.getValue();
@@ -223,7 +222,16 @@ public class PhongController implements Initializable {
         lblPhongSuDung.setText(String.valueOf(soSuDung));
         lblPhongBaoTri.setText(String.valueOf(soBaoTri));
     }
+    @FXML
+    private void handleLamMoi(ActionEvent event) {
+        // 1. Đặt lại giá trị của 2 ComboBox về mặc định
+        cbxTang.setValue("Tất cả các tầng");
+        cbxTrangThai.setValue("Tất cả trạng thái");
 
+        // 2. Tải lại dữ liệu mới từ CSDL
+        // (Việc này cũng sẽ tự động cập nhật thống kê)
+        taiBang();
+    }
     // --- Các phương thức chuyển trang (giữ nguyên) ---
     private ContentSwitcher switcher;
 
@@ -244,15 +252,15 @@ public class PhongController implements Initializable {
         if (switcher != null) switcher.switchContent("/com/example/louishotelmanagement/fxml/doi-phong-view.fxml");
     }
     @FXML private void moHuy(ActionEvent actionEvent) {
-        if (switcher != null) switcher.switchContent("/com/example/louishotelmanagement/fxml/huy-dat-phong-view.fxml");
+        if (switcher != null) switcher.switchContent("/com/example/louishotelmanagement/fxml/huy-phong-view.fxml");
     }
     @FXML private void moDichVu(ActionEvent actionEvent) {
         if (switcher != null) switcher.switchContent("/com/example/louishotelmanagement/fxml/dat-dich-vu-view.fxml");
     }
+    @FXML private void moHuyDat(ActionEvent actionEvent) {
+        if (switcher != null) switcher.switchContent("/com/example/louishotelmanagement/fxml/huy-dat-phong-view.fxml");
+    }
     @FXML private void moThanhToan(ActionEvent actionEvent) {
         if (switcher != null) switcher.switchContent("/com/example/louishotelmanagement/fxml/thanh-toan-view.fxml");
-    }
-    @FXML private void moTraPhong(ActionEvent actionEvent) {
-        if (switcher != null) switcher.switchContent("/com/example/louishotelmanagement/fxml/huy-phong-view.fxml");
     }
 }

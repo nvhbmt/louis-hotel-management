@@ -1,6 +1,5 @@
 -- Thiết lập cơ sở dữ liệu
-USE QuanLyKhachSan;
-GO
+
 
 -------------------------------------------------------------------
 -- 1. LoaiPhong (Loại Phòng)
