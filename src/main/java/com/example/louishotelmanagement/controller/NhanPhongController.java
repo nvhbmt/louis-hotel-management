@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-public class NhanPhongController implements Initializable {
+public class NhanPhongController implements Initializable,Refreshable {
     public ComboBox dsKhachHang;
     public TextField soDT;
     public TextField CCCD;
@@ -201,7 +201,7 @@ public class NhanPhongController implements Initializable {
         }
     }
 
-    public void handleNhanPhong(ActionEvent actionEvent) throws SQLException {
+    public void handleNhanPhong(ActionEvent actionEvent) throws Exception {
         if (check) {
             phongDAO.capNhatTrangThaiPhong(maPhong.getText(), "Đang sử dụng");
             PhieuDatPhong pdp = phieuDatPhongDAO.layPhieuDatPhongTheoMa(maPhieu.getText());
@@ -212,9 +212,24 @@ public class NhanPhongController implements Initializable {
             ThongBaoUtil.hienThiThongBao("Thành công", "Bạn đã nhận phòng thành công");
             dsPhong.getItems().remove(dsPhong.getSelectionModel().getSelectedIndex());
             dsPhong.getSelectionModel().selectFirst();
+            refreshData();
         } else {
             ThongBaoUtil.hienThiLoi("Lỗi", "Không đặt được phòng");
         }
+    }
+
+    @Override
+    public void refreshData() throws SQLException, Exception {
+        laydsKh();
+        loadData();
+        laydsPhongTheoKhachHang();
+        khoiTaoDinhDangNgay();
+        maPhieu.setText(null);
+        maPhong.setText(null);
+        tang.setText(null);
+        hoTen.setText(null);
+        ngayDen.setValue(null);
+        ngayDi.setValue(null);
     }
 }
 
