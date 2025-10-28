@@ -5,7 +5,6 @@ import com.example.louishotelmanagement.dao.KhachHangDAO;
 import com.example.louishotelmanagement.dao.PhieuDatPhongDAO;
 import com.example.louishotelmanagement.dao.PhongDAO;
 import com.example.louishotelmanagement.model.*;
-
 import com.example.louishotelmanagement.util.ThongBaoUtil;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -68,7 +67,7 @@ public class HuyDatPhongController implements Initializable, Refreshable {
             laydsKhachHang();
             KhoiTaoTableView();
             dsKhachHang.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
-                try{
+                try {
                     BangPhieuTheoKhachHang();
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
@@ -87,21 +86,24 @@ public class HuyDatPhongController implements Initializable, Refreshable {
             throw new RuntimeException(e);
         }
     }
+
     public void BangPhieuTheoKhachHang() throws SQLException {
         tablePhieu.getItems().clear();
         ArrayList<PhieuDatPhong> dsPhieu = pDao.layDSPhieuDatPhongTheoKhachHang(dsMaKH.get(dsKhachHang.getSelectionModel().getSelectedIndex()));
         ObservableList<PhieuDatPhong> observableListPhieu = FXCollections.observableArrayList(dsPhieu);
         tablePhieu.setItems(observableListPhieu);
     }
-    public void laydsKhachHang() throws  SQLException{
+
+    public void laydsKhachHang() throws SQLException {
         dsKhachHang.getItems().clear();
         ArrayList<KhachHang> khs = kDao.layDSKhachHang();
         dsMaKH = new ArrayList<>();
-        for(KhachHang khachHang : khs) {
+        for (KhachHang khachHang : khs) {
             dsKhachHang.getItems().add(khachHang.getHoTen());
             dsMaKH.add(khachHang.getMaKH());
         }
     }
+
     public void KhoiTaoTableView() throws SQLException {
         colMaPhieu.setCellValueFactory(new PropertyValueFactory<>("maPhieu"));
         colNgayDat.setCellValueFactory(new PropertyValueFactory<>("ngayDat"));
@@ -224,7 +226,7 @@ public class HuyDatPhongController implements Initializable, Refreshable {
                         return;
                     }
                 }
-                kDao.capNhatTrangThaiKhachHang(phieuTam.getMaKH(),TrangThaiKhachHang.CHECK_OUT);
+                kDao.capNhatTrangThaiKhachHang(phieuTam.getMaKH(), TrangThaiKhachHang.CHECK_OUT);
                 ThongBaoUtil.hienThiThongBao("Thông báo", "Hủy đặt phòng thành công");
                 tablePhieu.refresh();
             } else {
@@ -266,7 +268,7 @@ public class HuyDatPhongController implements Initializable, Refreshable {
 
             // 3. Load FXML của màn hình chi tiết
             // Đảm bảo đường dẫn FXML là chính xác theo cấu trúc dự án của bạn!
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/ChiTietPhongTrongPhieuView.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/chi-tiet-phong-trong-phieu-view.fxml"));
             Parent root = loader.load();
 
             // 4. Truy cập Controller của màn hình mới

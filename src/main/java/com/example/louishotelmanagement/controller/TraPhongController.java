@@ -11,8 +11,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-
 import javafx.util.StringConverter;
+
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class TraPhongController implements Initializable,Refreshable{
+public class TraPhongController implements Initializable, Refreshable {
 
     public Button btnCheck;
     public DatePicker ngayDi;
@@ -46,6 +46,7 @@ public class TraPhongController implements Initializable,Refreshable{
     private HoaDonDAO hdDao;
     private List<CTHoaDonPhong> listCTHoaDonPhong = new ArrayList<>();
     private ContentSwitcher switcher;
+
     public void setContentSwitcher(ContentSwitcher switcher) {
         this.switcher = switcher;
     }
@@ -58,12 +59,12 @@ public class TraPhongController implements Initializable,Refreshable{
         phieuDatPhongDAO = new PhieuDatPhongDAO();
         hdDao = new HoaDonDAO();
         btnXemChiTiet.setDisable(true);
-        try{
+        try {
             laydsKhachHang();
             laydsPhieuTheoKhachHang();
             laydsPhongTheoPhieu();
             dsKhachHang.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-                if(newValue!=null){
+                if (newValue != null) {
                     try {
                         laydsPhieuTheoKhachHang();
                     } catch (SQLException e) {
@@ -72,7 +73,7 @@ public class TraPhongController implements Initializable,Refreshable{
                 }
             });
             dsPhieu.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-                if(newValue!=null){
+                if (newValue != null) {
                     try {
                         laydsPhongTheoPhieu();
                     } catch (SQLException e) {
@@ -120,35 +121,39 @@ public class TraPhongController implements Initializable,Refreshable{
         // *Tùy chọn:* Đảm bảo DatePicker có thể hiển thị ngày hôm nay nếu người dùng chưa chọn
         // ngayDen.setValue(LocalDate.now());
     }
-    public void laydsKhachHang() throws  SQLException{
+
+    public void laydsKhachHang() throws SQLException {
         ArrayList<KhachHang> khs = khDao.layDSKhachHang();
-        for(KhachHang khachHang : khs) {
+        for (KhachHang khachHang : khs) {
             dsKhachHang.getItems().add(khachHang.getHoTen());
             dsMaKH.add(khachHang.getMaKH());
         }
         dsKhachHang.getSelectionModel().selectFirst();
     }
+
     public void laydsPhieuTheoKhachHang() throws SQLException {
         dsPhieu.getItems().clear();
         ArrayList<PhieuDatPhong> listpdp = phieuDatPhongDAO.layDSPhieuDatPhongTheoKhachHang(dsMaKH.get(dsKhachHang.getSelectionModel().getSelectedIndex()));
-        for(PhieuDatPhong phieuDatPhong : listpdp) {
+        for (PhieuDatPhong phieuDatPhong : listpdp) {
             dsPhieu.getItems().add(phieuDatPhong.getMaPhieu());
         }
         dsPhieu.getSelectionModel().selectFirst();
     }
+
     public void laydsPhongTheoPhieu() throws SQLException {
         dsPhong.getItems().clear();
         ArrayList<CTHoaDonPhong> ctHoaDonPhongs = cthdpDao.getCTHoaDonPhongTheoMaPhieu(dsPhieu.getSelectionModel().getSelectedItem().toString());
-        for(CTHoaDonPhong ctHoaDonPhong : ctHoaDonPhongs) {
+        for (CTHoaDonPhong ctHoaDonPhong : ctHoaDonPhongs) {
             dsPhong.getItems().add(ctHoaDonPhong.getMaPhong());
         }
         dsPhong.getSelectionModel().selectFirst();
     }
+
     public void handleCheck(javafx.event.ActionEvent actionEvent) throws Exception {
         boolean IsCheck = false;
-        if(dsPhieu.getSelectionModel().getSelectedItem()!=null){
+        if (dsPhieu.getSelectionModel().getSelectedItem() != null) {
             PhieuDatPhong phieuDatPhong = phieuDatPhongDAO.layPhieuDatPhongTheoMa(dsPhieu.getSelectionModel().getSelectedItem().toString());
-            if(phieuDatPhong!=null){
+            if (phieuDatPhong != null) {
                 KhachHang khachHang = khDao.layKhachHangTheoMa(phieuDatPhong.getMaKH());
                 hoTen.setText(khachHang.getHoTen());
                 maPhieuThue.setText(phieuDatPhong.getMaPhieu());
@@ -156,12 +161,12 @@ public class TraPhongController implements Initializable,Refreshable{
                 ArrayList<CTHoaDonPhong> listCTHDPTheoPhieu = cthdpDao.getCTHoaDonPhongTheoMaPhieu(phieuDatPhong.getMaPhieu());
                 soLuongPhong.setText(String.valueOf(listCTHDPTheoPhieu.size()));
                 IsCheck = true;
-            }else{
-                ThongBaoUtil.hienThiLoi("Lỗi kiểm tra","Không tìm thấy bất kì phiếu đặt phòng nào");
+            } else {
+                ThongBaoUtil.hienThiLoi("Lỗi kiểm tra", "Không tìm thấy bất kì phiếu đặt phòng nào");
                 refreshData();
             }
-        }else{
-            ThongBaoUtil.hienThiLoi("Lỗi kiểm tra","Vui lòng chọn phiếu muốn kiểm tra");
+        } else {
+            ThongBaoUtil.hienThiLoi("Lỗi kiểm tra", "Vui lòng chọn phiếu muốn kiểm tra");
             refreshData();
         }
         btnXemChiTiet.setDisable(!IsCheck);
@@ -246,7 +251,7 @@ public class TraPhongController implements Initializable,Refreshable{
 
             // 3. Load FXML của màn hình chi tiết
             // Đảm bảo đường dẫn FXML là chính xác theo cấu trúc dự án của bạn!
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/ChiTietPhongTrongPhieuView.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/chi-tiet-phong-trong-phieu-view.fxml"));
             Parent root = loader.load();
 
             // 4. Truy cập Controller của màn hình mới
