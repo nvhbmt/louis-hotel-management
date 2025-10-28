@@ -4,10 +4,7 @@ import com.example.louishotelmanagement.dao.CTHoaDonPhongDAO;
 import com.example.louishotelmanagement.dao.KhachHangDAO;
 import com.example.louishotelmanagement.dao.PhieuDatPhongDAO;
 import com.example.louishotelmanagement.dao.PhongDAO;
-import com.example.louishotelmanagement.model.CTHoaDonPhong;
-import com.example.louishotelmanagement.model.KhachHang;
-import com.example.louishotelmanagement.model.PhieuDatPhong;
-import com.example.louishotelmanagement.model.TrangThaiPhieuDatPhong;
+import com.example.louishotelmanagement.model.*;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
 
 import javafx.event.ActionEvent;
@@ -211,6 +208,7 @@ public class NhanPhongController implements Initializable {
             phieuDatPhongDAO.capNhatTrangThaiPhieuDatPhong(pdp.getMaPhieu(), "Đang sử dụng");
             CTHoaDonPhong ctHoaDonPhong = ctHoaDondao.getDSCTHoaDonPhongTheoMaPhong(dsPhong.getSelectionModel().getSelectedItem().toString()).getLast();
             ctHoaDondao.capNhatNgayDenThucTe( ctHoaDonPhong.getMaHD(),maPhong.getText(), LocalDate.now());
+            khachHangDAO.capNhatTrangThaiKhachHang(dsMaKH.get(dsKhachHang.getSelectionModel().getSelectedIndex()), TrangThaiKhachHang.DANG_LUU_TRU);
             ThongBaoUtil.hienThiThongBao("Thành công", "Bạn đã nhận phòng thành công");
             dsPhong.getItems().remove(dsPhong.getSelectionModel().getSelectedIndex());
             dsPhong.getSelectionModel().selectFirst();

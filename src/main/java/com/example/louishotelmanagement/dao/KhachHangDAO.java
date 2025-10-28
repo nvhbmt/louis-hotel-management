@@ -127,6 +127,20 @@ public class KhachHangDAO {
         }
     }
 
+    // Cập nhật trạng thái khách hàng
+    public boolean capNhatTrangThaiKhachHang(String maKH, TrangThaiKhachHang trangThaiMoi) throws SQLException {
+        String sql = "{call sp_CapNhatTrangThaiKhachHang(?,?)}";
+        try (Connection con = CauHinhDatabase.getConnection();
+             CallableStatement cs = con.prepareCall(sql)) {
+
+            cs.setString(1, maKH);
+            // Sử dụng getTenHienThi() để lấy chuỗi trạng thái phù hợp (ví dụ: "Đang lưu trú")
+            cs.setString(2, trangThaiMoi.getTenHienThi());
+
+            return cs.executeUpdate() > 0;
+        }
+    }
+
     // Xóa khách hàng
     public boolean xoaKhachHang(String maKH) throws SQLException {
         String sql = "{call sp_XoaKhachHang(?)}";

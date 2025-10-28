@@ -499,6 +499,7 @@ public class DatPhongController implements Initializable, Refreshable{
         for (Phong p : listPhongDuocDat) {
             ThemChiTietPhong(pdp, hd, p);
         }
+        Kdao.capNhatTrangThaiKhachHang(newKh.getMaKH(),TrangThaiKhachHang.DA_DAT);
 
         ThongBaoUtil.hienThiThongBao("Thông báo", "Đặt phòng thành công. Tiền cọc: " + result.tienCoc + " VND (" + result.phuongThucTT + ")");
 

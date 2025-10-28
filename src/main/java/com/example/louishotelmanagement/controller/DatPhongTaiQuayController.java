@@ -454,6 +454,7 @@ public class DatPhongTaiQuayController implements Initializable,Refreshable {
             for (Phong p : listPhongDuocDat) {
                 ThemChiTietPhong(pdp, hd, p); // Gọi hàm xử lý chi tiết
             }
+            Kdao.capNhatTrangThaiKhachHang(newKh.getMaKH(),TrangThaiKhachHang.DANG_LUU_TRU);
 
             refreshData();
             ThongBaoUtil.hienThiThongBao("Thành Công", "Bạn đã đặt phòng thành công");

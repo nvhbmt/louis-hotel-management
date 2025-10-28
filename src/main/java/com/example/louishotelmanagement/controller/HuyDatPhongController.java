@@ -224,6 +224,7 @@ public class HuyDatPhongController implements Initializable, Refreshable {
                         return;
                     }
                 }
+                kDao.capNhatTrangThaiKhachHang(phieuTam.getMaKH(),TrangThaiKhachHang.CHECK_OUT);
                 ThongBaoUtil.hienThiThongBao("Thông báo", "Hủy đặt phòng thành công");
                 tablePhieu.refresh();
             } else {
