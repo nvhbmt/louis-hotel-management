@@ -410,8 +410,12 @@ public class DatPhongTaiQuayController implements Initializable,Refreshable {
 // -------------------------------------------------------------
 
     public void handleDatPhong(ActionEvent actionEvent) throws SQLException {
-        if (listPhongDuocDat.isEmpty()&&ngayDi.getValue() == null) {
-            showAlertError("Lỗi ngày", "Không được vui lòng không bỏ bất kì thông tin nào");
+        if (ngayDi.getValue() == null) {
+            showAlertError("Lỗi", "Vui lòng chọn ngày đi trước khi đặt phòng.");
+            return;
+        }
+        if (listPhongDuocDat.isEmpty()) {
+            showAlertError("Lỗi", "Vui lòng chọn phòng trước khi đặt");
             return;
         }
 
