@@ -1,9 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourcePerFileMappings">
-    <file url="file://$APPLICATION_CONFIG_DIR$/consoles/db/459ee73b-4ed6-4b39-873d-b03de0ad361d/console.sql" value="459ee73b-4ed6-4b39-873d-b03de0ad361d" />
     <file url="file://$PROJECT_DIR$/mssql/duLieuMau.sql" value="459ee73b-4ed6-4b39-873d-b03de0ad361d" />
     <file url="file://$PROJECT_DIR$/mssql/khoiTaoDataBase.sql" value="459ee73b-4ed6-4b39-873d-b03de0ad361d" />
+    <file url="file://$PROJECT_DIR$/mssql/storedProceduresCTHoaDonDichVu.sql" value="459ee73b-4ed6-4b39-873d-b03de0ad361d" />
+    <file url="file://$PROJECT_DIR$/mssql/storedProceduresCTHoaDonPhong.sql" value="459ee73b-4ed6-4b39-873d-b03de0ad361d" />
+    <file url="file://$PROJECT_DIR$/mssql/storedProceduresDichVu.sql" value="459ee73b-4ed6-4b39-873d-b03de0ad361d" />
+    <file url="file://$PROJECT_DIR$/mssql/storedProceduresHoaDon.sql" value="459ee73b-4ed6-4b39-873d-b03de0ad361d" />
+    <file url="file://$PROJECT_DIR$/mssql/storedProceduresKhachHang.sql" value="459ee73b-4ed6-4b39-873d-b03de0ad361d" />
+    <file url="file://$PROJECT_DIR$/mssql/storedProceduresMaGiamGia.sql" value="459ee73b-4ed6-4b39-873d-b03de0ad361d" />
+    <file url="file://$PROJECT_DIR$/mssql/storedProceduresNhanVien.sql" value="459ee73b-4ed6-4b39-873d-b03de0ad361d" />
+    <file url="file://$PROJECT_DIR$/mssql/storedProceduresPhieuDatPhong.sql" value="459ee73b-4ed6-4b39-873d-b03de0ad361d" />
+    <file url="file://$PROJECT_DIR$/mssql/storedProceduresPhieuDichVu.sql" value="459ee73b-4ed6-4b39-873d-b03de0ad361d" />
     <file url="file://$PROJECT_DIR$/mssql/storedProceduresPhong.sql" value="459ee73b-4ed6-4b39-873d-b03de0ad361d" />
+    <file url="file://$PROJECT_DIR$/mssql/storedProceduresTaiKhoan.sql" value="459ee73b-4ed6-4b39-873d-b03de0ad361d" />
+    <file url="file://$PROJECT_DIR$/mssql/storedProceduresThongKe.sql" value="459ee73b-4ed6-4b39-873d-b03de0ad361d" />
   </component>
 </project>
