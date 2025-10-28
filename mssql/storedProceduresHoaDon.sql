@@ -31,20 +31,7 @@ CREATE PROCEDURE sp_TimHoaDonTheoMa
 AS
 BEGIN
     SET NOCOUNT ON;
-
-    SELECT
-        maHD,
-        ngayLap,
-        phuongThuc,
-        trangThai,
-        tongTien,
-        maKH,
-        maNV,
-        maGG
-    FROM
-        HoaDon
-    WHERE
-        maHD = @maHD;
+    SELECT * FROM HoaDon WHERE maHD = @maHD;
 END;
 GO
 -- 2. Sửa hóa đơn

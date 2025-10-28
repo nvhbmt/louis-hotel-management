@@ -105,3 +105,28 @@ BEGIN
 END;
 GO
 
+-- Thủ tục lưu trữ: Cập nhật trạng thái của một khách hàng
+CREATE PROCEDURE sp_CapNhatTrangThaiKhachHang
+    @MaKH NVARCHAR(20),
+    @TrangThaiMoi NVARCHAR(50)
+AS
+BEGIN
+    -- Kiểm tra xem khách hàng có tồn tại không
+    IF EXISTS (SELECT 1 FROM KhachHang WHERE MaKH = @MaKH)
+        BEGIN
+            -- Cập nhật trạng thái
+            UPDATE KhachHang
+            SET TrangThai = @TrangThaiMoi
+            WHERE MaKH = @MaKH;
+
+            -- Trả về số dòng bị ảnh hưởng (1 nếu thành công, 0 nếu không có gì thay đổi)
+            SELECT @@ROWCOUNT;
+        END
+    ELSE
+        BEGIN
+            -- Khách hàng không tồn tại, trả về 0 dòng bị ảnh hưởng
+            SELECT 0;
+        END
+END
+GO
+
