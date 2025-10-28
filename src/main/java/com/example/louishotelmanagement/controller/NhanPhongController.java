@@ -200,19 +200,30 @@ public class NhanPhongController implements Initializable,Refreshable {
             }
         }
     }
-
+    public void NhanPhong() throws Exception {
+        phongDAO.capNhatTrangThaiPhong(maPhong.getText(), "Đang sử dụng");
+        PhieuDatPhong pdp = phieuDatPhongDAO.layPhieuDatPhongTheoMa(maPhieu.getText());
+        phieuDatPhongDAO.capNhatTrangThaiPhieuDatPhong(pdp.getMaPhieu(), "Đang sử dụng");
+        CTHoaDonPhong ctHoaDonPhong = ctHoaDondao.getDSCTHoaDonPhongTheoMaPhong(dsPhong.getSelectionModel().getSelectedItem().toString()).getLast();
+        ctHoaDondao.capNhatNgayDenThucTe( ctHoaDonPhong.getMaHD(),maPhong.getText(), LocalDate.now());
+        ThongBaoUtil.hienThiThongBao("Thành công", "Bạn đã nhận phòng thành công");
+        dsPhong.getItems().remove(dsPhong.getSelectionModel().getSelectedIndex());
+        dsPhong.getSelectionModel().selectFirst();
+        refreshData();
+    }
     public void handleNhanPhong(ActionEvent actionEvent) throws Exception {
         if (check) {
-            phongDAO.capNhatTrangThaiPhong(maPhong.getText(), "Đang sử dụng");
-            PhieuDatPhong pdp = phieuDatPhongDAO.layPhieuDatPhongTheoMa(maPhieu.getText());
-            phieuDatPhongDAO.capNhatTrangThaiPhieuDatPhong(pdp.getMaPhieu(), "Đang sử dụng");
-            CTHoaDonPhong ctHoaDonPhong = ctHoaDondao.getDSCTHoaDonPhongTheoMaPhong(dsPhong.getSelectionModel().getSelectedItem().toString()).getLast();
-            ctHoaDondao.capNhatNgayDenThucTe( ctHoaDonPhong.getMaHD(),maPhong.getText(), LocalDate.now());
-            khachHangDAO.capNhatTrangThaiKhachHang(dsMaKH.get(dsKhachHang.getSelectionModel().getSelectedIndex()), TrangThaiKhachHang.DANG_LUU_TRU);
-            ThongBaoUtil.hienThiThongBao("Thành công", "Bạn đã nhận phòng thành công");
-            dsPhong.getItems().remove(dsPhong.getSelectionModel().getSelectedIndex());
-            dsPhong.getSelectionModel().selectFirst();
-            refreshData();
+            if(ngayDen.getValue().isAfter(LocalDate.now())){
+                boolean xacNhan = ThongBaoUtil.hienThiXacNhan("Xác nhận","Bạn có chắc là muốn nhận phòng sớm và phát sinh chi phí thêm");
+                if(xacNhan){
+                    NhanPhong();
+                }else{
+                    ThongBaoUtil.hienThiThongBao("Thông báo","Bạn đã hủy bỏ nhận phòng sớm");
+                }
+            }else{
+                NhanPhong();
+            }
+
         } else {
             ThongBaoUtil.hienThiLoi("Lỗi", "Không đặt được phòng");
         }
