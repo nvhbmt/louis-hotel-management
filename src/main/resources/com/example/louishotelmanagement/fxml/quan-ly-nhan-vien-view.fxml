@@ -15,7 +15,6 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
 <BorderPane fx:id="rootPane" prefHeight="883.0" prefWidth="1014.0" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/24" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.QuanLyNhanVienController">
     <center>
@@ -32,7 +31,7 @@
                  <children>
                <HBox spacing="16.0">
                   <children>
-                               <ImageView fitHeight="72.0" fitWidth="68.0" pickOnBounds="true" preserveRatio="true">
+                               <ImageView fitHeight="72.0" fitWidth="72.0" pickOnBounds="true" preserveRatio="true">
                                    <image>
                                        <Image url="@../image/user.png" />
                                    </image>
@@ -133,55 +132,18 @@
             </GridPane>
 
             <!-- Search and Filter Panel -->
-            <HBox alignment="CENTER_LEFT" spacing="100.0" style="-fx-border-color: black; -fx-border-radius: 15;">
-                <VBox alignment="CENTER" prefHeight="50.0" prefWidth="255.0">
-                    <children>
-                        <Label prefHeight="18.0" prefWidth="255.0" text="Tìm kiếm">
-                            <font>
-                                <Font name="System Bold" size="14.0" />
-                            </font>
-                            <padding>
-                                <Insets bottom="5.0" />
-                            </padding>
-                        </Label>
-                        <TextField fx:id="timKiemField" prefHeight="33.0" prefWidth="239.0" promptText="Mã nhân viên/ số điện thoại / họ tên" styleClass="form-field" />
-                    </children>
-                </VBox>
-                <VBox alignment="CENTER" prefHeight="50.0" prefWidth="255.0">
-                    <children>
-                        <Label prefHeight="25.0" prefWidth="253.0" text="Chức vụ">
-                            <font>
-                                <Font name="System Bold" size="14.0" />
-                            </font>
-                            <padding>
-                                <Insets bottom="5.0" />
-                            </padding>
-                        </Label>
-                        <ComboBox fx:id="cbxChucVu" prefHeight="42.0" prefWidth="254.0" promptText="Tất cả chức vụ" styleClass="form-field" />
-                    </children>
-                </VBox>
-                <VBox alignment="BOTTOM_CENTER" prefHeight="200.0" prefWidth="100.0">
-                    <children>
-                        <Button fx:id="btnLamMoi" prefHeight="40.0" prefWidth="135.0" styleClass="btn-lam-moi" text="🔄 Làm Mới" />
-                    </children>
-                    <opaqueInsets>
-                        <Insets />
-                    </opaqueInsets>
-                    <padding>
-                        <Insets bottom="10.0" />
-                    </padding>
-                </VBox>
+            <HBox alignment="CENTER_LEFT" spacing="16.0">
+                  <TextField fx:id="timKiemField" prefHeight="40.0" prefWidth="519.0" promptText="Mã nhân viên/ số điện thoại / họ tên" styleClass="form-field" HBox.hgrow="ALWAYS" />
+                  <ComboBox fx:id="cbxChucVu" prefHeight="40.0" prefWidth="254.0" promptText="Tất cả chức vụ" styleClass="form-field" />
+                  <Button fx:id="btnLamMoi" prefHeight="40.0" prefWidth="130.0" styleClass="btn-lam-moi" text="🔄 Làm Mới" />
                 <VBox.margin>
                     <Insets />
                 </VBox.margin>
-                <padding>
-                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                </padding>
             </HBox>
 
             <!-- Table View -->
             <VBox prefHeight="561.0" prefWidth="890.0" styleClass="table-container">
-                <TableView fx:id="nhanVienTable" prefHeight="576.0" prefWidth="850.0" styleClass="table-view">
+                <TableView fx:id="nhanVienTable" prefHeight="576.0" prefWidth="850.0">
                     <columns>
                         <TableColumn fx:id="colMaNV" prefWidth="80.0" text="Mã nhân viên" />
                         <TableColumn fx:id="colHoTen" prefWidth="120.0" text="Họ tên" />
@@ -194,7 +156,13 @@
                     <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                     </columnResizePolicy>
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </padding>
                 </TableView>
+            <padding>
+               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+            </padding>
             </VBox>
         </VBox>
     </center>
