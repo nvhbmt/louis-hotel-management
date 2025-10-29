@@ -134,7 +134,7 @@
 
                 <HBox alignment="CENTER_LEFT" spacing="15.0" HBox.hgrow="ALWAYS">
                     <children>
-                        <TextField fx:id="txtTimKiem" maxWidth="Infinity" prefHeight="41.0" prefWidth="200.0" promptText="Nhập mã khách hàng..." style="-fx-border-color: #B0C4DE; -fx-border-radius: 15; -fx-background-radius: 15;" styleClass="form-field" HBox.hgrow="ALWAYS" />
+                        <TextField fx:id="txtTimKiem" maxWidth="Infinity" prefHeight="41.0" prefWidth="200.0" promptText="Tìm tên, số điện thoại, email..." style="-fx-border-color: #B0C4DE; -fx-border-radius: 15; -fx-background-radius: 15;" styleClass="form-field" HBox.hgrow="ALWAYS" />
 
                         <ComboBox fx:id="cmbHang" maxWidth="Infinity" prefHeight="41.0" prefWidth="150.0" promptText="Hạng khách" style="-fx-background-radius: 15; -fx-background-color: #F5F9FF; -fx-border-color: #B0C4DE; -fx-border-radius: 15;" styleClass="hover-effect" HBox.hgrow="ALWAYS" />
 

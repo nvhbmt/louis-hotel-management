@@ -93,7 +93,7 @@
                 <HBox alignment="CENTER_LEFT" spacing="15.0" HBox.hgrow="ALWAYS">
                     <children>
                         <TextField fx:id="txtTimKiem" maxWidth="Infinity" prefHeight="41.0" prefWidth="200.0"
-                                   promptText="Tìm kiếm thông tin dịch vụ..."
+                                   promptText="Tìm kiếm mã, tên dịch vụ..."
                                    style="-fx-border-color: #B0C4DE; -fx-border-radius: 15; -fx-background-radius: 15;"
                                    styleClass="form-field" HBox.hgrow="ALWAYS"/>
 
