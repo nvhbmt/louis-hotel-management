@@ -97,13 +97,13 @@ public class ThongKeController implements Initializable {
     @FXML
     private HBox hboxChonNam;
     @FXML
+    private HBox vboxSelectionControls;
+    @FXML
     private DatePicker dpTuNgay;
     @FXML
     private DatePicker dpDenNgay;
     @FXML
     private ComboBox<Integer> cbNam;
-    @FXML
-    private VBox vboxSelectionControls;
     @FXML
     private VBox vboxChart;
     @FXML
@@ -317,7 +317,7 @@ public class ThongKeController implements Initializable {
     @FXML
     private void handleChonTheoTuan() {
         currentChartType = "TUAN";
-        hboxChonNgay.setVisible(false);
+        hboxChonNgay.setVisible(true);
         hboxChonNam.setVisible(true);
         taiDuLieuChart();
     }
