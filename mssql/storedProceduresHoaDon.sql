@@ -218,3 +218,40 @@ BEGIN
     SELECT * FROM MaGiamGia WHERE maGG = @maGG;
 END;
 GO
+
+
+-- 9. Cập nhật Tổng Tiền Hóa Đơn (TÍNH TỪ CÁC CHI TIẾT)
+-- LƯU Ý: SP này không bao gồm VAT và GIẢM GIÁ.
+-- VAT và GIẢM GIÁ nên được tính trong ứng dụng Java.
+CREATE PROCEDURE sp_CapNhatTongTienHoaDon
+@maHD NVARCHAR(10)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @TongTienPhong DECIMAL(18, 2) = 0.0;
+    DECLARE @TongTienDichVu DECIMAL(18, 2) = 0.0;
+    DECLARE @TongThanhToanGoc DECIMAL(18, 2);
+
+    -- 1. Tính tổng tiền phòng (đã bao gồm thanhTien trong CTHoaDonPhong)
+    SELECT @TongTienPhong = ISNULL(SUM(ThanhTien), 0)
+    FROM CTHoaDonPhong
+    WHERE maHD = @maHD;
+
+    -- 2. Tính tổng tiền dịch vụ (đã bao gồm thanhTien trong CTHoaDonDichVu)
+    SELECT @TongTienDichVu = ISNULL(SUM(ThanhTien), 0)
+    FROM CTHoaDonDichVu
+    WHERE maHD = @maHD;
+
+    -- 3. Tính tổng thanh toán gốc (chưa VAT/Giảm giá)
+    SET @TongThanhToanGoc = @TongTienPhong + @TongTienDichVu;
+
+    -- 4. Cập nhật cột TongTien trong bảng HoaDon
+    UPDATE HoaDon
+    SET tongTien = @TongThanhToanGoc
+    WHERE maHD = @maHD;
+
+    -- 5. Trả về số dòng bị ảnh hưởng (hoặc có thể trả về tổng tiền mới)
+    -- SELECT @TongThanhToanGoc AS TongTienMoi;
+END;
+GO

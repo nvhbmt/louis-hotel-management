@@ -135,6 +135,7 @@ public class TraPhongController implements Initializable, Refreshable {
         dsPhieu.getItems().clear();
         ArrayList<PhieuDatPhong> listpdp = phieuDatPhongDAO.layDSPhieuDatPhongTheoKhachHang(dsMaKH.get(dsKhachHang.getSelectionModel().getSelectedIndex()));
         for (PhieuDatPhong phieuDatPhong : listpdp) {
+            if(phieuDatPhong.getTrangThai().equals(TrangThaiPhieuDatPhong.DANG_SU_DUNG))
             dsPhieu.getItems().add(phieuDatPhong.getMaPhieu());
         }
         dsPhieu.getSelectionModel().selectFirst();
@@ -142,11 +143,16 @@ public class TraPhongController implements Initializable, Refreshable {
 
     public void laydsPhongTheoPhieu() throws SQLException {
         dsPhong.getItems().clear();
-        ArrayList<CTHoaDonPhong> ctHoaDonPhongs = cthdpDao.getCTHoaDonPhongTheoMaPhieu(dsPhieu.getSelectionModel().getSelectedItem().toString());
-        for (CTHoaDonPhong ctHoaDonPhong : ctHoaDonPhongs) {
-            dsPhong.getItems().add(ctHoaDonPhong.getMaPhong());
+        if(dsPhieu.getSelectionModel().getSelectedItem()!=null){
+            ArrayList<CTHoaDonPhong> ctHoaDonPhongs = cthdpDao.getCTHoaDonPhongTheoMaPhieu(dsPhieu.getSelectionModel().getSelectedItem().toString());
+            for (CTHoaDonPhong ctHoaDonPhong : ctHoaDonPhongs) {
+                dsPhong.getItems().add(ctHoaDonPhong.getMaPhong());
+            }
+            dsPhong.getSelectionModel().selectFirst();
+        }else{
+            dsPhong.getItems().clear();
         }
-        dsPhong.getSelectionModel().selectFirst();
+
     }
 
     public void handleCheck(javafx.event.ActionEvent actionEvent) throws Exception {
