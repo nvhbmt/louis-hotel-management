@@ -168,12 +168,13 @@ public class NhanPhongController implements Initializable,Refreshable {
 
     public void handleCheck(javafx.event.ActionEvent actionEvent) throws SQLException {
         Boolean found = false;
-        dsCTHoaDonPhong = ctHoaDondao.getDSCTHoaDonPhongTheoMaPhong(dsPhong.getSelectionModel().getSelectedItem().toString());
-        if (dsCTHoaDonPhong.size() == 0) {
+
+        if (dsPhong.getSelectionModel().getSelectedItem()==null ) {
             ThongBaoUtil.hienThiLoi("Lỗi", "Không tìm được phòng");
             check = false;
             return;
         } else {
+            dsCTHoaDonPhong = ctHoaDondao.getDSCTHoaDonPhongTheoMaPhong(dsPhong.getSelectionModel().getSelectedItem().toString());
             if (ngayDat.getValue() == null) {
                 ThongBaoUtil.hienThiLoi("Lỗi", "Ngày đặt trống");
                 return;
@@ -225,7 +226,7 @@ public class NhanPhongController implements Initializable,Refreshable {
             }
 
         } else {
-            ThongBaoUtil.hienThiLoi("Lỗi", "Không đặt được phòng");
+            ThongBaoUtil.hienThiLoi("Lỗi", "Không tìm thấy bất kì phòng nào để nhận.");
         }
     }
 
