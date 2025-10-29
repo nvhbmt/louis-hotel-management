@@ -158,8 +158,8 @@ VALUES ('HD001', '2025-10-12', N'Chuyển khoản', N'Đã thanh toán', 4500000
        ('HD003', '2025-10-17', N'Ví điện tử', N'Đã thanh toán', 3600000, 'KH003', 'NV002', 'GG002'),
        ('HD004', '2025-10-23', N'Tiền mặt', N'Đã thanh toán', 2000000, 'KH004', 'NV003', NULL),
        ('HD005', '2025-10-24', N'Chuyển khoản', N'Đã thanh toán', 2200000, 'KH005', 'NV004', NULL),
-       ('HD006', '2025-10-24', N'Tiền mặt', N'Chưa thanh toán', 1800000, 'KH003', 'NV001', NULL),
-       ('HD007', '2025-10-25', N'Chuyển khoản', N'Chưa thanh toán', 3500000, 'KH001', 'NV002', NULL);
+       ('HD006', '2025-10-24', null, N'Chưa thanh toán', 1800000, 'KH003', 'NV001', NULL),
+       ('HD007', '2025-10-25', null, N'Chưa thanh toán', 3500000, 'KH001', 'NV002', NULL);
 GO
 
 
