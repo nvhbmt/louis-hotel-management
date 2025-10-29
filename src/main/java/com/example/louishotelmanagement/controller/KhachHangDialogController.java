@@ -59,7 +59,7 @@ public class KhachHangDialogController implements Initializable {
 
     private String layMaKhachHangNeuThemMoi() {
         if (!"ADD".equals(mode)) return "";
-        return "KH" + System.currentTimeMillis() % 100000;
+        return "KH" + (System.currentTimeMillis() % 1000);
     }
 
     private void taoForm(String maKH, String hoTen, String soDT, String email, String diaChi,

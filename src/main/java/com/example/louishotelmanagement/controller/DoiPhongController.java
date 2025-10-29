@@ -282,7 +282,7 @@ public class DoiPhongController implements Initializable,Refreshable {
             }
             ThongBaoUtil.hienThiThongBao("Thông báo","Đổi phòng thành công");
         } else {
-            ThongBaoUtil.hienThiLoi("Lỗi", "Không thực hiện được");
+            ThongBaoUtil.hienThiLoi("Lỗi", "Vui lòng chọn phòng muốn đổi");
         }
     }
 

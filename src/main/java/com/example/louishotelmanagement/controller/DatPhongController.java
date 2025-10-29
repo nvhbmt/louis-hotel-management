@@ -545,7 +545,7 @@ public class DatPhongController implements Initializable, Refreshable{
     public void handleThemKhachHang(ActionEvent actionEvent) {
         try {
             // 1. Tải FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/them-khach-hang-form.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/khach-hang-form-dialog.fxml"));
             Parent parent = loader.load();
 
             // 2. Lấy Controller (nếu cần truyền dữ liệu hoặc gọi phương thức)
