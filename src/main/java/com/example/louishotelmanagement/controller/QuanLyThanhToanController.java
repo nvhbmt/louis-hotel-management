@@ -161,6 +161,8 @@ public class QuanLyThanhToanController {
                     boolean matchesKeyword = keyword.isEmpty()
                             || (hd.getMaHD() != null && hd.getMaHD().toLowerCase().contains(keyword))
                             || (hd.getSoPhong() != null && hd.getSoPhong().toLowerCase().contains(keyword))
+                            || (hd.getKhachHang() != null && hd.getKhachHang().getHoTen() != null
+                            && hd.getKhachHang().getHoTen().toLowerCase().contains(keyword))
                             || (hd.getMaKH() != null && hd.getMaKH().toLowerCase().contains(keyword));
                     if (!matchesKeyword) return false;
 
