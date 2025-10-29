@@ -14,24 +14,25 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="900.0" prefWidth="1602.0" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.QuanLyHoaDonController">
+<BorderPane prefHeight="900.0" prefWidth="1602.0" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/24" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.QuanLyHoaDonController">
    <center>
       <!-- Main Content Area -->
-      <VBox prefHeight="800.0" prefWidth="950.0" spacing="20.0" style="-fx-background-color: #f8f9fa; box-border-radius: 15%; -fx-padding: 10 15 10 15;" BorderPane.alignment="CENTER">
-         <!-- Header -->
-         <VBox spacing="5.0">
-            <HBox alignment="CENTER_LEFT" prefHeight="54.0" prefWidth="920.0">
-               <children>
-                  <ImageView fitHeight="65.0" fitWidth="68.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../image/invoice.png" />
-                     </image>
-                  </ImageView>
-                  <Label style="-fx-font-size: 28px; -fx-font-weight: bold;" text="Hóa đơn" textFill="#2c3e50" />
-               </children>
-            </HBox>
-            <Label style="-fx-font-size: 14px;" text="Màn hình xem hóa đơn" textFill="#7f8c8d" />
-         </VBox>
+      <VBox prefHeight="800.0" prefWidth="950.0" spacing="20.0" BorderPane.alignment="CENTER">
+         <HBox alignment="CENTER_LEFT" prefHeight="54.0" prefWidth="920.0" spacing="16.0">
+            <children>
+               <ImageView fitHeight="72.0" fitWidth="72.0" pickOnBounds="true" preserveRatio="true">
+                  <image>
+                     <Image url="@../image/invoice.png" />
+                  </image>
+               </ImageView>
+               <VBox>
+                  <children>
+                     <Label style="-fx-font-size: 28px; -fx-font-weight: bold;" text="Hóa đơn" textFill="#2c3e50" />
+                     <Label style="-fx-font-size: 14px;" text="Màn hình xem hóa đơn" textFill="#7f8c8d" />
+                  </children>
+               </VBox>
+            </children>
+         </HBox>
          <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="821.0" style="-fx-border-color: black; -fx-border-radius: 10; -fx-padding: 10 15 10 15;">
             <children>
                <VBox prefHeight="74.0" prefWidth="565.0">
@@ -41,7 +42,7 @@
                            <Font name="System Bold" size="14.0" />
                         </font>
                      </Label>
-                     <TextField fx:id="txtTimKiem" prefHeight="38.0" prefWidth="469.0" promptText="Mã hóa đơn/Tên/Số phòng" style="-fx-border-radius: 10;" />
+                     <TextField fx:id="txtTimKiem" prefHeight="40.0" prefWidth="469.0" promptText="Mã hóa đơn/Tên/Số phòng" style="-fx-border-radius: 10;" />
                   </children>
                   <padding>
                      <Insets right="50.0" />
@@ -62,7 +63,7 @@
                </VBox>
                <HBox alignment="BOTTOM_LEFT" prefHeight="100.0" prefWidth="200.0">
                   <children>
-                     <Button fx:id="btnLamMoi" onAction="#handleLamMoi" prefHeight="45.0" prefWidth="150.0" styleClass="btn-lam-moi" text="🔄 Làm Mới" />
+                     <Button fx:id="btnLamMoi" onAction="#handleLamMoi" prefHeight="40.0" prefWidth="150.0" styleClass="btn-lam-moi" text="🔄 Làm Mới" />
                   </children>
                   <padding>
                      <Insets left="50.0" />
@@ -70,9 +71,9 @@
                </HBox>
             </children>
          </HBox>
-         <VBox>
+         <VBox VBox.vgrow="ALWAYS">
             <children>
-               <TableView fx:id="hoaDonTable" fixedCellSize="40.0" style="-fx-border-color: Black; -fx-border-radius: 10;">
+               <TableView fx:id="hoaDonTable" fixedCellSize="40.0" style="-fx-border-color: Black; -fx-border-radius: 10;" VBox.vgrow="ALWAYS">
                  <columns>
                    <TableColumn fx:id="colMaHD" prefWidth="148.00000882148743" text="Mã hóa đơn" />
                      <TableColumn fx:id="colHoTen" minWidth="0.0" prefWidth="207.19998168945312" text="Họ tên" />

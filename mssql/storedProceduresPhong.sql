@@ -481,24 +481,6 @@ BEGIN
 END
 GO
 
--- Lấy mã phòng tiếp theo
-CREATE PROCEDURE sp_LayMaPhongTiepTheo @maPhongTiepTheo NVARCHAR(10) OUTPUT
-AS
-BEGIN
-    DECLARE @maxSo INT = 0;
-
-    -- Lấy số lớn nhất từ các mã phòng hiện có
-    SELECT @maxSo = ISNULL(MAX(CAST(SUBSTRING(maPhong, 2, LEN(maPhong) - 1) AS INT)), 0)
-    FROM Phong
-    WHERE maPhong LIKE 'P%'
-      AND LEN(maPhong) = 4
-      AND ISNUMERIC(SUBSTRING(maPhong, 2, 3)) = 1;
-
-    -- Tạo mã phòng tiếp theo
-    SET @maPhongTiepTheo = 'P' + RIGHT('000' + CAST(@maxSo + 1 AS VARCHAR(3)), 3);
-END
-GO
-
 -- Lấy mã loại phòng tiếp theo
 CREATE PROCEDURE sp_LayMaLoaiPhongTiepTheo @maLoaiPhongTiepTheo NVARCHAR(10) OUTPUT
 AS

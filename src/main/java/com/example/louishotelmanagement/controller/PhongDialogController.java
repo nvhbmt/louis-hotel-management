@@ -47,10 +47,9 @@ public class PhongDialogController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         try {
             khoiTaoDAO();
-            String maPhongTiepTheo = layMaPhongTiepTheoNeuThemMoi();
             List<LoaiPhong> dsLoaiPhong = loaiPhongDAO.layDSLoaiPhong();
 
-            taoForm(maPhongTiepTheo, 1, null, dsLoaiPhong, "");
+            taoForm("", 1, null, dsLoaiPhong, "");
             hienThiForm();
 
         } catch (SQLException e) {
@@ -61,17 +60,6 @@ public class PhongDialogController implements Initializable {
     private void khoiTaoDAO() throws SQLException {
         phongDAO = new PhongDAO();
         loaiPhongDAO = new LoaiPhongDAO();
-    }
-
-    private String layMaPhongTiepTheoNeuThemMoi() {
-        if (!"ADD".equals(mode)) return "";
-
-        try {
-            return phongDAO.layMaPhongTiepTheo();
-        } catch (SQLException e) {
-            ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể lấy mã phòng tiếp theo: " + e.getMessage());
-            return "";
-        }
     }
 
     private void taoForm(String maPhong, Integer tang, TrangThaiPhong trangThai,
@@ -89,7 +77,7 @@ public class PhongDialogController implements Initializable {
     }
 
     private StringField taoFieldMaPhong(String maPhong) {
-        StringField field = Field.ofStringType(maPhong)
+        return Field.ofStringType(maPhong)
                 .label("Mã Phòng")
                 .placeholder("VD: P101")
                 .validate(
@@ -97,11 +85,6 @@ public class PhongDialogController implements Initializable {
                         RegexValidator.forPattern("^P\\d{3}$", "Mã phòng phải theo định dạng 'Pxxx'")
                 )
                 .required("Mã phòng không được để trống");
-
-        if ("ADD".equals(mode)) {
-            field.editable(false);
-        }
-        return field;
     }
 
     private IntegerField taoFieldTang(Integer tang) {
@@ -150,26 +133,39 @@ public class PhongDialogController implements Initializable {
         } else {
             lblTieuDe.setText("Thêm Phòng Mới");
             btnLuu.setText("Lưu");
-            if (maPhongField != null) {
-                maPhongField.editable(false);
-            }
         }
     }
 
     public void setPhong(Phong phong) {
         if (phong == null) return;
 
-        // Set values
-        maPhongField.valueProperty().set(phong.getMaPhong());
-        maPhongField.editable(false);
+        try {
+            // Load lại danh sách loại phòng
+            List<LoaiPhong> dsLoaiPhong = loaiPhongDAO.layDSLoaiPhong();
+            
+            // Clear form container
+            formContainer.getChildren().clear();
+            
+            // Tạo lại form với data của phòng
+            taoForm(
+                phong.getMaPhong(),
+                phong.getTang() != null ? phong.getTang() : 1,
+                phong.getTrangThai(),
+                dsLoaiPhong,
+                phong.getMoTa() != null ? phong.getMoTa() : ""
+            );
+            hienThiForm();
+            
+            // Set giá trị cho các field sau khi form đã được tạo
+            trangThaiField.selectionProperty().set(phong.getTrangThai());
+            loaiPhongField.selectionProperty().set(phong.getLoaiPhong());
+            
+            // Set mã phòng không được edit
+            maPhongField.editable(false);
 
-        if (phong.getTang() != null) {
-            tangField.valueProperty().set(phong.getTang());
+        } catch (SQLException e) {
+            ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể load data phòng: " + e.getMessage());
         }
-
-        trangThaiField.selectionProperty().set(phong.getTrangThai());
-        moTaField.valueProperty().set(phong.getMoTa());
-        loaiPhongField.selectionProperty().set(phong.getLoaiPhong());
     }
 
     @FXML

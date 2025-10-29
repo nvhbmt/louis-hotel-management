@@ -447,8 +447,20 @@ public class DatPhongController implements Initializable, Refreshable{
 
     public void handleDatPhong(ActionEvent actionEvent) throws SQLException {
         // 0. KIỂM TRA ĐIỀU KIỆN BAN ĐẦU
-        if (listPhongDuocDat.isEmpty() || ngayDen.getValue() == null || ngayDi.getValue() == null) {
-            ThongBaoUtil.hienThiLoi("Lỗi", "Vui lòng chọn phòng và nhập đầy đủ ngày đến/ngày đi.");
+        if (ngayDen.getValue() == null || ngayDi.getValue() == null) {
+            ThongBaoUtil.hienThiLoi("Lỗi", "Vui lòng chọn đầy đủ ngày đến/ngày đi.");
+            return;
+        }
+        if (listPhongDuocDat.isEmpty()) {
+            ThongBaoUtil.hienThiLoi("Lỗi", "Vui lòng chọn phòng trước khi đặt");
+            return;
+        }
+        if(ngayDen.getValue().isBefore(LocalDate.now())) {
+            ThongBaoUtil.hienThiLoi("Lỗi","Không được chọn ngày đến trước ngày hôm nay");
+            return;
+        }
+        if(ngayDen.getValue().isAfter(ngayDi.getValue())) {
+            ThongBaoUtil.hienThiLoi("Lỗi","Không được chọn ngày đến sau ngày đi");
             return;
         }
 
@@ -533,7 +545,7 @@ public class DatPhongController implements Initializable, Refreshable{
     public void handleThemKhachHang(ActionEvent actionEvent) {
         try {
             // 1. Tải FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/them-khach-hang-form.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/khach-hang-form-dialog.fxml"));
             Parent parent = loader.load();
 
             // 2. Lấy Controller (nếu cần truyền dữ liệu hoặc gọi phương thức)

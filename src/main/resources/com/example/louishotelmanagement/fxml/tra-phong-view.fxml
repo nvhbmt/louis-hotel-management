@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="864.0" prefWidth="1014.4" style="-fx-background-color: #F0F0F0;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.TraPhongController">
+<BorderPane prefHeight="864.0" prefWidth="1014.4" style="-fx-background-color: #F0F0F0;" xmlns="http://javafx.com/javafx/24" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.TraPhongController">
 
     <center>
         <VBox prefHeight="650.0" prefWidth="100.0" spacing="10.0" BorderPane.alignment="CENTER">
@@ -177,26 +177,33 @@
         </HBox>
     </bottom>
    <top>
-      <VBox prefHeight="112.0" prefWidth="1014.0" style="-fx-background-color: white;" BorderPane.alignment="CENTER">
+      <HBox spacing="16.0">
          <children>
-              <Label alignment="TOP_LEFT" style="-fx-font-weight: 900;-fx-font-size: 25px" text="Trả phòng">
-                  <graphic>
-                      <ImageView fitHeight="59.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true">
-                          <image>
-                              <Image url="@../image/computer.png" />
-                          </image>
-                      </ImageView>
-                  </graphic>
-              </Label>
-            <Label text="Thực hiện chức năng trả phòng cho khách hàng" textFill="#7f8c8d">
-               <VBox.margin>
-                  <Insets left="60.0" />
-               </VBox.margin>
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Label>
+                <ImageView fitHeight="72.0" fitWidth="72.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@../image/computer.png" />
+                    </image>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+                </ImageView>
+            <VBox prefHeight="62.0" prefWidth="875.0" HBox.hgrow="ALWAYS">
+               <children>
+                    <Label alignment="TOP_LEFT" style="-fx-font-weight: 900;-fx-font-size: 25px" text="Trả phòng" />
+                  <Label text="Thực hiện chức năng trả phòng cho khách hàng" textFill="#7f8c8d">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+               </children>
+            </VBox>
          </children>
-      </VBox>
+         <BorderPane.margin>
+            <Insets bottom="32.0" />
+         </BorderPane.margin>
+      </HBox>
    </top>
+   <padding>
+      <Insets bottom="32.0" left="32.0" right="32.0" top="32.0" />
+   </padding>
 </BorderPane>

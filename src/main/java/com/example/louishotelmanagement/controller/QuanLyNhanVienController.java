@@ -2,11 +2,6 @@ package com.example.louishotelmanagement.controller;
 
 import com.example.louishotelmanagement.dao.NhanVienDAO;
 import com.example.louishotelmanagement.model.NhanVien;
-// Import Alert, ButtonType, Optional nếu dùng Dialog xác nhận xóa
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Dialog;
-
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -23,7 +18,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.util.Callback; // Cần cho định dạng ngày
 
 import java.io.IOException;
 import java.net.URL;
@@ -31,30 +25,44 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional; // Cần cho Dialog xác nhận xóa
+import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors; // Cần cho lấy danh sách chức vụ
 
 public class QuanLyNhanVienController implements Initializable {
 
     // --- FXML Components ---
-    @FXML private Label lblTongTaiKhoan;
-    @FXML private Label lblTaiKhoanHoatDong; // Sẽ dùng cho Lễ tân
-    @FXML private Label lblTaiKhoanBiKhoa;   // Sẽ dùng cho Nhân viên khác
-    @FXML private Label lblTaiKhoanManager;  // Sẽ dùng cho Quản lý
-    @FXML private Button btnThemNV;
-    @FXML private TextField timKiemField;
-    @FXML private ComboBox<String> cbxChucVu;
-    @FXML private Button btnLamMoi;
-    @FXML private TableView<NhanVien> nhanVienTable;
-    @FXML private TableColumn<NhanVien, String> colMaNV;
-    @FXML private TableColumn<NhanVien, String> colHoTen;
-    @FXML private TableColumn<NhanVien, LocalDate> colNgaySinh; // Kiểu LocalDate
-    @FXML private TableColumn<NhanVien, String> colDiaChi;
-    @FXML private TableColumn<NhanVien, String> colSDT;
-    @FXML private TableColumn<NhanVien, String> colChucVu;
-    @FXML private TableColumn<NhanVien, Void> colThaoTac;
+    @FXML
+    private Label lblTongTaiKhoan;
+    @FXML
+    private Label lblTaiKhoanHoatDong; // Sẽ dùng cho Lễ tân
+    @FXML
+    private Label lblTaiKhoanBiKhoa;   // Sẽ dùng cho Nhân viên khác
+    @FXML
+    private Label lblTaiKhoanManager;  // Sẽ dùng cho Quản lý
+    @FXML
+    private Button btnThemNV;
+    @FXML
+    private TextField timKiemField;
+    @FXML
+    private ComboBox<String> cbxChucVu;
+    @FXML
+    private Button btnLamMoi;
+    @FXML
+    private TableView<NhanVien> nhanVienTable;
+    @FXML
+    private TableColumn<NhanVien, String> colMaNV;
+    @FXML
+    private TableColumn<NhanVien, String> colHoTen;
+    @FXML
+    private TableColumn<NhanVien, LocalDate> colNgaySinh; // Kiểu LocalDate
+    @FXML
+    private TableColumn<NhanVien, String> colDiaChi;
+    @FXML
+    private TableColumn<NhanVien, String> colSDT;
+    @FXML
+    private TableColumn<NhanVien, String> colChucVu;
+    @FXML
+    private TableColumn<NhanVien, Void> colThaoTac;
 
     // --- Data and DAO ---
     private NhanVienDAO nhanVienDAO;
@@ -255,11 +263,12 @@ public class QuanLyNhanVienController implements Initializable {
 
     /**
      * Mở Dialog để thêm hoặc sửa thông tin nhân viên.
+     *
      * @param nhanVienToEdit Nhân viên cần sửa (null nếu là thêm mới).
      */
     private void moDialogNhanVien(NhanVien nhanVienToEdit) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/NhanVienDialog.fxml")); // Đảm bảo đường dẫn đúng
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/nhan-vien-dialog.fxml")); // Đảm bảo đường dẫn đúng
             Parent root = loader.load();
 
             NhanVienDialogController dialogController = loader.getController();

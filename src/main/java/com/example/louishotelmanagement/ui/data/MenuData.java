@@ -25,36 +25,49 @@ public class MenuData {
                 new MenuItemModel("Phòng", "mdi2b-bed",null)
         );
         phongGroup.getChildren().addAll(List.of(
-                new TreeItem<>(new MenuItemModel("Đặt phòng", "mdi2b-bed", "/com/example/louishotelmanagement/fxml/phong-view.fxml")),
-                new TreeItem<>(new MenuItemModel("Quản lý phòng", "mdi2b-bed",
-                        "/com/example/louishotelmanagement/fxml/quan-ly-phong-view.fxml")),
-                new TreeItem<>(new MenuItemModel("Loại phòng", "mdi2t-tag",
-                        "/com/example/louishotelmanagement/fxml/quan-ly-loai-phong-view.fxml"))
+                new TreeItem<>(new MenuItemModel("Đặt phòng", "mdi2b-bed", "/com/example/louishotelmanagement/fxml/phong-view.fxml"))
         ));
+
+        if ("Manager".equals(userRole)) {
+                phongGroup.getChildren().addAll(List.of(
+                        new TreeItem<>(new MenuItemModel("Quản lý phòng", "mdi2b-bed",
+                                "/com/example/louishotelmanagement/fxml/quan-ly-phong-view.fxml")),
+                        new TreeItem<>(new MenuItemModel("Loại phòng", "mdi2t-tag",
+                                "/com/example/louishotelmanagement/fxml/quan-ly-loai-phong-view.fxml"))
+                ));
+            }
 
         TreeItem<MenuItemModel> dichVuGroup = new TreeItem<>(
                 new MenuItemModel("Dịch vụ", "mdi2c-coffee", null)
         );
         dichVuGroup.getChildren().addAll(List.of(
-                new TreeItem<>(new MenuItemModel("Quản lý dịch vụ", "mdi2c-coffee",
-                        "/com/example/louishotelmanagement/fxml/quan-ly-dich-vu-view.fxml")),
                 new TreeItem<>(new MenuItemModel("Cung cấp dịch vụ", "mdi2h-handshake",
-                        "/com/example/louishotelmanagement/fxml/dat-dich-vu-view.fxml")),
-                new TreeItem<>(new MenuItemModel("Hủy dịch vụ", "mdi2c-close-circle",
-                        "/com/example/louishotelmanagement/fxml/huy-dich-vu.fxml"))
+                        "/com/example/louishotelmanagement/fxml/dat-dich-vu-view.fxml"))
         ));
+
+        if ("Manager".equals(userRole)) {
+            dichVuGroup.getChildren().addAll(List.of(
+                new TreeItem<>(new MenuItemModel("Quản lý dịch vụ", "mdi2c-coffee",
+                "/com/example/louishotelmanagement/fxml/quan-ly-dich-vu-view.fxml"))
+            ));
+        }
 
         TreeItem<MenuItemModel> hoaDonGroup = new TreeItem<>(
                 new MenuItemModel("Hóa đơn", "mdi2c-cash-multiple", null)
         );
         hoaDonGroup.getChildren().addAll(List.of(
                 new TreeItem<>(new MenuItemModel("Thanh toán", "mdi2c-cash",
-                        "/com/example/louishotelmanagement/fxml/thanh-toan-view.fxml")),
-                new TreeItem<>(new MenuItemModel("Giảm giá", "mdi2s-sale",
-                        "/com/example/louishotelmanagement/fxml/quan-ly-giam-gia-view.fxml")),
-                new TreeItem<>(new MenuItemModel("Quản lí hóa đơn", "mdi2f-file-document",
-                        "/com/example/louishotelmanagement/fxml/hoa-don-view.fxml"))
+                        "/com/example/louishotelmanagement/fxml/thanh-toan-view.fxml"))
+//                new TreeItem<>(new MenuItemModel("Giảm giá", "mdi2s-sale",
+//                        "/com/example/louishotelmanagement/fxml/quan-ly-giam-gia-view.fxml"))
         ));
+
+        if ("Manager".equals(userRole)) {
+            hoaDonGroup.getChildren().addAll(List.of(
+                new TreeItem<>(new MenuItemModel("Quản lí hóa đơn", "mdi2f-file-document",
+                "/com/example/louishotelmanagement/fxml/hoa-don-view.fxml"))
+            ));
+        }
 
         TreeItem<MenuItemModel> thongKe = new TreeItem<>(
                 new MenuItemModel("Thống kê", "mdi2c-chart-bar", "/com/example/louishotelmanagement/fxml/thong-ke-view.fxml")

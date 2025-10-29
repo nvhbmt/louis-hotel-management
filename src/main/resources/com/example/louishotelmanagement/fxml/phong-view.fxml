@@ -17,7 +17,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="737.0" prefWidth="1153.0" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/24" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.PhongController">
+<BorderPane prefHeight="737.0" prefWidth="1153.0" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.PhongController">
     <center>
         <!-- Main Content Area -->
         <VBox prefHeight="904.0" prefWidth="1462.0" spacing="32.0" BorderPane.alignment="CENTER">
@@ -147,10 +147,10 @@
                     </Label>
                     <VBox alignment="CENTER" prefHeight="345.0" prefWidth="201.0" stylesheets="@../css/style.css">
                         <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="74.0" prefWidth="140.0">
-                            <Button fx:id="btnDatTT" maxHeight="40.0" maxWidth="132.0" minHeight="40.0" minWidth="132.0" mnemonicParsing="false" onAction="#moDatTT" prefHeight="40.0" prefWidth="132.0" style="-fx-background-color: #6F84DA;" styleClass="btn-lam-moi" text="Đặt tại quầy" textFill="WHITE" />
+                            <Button fx:id="btnDatTT" maxHeight="40.0" maxWidth="132.0" minHeight="40.0" minWidth="132.0" mnemonicParsing="false" onAction="#moDatTT" prefHeight="40.0" prefWidth="132.0" style="-fx-background-color: #6F84DA;" styleClass="btn-lam-moi" text="Đặt trực tiếp" textFill="WHITE" />
                         </HBox>
                         <HBox alignment="CENTER" prefHeight="74.0" prefWidth="140.0">
-                            <Button fx:id="btnDatPhong" mnemonicParsing="false" onAction="#moDatPhong" prefHeight="40.0" prefWidth="132.0" style="-fx-background-color: #6F84DA;" styleClass="btn-lam-moi" text="Đặt phòng" textFill="WHITE" />
+                            <Button fx:id="btnDatPhong" mnemonicParsing="false" onAction="#moDatPhong" prefHeight="40.0" prefWidth="132.0" style="-fx-background-color: #6F84DA;" styleClass="btn-lam-moi" text="Đặt trước" textFill="WHITE" />
                         </HBox>
                         <HBox alignment="CENTER" layoutX="40.0" layoutY="155.0" prefHeight="74.0" prefWidth="140.0">
                             <Button fx:id="btnNhanPhong" mnemonicParsing="false" onAction="#moNhanPhong" prefHeight="40.0" prefWidth="132.0" style="-fx-background-color: #6F84DA;" styleClass="btn-lam-moi" text="Nhận phòng" textFill="WHITE" />

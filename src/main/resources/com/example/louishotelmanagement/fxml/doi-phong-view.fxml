@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="864.0" prefWidth="1014.4" stylesheets="@../css/doi-phong.css, @../css/dat-phong.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.DoiPhongController">
+<BorderPane prefHeight="864.0" prefWidth="1014.4" stylesheets="@../css/doi-phong.css, @../css/dat-phong.css" xmlns="http://javafx.com/javafx/24" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.DoiPhongController">
     <center>
         <VBox alignment="TOP_CENTER" fillWidth="false" prefHeight="474.0" prefWidth="922.0" BorderPane.alignment="CENTER">
             <children>
@@ -127,26 +127,27 @@
         </HBox>
     </bottom>
    <top>
-      <VBox prefHeight="96.0" prefWidth="1014.0" BorderPane.alignment="CENTER">
+      <HBox spacing="16.0">
          <children>
-              <Label styleClass="header-title" text="Đổi phòng">
-                  <graphic>
-                      <ImageView pickOnBounds="true" preserveRatio="true" styleClass="header-icon">
-                          <image>
-                              <Image url="@../image/exchange.png" />
-                          </image>
-                      </ImageView>
-                  </graphic>
-              </Label>
-            <Label text="Thực hiện chức năng đổi phòng cho khách hàng" textFill="#7f8c8d">
-               <VBox.margin>
-                  <Insets left="40.0" />
-               </VBox.margin>
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Label>
+                <ImageView fitHeight="72.0" fitWidth="72.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@../image/exchange.png" />
+                    </image>
+                </ImageView>
+            <VBox>
+               <children>
+                    <Label styleClass="header-title" text="Đổi phòng" />
+                  <Label text="Thực hiện chức năng đổi phòng cho khách hàng" textFill="#7f8c8d">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+               </children>
+            </VBox>
          </children>
-      </VBox>
+      </HBox>
    </top>
+   <padding>
+      <Insets bottom="32.0" left="32.0" right="32.0" top="32.0" />
+   </padding>
 </BorderPane>

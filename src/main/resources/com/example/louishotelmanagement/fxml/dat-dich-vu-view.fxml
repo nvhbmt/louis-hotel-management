@@ -18,27 +18,26 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.DatDichVuController">
+<BorderPane xmlns="http://javafx.com/javafx/24" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.DatDichVuController">
     <top>
-        <VBox prefHeight="58.0" prefWidth="1054.0" style="-fx-background-color: #f8f9fa; -fx-padding: 30 10 10 10;" BorderPane.alignment="TOP_LEFT">
-            <VBox prefHeight="137.0" prefWidth="1034.0" spacing="5.0">
-                <Label style="-fx-font-size: 28px; -fx-font-weight: bold;" text="Đặt Dịch Vụ" textFill="#2c3e50">
-               <graphic>
-                  <ImageView fitHeight="66.0" fitWidth="72.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../image/desk-bell.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-               <VBox.margin>
-                  <Insets />
-               </VBox.margin></Label>
-                <Label style="-fx-font-size: 14px;" text="Thực hiện yêu cầu dịch vụ cho khách hàng" textFill="#7f8c8d">
-               <VBox.margin>
-                  <Insets left="70.0" />
-               </VBox.margin></Label>
+      <HBox spacing="16.0">
+         <children>
+            <ImageView fitHeight="72.0" fitWidth="72.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../image/desk-bell.png" />
+               </image>
+            </ImageView>
+            <VBox>
+               <children>
+                      <Label style="-fx-font-size: 28px; -fx-font-weight: bold;" text="Đặt Dịch Vụ" textFill="#2c3e50" />
+                      <Label style="-fx-font-size: 14px;" text="Thực hiện yêu cầu dịch vụ cho khách hàng" textFill="#7f8c8d" />
+               </children>
             </VBox>
-        </VBox>
+         </children>
+         <BorderPane.margin>
+            <Insets bottom="32.0" />
+         </BorderPane.margin>
+      </HBox>
     </top>
     <center>
         <VBox maxWidth="1.7976931348623157E308" prefHeight="774.0" prefWidth="1054.0" spacing="20.0" style="-fx-background-color: white; -fx-padding: 30; -fx-border-color: #ced4da; -fx-border-radius: 8;" BorderPane.alignment="CENTER">
@@ -71,7 +70,7 @@
                         <TextField fx:id="maNV" opacity="0.82" prefHeight="26.0" prefWidth="270.0" promptText="Hệ thống tự động nhập" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                     </children>
                     <rowConstraints>
-                        <RowConstraints minHeight="10.0" prefHeight="50.0" />
+                        <RowConstraints prefHeight="50.0" />
                         <RowConstraints />
                         <RowConstraints />
                     </rowConstraints>
@@ -127,4 +126,7 @@
             </children>
         </VBox>
     </center>
+   <padding>
+      <Insets bottom="32.0" left="32.0" right="32.0" top="32.0" />
+   </padding>
 </BorderPane>

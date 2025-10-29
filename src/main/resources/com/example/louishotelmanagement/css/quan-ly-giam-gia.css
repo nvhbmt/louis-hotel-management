@@ -37,17 +37,6 @@
     -fx-padding: 4px 8px;
 }
 
-/* Style cho các stat cards */
-.stat-card-border {
-    -fx-background-color: #ffffff;
-    -fx-border-color: #e9ecef;
-    -fx-border-width: 1px;
-    -fx-border-radius: 8px;
-    -fx-background-radius: 8px;
-    -fx-padding: 20px;
-    -fx-alignment: CENTER;
-}
-
 .stat-label {
     -fx-font-size: 14px;
     -fx-text-fill: #6c757d;
@@ -58,36 +47,6 @@
     -fx-font-size: 24px;
     -fx-font-weight: bold;
     -fx-text-fill: #495057;
-}
-
-/* Style cho form fields */
-.form-field {
-    -fx-background-color: #ffffff;
-    -fx-border-color: #ced4da;
-    -fx-border-width: 1px;
-    -fx-border-radius: 4px;
-    -fx-background-radius: 4px;
-    -fx-padding: 8px 12px;
-}
-
-.form-field:focused {
-    -fx-border-color: #80bdff;
-    -fx-border-width: 2px;
-}
-
-/* Style cho table container */
-.table-container {
-    -fx-background-color: #ffffff;
-    -fx-border-color: #dee2e6;
-    -fx-border-width: 1px;
-    -fx-border-radius: 8px;
-    -fx-background-radius: 8px;
-    -fx-padding: 16px;
-}
-
-/* Style cho table view */
-.table-view {
-    -fx-background-color: white;
 }
 
 /* Style cho main content */
