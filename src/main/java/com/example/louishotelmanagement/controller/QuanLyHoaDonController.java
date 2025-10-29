@@ -174,7 +174,7 @@ public class QuanLyHoaDonController implements Initializable {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Thông báo");
         alert.setHeaderText("Chức năng đang phát triển");
-        alert.setContentText("Logic in hóa đơn (dùng PrinterJob) cho hóa đơn " + hoaDon.getMaHD() + " sẽ được triển khai ở đây.");
+        alert.setContentText("Logic in hóa đơn cho hóa đơn " + hoaDon.getMaHD() + " sẽ được triển khai ở đây.");
         alert.showAndWait();
     }
 
@@ -217,13 +217,13 @@ public class QuanLyHoaDonController implements Initializable {
     }
 
     public void handleLamMoi(javafx.event.ActionEvent actionEvent) {
-        // 1. Xóa nội dung ô tìm kiếm
+
         txtTimKiem.clear();
 
-        // 2. Đặt lại ComboBox về giá trị mặc định
+
         cbNgayTao.setValue("Tất cả");
 
-        // 3. Tải lại toàn bộ dữ liệu từ CSDL
+
         taiDuLieuHoaDon();
     }
 }

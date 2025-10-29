@@ -74,14 +74,10 @@ public class PhongController implements Initializable {
      * Cấu hình cột, định dạng ô, và gán danh sách đã lọc cho TableView.
      */
     private void cauHinhBang() {
-        // 1. Khởi tạo danh sách gốc
         phongObservableList = FXCollections.observableArrayList();
-        // 2. Tạo FilteredList để "gói" danh sách gốc
         filteredPhongList = new FilteredList<>(phongObservableList, p -> true);
-        // 3. Gán FilteredList cho TableView
         tableViewPhong.setItems(filteredPhongList);
-
-        // 4. Cấu hình các cột
+        //các cột
         maPhong.setCellValueFactory(new PropertyValueFactory<>("maPhong"));
 
         loaiPhong.setCellValueFactory(cellData -> {
@@ -89,14 +85,14 @@ public class PhongController implements Initializable {
             return new SimpleStringProperty(lp != null ? lp.getTenLoai() : "N/A");
         });
 
-        // Cột Đơn Giá (Sửa thành BigDecimal)
+
         donGia.setCellValueFactory(cellData -> {
             LoaiPhong lp = cellData.getValue().getLoaiPhong();
             Double gia = (lp != null) ? lp.getDonGia() : 0.0;
             return new SimpleObjectProperty<>(gia);
         });
 
-        // Định dạng tiền tệ cho cột Đơn Giá (Sửa thành BigDecimal)
+        // Định dạng
         donGia.setCellFactory(column -> new TableCell<Phong, Double>() {
             private final NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
 
@@ -111,7 +107,7 @@ public class PhongController implements Initializable {
             }
         });
 
-        // Cột Trạng Thái (Lấy dữ liệu và tô màu)
+        // Cột Trạng Thái
         trangThai.setCellValueFactory(new PropertyValueFactory<>("trangThai"));
         trangThai.setCellFactory(column -> new TableCell<>() {
             @Override
@@ -135,9 +131,7 @@ public class PhongController implements Initializable {
         });
     }
 
-    /**
-     * Tải dữ liệu từ CSDL và cập nhật thống kê.
-     */
+
     public void taiBang() {
         try {
             ArrayList<Phong> dsPhong = phongDAO.layDSPhong();
@@ -149,11 +143,8 @@ public class PhongController implements Initializable {
         }
     }
 
-    /**
-     * Khởi tạo dữ liệu cho cả hai ComboBox (Tầng và Trạng Thái).
-     */
+
     private void cauHinhCBX() {
-        // --- Setup ComboBox Tầng ---
         ObservableList<String> danhSachTang = FXCollections.observableArrayList();
         danhSachTang.add("Tất cả các tầng"); // Thêm tùy chọn "Tất cả"
         int soTangKhachSan = 4;
@@ -161,11 +152,11 @@ public class PhongController implements Initializable {
             danhSachTang.add("Tầng " + i);
         }
         cbxTang.setItems(danhSachTang);
-        cbxTang.setValue("Tất cả các tầng"); // Đặt làm mặc định
+        cbxTang.setValue("Tất cả các tầng");
 
         // --- Setup ComboBox Trạng Thái ---
         ObservableList<String> danhSachTrangThai = FXCollections.observableArrayList();
-        danhSachTrangThai.add("Tất cả trạng thái"); // Thêm tùy chọn "Tất cả"
+        danhSachTrangThai.add("Tất cả trạng thái");
         // Thêm các trạng thái từ Enum
         danhSachTrangThai.add(TrangThaiPhong.TRONG.toString());
         danhSachTrangThai.add(TrangThaiPhong.DANG_SU_DUNG.toString());
@@ -173,20 +164,17 @@ public class PhongController implements Initializable {
         danhSachTrangThai.add(TrangThaiPhong.BAO_TRI.toString());
 
         cbxTrangThai.setItems(danhSachTrangThai);
-        cbxTrangThai.setValue("Tất cả trạng thái"); // Đặt làm mặc định
+        cbxTrangThai.setValue("Tất cả trạng thái");
     }
 
-    /**
-     * Thiết lập bộ lọc tự động. Bảng sẽ tự lọc lại
-     * mỗi khi giá trị trong cbxTang hoặc cbxTrangThai thay đổi.
-     */
+
     private void cauHinhLoc() {
         filteredPhongList.predicateProperty().bind(Bindings.createObjectBinding(() -> {
             String tangDaChon = cbxTang.getValue();
             String trangThaiDaChon = cbxTrangThai.getValue();
 
             return phong -> {
-                // --- Điều kiện 1: Lọc theo tầng ---
+                //tang
                 boolean tangMatch = false;
                 if (tangDaChon == null || tangDaChon.equals("Tất cả các tầng")) {
                     tangMatch = true;
@@ -199,7 +187,7 @@ public class PhongController implements Initializable {
                     }
                 }
 
-                // --- Điều kiện 2: Lọc theo trạng thái ---
+                // trạng thái
                 boolean trangThaiMatch = false;
                 if (trangThaiDaChon == null || trangThaiDaChon.equals("Tất cả trạng thái")) {
                     trangThaiMatch = true;
@@ -210,13 +198,11 @@ public class PhongController implements Initializable {
                 // Chỉ hiển thị khi CẢ HAI điều kiện đều đúng
                 return tangMatch && trangThaiMatch;
             };
-        }, cbxTang.valueProperty(), cbxTrangThai.valueProperty())); // Kích hoạt khi 1 trong 2 thay đổi
+        }, cbxTang.valueProperty(), cbxTrangThai.valueProperty()));
     }
 
 
-    /**
-     * Cập nhật các Label thống kê dựa trên danh sách gốc.
-     */
+
     private void capNhatThongKe() {
         long tongSo = phongObservableList.size();
         long soTrong = phongObservableList.stream()
@@ -238,16 +224,14 @@ public class PhongController implements Initializable {
 
     @FXML
     private void handleLamMoi(ActionEvent event) {
-        // 1. Đặt lại giá trị của 2 ComboBox về mặc định
+
         cbxTang.setValue("Tất cả các tầng");
         cbxTrangThai.setValue("Tất cả trạng thái");
 
-        // 2. Tải lại dữ liệu mới từ CSDL
-        // (Việc này cũng sẽ tự động cập nhật thống kê)
+
         taiBang();
     }
-
-    // --- Các phương thức chuyển trang (giữ nguyên) ---
+    // huyển trang
     private ContentSwitcher switcher;
 
     public void setContentSwitcher(ContentSwitcher switcher) {

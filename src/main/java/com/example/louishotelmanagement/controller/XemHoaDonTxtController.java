@@ -25,14 +25,14 @@ public class XemHoaDonTxtController {
 
     @FXML
     private void handleDong(ActionEvent event) {
-        // Lấy cửa sổ (Stage) và đóng nó
+
         Stage stage = (Stage) btnDong.getScene().getWindow();
         stage.close();
     }
 
     @FXML
     private void handleIn(ActionEvent event) {
-        // Đây là nơi bạn sẽ thêm logic in ấn thực tế (dùng PrinterJob)
+
 
         System.out.println("--- Đang in nội dung ---");
         System.out.println(txtHoaDon.getText());
@@ -40,7 +40,7 @@ public class XemHoaDonTxtController {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Thông báo");
         alert.setHeaderText("Chức năng đang phát triển");
-        alert.setContentText("Logic in hóa đơn (dùng PrinterJob) sẽ được triển khai ở đây.");
+        alert.setContentText("Logic in hóa đơn sẽ được triển khai ở đây.");
         alert.showAndWait();
     }
 }
