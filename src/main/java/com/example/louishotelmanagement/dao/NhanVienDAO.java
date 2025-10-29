@@ -93,13 +93,40 @@ public class NhanVienDAO {
                 }
             }
         }
-        return null; // không tìm thấy
+        return null;
     }
+    public String layMaNVTiepTheo() throws SQLException {
+        String sql = "SELECT TOP 1 maNV FROM NhanVien WHERE maNV LIKE 'NV[0-9][0-9][0-9]' ORDER BY maNV DESC";
+        String maNVCuoi = "NV000";
 
+        try (Connection con = CauHinhDatabase.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            if (rs.next()) {
+                maNVCuoi = rs.getString("maNV");
+            }
+        }
+
+
+        int soHienTai = 0;
+        try {
+
+            soHienTai = Integer.parseInt(maNVCuoi.substring(2));
+        } catch (NumberFormatException | IndexOutOfBoundsException e) {
+            System.err.println("Lỗi khi phân tích mã NV cuối cùng: " + maNVCuoi + " - " + e.getMessage());
+
+            soHienTai = 0;
+        }
+
+
+        int soMoi = soHienTai + 1;
+
+
+        return String.format("NV%03d", soMoi);
+    }
     public static void main(String[] args) throws SQLException {
         NhanVienDAO nvdao = new NhanVienDAO();
-        //NhanVien nhanVien = new NhanVien("NV09","Nguyễn Văn A","09203910293","Hồ Chí Minh city","Nhân viên",LocalDate.of(2005,03,02));
-        //System.out.println(nvdao.ThemNhanVien(nhanVien));
 
         String maNV = "NV09";
         System.out.println(nvdao.XoaNhanVien(maNV));
