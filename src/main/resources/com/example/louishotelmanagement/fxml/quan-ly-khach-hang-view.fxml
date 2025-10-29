@@ -17,7 +17,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="rootPane" stylesheets="@../css/main.css, @../css/quan-ly-khach-hang.css, @../css/table-style.css" xmlns="http://javafx.com/javafx/24" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.QuanLyKhachHangController">
+<BorderPane fx:id="rootPane" stylesheets="@../css/main.css, @../css/quan-ly-khach-hang.css, @../css/table-style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.QuanLyKhachHangController">
     <center>
         <VBox alignment="TOP_CENTER" prefHeight="800.0" prefWidth="1276.0" spacing="32.0" VBox.vgrow="ALWAYS">
             <children>
@@ -148,21 +148,18 @@
                     </children>
                 </HBox>
 
-                <VBox prefHeight="561.0" prefWidth="890.0" styleClass="table-container" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
+                <VBox alignment="CENTER" prefHeight="561.0" prefWidth="890.0" styleClass="table-container" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
                     <children>
                         <TableView fx:id="tableViewKhachHang" prefHeight="576.0" prefWidth="850.0" VBox.vgrow="ALWAYS">
-                            <columnResizePolicy>
-                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                            </columnResizePolicy>
                             <columns>
-                                <TableColumn fx:id="colMaKH" maxWidth="Infinity" minWidth="80.0" prefWidth="98.0" text="Mã Khách Hàng" />
-                                <TableColumn fx:id="colHoTen" maxWidth="Infinity" minWidth="120.0" prefWidth="143.0" text="Họ và Tên" />
-                                <TableColumn fx:id="colSoDT" maxWidth="Infinity" minWidth="100.0" prefWidth="127.0" text="Số điện thoại" />
-                                <TableColumn fx:id="colEmail" maxWidth="Infinity" minWidth="97.0" prefWidth="97.0" text="Email" />
-                                <TableColumn fx:id="colGhiChu" maxWidth="Infinity" prefWidth="86.0" text="Ghi chú" />
-                                <TableColumn fx:id="colHangKhach" maxWidth="Infinity" minWidth="89.0" prefWidth="97.0" text="Hạng khách" />
-                                <TableColumn fx:id="colTrangThai" maxWidth="Infinity" minWidth="89.0" prefWidth="78.0" text="Trạng thái" />
-                                <TableColumn fx:id="colThaoTac" maxWidth="Infinity" minWidth="150.0" prefWidth="203.0" text="Thao tác" />
+                                <TableColumn fx:id="colMaKH" maxWidth="Infinity" minWidth="80.0" prefWidth="124.79998624324799" text="Mã Khách Hàng" />
+                                <TableColumn fx:id="colHoTen" maxWidth="Infinity" minWidth="120.0" prefWidth="172.00000762939453" text="Họ và Tên" />
+                                <TableColumn fx:id="colSoDT" maxWidth="Infinity" minWidth="92.0" prefWidth="132.0" text="Số điện thoại" />
+                                <TableColumn fx:id="colEmail" maxWidth="Infinity" minWidth="71.2000732421875" prefWidth="178.39993286132812" text="Email" />
+                                <TableColumn fx:id="colGhiChu" maxWidth="Infinity" prefWidth="182.40008544921875" text="Ghi chú" />
+                                <TableColumn fx:id="colHangKhach" maxWidth="Infinity" minWidth="89.0" prefWidth="107.99993896484375" text="Hạng khách" />
+                                <TableColumn fx:id="colTrangThai" maxWidth="Infinity" minWidth="64.7999267578125" prefWidth="98.4000244140625" text="Trạng thái" />
+                                <TableColumn fx:id="colThaoTac" maxWidth="Infinity" minWidth="123.2000732421875" prefWidth="185.599853515625" text="Thao tác" />
                             </columns>
                             <padding>
                                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
