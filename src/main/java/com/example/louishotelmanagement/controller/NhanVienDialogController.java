@@ -15,7 +15,7 @@ import java.util.StringTokenizer; // Cần cho định dạng họ tên
 
 public class NhanVienDialogController {
 
-    // ... (Các @FXML components giữ nguyên) ...
+
     @FXML private Label lblTitle;
     @FXML private TextField tfMaNV;
     @FXML private TextField tfHoTen;
@@ -43,7 +43,7 @@ public class NhanVienDialogController {
         isEditMode = (nhanVien != null);
 
         if (isEditMode) {
-            // --- Chế độ SỬA ---
+
             lblTitle.setText("Sửa Thông Tin Nhân Viên");
             tfMaNV.setText(nhanVien.getMaNV());
             tfMaNV.setEditable(false); // Không cho sửa Mã NV khi sửa
@@ -53,7 +53,7 @@ public class NhanVienDialogController {
             tfDiaChi.setText(nhanVien.getDiaChi());
             cbChucVu.setValue(nhanVien.getChucVu());
         } else {
-            // --- Chế độ THÊM ---
+
             lblTitle.setText("Thêm Nhân Viên Mới");
             tfMaNV.setEditable(false); // Mã NV tự sinh, không cho sửa
             // Lấy mã NV tiếp theo từ DAO và hiển thị
@@ -73,7 +73,7 @@ public class NhanVienDialogController {
         if (validateInput()) {
             try {
                 String maNV = tfMaNV.getText().trim();
-                // Lấy họ tên gốc và định dạng lại
+
                 String hoTenRaw = tfHoTen.getText().trim();
                 String hoTenFormatted = formatProperCase(hoTenRaw); // Gọi hàm định dạng
 
@@ -82,7 +82,7 @@ public class NhanVienDialogController {
                 String diaChi = tfDiaChi.getText().trim();
                 String chucVu = cbChucVu.getValue();
 
-                // Tạo đối tượng NhanVien với họ tên đã định dạng
+
                 NhanVien nv = new NhanVien(maNV, hoTenFormatted, soDT, diaChi, chucVu, ngaySinh);
 
                 boolean success;
@@ -117,17 +117,12 @@ public class NhanVienDialogController {
     }
 
     // --- Hàm định dạng họ tên ---
-    /**
-     * Chuyển đổi chuỗi thành dạng viết hoa chữ cái đầu mỗi từ.
-     * Ví dụ: "nguyễn văn an" -> "Nguyễn Văn An"
-     * @param input Chuỗi họ tên gốc.
-     * @return Chuỗi đã được định dạng.
-     */
+
     private String formatProperCase(String input) {
         if (input == null || input.isEmpty()) {
             return "";
         }
-        // Thay thế nhiều khoảng trắng thành 1 khoảng trắng và cắt bỏ khoảng trắng thừa 2 đầu
+        //xóa space
         String cleanedInput = input.trim().replaceAll("\\s+", " ");
 
         StringBuilder properCase = new StringBuilder();
@@ -135,7 +130,7 @@ public class NhanVienDialogController {
 
         while (tokenizer.hasMoreTokens()) {
             String word = tokenizer.nextToken();
-            // Viết hoa chữ cái đầu, viết thường các chữ còn lại
+            // Viết hoa
             properCase.append(Character.toUpperCase(word.charAt(0)))
                     .append(word.substring(1).toLowerCase());
             if (tokenizer.hasMoreTokens()) {
@@ -145,19 +140,19 @@ public class NhanVienDialogController {
         return properCase.toString();
     }
 
-    // ... (validateInput, closeDialog, hienThiThongBao, hienThiLoi giữ nguyên) ...
+
     private boolean validateInput() {
         String errorMessage = "";
-        LocalDate today = LocalDate.now(); // Lấy ngày hiện tại
+        LocalDate today = LocalDate.now();
 
-        // --- Kiểm tra các trường khác (Mã NV, Họ tên, ...) ---
+        //kiểm tra
         if (tfMaNV.getText() == null || tfMaNV.getText().trim().isEmpty()) {
             errorMessage += "Mã nhân viên không được để trống!\n";
         }
         if (tfHoTen.getText() == null || tfHoTen.getText().trim().isEmpty()) {
             errorMessage += "Họ tên không được để trống!\n";
         }
-        // ... (Các kiểm tra khác: Địa chỉ, Chức vụ) ...
+
         if (tfDiaChi.getText() == null || tfDiaChi.getText().trim().isEmpty()) {
             errorMessage += "Địa chỉ không được để trống!\n";
         }
@@ -165,7 +160,7 @@ public class NhanVienDialogController {
             errorMessage += "Chức vụ không được để trống!\n";
         }
 
-        // --- Kiểm tra Số Điện Thoại (phải đúng 11 số) ---
+
         String soDT = tfSoDT.getText();
         if (soDT == null || soDT.trim().isEmpty()) {
             errorMessage += "Số điện thoại không được để trống!\n";
@@ -173,7 +168,7 @@ public class NhanVienDialogController {
             errorMessage += "Số điện thoại phải bao gồm đúng 11 chữ số!\n";
         }
 
-        // --- Kiểm tra Ngày sinh (trên 18 tuổi) ---
+
         LocalDate ngaySinh = dpNgaySinh.getValue();
         if (ngaySinh == null) {
             errorMessage += "Ngày sinh không được để trống!\n";
@@ -187,13 +182,11 @@ public class NhanVienDialogController {
                 }
             }
         }
-
-        // --- Hiển thị lỗi nếu có ---
         if (errorMessage.isEmpty()) {
-            return true; // Hợp lệ
+            return true;
         } else {
             hienThiLoi("Dữ liệu không hợp lệ", errorMessage);
-            return false; // Không hợp lệ
+            return false;
         }
     }
     private void closeDialog() {

@@ -65,13 +65,13 @@ public class HoaDonDAO2 {
                     ds.add(hd);
 
                 } catch (Exception e_inner) {
-                    // Có thể re-throw lỗi nếu cần
+
                 }
             }
         } catch (SQLException e_outer) {
             throw e_outer;
         } catch (Exception e_other) {
-            // Có thể re-throw lỗi nếu cần
+
         }
         return ds;
     }
