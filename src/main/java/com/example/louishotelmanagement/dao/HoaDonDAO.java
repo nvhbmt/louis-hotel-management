@@ -15,21 +15,29 @@ import java.util.List;
 public class HoaDonDAO {
 
     // 🔹 Sinh mã hóa đơn tiếp theo (SỬA: Dùng OutParameter, như trong HoaDonDAO2)
-    public String taoMaHoaDonTiepTheo() throws SQLException {
-        // Giả định SP sp_TaoMaHoaDonTiepTheo sử dụng output parameter
-        String sql = "{CALL sp_TaoMaHoaDonTiepTheo(?)}";
-        try (Connection conn = CauHinhDatabase.getConnection();
-             CallableStatement cs = conn.prepareCall(sql)) {
+    public String taoMaHoaDonTiepTheo() {
+        // Chuỗi lệnh SQL để gọi Stored Procedure (không có tham số)
+        String sql = "{CALL sp_TaoMaHoaDonTiepTheo}";
+        String maHDMoi = null;
 
-            cs.registerOutParameter(1, Types.NVARCHAR);
-            cs.execute();
-            String nextId = cs.getString(1);
-
-            if (nextId == null || nextId.isEmpty()) {
-                throw new SQLException("Stored procedure sp_TaoMaHoaDonTiepTheo không trả về giá trị.");
+        // Sử dụng try-with-resources để tự động đóng tài nguyên
+        try (
+                // Lấy kết nối từ lớp cấu hình của bạn (ví dụ: CauHinhDatabase.getConnection())
+                Connection conn = CauHinhDatabase.getConnection();
+                CallableStatement cs = conn.prepareCall(sql);
+                // SP sử dụng SELECT để trả kết quả, nên dùng executeQuery()
+                ResultSet rs = cs.executeQuery()
+        ) {
+            // Lấy giá trị của cột "maHDMoi" mà Stored Procedure đã trả ra
+            if (rs.next()) {
+                maHDMoi = rs.getString("maHDMoi");
             }
-            return nextId;
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi tạo mã hóa đơn tiếp theo: " + e.getMessage());
+            e.printStackTrace();
         }
+
+        return maHDMoi;
     }
 
 

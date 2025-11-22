@@ -25,7 +25,6 @@ import java.util.ResourceBundle;
 public class TraPhongController implements Initializable, Refreshable {
 
     public Button btnCheck;
-    public DatePicker ngayDi;
     public ComboBox dsPhong;
     public ComboBox dsKhachHang;
     public Button btnTraPhong;
@@ -59,10 +58,13 @@ public class TraPhongController implements Initializable, Refreshable {
         phieuDatPhongDAO = new PhieuDatPhongDAO();
         hdDao = new HoaDonDAO();
         btnXemChiTiet.setDisable(true);
+
         try {
             laydsKhachHang();
             laydsPhieuTheoKhachHang();
             laydsPhongTheoPhieu();
+            khoiTaoDinhDangNgay();
+            setDisable();
             dsKhachHang.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue != null) {
                     try {
@@ -80,12 +82,22 @@ public class TraPhongController implements Initializable, Refreshable {
                         throw new RuntimeException(e);
                     }
                 }
+                setDisable();
             });
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
-
+    private void setDisable(){
+        if(ngayDen!=null){
+            ngayDen.setDisable(true);
+            ngayDen.setStyle("-fx-opacity: 1; -fx-text-fill: black; -fx-background-color: #eee;");
+        }
+        if(ngayTraPhong!=null){
+            ngayTraPhong.setDisable(true);
+            ngayTraPhong.setStyle("-fx-opacity: 1; -fx-text-fill: black; -fx-background-color: #eee;");
+        }
+    }
     private void khoiTaoDinhDangNgay() {
         // Định dạng ngày tháng mong muốn (ví dụ: 25/10/2025)
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -115,7 +127,7 @@ public class TraPhongController implements Initializable, Refreshable {
         };
 
         // Áp dụng converter cho cả hai DatePicker
-        ngayDi.setConverter(converter);
+        ngayTraPhong.setConverter(converter);
         ngayDen.setConverter(converter);
 
         // *Tùy chọn:* Đảm bảo DatePicker có thể hiển thị ngày hôm nay nếu người dùng chưa chọn

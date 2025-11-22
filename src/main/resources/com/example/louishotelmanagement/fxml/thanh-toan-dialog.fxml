@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<ScrollPane fitToHeight="true" fitToWidth="true" stylesheets="@../css/main.css, @../css/thanh-toan.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.ThanhToanDialogController">
+<ScrollPane fitToHeight="true" fitToWidth="true" stylesheets="@../css/main.css, @../css/thanh-toan.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.ThanhToanDialogController">
     <content>
         <BorderPane>
             <center>
@@ -102,10 +102,6 @@
                                     <TextField prefHeight="33.0" text="Chuyển khoản" HBox.hgrow="ALWAYS" />
                                 </HBox>
                                 <Region VBox.vgrow="ALWAYS" />
-                                <HBox alignment="CENTER_LEFT" spacing="10.0" HBox.hgrow="ALWAYS">
-                                    <RadioButton fx:id="rbtnViDienTu" />
-                                    <TextField prefHeight="33.0" text="Ví điện tử" HBox.hgrow="ALWAYS" />
-                                </HBox>
                             </VBox>
                         </children>
                     </HBox>
