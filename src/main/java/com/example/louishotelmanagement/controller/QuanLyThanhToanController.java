@@ -39,7 +39,6 @@ public class QuanLyThanhToanController {
     @FXML private ComboBox<String> cmbNgayLap;
     @FXML private Button btnLamMoi;
     @FXML private Button btnThanhToan;
-
     @FXML private TableView<HoaDon> tableViewKhachHang;
     @FXML private TableColumn<HoaDon, String> colMaHD;
     @FXML private TableColumn<HoaDon, LocalDate> colNgayLap;

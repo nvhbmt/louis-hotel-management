@@ -31,8 +31,8 @@ VALUES
 ('P201', 2, N'Trống', N'Phòng đơn tầng 2, view hồ bơi', 'LP001'),
 ('P202', 2, N'Trống', N'Phòng đơn tầng 2, view thành phố', 'LP001'),
 ('P203', 2, N'Trống', N'Phòng đơn tầng 2, góc tòa nhà', 'LP001'),
-('P204', 2, N'Trống', N'Phòng đôi tầng 2, view sân', 'LP002'),
-('P205', 2, N'Trống', N'Phòng đôi tầng 2, view đường', 'LP002'),
+('P204', 2, N'Đang sử dụng', N'Phòng đôi tầng 2, view sân', 'LP002'),
+('P205', 2, N'Đang sử dụng', N'Phòng đôi tầng 2, view đường', 'LP002'),
 ('P206', 2, N'Trống', N'Phòng đôi tầng 2, góc tòa nhà', 'LP002'),
 
 -- Tầng 3
@@ -102,18 +102,32 @@ GO
 -- 6. MaGiamGia (Mã giảm giá)
 -------------------------------------------------------------------
 PRINT N'-- 6. Đang thêm dữ liệu bảng MaGiamGia...';
-INSERT INTO MaGiamGia (maGG, code, giamGia, kieuGiamGia, ngayBatDau, ngayKetThuc, tongTienToiThieu, moTa, trangThai,
-                       maNV)
-VALUES ('GG001', 'SALE10OCT', 10, 'PERCENT', '2025-10-01', '2025-10-31', 2000000,
-        N'Giảm 10% cho tổng hóa đơn từ 2 triệu trong tháng 10', N'Đang diễn ra', 'NV001'),
-       ('GG002', 'WEEKEND50K', 50000, 'AMOUNT', '2025-10-10', '2025-10-25', 1000000,
-        N'Giảm 50,000 cho hóa đơn cuối tuần từ 1 triệu', N'Đang diễn ra', 'NV002'),
-       ('GG003', 'VIP15', 15, 'PERCENT', '2025-09-01', '2025-12-31', 0, N'Ưu đãi 15% cho khách VIP đến hết năm',
-        N'Đang diễn ra', 'NV001'),
-       ('GG004', 'SAVE100K', 100000, 'AMOUNT', '2025-10-01', '2025-11-01', 3000000,
-        N'Giảm 100,000 cho hóa đơn từ 3 triệu', N'Đang diễn ra', 'NV004'),
-       ('GG005', 'BLACKFRI30', 30, 'PERCENT', '2025-11-29', '2025-11-29', NULL, N'Giảm 30% Black Friday',
-        N'Chưa diễn ra', 'NV002');
+INSERT INTO MaGiamGia (maGG, code, giamGia, kieuGiamGia, ngayBatDau, ngayKetThuc, tongTienToiThieu, moTa, trangThai, maNV)
+VALUES
+    -- GG001: Khuyến mãi cả năm (Active)
+    -- Giảm 10% (PERCENT)
+    ('GG001', 'WELCOME2025', 10, 'PERCENT', '2025-01-01', '2025-12-31', 1500000,
+     N'Giảm 10% cho khách hàng mới năm 2025', N'Đang diễn ra', 'NV001'),
+
+    -- GG002: Khuyến mãi Mùa Đông (Active)
+    -- Giảm 500k tiền mặt (AMOUNT) - Đang trong thời gian áp dụng (1/10 - 31/12)
+    ('GG002', 'WINTER500', 500000, 'AMOUNT', '2025-10-01', '2025-12-31', 5000000,
+     N'Ưu đãi mùa đông: Giảm 500k cho hóa đơn trên 5 triệu', N'Đang diễn ra', 'NV002'),
+
+    -- GG003: Khách VIP (Active)
+    -- Giảm 15% (PERCENT) - Hiệu lực dài hạn
+    ('GG003', 'VIPGOLD', 15, 'PERCENT', '2025-01-01', '2026-01-01', 0,
+     N'Đặc quyền VIP: Giảm 15% trên mọi hóa đơn', N'Đang diễn ra', 'NV001'),
+
+    -- GG004: Khuyến mãi Tháng 11 (Active)
+    -- Giảm 200k tiền mặt (AMOUNT) - Chạy trong tháng 11 (Hiện tại là 22/11 -> OK)
+    ('GG004', 'NOV200', 200000, 'AMOUNT', '2025-11-01', '2025-11-30', 2000000,
+     N'Chào tháng 11: Giảm 200k khi đặt phòng sớm', N'Đang diễn ra', 'NV004'),
+
+    -- GG005: Giáng Sinh/Năm mới (Upcoming)
+    -- Giảm 30% (PERCENT) - Ngày bắt đầu là 20/12 (Tương lai) nên trạng thái là Chưa diễn ra
+    ('GG005', 'XMAS30', 30, 'PERCENT', '2025-12-20', '2025-12-25', NULL,
+     N'Giáng sinh an lành: Giảm 30% cho các cặp đôi', N'Chưa diễn ra', 'NV002');
 GO
 
 -------------------------------------------------------------------
@@ -142,9 +156,9 @@ VALUES
 ('PD004', '2025-10-20', '2025-10-22', '2025-10-25', N'Hoàn thành', N'Đặt trước', 'KH004', 'NV003', 300000.00),
 ('PD005', '2025-10-21', '2025-10-24', '2025-10-26', N'Hoàn thành', N'Đặt trước', 'KH005', 'NV004', 200000.00),
 -- Đã đặt (Đặt trực tiếp): tiền cọc = 0
-('PD006', '2025-10-24', '2025-10-24', '2025-10-26', N'Đã đặt', N'Đặt trực tiếp', 'KH003', 'NV001', 0.00),
+('PD006', '2025-10-24', '2025-10-24', null, N'Đang sử dụng', N'Đặt trực tiếp', 'KH003', 'NV001', 0.00),
 -- Đã đặt (Đặt trước): tiền cọc = 20% tổng chi phí phòng
-('PD007', '2025-10-25', '2025-10-25', '2025-10-28', N'Đã đặt', N'Đặt trước', 'KH004', 'NV003', 510000.00);
+('PD007', '2025-10-25', '2025-10-25', null, N'Đang sử dụng', N'Đặt trước', 'KH004', 'NV003', 510000.00);
 GO
 
 

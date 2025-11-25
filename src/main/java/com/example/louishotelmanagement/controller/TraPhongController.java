@@ -25,7 +25,6 @@ import java.util.ResourceBundle;
 public class TraPhongController implements Initializable, Refreshable {
 
     public Button btnCheck;
-    public DatePicker ngayDi;
     public ComboBox dsPhong;
     public ComboBox dsKhachHang;
     public Button btnTraPhong;
@@ -59,10 +58,13 @@ public class TraPhongController implements Initializable, Refreshable {
         phieuDatPhongDAO = new PhieuDatPhongDAO();
         hdDao = new HoaDonDAO();
         btnXemChiTiet.setDisable(true);
+
         try {
             laydsKhachHang();
             laydsPhieuTheoKhachHang();
             laydsPhongTheoPhieu();
+            khoiTaoDinhDangNgay();
+            setDisable();
             dsKhachHang.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue != null) {
                     try {
@@ -80,12 +82,22 @@ public class TraPhongController implements Initializable, Refreshable {
                         throw new RuntimeException(e);
                     }
                 }
+                setDisable();
             });
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
-
+    private void setDisable(){
+        if(ngayDen!=null){
+            ngayDen.setDisable(true);
+            ngayDen.setStyle("-fx-opacity: 1; -fx-text-fill: black; -fx-background-color: #eee;");
+        }
+        if(ngayTraPhong!=null){
+            ngayTraPhong.setDisable(true);
+            ngayTraPhong.setStyle("-fx-opacity: 1; -fx-text-fill: black; -fx-background-color: #eee;");
+        }
+    }
     private void khoiTaoDinhDangNgay() {
         // Định dạng ngày tháng mong muốn (ví dụ: 25/10/2025)
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -115,7 +127,7 @@ public class TraPhongController implements Initializable, Refreshable {
         };
 
         // Áp dụng converter cho cả hai DatePicker
-        ngayDi.setConverter(converter);
+        ngayTraPhong.setConverter(converter);
         ngayDen.setConverter(converter);
 
         // *Tùy chọn:* Đảm bảo DatePicker có thể hiển thị ngày hôm nay nếu người dùng chưa chọn
@@ -209,14 +221,7 @@ public class TraPhongController implements Initializable, Refreshable {
 
             if (hd != null) {
                 if (hd.getTrangThai().equals(TrangThaiHoaDon.CHUA_THANH_TOAN)) {
-
-                    // 💡 TRẠNG THÁI 1: CHƯA THANH TOÁN -> CHUYỂN MÀN HÌNH THANH TOÁN (KHÔNG TRUYỀN DỮ LIỆU)
-                    if (switcher != null) {
-                        switcher.switchContent("/com/example/louishotelmanagement/fxml/thanh-toan-view.fxml");
-                    } else {
-                        ThongBaoUtil.hienThiLoi("Lỗi hệ thống", "Không tìm thấy bộ chuyển đổi nội dung (switcher).");
-                    }
-
+                    moDialogThanhToan(hd);
                 } else {
 
                     // 💡 TRẠNG THÁI 2: ĐÃ THANH TOÁN -> HOÀN TẤT VÀ DỌN PHÒNG
@@ -233,6 +238,38 @@ public class TraPhongController implements Initializable, Refreshable {
             } else {
                 ThongBaoUtil.hienThiLoi("Lỗi trả phòng", "Không tìm thấy Hóa đơn phòng có mã: " + ctHoaDonPhong.getMaHD());
             }
+        }
+    }
+    // Trong TraPhongController.java
+    private void moDialogThanhToan(HoaDon hoaDonCanThanhToan) {
+        try {
+            // 1. Load FXML của Dialog Thanh Toán
+            // Đảm bảo đường dẫn FXML là chính xác!
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/thanh-toan-dialog.fxml"));
+            Parent root = loader.load();
+
+            // 2. Truy cập Controller của Dialog mới
+            ThanhToanDialogController thanhToanController = loader.getController();
+
+            // 3. Truyền đối tượng HoaDon sang Controller mới
+            thanhToanController.setHoaDon(hoaDonCanThanhToan);
+
+            // 4. Tạo Stage và hiển thị Dialog
+            Stage stage = new Stage();
+            stage.setTitle("Thanh Toán Hóa Đơn #" + hoaDonCanThanhToan.getMaHD());
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL); // Chặn tương tác với cửa sổ cha
+            stage.showAndWait(); // Hiển thị và chờ người dùng đóng Dialog
+
+            // 5. Sau khi Dialog đóng, refresh dữ liệu trên màn hình TraPhong
+            refreshData();
+
+        } catch (IOException e) {
+            ThongBaoUtil.hienThiLoi("Lỗi mở màn hình", "Không tìm thấy file FXML Thanh Toán hoặc lỗi tải: " + e.getMessage());
+            e.printStackTrace();
+        } catch (Exception e) {
+            ThongBaoUtil.hienThiLoi("Lỗi hệ thống", "Lỗi xảy ra trong quá trình mở Dialog Thanh Toán: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
