@@ -31,8 +31,8 @@ VALUES
 ('P201', 2, N'Trống', N'Phòng đơn tầng 2, view hồ bơi', 'LP001'),
 ('P202', 2, N'Trống', N'Phòng đơn tầng 2, view thành phố', 'LP001'),
 ('P203', 2, N'Trống', N'Phòng đơn tầng 2, góc tòa nhà', 'LP001'),
-('P204', 2, N'Trống', N'Phòng đôi tầng 2, view sân', 'LP002'),
-('P205', 2, N'Trống', N'Phòng đôi tầng 2, view đường', 'LP002'),
+('P204', 2, N'Đang sử dụng', N'Phòng đôi tầng 2, view sân', 'LP002'),
+('P205', 2, N'Đang sử dụng', N'Phòng đôi tầng 2, view đường', 'LP002'),
 ('P206', 2, N'Trống', N'Phòng đôi tầng 2, góc tòa nhà', 'LP002'),
 
 -- Tầng 3
@@ -156,9 +156,9 @@ VALUES
 ('PD004', '2025-10-20', '2025-10-22', '2025-10-25', N'Hoàn thành', N'Đặt trước', 'KH004', 'NV003', 300000.00),
 ('PD005', '2025-10-21', '2025-10-24', '2025-10-26', N'Hoàn thành', N'Đặt trước', 'KH005', 'NV004', 200000.00),
 -- Đã đặt (Đặt trực tiếp): tiền cọc = 0
-('PD006', '2025-10-24', '2025-10-24', '2025-10-26', N'Đã đặt', N'Đặt trực tiếp', 'KH003', 'NV001', 0.00),
+('PD006', '2025-10-24', '2025-10-24', null, N'Đang sử dụng', N'Đặt trực tiếp', 'KH003', 'NV001', 0.00),
 -- Đã đặt (Đặt trước): tiền cọc = 20% tổng chi phí phòng
-('PD007', '2025-10-25', '2025-10-25', '2025-10-28', N'Đã đặt', N'Đặt trước', 'KH004', 'NV003', 510000.00);
+('PD007', '2025-10-25', '2025-10-25', null, N'Đang sử dụng', N'Đặt trước', 'KH004', 'NV003', 510000.00);
 GO
 
 

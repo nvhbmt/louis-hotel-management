@@ -89,7 +89,6 @@ public class ThanhToanDialogController {
         hienThiThongTinHoaDon();
         tinhTongThanhToan();
     }
-
     private void tinhTongThanhToan() {
         try {
             double tienPhong = 0.0;
@@ -246,9 +245,10 @@ public class ThanhToanDialogController {
                 // Sử dụng ThongBaoUtil.hienThiThongBao nếu nó chấp nhận 2 tham số:
                 // ThongBaoUtil.hienThiThongBao("Thành công", "Xác nhận chuyển khoản thành công. Vui lòng bấm THANH TOÁN để hoàn tất.");
                 // Hoặc dùng Alert tiêu chuẩn nếu ThongBaoUtil không phù hợp:
-                Alert successAlert = new Alert(Alert.AlertType.INFORMATION, "Xác nhận chuyển khoản thành công. Vui lòng bấm THANH TOÁN để hoàn tất.");
+                Alert successAlert = new Alert(Alert.AlertType.INFORMATION, "Xác nhận chuyển khoản thành công.");
                 successAlert.setHeaderText(null);
                 successAlert.showAndWait();
+                dongForm();
             } else {
                 // Hủy giao dịch (hoặc đóng) -> Vô hiệu hóa nút và bỏ chọn RadioButton
                 btnThanhToan.setDisable(true);
