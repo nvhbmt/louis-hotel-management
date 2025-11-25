@@ -242,13 +242,13 @@ public class ThanhToanDialogController {
             if (qrController.isTransactionConfirmed()) {
                 // CHỈ kích hoạt nút nếu người dùng đã Xác nhận
                 btnThanhToan.setDisable(false);
+                rbtnTienMat.setDisable(true);
                 // Sử dụng ThongBaoUtil.hienThiThongBao nếu nó chấp nhận 2 tham số:
                 // ThongBaoUtil.hienThiThongBao("Thành công", "Xác nhận chuyển khoản thành công. Vui lòng bấm THANH TOÁN để hoàn tất.");
                 // Hoặc dùng Alert tiêu chuẩn nếu ThongBaoUtil không phù hợp:
                 Alert successAlert = new Alert(Alert.AlertType.INFORMATION, "Xác nhận chuyển khoản thành công.");
                 successAlert.setHeaderText(null);
                 successAlert.showAndWait();
-                dongForm();
             } else {
                 // Hủy giao dịch (hoặc đóng) -> Vô hiệu hóa nút và bỏ chọn RadioButton
                 btnThanhToan.setDisable(true);
@@ -313,4 +313,5 @@ public class ThanhToanDialogController {
             ThongBaoUtil.hienThiLoi("Lỗi", "Không thể lưu thông tin thanh toán vào hệ thống.");
         }
     }
+
 }
