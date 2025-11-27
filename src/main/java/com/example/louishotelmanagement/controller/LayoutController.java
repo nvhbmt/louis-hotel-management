@@ -1,25 +1,28 @@
 package com.example.louishotelmanagement.controller;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.ResourceBundle;
+
 import com.example.louishotelmanagement.service.AuthService;
-import com.example.louishotelmanagement.ui.models.MenuItemModel;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
-import com.example.louishotelmanagement.ui.data.MenuData;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
-import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
 
 public class LayoutController implements Initializable, ContentSwitcher {
 
     @FXML
-    private TreeView<MenuItemModel> menuTree;
+    private VBox menuContainer;
 
     @FXML
     private BorderPane mainBorderPane;
@@ -30,17 +33,19 @@ public class LayoutController implements Initializable, ContentSwitcher {
     @FXML
     private Button logoutBtn;
     
-    private TreeItem<MenuItemModel> currentActiveItem;
+    private Button currentActiveButton;
+    private Map<String, Button> fxmlPathToButton = new HashMap<>();
+    private Map<Button, VBox> groupButtonToSubmenu = new HashMap<>();
     private AuthService authService;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         authService = AuthService.getInstance();
         setupUserInfo();
-        setupMenuTree();
+        setupMenuVBox();
         loadFXML("/com/example/louishotelmanagement/fxml/trang-chu-view.fxml");
         // Set trang chủ làm active mặc định
-        setActiveItem(findMenuItemByPath("/com/example/louishotelmanagement/fxml/trang-chu-view.fxml"));
+        setActiveButtonByPath("/com/example/louishotelmanagement/fxml/trang-chu-view.fxml");
     }
     
     private void setupUserInfo() {
@@ -83,112 +88,101 @@ public class LayoutController implements Initializable, ContentSwitcher {
         }
     }
 
-    /** Khởi tạo TreeView và xử lý sự kiện */
-    private void setupMenuTree() {
-        TreeItem<MenuItemModel> root = MenuData.createMenuTree();
-        menuTree.setRoot(root);
-        menuTree.setShowRoot(false);
-
-        // Custom hiển thị từng dòng menu
-        menuTree.setCellFactory(_ -> new TreeCell<>() {
-            @Override
-            protected void updateItem(MenuItemModel item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                    setGraphic(null);
-                    getStyleClass().remove("active");
-                } else {
-                    setText(item.getTitle());
-                    setGraphic(item.getIconNode());
-                    
-                    // Thêm/xóa class active dựa trên trạng thái
-                    if (currentActiveItem != null && currentActiveItem.getValue().equals(item)) {
-                        getStyleClass().add("active");
-                    } else {
-                        getStyleClass().remove("active");
-                    }
-                }
-            }
-        });
-
-        // Click item con → load FXML
-        menuTree.getSelectionModel().selectedItemProperty().addListener((_, _, selected) -> {
-            if (selected != null && selected.getValue().getFxmlPath() != null) {
-                loadFXML(selected.getValue().getFxmlPath());
-                setActiveItem(selected);
-            }
-        });
-
-        // Click 1 lần vào menu cha → mở/đóng (vì đã ẩn mũi tên)
-        menuTree.setOnMouseClicked(event -> {
-            TreeItem<MenuItemModel> selected = menuTree.getSelectionModel().getSelectedItem();
-            if (selected != null) {
-                if (!selected.isLeaf()) {
-                    // Menu cha - mở/đóng
-                    boolean newState = !selected.isExpanded();
-                    // Đóng các nhóm khác
-                    for (TreeItem<MenuItemModel> item : menuTree.getRoot().getChildren()) {
-                        if (item != selected) item.setExpanded(false);
-                    }
-                    selected.setExpanded(newState);
-                } else if (selected.getValue().getFxmlPath() != null) {
-                    // Menu con - load FXML và set active
-                    loadFXML(selected.getValue().getFxmlPath());
-                    setActiveItem(selected);
-                }
-            }
-        });
+    /** Khởi tạo VBox menu và xử lý sự kiện */
+    private void setupMenuVBox() {
+        menuContainer.getChildren().clear();
+        
+        // Sử dụng MenuBuilder để xây dựng menu
+        MenuBuilder.MenuBuildResult result = MenuBuilder.buildMenu(
+            // Handler cho menu item click
+            (fxmlPath, button) -> {
+                loadFXML(fxmlPath);
+                setActiveButton(button);
+            },
+            // Handler cho submenu toggle
+            this::toggleSubmenu
+        );
+        
+        // Lấy các components từ kết quả
+        VBox builtMenu = result.getMenuContainer();
+        fxmlPathToButton = result.getFxmlPathToButton();
+        groupButtonToSubmenu = result.getGroupButtonToSubmenu();
+        
+        // Thêm menu vào container
+        menuContainer.getChildren().addAll(builtMenu.getChildren());
     }
-
+    
+    /** Toggle submenu visibility */
+    private void toggleSubmenu(Button groupHeader, VBox submenu) {
+        boolean isExpanded = submenu.isVisible();
+        
+        // Close all other groups
+        for (Map.Entry<Button, VBox> entry : groupButtonToSubmenu.entrySet()) {
+            if (entry.getKey() != groupHeader) {
+                entry.getValue().setVisible(false);
+                entry.getValue().setManaged(false);
+                entry.getKey().getStyleClass().remove("expanded");
+                // Reset arrow rotation (arrow ở cuối cùng)
+                MenuBuilder.resetArrowRotation(entry.getKey());
+            }
+        }
+        
+        // Toggle current group
+        submenu.setVisible(!isExpanded);
+        submenu.setManaged(!isExpanded);
+        
+        if (!isExpanded) {
+            groupHeader.getStyleClass().add("expanded");
+            // Rotate arrow (arrow ở cuối cùng)
+            MenuBuilder.rotateArrow(groupHeader, 90);
+        } else {
+            groupHeader.getStyleClass().remove("expanded");
+            // Reset arrow rotation
+            MenuBuilder.rotateArrow(groupHeader, 0);
+        }
+    }
+    
+    
     /** Load FXML vào vùng trung tâm với caching */
     private void loadFXML(String path) {
         ContentManager.loadFXML(path, mainBorderPane, this);
     }
     
-    /** Set item làm active */
-    private void setActiveItem(TreeItem<MenuItemModel> item) {
-        if (currentActiveItem != null) {
-            // Refresh cell cũ để bỏ active state
-            refreshTreeCell(currentActiveItem);
+    /** Set button làm active */
+    private void setActiveButton(Button button) {
+        if (currentActiveButton != null) {
+            currentActiveButton.getStyleClass().remove("active");
         }
         
-        currentActiveItem = item;
-        if (item != null) {
-            // Refresh cell mới để thêm active state
-            refreshTreeCell(item);
+        currentActiveButton = button;
+        if (button != null) {
+            button.getStyleClass().add("active");
         }
     }
     
-    /** Refresh tree cell để cập nhật style */
-    private void refreshTreeCell(TreeItem<MenuItemModel> item) {
-        // Force refresh của tree view để cập nhật cell styling
-        menuTree.refresh();
-    }
-    
-    /** Tìm menu item theo FXML path */
-    private TreeItem<MenuItemModel> findMenuItemByPath(String fxmlPath) {
-        return findMenuItemByPathRecursive(menuTree.getRoot(), fxmlPath);
-    }
-    
-    /** Tìm menu item theo FXML path (recursive) */
-    private TreeItem<MenuItemModel> findMenuItemByPathRecursive(TreeItem<MenuItemModel> parent, String fxmlPath) {
-        if (parent == null) return null;
-        
-        // Kiểm tra item hiện tại
-        if (fxmlPath.equals(parent.getValue().getFxmlPath())) {
-            return parent;
+    /** Set active button theo FXML path */
+    private void setActiveButtonByPath(String fxmlPath) {
+        Button button = fxmlPathToButton.get(fxmlPath);
+        if (button != null) {
+            setActiveButton(button);
+            // Expand parent group if needed
+            expandToButton(button);
         }
-        
-        // Tìm trong children
-        for (TreeItem<MenuItemModel> child : parent.getChildren()) {
-            TreeItem<MenuItemModel> found = findMenuItemByPathRecursive(child, fxmlPath);
-            if (found != null) {
-                return found;
+    }
+    
+    /** Expand group để hiển thị button được chọn */
+    private void expandToButton(Button button) {
+        // Find which group contains this button
+        for (Map.Entry<Button, VBox> entry : groupButtonToSubmenu.entrySet()) {
+            if (entry.getValue().getChildren().contains(button)) {
+                // Expand this group
+                VBox submenu = entry.getValue();
+                if (!submenu.isVisible()) {
+                    toggleSubmenu(entry.getKey(), submenu);
+                }
+                break;
             }
         }
-        
-        return null;
     }
 
     @Override
@@ -201,22 +195,7 @@ public class LayoutController implements Initializable, ContentSwitcher {
         loadFXML(fxmlPath);
         
         if (updateMenuActive) {
-            // Tìm và set active item trong menu
-            TreeItem<MenuItemModel> foundItem = findMenuItemByPath(fxmlPath);
-            if (foundItem != null) {
-                setActiveItem(foundItem);
-                // Expand parent nếu cần
-                expandToItem(foundItem);
-            }
-        }
-    }
-    
-    /** Expand tree để hiển thị item được chọn */
-    private void expandToItem(TreeItem<MenuItemModel> item) {
-        TreeItem<MenuItemModel> parent = item.getParent();
-        while (parent != null && parent != menuTree.getRoot()) {
-            parent.setExpanded(true);
-            parent = parent.getParent();
+            setActiveButtonByPath(fxmlPath);
         }
     }
 }

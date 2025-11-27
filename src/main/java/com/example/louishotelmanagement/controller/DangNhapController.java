@@ -40,6 +40,9 @@ public class DangNhapController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         taiKhoanDAO = new TaiKhoanDAO();
         authService = AuthService.getInstance();
+
+        tenDangNhapField.setText("manager");
+        matKhauField.setText("manager123");
         
         setupEventHandlers();
     }

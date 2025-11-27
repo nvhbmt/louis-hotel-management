@@ -52,6 +52,10 @@ public class MenuData {
             ));
         }
 
+        TreeItem<MenuItemModel> khuyenMai = new TreeItem<>(
+                new MenuItemModel("Khuyến mãi", "mdi2c-chart-bar", "/com/example/louishotelmanagement/fxml/quan-ly-giam-gia-view.fxml")
+        );
+
         TreeItem<MenuItemModel> hoaDonGroup = new TreeItem<>(
                 new MenuItemModel("Hóa đơn", "mdi2c-cash-multiple", null)
         );
@@ -93,6 +97,7 @@ public class MenuData {
         menuItems.add(trangChu);
         menuItems.add(phongGroup);
         menuItems.add(dichVuGroup);
+        menuItems.add(khuyenMai);
         menuItems.add(hoaDonGroup);
 
         // Chỉ Manager mới có quyền xem thống kê và quản lý nhân viên
