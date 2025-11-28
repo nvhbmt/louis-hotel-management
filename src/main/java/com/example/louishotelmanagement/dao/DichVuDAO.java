@@ -6,8 +6,8 @@ import com.example.louishotelmanagement.model.DichVu;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class DichVuDAO {
     //THEM DICH VU
@@ -76,32 +76,31 @@ public class DichVuDAO {
         }
     }
     // LẤY DANH SÁCH DỊCH VỤ
-    public List<DichVu> layTatCaDichVu(Boolean chiLayConKinhDoanh) throws Exception {
-        List<DichVu> list = new ArrayList<>();
-        String sql = "{CALL sp_LayTatCaDichVu(?)}";
+    public ArrayList<DichVu> layTatCaDichVu(boolean b) throws SQLException {
+        ArrayList<DichVu> ds = new ArrayList<>();
+        String sql = "{CALL sp_LayTatCaDichVu(NULL)}"; // gọi SP không lọc theo trạng thái
+
         try (Connection con = CauHinhDatabase.getConnection();
-             CallableStatement stmt = con.prepareCall(sql)) {
-            if (chiLayConKinhDoanh == null) {
-                stmt.setNull(1, java.sql.Types.BIT);
-            } else {
-                stmt.setBoolean(1, chiLayConKinhDoanh);
-            }
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    DichVu dv = new DichVu(
-                            rs.getString("maDV"),
-                            rs.getString("tenDV"),
-                            rs.getInt("soLuong"),
-                            rs.getDouble("donGia"),
-                            rs.getString("moTa"),
-                            rs.getBoolean("conKinhDoanh")
-                    );
-                    list.add(dv);
-                }
+             CallableStatement cs = con.prepareCall(sql);
+             ResultSet rs = cs.executeQuery()) {
+
+            while (rs.next()) {
+                DichVu dv = new DichVu(
+                        rs.getString("maDV"),
+                        rs.getString("tenDV"),
+                        rs.getInt("soLuong"),
+                        rs.getDouble("donGia"),
+                        rs.getString("moTa"),
+                        rs.getBoolean("conKinhDoanh")
+                );
+                ds.add(dv);
             }
         }
-        return list;
+
+        return ds;
     }
+
+
 
     // Lấy mã dịch vụ tiếp theo
     public String layMaDichVuTiepTheo() throws Exception {

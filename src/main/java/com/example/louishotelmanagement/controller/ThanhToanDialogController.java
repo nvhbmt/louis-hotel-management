@@ -69,6 +69,12 @@ public class ThanhToanDialogController {
     private final KhachHangDAO khachHangDAO = new KhachHangDAO();
     private final MaGiamGiaDAO maGiamGiaDAO = new MaGiamGiaDAO();
     private final HoaDonDAO2 hoaDonDAO2 = new HoaDonDAO2();
+    private final CTHoaDonPhongDAO cthdPhongDAO = new CTHoaDonPhongDAO();
+    private BigDecimal valTienPhong;
+    private BigDecimal valTienDichVu;
+    private BigDecimal valGiamGia;
+    private BigDecimal valVAT;
+    private BigDecimal valTongThanhToan;
 
     // Nhận hóa đơn từ controller trước
     public void setHoaDon(HoaDon hoaDon) {
@@ -91,48 +97,50 @@ public class ThanhToanDialogController {
     }
     private void tinhTongThanhToan() {
         try {
-            double tienPhong = 0.0;
-            BigDecimal tienDichVu = BigDecimal.ZERO;
-            double vat = 0.0;
-            double giamGia = 0.0;
-            double tongThanhToan = 0.0;
 
-            // Lấy danh sách hóa đơn từ DAO (tìm hóa đơn theo mã phòng hoặc mã KH)
-            for (HoaDon hd : hoaDonDAO2.layDanhSachHoaDon()) {
-                if (hd.getSoPhong().equals(hoaDon.getSoPhong()) ||
-                        hd.getMaKH().equals(hoaDon.getMaKH())) {
-                    tienPhong = hd.getTongTien().doubleValue(); // Tổng tiền phòng gốc
-                    break;
-                }
-            }
+            // Hàm này trả về double đổi sang BigDecimal
+            double tongTienPhongDB = cthdPhongDAO.tinhTongTienPhongTheoHD(hoaDon.getMaHD());
 
-            // Tính giảm giá nếu có mã giảm
-            if (hoaDon.getMaGG() != null) {
+            valTienPhong = BigDecimal.valueOf(tongTienPhongDB);
+
+            // -----------------------------------------------------------
+
+            valTienDichVu = cthddv.tinhTongTienDichVu(hoaDon.getMaHD());
+            if (valTienDichVu == null) valTienDichVu = BigDecimal.ZERO;
+
+            valGiamGia = BigDecimal.ZERO;
+            if (hoaDon.getMaGG() != null && !hoaDon.getMaGG().isEmpty()) {
                 MaGiamGia mgg = maGiamGiaDAO.layMaGiamGiaThepMa(hoaDon.getMaGG());
                 if (mgg != null) {
                     if (mgg.getKieuGiamGia() == KieuGiamGia.PERCENT) {
-                        giamGia = tienPhong * (mgg.getGiamGia() / 100.0);
+                        // Giảm % trên tổng tiền phòng
+                        valGiamGia = valTienPhong.multiply(BigDecimal.valueOf(mgg.getGiamGia() / 100.0));
                     } else if (mgg.getKieuGiamGia() == KieuGiamGia.AMOUNT) {
-                        giamGia = mgg.getGiamGia();
+                        // Giảm số tiền cụ thể
+                        valGiamGia = BigDecimal.valueOf(mgg.getGiamGia());
                     }
                 }
             }
-            tienDichVu = cthddv.tinhTongTienDichVu(hoaDon.getMaHD());
-            // VAT 10% chỉ tính trên phần còn lại sau khi giảm giá
-            vat = (tienPhong - giamGia) * 0.1;
 
-            // Tổng thanh toán cuối cùng
-            tongThanhToan = (tienPhong - giamGia) + vat + tienDichVu.doubleValue();
+            BigDecimal tongTruocThue = valTienPhong.add(valTienDichVu).subtract(valGiamGia);
 
-            // Hiển thị lên UI
-            lblTongTienPhong.setText(String.format("%,.0f ₫", tienPhong));
-            lblTongTienDichVu.setText(String.format("%,.0f đ", tienDichVu));
-            lblVat.setText(String.format("%,.0f ₫", vat));
-            lblTongGiamGia.setText(String.format("%,.0f ₫", giamGia));
-            lblTongThanhToan.setText(String.format("%,.0f ₫", tongThanhToan));
+            if (tongTruocThue.compareTo(BigDecimal.ZERO) < 0) tongTruocThue = BigDecimal.ZERO;
+
+            // Tính thuế
+            valVAT = tongTruocThue.multiply(BigDecimal.valueOf(0.1));
+
+            valTongThanhToan = tongTruocThue.add(valVAT);
+
+            lblTongTienPhong.setText(String.format("%,.0f ₫", valTienPhong));
+            lblTongTienDichVu.setText(String.format("%,.0f ₫", valTienDichVu));
+            lblVat.setText(String.format("%,.0f ₫", valVAT));
+            lblTongGiamGia.setText(String.format("%,.0f ₫", valGiamGia));
+
+            lblTongThanhToan.setText(String.format("%,.0f ₫", valTongThanhToan));
 
         } catch (Exception e) {
             e.printStackTrace();
+            ThongBaoUtil.hienThiLoi("Lỗi tính tiền", "Chi tiết: " + e.getMessage());
         }
     }
 
@@ -198,25 +206,15 @@ public class ThanhToanDialogController {
         // Vô hiệu hóa nút thanh toán lúc ban đầu
         btnThanhToan.setDisable(true);
 
-        // Logic xử lý khi chọn phương thức thanh toán
-        // Logic xử lý khi chọn phương thức thanh toán
         group.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == rbtnTienMat) {
-                // Trường hợp 1: Tiền Mặt
-                btnThanhToan.setDisable(false); // Kích hoạt ngay
-                // anQRCode(); // Gọi hàm ẩn nếu có hiển thị QR trước đó
+                btnThanhToan.setDisable(false);
             } else if (newValue == rbtnTheNganHang) {
-                // Trường hợp 2: Chuyển Khoản/Thẻ
-
-                // 1. Vô hiệu hóa nút Thanh Toán (chỉ kích hoạt lại sau khi XÁC NHẬN QR)
                 btnThanhToan.setDisable(true);
 
-                // 2. Mở màn hình QR Code
                 moManHinhQRCode();
 
-                // LƯU Ý: Logic kích hoạt nút nằm bên trong moManHinhQRCode() sau khi nó đóng.
             } else {
-                // Trường hợp 3: Không chọn gì
                 btnThanhToan.setDisable(true);
             }
         });
@@ -227,7 +225,6 @@ public class ThanhToanDialogController {
     }
     private void moManHinhQRCode() {
         try {
-            // ... (Phần load FXML và stage giữ nguyên) ...
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/ma-qr-view.fxml"));
             Parent parent = loader.load();
             QRController qrController = loader.getController();
@@ -236,30 +233,22 @@ public class ThanhToanDialogController {
             stage.setTitle("Mã QR Thanh Toán");
             stage.setScene(new Scene(parent));
 
-            stage.showAndWait(); // Chờ cửa sổ QR đóng
+            stage.showAndWait();
 
-            // === LOGIC KIỂM TRA KẾT QUẢ TỪ QR CONTROLLER ===
             if (qrController.isTransactionConfirmed()) {
-                // CHỈ kích hoạt nút nếu người dùng đã Xác nhận
                 btnThanhToan.setDisable(false);
                 rbtnTienMat.setDisable(true);
-                // Sử dụng ThongBaoUtil.hienThiThongBao nếu nó chấp nhận 2 tham số:
-                // ThongBaoUtil.hienThiThongBao("Thành công", "Xác nhận chuyển khoản thành công. Vui lòng bấm THANH TOÁN để hoàn tất.");
-                // Hoặc dùng Alert tiêu chuẩn nếu ThongBaoUtil không phù hợp:
+
                 Alert successAlert = new Alert(Alert.AlertType.INFORMATION, "Xác nhận chuyển khoản thành công.");
                 successAlert.setHeaderText(null);
                 successAlert.showAndWait();
             } else {
-                // Hủy giao dịch (hoặc đóng) -> Vô hiệu hóa nút và bỏ chọn RadioButton
                 btnThanhToan.setDisable(true);
-                // Quan trọng: Bỏ chọn phương thức chuyển khoản để buộc người dùng chọn lại
                 rbtnTienMat.getToggleGroup().selectToggle(null);
             }
 
         } catch (IOException e) {
             e.printStackTrace();
-            // Thay thế ThongBaoUtil.hienThiLoi bằng phương thức phù hợp nếu cần:
-            // ThongBaoUtil.hienThiLoi("Lỗi", "Không thể mở màn hình QR Code.");
             btnThanhToan.setDisable(true);
         }
     }
@@ -274,7 +263,6 @@ public class ThanhToanDialogController {
         rbtnTheNganHang.setSelected(false);
     }
     private void thanhToan() {
-        // 1. Kiểm tra lại phương thức thanh toán
         PhuongThucThanhToan phuongThuc;
 
         if(rbtnTienMat.isSelected()) {
@@ -287,25 +275,17 @@ public class ThanhToanDialogController {
             return;
         }
 
-        // 2. Cập nhật thông tin hóa đơn
         try {
-            // Cập nhật các trường cần thiết
             hoaDon.setPhuongThuc(phuongThuc);
             hoaDon.setTrangThai(TrangThaiHoaDon.DA_THANH_TOAN);
             hoaDon.setNgayCheckOut(LocalDate.now());
             String tongThanhToanText = lblTongThanhToan.getText()
-                    .replaceAll("[^0-9]", ""); // Loại bỏ tất cả trừ số (0-9)
-            // Chuyển chuỗi đã làm sạch thành BigDecimal
+                    .replaceAll("[^0-9]", "");
             hoaDon.setTongTien(new BigDecimal(tongThanhToanText));
             hoaDonDAO2.capNhatHoaDon(hoaDon);
-            // **LƯU VÀO CƠ SỞ DỮ LIỆU (DAO)**
-            // Giả sử HoaDonDAO2 có phương thức cập nhật
-            // hoaDonDAO2.capNhatHoaDon(hoaDon);
 
-            // 3. Thông báo thành công và đóng form
             ThongBaoUtil.hienThiThongBao("Thành công", "Thanh toán hóa đơn #" + hoaDon.getMaHD() + " đã hoàn tất.");
 
-            // Đóng form thanh toán
             dongForm();
 
         } catch (Exception e) {

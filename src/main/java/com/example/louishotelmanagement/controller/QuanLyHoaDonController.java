@@ -168,7 +168,6 @@ public class QuanLyHoaDonController implements Initializable {
     }
 
 
-    // --- Các hàm xử lý sự kiện ---
     private void handleInHoaDon(HoaDon hoaDon) {
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -200,7 +199,6 @@ public class QuanLyHoaDonController implements Initializable {
             stage.showAndWait();
 
         } catch (SQLException e) {
-            // Đã xóa e.printStackTrace()
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Lỗi Truy Vấn Dữ Liệu");
             alert.setHeaderText("Không thể tạo chi tiết hóa đơn.");
@@ -225,5 +223,11 @@ public class QuanLyHoaDonController implements Initializable {
 
 
         taiDuLieuHoaDon();
+    }
+
+    @FXML
+    public void handleAutoRefreshOnMouseEntered() {
+        taiDuLieuHoaDon();
+        // Auto refresh cập nhật mới thông tin hóa đơn mỗi khi di chuyển chuột qua
     }
 }
