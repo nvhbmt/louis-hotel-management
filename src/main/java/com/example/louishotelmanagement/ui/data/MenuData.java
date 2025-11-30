@@ -60,18 +60,18 @@ public class MenuData {
                 new MenuItemModel("Hóa đơn", "mdi2c-cash-multiple", null)
         );
         hoaDonGroup.getChildren().addAll(List.of(
-                new TreeItem<>(new MenuItemModel("Thanh toán", "mdi2c-cash",
+                new TreeItem<>(new MenuItemModel("Quản lí hóa đơn", "mdi2c-cash",
                         "/com/example/louishotelmanagement/fxml/thanh-toan-view.fxml"))
 //                new TreeItem<>(new MenuItemModel("Giảm giá", "mdi2s-sale",
 //                        "/com/example/louishotelmanagement/fxml/quan-ly-giam-gia-view.fxml"))
         ));
 
-        if ("Manager".equals(userRole)) {
-            hoaDonGroup.getChildren().addAll(List.of(
-                new TreeItem<>(new MenuItemModel("Quản lí hóa đơn", "mdi2f-file-document",
-                "/com/example/louishotelmanagement/fxml/hoa-don-view.fxml"))
-            ));
-        }
+//        if ("Manager".equals(userRole)) {
+//            hoaDonGroup.getChildren().addAll(List.of(
+//                new TreeItem<>(new MenuItemModel("Quản lí hóa đơn", "mdi2f-file-document",
+//                "/com/example/louishotelmanagement/fxml/hoa-don-view.fxml"))
+//            ));
+//        }
 
         TreeItem<MenuItemModel> thongKe = new TreeItem<>(
                 new MenuItemModel("Thống kê", "mdi2c-chart-bar", "/com/example/louishotelmanagement/fxml/thong-ke-view.fxml")

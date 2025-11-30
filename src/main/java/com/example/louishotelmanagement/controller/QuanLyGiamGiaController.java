@@ -1,8 +1,10 @@
 package com.example.louishotelmanagement.controller;
 
 import com.example.louishotelmanagement.dao.MaGiamGiaDAO;
+import com.example.louishotelmanagement.model.KhachHang;
 import com.example.louishotelmanagement.model.KieuGiamGia;
 import com.example.louishotelmanagement.model.MaGiamGia;
+import com.example.louishotelmanagement.model.PhieuDatPhong;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
@@ -38,6 +40,10 @@ public class QuanLyGiamGiaController implements Initializable {
     public Label lblSoMaChuaBatDau;
     @FXML
     public BorderPane rootPane;
+    @FXML
+    public Label lblTongSoPhieu;
+    @FXML
+    public Button btnLamMoi;
     @FXML
     private TextField txtTimKiem;
     @FXML

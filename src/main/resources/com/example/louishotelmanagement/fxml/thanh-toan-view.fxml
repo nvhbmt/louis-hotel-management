@@ -35,8 +35,8 @@
                             <Image url="@../image/pay.png" />
                         </ImageView>
                         <VBox prefWidth="357.0" HBox.hgrow="ALWAYS">
-                            <Label styleClass="main-header" text="Thanh toán giao dịch" />
-                            <Label prefHeight="20.0" prefWidth="450.0" styleClass="main-subtitle" text="Thanh toán các giao dịch của khách sạn" />
+                            <Label styleClass="main-header" text="Quản lí hóa đơn" />
+                            <Label prefHeight="20.0" prefWidth="450.0" styleClass="main-subtitle" text="Quản lí các hóa đơn trong khách sạn" />
                         </VBox>
                     </HBox>
                     <HBox alignment="CENTER_RIGHT" prefWidth="200.0" spacing="5.0" GridPane.columnIndex="1">
@@ -80,8 +80,8 @@
                         <VBox styleClass="stat-box" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS">
                             <HBox alignment="CENTER_LEFT" spacing="15">
                                 <VBox alignment="CENTER_LEFT" spacing="15" HBox.hgrow="ALWAYS">
-                                    <Label styleClass="stat-title" text="Số thanh toán" />
-                                    <Label fx:id="lblDangLuuTru" styleClass="stat-number" text="15" />
+                                    <Label styleClass="stat-title" text="Đã thanh toán" />
+                                    <Label fx:id="lblDaThanhToan" styleClass="stat-number" text="15" />
                                 </VBox>
                                 <ImageView fitHeight="45" fitWidth="45" preserveRatio="true">
                                     <image>
@@ -95,7 +95,7 @@
                         <VBox styleClass="stat-box" GridPane.columnIndex="2" GridPane.hgrow="ALWAYS">
                             <HBox alignment="CENTER_LEFT" spacing="15">
                                 <VBox alignment="CENTER_LEFT" spacing="15" HBox.hgrow="ALWAYS">
-                                    <Label styleClass="stat-title" text="Doanh thu ngày" />
+                                    <Label styleClass="stat-title" text="Doanh thu trong ngày" />
                                     <Label fx:id="lblCheckout" styleClass="stat-number" text="14" />
                                 </VBox>
                                 <ImageView fitHeight="45" fitWidth="45" preserveRatio="true">
@@ -110,9 +110,14 @@
                         <VBox styleClass="stat-box" GridPane.columnIndex="3" GridPane.hgrow="ALWAYS">
                             <HBox alignment="CENTER_LEFT" spacing="15">
                                 <VBox alignment="CENTER_LEFT" spacing="15" HBox.hgrow="ALWAYS">
-                                    <Label styleClass="stat-title" text="Rỗng" />
-                                    <Label fx:id="lblKhachVIP" styleClass="stat-number" text="10" />
+                                    <Label styleClass="stat-title" text="Số hóa đơn có khuyến mãi" />
+                                    <Label fx:id="lblKhuyenMai" styleClass="stat-number" text="10" />
                                 </VBox>
+                        <ImageView fitHeight="45" fitWidth="45" preserveRatio="true">
+                           <image>
+                              <Image url="@../image/coupons.png" />
+                           </image>
+                        </ImageView>
                             </HBox>
                         </VBox>
                     </children>
@@ -139,9 +144,10 @@
                             <TableColumn fx:id="colNgayLap" maxWidth="Infinity" prefWidth="120.0" text="Ngày Lập" />
                             <TableColumn fx:id="colPhuongThuc" maxWidth="Infinity" prefWidth="100.0" text="Phương Thức" />
                             <TableColumn fx:id="colTrangThai" maxWidth="Infinity" prefWidth="144.0" text="Trạng Thái" />
-                            <TableColumn fx:id="colTongTien" maxWidth="Infinity" prefWidth="204.0" text="Tổng Tiền" />
-                            <TableColumn fx:id="colMaGiamGia" maxWidth="Infinity" prefWidth="312.6666259765625" text="Mã Giảm Giá" />
-                            <TableColumn fx:id="colTenKH" maxWidth="Infinity" prefWidth="258.66668701171875" text="Tên Khách Hàng" />
+                            <TableColumn fx:id="colTongTien" maxWidth="Infinity" prefWidth="100" text="Tổng Tiền" />
+                            <TableColumn fx:id="colMaGiamGia" maxWidth="Infinity" prefWidth="130" text="Mã Giảm Giá" />
+                            <TableColumn fx:id="colTenKH" maxWidth="Infinity" minWidth="0.0" prefWidth="336.79998779296875" text="Tên Khách Hàng" />
+                     <TableColumn fx:id="colThaoTac" maxWidth="150.0" prefWidth="130.5999755859375" text="Thao tác" />
                         </columns>
                         <padding>
                             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

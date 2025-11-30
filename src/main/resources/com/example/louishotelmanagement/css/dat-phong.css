@@ -83,3 +83,17 @@
     -fx-background-color: #d4edda;
     -fx-text-fill: #155724;
 }
+
+.status-dadat {
+    /* Màu nền xanh dương nhạt (Light Blue) */
+    -fx-background-color: #cce5ff;
+    /* Màu chữ xanh dương đậm (Dark Blue) */
+    -fx-text-fill: #004085;
+}
+
+.status-hoanthanh {
+    /* Màu nền xám nhạt (Light Gray) */
+    -fx-background-color: #e2e3e5;
+    /* Màu chữ xám đen (Dark Gray) */
+    -fx-text-fill: #383d41;
+}
