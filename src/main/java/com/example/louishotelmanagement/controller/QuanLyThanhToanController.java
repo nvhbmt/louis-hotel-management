@@ -10,10 +10,12 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -28,12 +30,13 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class QuanLyThanhToanController {
+public class QuanLyThanhToanController implements Refreshable{
+
 
     @FXML private Label lblSoKhachHang;
-    @FXML private Label lblDangLuuTru;
+    @FXML private Label lblDaThanhToan;
     @FXML private Label lblCheckout;
-    @FXML private Label lblKhachVIP;
+    @FXML private Label lblKhuyenMai;
 
     @FXML private TextField txtTimKiem;
     @FXML private ComboBox<String> cmbNgayLap;
@@ -42,6 +45,7 @@ public class QuanLyThanhToanController {
     @FXML private TableView<HoaDon> tableViewKhachHang;
     @FXML private TableColumn<HoaDon, String> colMaHD;
     @FXML private TableColumn<HoaDon, LocalDate> colNgayLap;
+    @FXML private TableColumn<HoaDon, Void> colThaoTac;
     @FXML private TableColumn<HoaDon, String> colPhuongThuc;
     @FXML private TableColumn<HoaDon, String> colTrangThai;
     @FXML private TableColumn<HoaDon, BigDecimal> colTongTien;
@@ -126,7 +130,75 @@ public class QuanLyThanhToanController {
             }
         });
 
+        colThaoTac.setCellFactory(param -> new TableCell<>() {
+            private final Button btnPrint = new Button("In");
+            private final Button btnView = new Button("Xem");
+            private final HBox pane = new HBox(10, btnPrint, btnView);
+            {
+                pane.setAlignment(Pos.CENTER);
+                double buttonWidth = 70;
+                btnPrint.setPrefWidth(buttonWidth);
+                btnView.setPrefWidth(buttonWidth);
+                btnPrint.setStyle("-fx-background-color: #ffffff; -fx-text-fill: #000000; -fx-border-color: #c0c0c0;-fx-border-radius: 10;");
+                btnView.setStyle("-fx-background-color: #28a745; -fx-text-fill: white; -fx-border-radius: 10;");
+                btnPrint.setOnAction(event -> handleInHoaDon(getTableView().getItems().get(getIndex())));
+                btnView.setOnAction(event -> handleXemChiTiet(getTableView().getItems().get(getIndex())));
+            }
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                setGraphic(empty ? null : pane);
+            }
+        });
+
         tableViewKhachHang.setItems(masterList);
+    }
+
+    private void handleInHoaDon(HoaDon hoaDon) {
+
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Thông báo");
+        alert.setHeaderText("Chức năng đang phát triển");
+        alert.setContentText("Logic in hóa đơn cho hóa đơn " + hoaDon.getMaHD() + " sẽ được triển khai ở đây.");
+        alert.showAndWait();
+    }
+
+
+    private void handleXemChiTiet(HoaDon hoaDon) {
+
+
+        try {
+            com.example.louishotelmanagement.controller.HoaDonTxtGenerator generator = new com.example.louishotelmanagement.controller.HoaDonTxtGenerator();
+            String noiDungHoaDon = generator.taoNoiDungHoaDon(hoaDon);
+
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/xem-hoa-don-txt.fxml"));
+            Parent root = loader.load();
+
+            XemHoaDonTxtController controller = loader.getController();
+            controller.initData(noiDungHoaDon);
+
+            Stage stage = new Stage();
+            stage.setTitle("Chi Tiết Hóa Đơn (Xem file TXT): " + hoaDon.getMaHD());
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+
+        } catch (SQLException e) {
+            // Đã xóa e.printStackTrace()
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Lỗi Truy Vấn Dữ Liệu");
+            alert.setHeaderText("Không thể tạo chi tiết hóa đơn.");
+            alert.setContentText("Lỗi SQL: " + e.getMessage());
+            alert.showAndWait();
+        } catch (IOException e) {
+            // Đã xóa e.printStackTrace()
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Lỗi Giao Diện");
+            alert.setHeaderText("Không thể mở màn hình xem hóa đơn.");
+            alert.setContentText("Lỗi FXML (kiểm tra lại đường dẫn): " + e.getMessage());
+            alert.showAndWait();
+        }
     }
 
     private void setupComboBox() {
@@ -144,7 +216,6 @@ public class QuanLyThanhToanController {
     private void loadHoaDonChuaThanhToan() throws SQLException {
         List<HoaDon> all = hoaDonDAO2.layDanhSachHoaDon(); // dùng DAO2
         List<HoaDon> chuaTT = all.stream()
-                .filter(hd -> hd.getTrangThai() == TrangThaiHoaDon.CHUA_THANH_TOAN)
                 .collect(Collectors.toList());
         masterList.setAll(chuaTT);
         tableViewKhachHang.setItems(FXCollections.observableArrayList(masterList));
@@ -181,14 +252,17 @@ public class QuanLyThanhToanController {
 
     private void capNhatThongKe() {
         List<HoaDon> visible = tableViewKhachHang.getItems();
-        lblSoKhachHang.setText(String.valueOf(visible.size()));
+        long countKHChuaThanhToan = visible.stream()
+                        .filter(hd->hd.getTrangThai()==TrangThaiHoaDon.CHUA_THANH_TOAN)
+                        .count();
+        lblSoKhachHang.setText(String.valueOf(countKHChuaThanhToan));
 
-        LocalDate today = LocalDate.now();
-        long countToday = visible.stream()
-                .filter(hd -> hd.getNgayLap() != null && hd.getNgayLap().isEqual(today))
+
+        long countKHDaThanhToan = visible.stream()
+                .filter(hd->hd.getTrangThai()==TrangThaiHoaDon.DA_THANH_TOAN)
                 .count();
-        lblDangLuuTru.setText(String.valueOf(countToday));
-
+        lblDaThanhToan.setText(String.valueOf(countKHDaThanhToan));
+        LocalDate today = LocalDate.now();
         BigDecimal revenueToday = visible.stream()
                 .filter(hd -> hd.getNgayLap() != null && hd.getNgayLap().isEqual(today))
                 .map(HoaDon::getTongTien)
@@ -196,10 +270,10 @@ public class QuanLyThanhToanController {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         lblCheckout.setText(String.format("%,.0f ₫", revenueToday.doubleValue()));
 
-        long vipCount = visible.stream()
-                .filter(hd -> hd.getKhachHang() != null && "Khách VIP".equalsIgnoreCase(hd.getKhachHang().getHangKhach()))
+        long KhuyenMaicount = visible.stream()
+                .filter(hd -> hd.getMaGG() != null)
                 .count();
-        lblKhachVIP.setText(String.valueOf(vipCount));
+        lblKhuyenMai.setText(String.valueOf(KhuyenMaicount));
     }
 
     private void onLamMoi(ActionEvent event) {
@@ -246,5 +320,13 @@ public class QuanLyThanhToanController {
         a.setHeaderText(null);
         a.setContentText(message);
         a.showAndWait();
+    }
+
+    @Override
+    public void refreshData() throws SQLException, Exception {
+        setupTableColumns();
+        setupComboBox();
+        setupListeners();
+        loadHoaDonChuaThanhToan();
     }
 }

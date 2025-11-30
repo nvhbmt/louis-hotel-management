@@ -69,6 +69,7 @@ public class TraPhongController implements Initializable, Refreshable {
                 if (newValue != null) {
                     try {
                         laydsPhieuTheoKhachHang();
+                        laydsPhongTheoPhieu();
                     } catch (SQLException e) {
                         throw new RuntimeException(e);
                     }
