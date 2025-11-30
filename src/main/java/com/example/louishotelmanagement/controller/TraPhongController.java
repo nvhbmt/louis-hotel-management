@@ -3,6 +3,8 @@ package com.example.louishotelmanagement.controller;
 import com.example.louishotelmanagement.dao.*;
 import com.example.louishotelmanagement.model.*;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
+import com.example.louishotelmanagement.util.Refreshable;
+import com.example.louishotelmanagement.util.ContentSwitcher;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
