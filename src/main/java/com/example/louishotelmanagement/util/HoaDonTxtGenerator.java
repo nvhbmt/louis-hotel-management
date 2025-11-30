@@ -1,4 +1,5 @@
-package com.example.louishotelmanagement.controller;
+package com.example.louishotelmanagement.util;
+
 import com.example.louishotelmanagement.dao.HoaDonDAO2;
 import com.example.louishotelmanagement.dao.MaGiamGiaDAO;
 import com.example.louishotelmanagement.model.*;
@@ -123,3 +124,4 @@ public class HoaDonTxtGenerator {
         return sb.toString();
     }
 }
+

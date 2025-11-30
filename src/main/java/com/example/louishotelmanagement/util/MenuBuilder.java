@@ -1,4 +1,4 @@
-package com.example.louishotelmanagement.controller;
+package com.example.louishotelmanagement.util;
 
 import java.util.HashMap;
 import java.util.List;

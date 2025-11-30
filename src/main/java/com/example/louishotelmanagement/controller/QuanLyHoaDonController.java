@@ -3,11 +3,13 @@ package com.example.louishotelmanagement.controller;
 import com.example.louishotelmanagement.dao.HoaDonDAO2;
 import com.example.louishotelmanagement.model.HoaDon;
 import com.example.louishotelmanagement.model.KhachHang;
+import com.example.louishotelmanagement.util.HoaDonTxtGenerator;
 
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -20,7 +22,6 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -183,7 +184,7 @@ public class QuanLyHoaDonController implements Initializable {
 
 
         try {
-            com.example.louishotelmanagement.controller.HoaDonTxtGenerator generator = new com.example.louishotelmanagement.controller.HoaDonTxtGenerator();
+            HoaDonTxtGenerator generator = new HoaDonTxtGenerator();
             String noiDungHoaDon = generator.taoNoiDungHoaDon(hoaDon);
 
 
@@ -216,7 +217,7 @@ public class QuanLyHoaDonController implements Initializable {
         }
     }
 
-    public void handleLamMoi(javafx.event.ActionEvent actionEvent) {
+    public void handleLamMoi(ActionEvent actionEvent) {
 
         txtTimKiem.clear();
 

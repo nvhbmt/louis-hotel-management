@@ -1,11 +1,13 @@
-package com.example.louishotelmanagement.controller;
+package com.example.louishotelmanagement.util;
 
+import com.example.louishotelmanagement.controller.PhongController;
+import com.example.louishotelmanagement.controller.TrangChuController;
+import com.example.louishotelmanagement.controller.TraPhongController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.layout.BorderPane;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -121,3 +123,4 @@ public class ContentManager {
         }
     }
 }
+

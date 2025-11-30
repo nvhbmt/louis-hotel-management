@@ -377,6 +377,7 @@ GO
 CREATE PROCEDURE sp_XoaPhong @maPhong NVARCHAR(10)
 AS
 BEGIN
+    SET NOCOUNT ON;
 
     -- Kiểm tra phòng có tồn tại không
     IF NOT EXISTS (SELECT 1 FROM Phong WHERE maPhong = @maPhong)
@@ -385,28 +386,11 @@ BEGIN
             RETURN;
         END
 
-    -- Kiểm tra phòng có đang được sử dụng không
-    IF EXISTS (SELECT 1 FROM CTPhieuDatPhong WHERE maPhong = @maPhong)
-        BEGIN
-            RAISERROR ('Không thể xóa phòng này vì đang được sử dụng!', 16, 1);
-            RETURN;
-        END
-
     -- Xóa phòng
     DELETE FROM Phong WHERE maPhong = @maPhong;
 END
 GO
 
--- Kiểm tra phòng có được sử dụng không
-CREATE PROCEDURE sp_KiemTraPhongDuocSuDung @maPhong NVARCHAR(10)
-AS
-BEGIN
-
-    SELECT COUNT(*) as count
-    FROM CTPhieuDatPhong
-    WHERE maPhong = @maPhong;
-END
-GO
 
 -- =============================================
 -- Stored Procedures bổ sung cho thống kê và báo cáo
