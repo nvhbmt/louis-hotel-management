@@ -13,11 +13,17 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ThanhToanDialogController {
 
+    public Label lblTienPhat;
+    public Label lblTienCoc;
     @FXML
     private TextField txtMaKhachHang;
     @FXML
@@ -63,7 +69,8 @@ public class ThanhToanDialogController {
 
     private CTHoaDonDichVuDAO cthddv;
 
-
+    private PhieuDatPhongDAO pdpDao = new PhieuDatPhongDAO();
+    private CTHoaDonPhongDAO cthddpDao = new CTHoaDonPhongDAO();
     private HoaDon hoaDon;
 
     private final KhachHangDAO khachHangDAO = new KhachHangDAO();
@@ -91,51 +98,101 @@ public class ThanhToanDialogController {
     }
     private void tinhTongThanhToan() {
         try {
-            double tienPhong = 0.0;
+            BigDecimal tienPhong = BigDecimal.ZERO;
             BigDecimal tienDichVu = BigDecimal.ZERO;
-            double vat = 0.0;
-            double giamGia = 0.0;
-            double tongThanhToan = 0.0;
+            BigDecimal vat =BigDecimal.ZERO;
+            BigDecimal giamGia = BigDecimal.ZERO;
+            BigDecimal tongThanhToan = BigDecimal.ZERO;
+            BigDecimal tienPhat = BigDecimal.ZERO;
+            BigDecimal tienCoc = BigDecimal.ZERO;
 
-            // Lấy danh sách hóa đơn từ DAO (tìm hóa đơn theo mã phòng hoặc mã KH)
-            for (HoaDon hd : hoaDonDAO2.layDanhSachHoaDon()) {
-                if (hd.getSoPhong().equals(hoaDon.getSoPhong()) ||
-                        hd.getMaKH().equals(hoaDon.getMaKH())) {
-                    tienPhong = hd.getTongTien().doubleValue(); // Tổng tiền phòng gốc
-                    break;
+            // Khai báo tỷ lệ phạt và độ chính xác (Scaling)
+            final BigDecimal TI_LE_PHAT = new BigDecimal("0.10"); // 10%
+            final int SCALE = 2; // Làm tròn 2 chữ số thập phân (ví dụ: 0.00)
+
+            List<CTHoaDonPhong> dsctHoaDonPhong = cthddpDao.getCTHoaDonPhongTheoMaHD(hoaDon.getMaHD());
+
+            for(CTHoaDonPhong cthdp : dsctHoaDonPhong){
+                // Lấy thông tin cần thiết
+                PhieuDatPhong pdp = pdpDao.layPhieuDatPhongTheoMa(cthdp.getMaPhieu());
+                tienCoc = pdp.getTienCoc();
+
+                // Tiền gốc cần thanh toán
+                BigDecimal tienGoc = cthdp.getThanhTien();
+
+                if((pdp.getNgayDi().isAfter(LocalDate.now())) || (pdp.getNgayDi().isEqual(LocalDate.now()))){
+                    // Trường hợp 1: Trả phòng đúng hạn (hoặc chưa đến hạn)
+                    tienPhong = tienPhong.add(tienGoc);
+                }else{
+                    // Trường hợp 2: Trả phòng trễ (NgayDi đã qua LocalDate.now())
+
+                    // 1. Tính số ngày trả trễ (ví dụ: so sánh NgayDi và ngày thanh toán/tính toán hiện tại)
+                    // Lưu ý: Cần đảm bảo hàm này trả về số nguyên dương >= 1
+                    long soNgayTraTre = tinhSoNgayTraTre(pdp.getNgayDi(), LocalDate.now());
+
+                    // Chuyển số ngày sang BigDecimal để tính toán
+                    BigDecimal soNgay = new BigDecimal(soNgayTraTre);
+
+                    // 2. Tính Phí phạt: Tiền gốc * Tỷ lệ phạt * Số ngày trễ
+                    // Phí phạt = tienGoc.multiply(TI_LE_PHAT).multiply(soNgay)
+                    BigDecimal phiPhat = tienGoc
+                            .multiply(TI_LE_PHAT)
+                            .multiply(soNgay)
+                            .setScale(SCALE, RoundingMode.HALF_UP); // Làm tròn phí phạt
+                    lblTienPhat.setText(String.format("%,.0f ₫", phiPhat));
+                    // 3. Tổng tiền phải trả = Tiền gốc + Phí phạt
+                    BigDecimal tongTienPhaiTra = tienGoc.add(phiPhat);
+
+                    // 4. Cập nhật tổng tiền phòng
+                    tienPhong = tienPhong.add(tongTienPhaiTra);
                 }
             }
+
+
 
             // Tính giảm giá nếu có mã giảm
             if (hoaDon.getMaGG() != null) {
                 MaGiamGia mgg = maGiamGiaDAO.layMaGiamGiaThepMa(hoaDon.getMaGG());
                 if (mgg != null) {
                     if (mgg.getKieuGiamGia() == KieuGiamGia.PERCENT) {
-                        giamGia = tienPhong * (mgg.getGiamGia() / 100.0);
+                        giamGia = tienPhong.multiply(BigDecimal.valueOf((mgg.getGiamGia() / 100.0)) ) ;
                     } else if (mgg.getKieuGiamGia() == KieuGiamGia.AMOUNT) {
-                        giamGia = mgg.getGiamGia();
+                        giamGia = BigDecimal.valueOf(mgg.getGiamGia());
                     }
                 }
             }
             tienDichVu = cthddv.tinhTongTienDichVu(hoaDon.getMaHD());
             // VAT 10% chỉ tính trên phần còn lại sau khi giảm giá
-            vat = (tienPhong - giamGia) * 0.1;
+            BigDecimal baseAmount = tienPhong.subtract(giamGia);
+            vat = baseAmount.multiply(new BigDecimal("0.1"));
 
             // Tổng thanh toán cuối cùng
-            tongThanhToan = (tienPhong - giamGia) + vat + tienDichVu.doubleValue();
+            tongThanhToan = baseAmount.add(vat).add(tienDichVu).subtract(tienCoc);
+
 
             // Hiển thị lên UI
             lblTongTienPhong.setText(String.format("%,.0f ₫", tienPhong));
             lblTongTienDichVu.setText(String.format("%,.0f đ", tienDichVu));
             lblVat.setText(String.format("%,.0f ₫", vat));
             lblTongGiamGia.setText(String.format("%,.0f ₫", giamGia));
+            lblTienCoc.setText(String.format("%,.0f ₫", tienCoc));
             lblTongThanhToan.setText(String.format("%,.0f ₫", tongThanhToan));
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
+    // -------------------------------------------------------------
+    // Hàm mẫu để tính số ngày trả trễ (Cần đặt ngoài vòng lặp hoặc trong class)
+    // Giả định: NgayDi là ngày phải trả phòng, ngayHienTai là ngày thanh toán
+    public long tinhSoNgayTraTre(LocalDate ngayDi, LocalDate ngayHienTai) {
+        // Chỉ tính ngày trễ nếu ngayHienTai là SAU ngayDi
+        if (ngayHienTai.isAfter(ngayDi)) {
+            // Cộng 1 ngày nếu bạn muốn ngày trễ đầu tiên là 1 (ví dụ: trễ 1 ngày)
+            return java.time.temporal.ChronoUnit.DAYS.between(ngayDi, ngayHienTai);
+        }
+        return 0; // Không trễ
+    }
 
     // Hiển thị thông tin hóa đơn ra form
     private void hienThiThongTinHoaDon() {
@@ -314,4 +371,14 @@ public class ThanhToanDialogController {
         }
     }
 
+    static void main() throws SQLException {
+        String maCTHDP = "HD006";
+        CTHoaDonPhongDAO cthoaDonPhongDAO = new CTHoaDonPhongDAO();
+        PhieuDatPhongDAO phieuDatPhongDAO = new PhieuDatPhongDAO();
+        List<CTHoaDonPhong> list = cthoaDonPhongDAO.getCTHoaDonPhongTheoMaHD(maCTHDP);
+        for(CTHoaDonPhong cthoaDonPhong : list) {
+            PhieuDatPhong pdp = phieuDatPhongDAO.layPhieuDatPhongTheoMa(cthoaDonPhong.getMaPhieu());
+            System.out.println(cthoaDonPhong);
+        }
+    }
 }
