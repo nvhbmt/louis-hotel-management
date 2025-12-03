@@ -36,7 +36,9 @@ public class MenuData {
                                 "/com/example/louishotelmanagement/fxml/quan-ly-loai-phong-view.fxml"))
                 ));
             }
-
+        TreeItem<MenuItemModel> PhieuDatPhongGroup = new TreeItem<>(
+                new MenuItemModel("Phiếu đặt phòng", "mdi2t-ticket-account", "/com/example/louishotelmanagement/fxml/quan-ly-phieu-dat-phong.fxml")
+        );
         TreeItem<MenuItemModel> dichVuGroup = new TreeItem<>(
                 new MenuItemModel("Dịch vụ", "mdi2c-coffee", null)
         );
@@ -96,6 +98,7 @@ public class MenuData {
         List<TreeItem<MenuItemModel>> menuItems = new ArrayList<>();
         menuItems.add(trangChu);
         menuItems.add(phongGroup);
+        menuItems.add(PhieuDatPhongGroup);
         menuItems.add(dichVuGroup);
         menuItems.add(khuyenMai);
         menuItems.add(hoaDonGroup);

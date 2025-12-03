@@ -404,7 +404,7 @@ public class DatPhongTaiQuayController implements Initializable,Refreshable {
                 BigDecimal.valueOf(p.getLoaiPhong().getDonGia())
         );
         // Cập nhật trạng thái phòng thành ĐÃ ĐẶT (DA_DAT)
-        Pdao.capNhatTrangThaiPhong(p.getMaPhong(), TrangThaiPhong.DA_DAT.toString());
+        Pdao.capNhatTrangThaiPhong(p.getMaPhong(), TrangThaiPhong.DANG_SU_DUNG.toString());
         cthdpDao.themCTHoaDonPhong(cthdp);
     }
 

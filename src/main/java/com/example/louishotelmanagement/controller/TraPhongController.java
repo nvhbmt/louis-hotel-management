@@ -150,8 +150,10 @@ public class TraPhongController implements Initializable, Refreshable {
         dsPhieu.getItems().clear();
         ArrayList<PhieuDatPhong> listpdp = phieuDatPhongDAO.layDSPhieuDatPhongTheoKhachHang(dsMaKH.get(dsKhachHang.getSelectionModel().getSelectedIndex()));
         for (PhieuDatPhong phieuDatPhong : listpdp) {
-            if(phieuDatPhong.getTrangThai().equals(TrangThaiPhieuDatPhong.DANG_SU_DUNG))
-            dsPhieu.getItems().add(phieuDatPhong.getMaPhieu());
+            if(phieuDatPhong.getTrangThai().equalsIgnoreCase(TrangThaiPhieuDatPhong.DANG_SU_DUNG.toString())){
+                dsPhieu.getItems().add(phieuDatPhong.getMaPhieu());
+            }
+
         }
         dsPhieu.getSelectionModel().selectFirst();
     }
@@ -233,6 +235,8 @@ public class TraPhongController implements Initializable, Refreshable {
                     // Cập nhật trạng thái từng phòng thành TRỐNG
                     for (CTHoaDonPhong ctHd : listCTHDP) {
                         phDao.capNhatTrangThaiPhong(ctHd.getMaPhong(), TrangThaiPhong.TRONG.toString());
+                        ctHd.setNgayDi(LocalDate.now());
+                        cthdpDao.capNhatNgayDiThucTe(ctHd.getMaHD(),ctHd.getMaPhong(),LocalDate.now());
                     }
 
                     ThongBaoUtil.hienThiThongBao("Thành công", "Trả phòng và dọn phòng thành công!");

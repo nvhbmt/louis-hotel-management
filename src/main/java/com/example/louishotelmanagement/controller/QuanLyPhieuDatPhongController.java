@@ -21,6 +21,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -53,7 +54,7 @@ public class QuanLyPhieuDatPhongController implements Initializable {
     @FXML
     public TableColumn<PhieuDatPhong, LocalDate> colNgayDi;
     @FXML
-    public TableColumn<PhieuDatPhong, Double> colTienCoc;
+    public TableColumn<PhieuDatPhong, BigDecimal> colTienCoc;
     @FXML
     public Label lblPhieuHoanThanh;
     @FXML
@@ -89,18 +90,19 @@ public class QuanLyPhieuDatPhongController implements Initializable {
     }
 
     private void capNhatThongKe() throws SQLException {
-        List<PhieuDatPhong> dsPhieuDatPhong = tableViewPhieuDatPhong.getItems();
+        List<PhieuDatPhong> dsPhieuDatPhong = phieuDatPhongDAO.layDSPhieuDatPhong();
 
         int tongPhieuDatPhong = dsPhieuDatPhong.size();
         long tongPhieuDatPhongDaDat = dsPhieuDatPhong.stream()
-                .filter(PDP->PDP.getTrangThai().equals(TrangThaiPhieuDatPhong.DA_DAT))
+                .filter(PDP->PDP.getTrangThai().equalsIgnoreCase(TrangThaiPhieuDatPhong.DA_DAT.toString()))
                 .count();
         long tongPhieuDatPhongDangSuDung = dsPhieuDatPhong.stream()
-                .filter(PDP->PDP.getTrangThai().equals(TrangThaiPhieuDatPhong.DANG_SU_DUNG))
+                .filter(PDP->PDP.getTrangThai().equalsIgnoreCase(TrangThaiPhieuDatPhong.DANG_SU_DUNG.toString()))
                 .count();
         long tongPhieuDatPhongDaHoanThanh = dsPhieuDatPhong.stream()
-                .filter(PDP->PDP.getTrangThai().equals(TrangThaiPhieuDatPhong.HOAN_THANH))
+                .filter(PDP->PDP.getTrangThai().equalsIgnoreCase(TrangThaiPhieuDatPhong.HOAN_THANH.toString()))
                 .count();
+        lblTongSoPhieu.setText(Long.toString(tongPhieuDatPhong));
         lblSoPhieuDaDat.setText(String.valueOf(tongPhieuDatPhongDaDat));
         lblPhieuDangSuDung.setText(String.valueOf(tongPhieuDatPhongDangSuDung));
         lblPhieuHoanThanh.setText(String.valueOf(tongPhieuDatPhongDaHoanThanh));
@@ -136,9 +138,6 @@ public class QuanLyPhieuDatPhongController implements Initializable {
         colNgayDi.setCellValueFactory(new PropertyValueFactory<>("ngayDi"));
         colTienCoc.setCellValueFactory(new PropertyValueFactory<>("tienCoc"));
         colTrangThai.setCellValueFactory(new PropertyValueFactory<>("trangThai"));
-        colThaoTac.setCellFactory(_->new TableCell<>(){
-
-        });
 
         // Format ngày tháng
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -182,12 +181,12 @@ public class QuanLyPhieuDatPhongController implements Initializable {
 
         colTienCoc.setCellFactory(column -> new TableCell<>() {
             @Override
-            protected void updateItem(Double item, boolean empty) {
+            protected void updateItem(BigDecimal item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty || item == null) {
                     setText(null);
                 } else {
-                    setText(String.format("%,.0f", item));
+                    setText(String.format("%,.0fđ", item));
                 }
             }
         });
@@ -290,7 +289,7 @@ public class QuanLyPhieuDatPhongController implements Initializable {
             // Lấy danh sách mã giảm giá từ database
             ArrayList<PhieuDatPhong> dsPhieuDatPhong = phieuDatPhongDAO.layDSPhieuDatPhong();
             danhSachPhieuDatPhong.clear();
-            danhSachPhieuDatPhongFiltered.addAll(dsPhieuDatPhong);
+            danhSachPhieuDatPhong.addAll(dsPhieuDatPhong);
             capNhatThongKe();
 
             // Áp dụng filter hiện tại

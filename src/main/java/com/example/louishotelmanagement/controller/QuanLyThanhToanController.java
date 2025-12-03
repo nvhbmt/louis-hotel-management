@@ -4,6 +4,7 @@ import com.example.louishotelmanagement.dao.HoaDonDAO2;
 import com.example.louishotelmanagement.dao.KhachHangDAO;
 import com.example.louishotelmanagement.dao.MaGiamGiaDAO;
 import com.example.louishotelmanagement.model.*;
+import com.example.louishotelmanagement.util.Refreshable;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -30,7 +31,7 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class QuanLyThanhToanController implements Refreshable{
+public class QuanLyThanhToanController implements Refreshable {
 
 
     @FXML private Label lblSoKhachHang;
@@ -168,7 +169,7 @@ public class QuanLyThanhToanController implements Refreshable{
 
 
         try {
-            com.example.louishotelmanagement.controller.HoaDonTxtGenerator generator = new com.example.louishotelmanagement.controller.HoaDonTxtGenerator();
+            com.example.louishotelmanagement.util.HoaDonTxtGenerator generator = new com.example.louishotelmanagement.util.HoaDonTxtGenerator();
             String noiDungHoaDon = generator.taoNoiDungHoaDon(hoaDon);
 
 
