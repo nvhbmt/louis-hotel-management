@@ -94,7 +94,7 @@ public class HoaDonTxtGenerator {
             }
         }
 
-        BigDecimal thueVAT = tongTienCuoiCung.subtract(congTienHang.subtract(giamGia));
+        BigDecimal thueVAT = tongTienCuoiCung.multiply(BigDecimal.valueOf(0.1));
         if (thueVAT.compareTo(BigDecimal.ZERO) < 0) {
             thueVAT = BigDecimal.ZERO;
         }
