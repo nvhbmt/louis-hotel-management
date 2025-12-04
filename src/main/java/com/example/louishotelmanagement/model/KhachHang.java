@@ -11,7 +11,7 @@ public class KhachHang {
     private LocalDate ngaySinh;
     private String ghiChu;
     private String CCCD;
-    private String hangKhach;
+    private HangKhach hangKhach;
     private TrangThaiKhachHang trangThai; // enum riêng đã có
 
     // Constructor mặc định
@@ -24,13 +24,13 @@ public class KhachHang {
         this.ngaySinh = null;
         this.ghiChu = "";
         this.CCCD = "";
-        this.hangKhach = "";
+        this.hangKhach = HangKhach.KHACH_THUONG;
         this.trangThai = TrangThaiKhachHang.DANG_LUU_TRU; // mặc định
     }
 
     // Constructor đầy đủ
     public KhachHang(String maKH, String hoTen, String soDT, String email, String diaChi,
-                     LocalDate ngaySinh, String ghiChu, String CCCD, String hangKhach,
+                     LocalDate ngaySinh, String ghiChu, String CCCD, HangKhach hangKhach,
                      TrangThaiKhachHang trangThai) {
         this.maKH = maKH;
         this.hoTen = hoTen;
@@ -75,8 +75,8 @@ public class KhachHang {
     public String getCCCD() { return CCCD; }
     public void setCCCD(String CCCD) { this.CCCD = CCCD; }
 
-    public String getHangKhach() { return hangKhach; }
-    public void setHangKhach(String hangKhach) { this.hangKhach = hangKhach; }
+    public HangKhach getHangKhach() { return hangKhach; }
+    public void setHangKhach(HangKhach hangKhach) { this.hangKhach = hangKhach; }
 
     public TrangThaiKhachHang getTrangThai() { return trangThai; }
     public void setTrangThai(TrangThaiKhachHang trangThai) {

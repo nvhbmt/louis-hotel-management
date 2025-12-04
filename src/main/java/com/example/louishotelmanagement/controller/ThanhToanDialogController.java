@@ -161,6 +161,8 @@ public class ThanhToanDialogController {
                     }
                 }
             }
+
+
             tienDichVu = cthddv.tinhTongTienDichVu(hoaDon.getMaHD());
             // VAT 10% chỉ tính trên phần còn lại sau khi giảm giá
             BigDecimal baseAmount = tienPhong.subtract(giamGia);
@@ -169,6 +171,20 @@ public class ThanhToanDialogController {
             // Tổng thanh toán cuối cùng
             tongThanhToan = baseAmount.add(vat).add(tienDichVu).subtract(tienCoc);
 
+            // Tính giảm giá theo hạng khách hàng
+            BigDecimal tienHangkhach =  BigDecimal.ZERO;
+            if(khachHangDAO.layKhachHangTheoMa(hoaDon.getMaKH()).getHangKhach().equals(HangKhach.KHACH_QUEN)){
+                tienHangkhach = tongThanhToan.multiply(BigDecimal.valueOf(0.05));
+            }else if(khachHangDAO.layKhachHangTheoMa(hoaDon.getMaKH()).getHangKhach().equals(HangKhach.KHACH_DOANH_NGHIEP)){
+                tienHangkhach = tongThanhToan.multiply(BigDecimal.valueOf(0.1));
+            }else if(khachHangDAO.layKhachHangTheoMa(hoaDon.getMaKH()).getHangKhach().equals(HangKhach.KHACH_VIP)){
+                tienHangkhach = tongThanhToan.multiply(BigDecimal.valueOf(0.15));
+            }else{
+                tienHangkhach = BigDecimal.ZERO;
+            }
+            giamGia = giamGia.add(tienHangkhach);
+
+            tongThanhToan = tongThanhToan.subtract(giamGia);
 
             // Hiển thị lên UI
             lblTongTienPhong.setText(String.format("%,.0f ₫", tienPhong));
@@ -206,7 +222,7 @@ public class ThanhToanDialogController {
                 txtHoTen.setText(kh.getHoTen());
                 txtSoDienThoai.setText(kh.getSoDT());
                 txtEmail.setText(kh.getEmail());
-                txtHangkhach.setText(kh.getHangKhach());
+                txtHangkhach.setText(kh.getHangKhach().toString());
             }
 
             // Lấy thông tin phòng
