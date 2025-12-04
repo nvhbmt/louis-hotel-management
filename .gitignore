@@ -40,3 +40,8 @@ build/
 ### docker volume files ###
 /mssql-data/
 /.idea/discord.xml
+
+.AGENTS.md
+.ai-devkit.json
+.cursor/
+docs/

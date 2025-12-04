@@ -101,7 +101,12 @@
                                         <Insets left="10.0" right="10.0" />
                                     </HBox.margin>
                                 </ImageView>
-                                <DatePicker fx:id="ngayDen" prefHeight="30.0" prefWidth="609.0" promptText="Chọn ngày nhận phòng" />
+                                <DatePicker fx:id="ngayDen" prefHeight="30.0" prefWidth="250.0" promptText="Chọn ngày nhận phòng" />
+                                <Label fx:id="lbLoaiDatPhong" prefWidth="200.0" style="-fx-font-weight: bold; -fx-text-fill: #007bff; -fx-font-size: 14px;" text="" visible="false">
+                                    <HBox.margin>
+                                        <Insets left="20.0" />
+                                    </HBox.margin>
+                                </Label>
                             </children>
                         </HBox>
 
@@ -123,7 +128,27 @@
                                         <Insets left="10.0" right="10.0" />
                                     </HBox.margin>
                                 </ImageView>
-                                <DatePicker fx:id="ngayDi" prefHeight="30.0" prefWidth="609.0" promptText="Chọn ngày trả phòng" />
+                                <DatePicker fx:id="ngayDi" prefHeight="30.0" prefWidth="250.0" promptText="Chọn ngày trả phòng" />
+                                <Label fx:id="lbSoDem" prefWidth="200.0" style="-fx-text-fill: #6c757d; -fx-font-size: 14px;" text="">
+                                    <HBox.margin>
+                                        <Insets left="20.0" />
+                                    </HBox.margin>
+                                </Label>
+                            </children>
+                        </HBox>
+                        
+                        <HBox alignment="CENTER" prefHeight="40.0" prefWidth="900.0">
+                            <children>
+                                <Label fx:id="lbLoadingPhong" prefWidth="300.0" style="-fx-text-fill: #007bff; -fx-font-size: 14px;" text="" visible="false">
+                                    <font>
+                                        <Font size="14.0" />
+                                    </font>
+                                </Label>
+                                <Label fx:id="lbSoPhongTrong" prefWidth="300.0" style="-fx-text-fill: #28a745; -fx-font-weight: bold; -fx-font-size: 14px;" text="">
+                                    <font>
+                                        <Font size="14.0" />
+                                    </font>
+                                </Label>
                             </children>
                         </HBox>
                   <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
@@ -150,21 +175,46 @@
                     </VBox.margin>
                 </VBox>
 
-                <TableView fx:id="tablePhong" prefHeight="431.0" prefWidth="1014.0" VBox.vgrow="ALWAYS">
-                    <columns>
-                        <TableColumn fx:id="colMaPhong" prefWidth="75.0" text="Mã phòng" />
-                        <TableColumn fx:id="colTenLoaiPhong" prefWidth="120.0" text="Loại phòng" />
-                        <TableColumn fx:id="colTang" prefWidth="50.0" text="Tầng" />
-                        <TableColumn fx:id="colDonGia" prefWidth="100.0" text="Đơn giá" />
-                        <TableColumn fx:id="colTrangThai" prefWidth="100.0" text="Trạng thái" />
-                        <TableColumn fx:id="colMoTa" minWidth="0.0" prefWidth="360.0" text="Mô tả" />
-                        <TableColumn fx:id="colThaoTac" prefWidth="90.0" text="Thao tác" />
-                        <TableColumn fx:id="colDaChon" prefWidth="90.0" text="Đã chọn" />
-                    </columns>
-                    <columnResizePolicy>
-                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                    </columnResizePolicy>
-                </TableView>
+                <VBox prefHeight="431.0" prefWidth="1014.0" VBox.vgrow="ALWAYS">
+                    <children>
+                        <TableView fx:id="tablePhong" prefHeight="431.0" prefWidth="1014.0" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn fx:id="colMaPhong" prefWidth="75.0" text="Mã phòng" />
+                                <TableColumn fx:id="colTenLoaiPhong" prefWidth="120.0" text="Loại phòng" />
+                                <TableColumn fx:id="colTang" prefWidth="50.0" text="Tầng" />
+                                <TableColumn fx:id="colDonGia" prefWidth="100.0" text="Đơn giá/đêm" />
+                                <TableColumn fx:id="colTrangThai" prefWidth="100.0" text="Trạng thái" />
+                                <TableColumn fx:id="colMoTa" minWidth="0.0" prefWidth="280.0" text="Mô tả" />
+                                <TableColumn fx:id="colThaoTac" prefWidth="90.0" text="Thao tác" />
+                                <TableColumn fx:id="colDaChon" prefWidth="90.0" text="Đã chọn" />
+                            </columns>
+                            <columnResizePolicy>
+                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                            </columnResizePolicy>
+                        </TableView>
+                        <VBox fx:id="vbEmptyState" alignment="CENTER" prefHeight="200.0" prefWidth="1014.0" style="-fx-background-color: #f8f9fa;" visible="false">
+                            <children>
+                                <ImageView fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../image/calendar.png" />
+                                    </image>
+                                    <VBox.margin>
+                                        <Insets bottom="10.0" />
+                                    </VBox.margin>
+                                </ImageView>
+                                <Label style="-fx-font-size: 16px; -fx-text-fill: #6c757d; -fx-font-weight: bold;" text="Chưa có phòng trống">
+                                    <VBox.margin>
+                                        <Insets bottom="5.0" />
+                                    </VBox.margin>
+                                </Label>
+                                <Label style="-fx-font-size: 14px; -fx-text-fill: #6c757d;" text="Vui lòng chọn khoảng thời gian khác hoặc thử lại sau" />
+                            </children>
+                            <padding>
+                                <Insets bottom="20.0" top="20.0" />
+                            </padding>
+                        </VBox>
+                    </children>
+                </VBox>
             </children>
         </VBox>
     </center>
@@ -183,12 +233,25 @@
                               <Insets left="20.0" />
                            </HBox.margin>
                                 </Label>
-                                <Label fx:id="SoPhongDaChon" prefWidth="100.0" style="-fx-font-weight: bold; -fx-text-fill: #007bff;" text="0">
+                                <Label fx:id="SoPhongDaChon" prefWidth="50.0" style="-fx-font-weight: bold; -fx-text-fill: #007bff; -fx-font-size: 16px;" text="0">
+                                    <font>
+                                        <Font size="16.0" />
+                                    </font>
+                                    <HBox.margin>
+                                        <Insets right="40.0" />
+                                    </HBox.margin>
+                                </Label>
+                                <Label text="Số đêm:">
+                                    <font>
+                                        <Font size="14.0" />
+                                    </font>
+                                </Label>
+                                <Label fx:id="lbTongSoDem" prefWidth="50.0" style="-fx-font-weight: bold; -fx-text-fill: #6c757d; -fx-font-size: 14px;" text="0">
                                     <font>
                                         <Font size="14.0" />
                                     </font>
                                     <HBox.margin>
-                                        <Insets right="30.0" />
+                                        <Insets right="40.0" />
                                     </HBox.margin>
                                 </Label>
                             </children>
@@ -207,9 +270,9 @@
                               <Insets left="20.0" />
                            </HBox.margin>
                                 </Label>
-                                <Label fx:id="TongTien" prefWidth="100.0" style="-fx-font-weight: bold; -fx-text-fill: #dc3545;" text="0 VNĐ">
+                                <Label fx:id="TongTien" prefWidth="200.0" style="-fx-font-weight: bold; -fx-text-fill: #dc3545; -fx-font-size: 18px;" text="0 VNĐ">
                                     <font>
-                                        <Font size="16.0" />
+                                        <Font size="18.0" />
                                     </font>
                                     <HBox.margin>
                                         <Insets right="30.0" />

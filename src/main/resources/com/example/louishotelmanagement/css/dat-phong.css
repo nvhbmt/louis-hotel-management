@@ -97,3 +97,134 @@
     /* Màu chữ xám đen (Dark Gray) */
     -fx-text-fill: #383d41;
 }
+
+/* ========================================
+   UI Improvements - New Styles
+   ======================================== */
+
+/* DatePicker Styles */
+.date-picker {
+    -fx-font-size: 14px;
+}
+
+.date-picker:focused {
+    -fx-border-color: #007bff;
+    -fx-border-width: 2px;
+}
+
+/* Loading Indicator */
+.loading-label {
+    -fx-text-fill: #007bff;
+    -fx-font-size: 14px;
+    -fx-font-style: italic;
+}
+
+/* Info Labels */
+.info-success {
+    -fx-text-fill: #28a745;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+}
+
+.info-warning {
+    -fx-text-fill: #ffc107;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+}
+
+.info-error {
+    -fx-text-fill: #dc3545;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+}
+
+.info-info {
+    -fx-text-fill: #007bff;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+}
+
+/* Empty State */
+.empty-state {
+    -fx-background-color: #f8f9fa;
+    -fx-border-color: #dee2e6;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+}
+
+/* Booking Type Indicator */
+.booking-type-direct {
+    -fx-font-weight: bold;
+    -fx-text-fill: #28a745;
+    -fx-font-size: 14px;
+}
+
+.booking-type-advance {
+    -fx-font-weight: bold;
+    -fx-text-fill: #007bff;
+    -fx-font-size: 14px;
+}
+
+/* Summary Section */
+.summary-section {
+    -fx-background-color: #f8f9fa;
+    -fx-border-color: #dee2e6;
+    -fx-border-width: 1px 0 0 0;
+    -fx-padding: 15px;
+}
+
+.summary-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #495057;
+}
+
+.summary-value {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #212529;
+}
+
+.summary-total {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #dc3545;
+}
+
+/* Table Improvements */
+.table-view {
+    -fx-border-color: #dee2e6;
+    -fx-border-width: 1px;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #e7f3ff;
+}
+
+.table-row-cell:hover {
+    -fx-background-color: #f8f9fa;
+}
+
+/* Button Improvements */
+.btn-primary {
+    -fx-background-color: #007bff;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-padding: 8px 16px;
+    -fx-background-radius: 4px;
+}
+
+.btn-primary:hover {
+    -fx-background-color: #0056b3;
+}
+
+.btn-success {
+    -fx-background-color: #28a745;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.btn-success:hover {
+    -fx-background-color: #218838;
+}
