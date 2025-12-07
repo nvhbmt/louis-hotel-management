@@ -123,6 +123,7 @@ public class ThanhToanDialogController {
                 if((pdp.getNgayDi().isAfter(LocalDate.now())) || (pdp.getNgayDi().isEqual(LocalDate.now()))){
                     // Trường hợp 1: Trả phòng đúng hạn (hoặc chưa đến hạn)
                     tienPhong = tienPhong.add(tienGoc);
+                    lblTienPhat.setText(String.format("%,.0f ₫", BigDecimal.ZERO));
                 }else{
                     // Trường hợp 2: Trả phòng trễ (NgayDi đã qua LocalDate.now())
 
@@ -147,9 +148,6 @@ public class ThanhToanDialogController {
                     tienPhong = tienPhong.add(tongTienPhaiTra);
                 }
             }
-
-
-
             // Tính giảm giá nếu có mã giảm
             if (hoaDon.getMaGG() != null) {
                 MaGiamGia mgg = maGiamGiaDAO.layMaGiamGiaThepMa(hoaDon.getMaGG());
@@ -161,18 +159,17 @@ public class ThanhToanDialogController {
                     }
                 }
             }
-
-
             tienDichVu = cthddv.tinhTongTienDichVu(hoaDon.getMaHD());
+            BigDecimal tienHangkhach =  BigDecimal.ZERO;
             // VAT 10% chỉ tính trên phần còn lại sau khi giảm giá
             BigDecimal baseAmount = tienPhong.subtract(giamGia);
             vat = baseAmount.multiply(new BigDecimal("0.1"));
 
             // Tổng thanh toán cuối cùng
-            tongThanhToan = baseAmount.add(vat).add(tienDichVu).subtract(tienCoc);
+            tongThanhToan = baseAmount.add(vat).add(tienDichVu);
 
             // Tính giảm giá theo hạng khách hàng
-            BigDecimal tienHangkhach =  BigDecimal.ZERO;
+
             if(khachHangDAO.layKhachHangTheoMa(hoaDon.getMaKH()).getHangKhach().equals(HangKhach.KHACH_QUEN)){
                 tienHangkhach = tongThanhToan.multiply(BigDecimal.valueOf(0.05));
             }else if(khachHangDAO.layKhachHangTheoMa(hoaDon.getMaKH()).getHangKhach().equals(HangKhach.KHACH_DOANH_NGHIEP)){
@@ -183,8 +180,12 @@ public class ThanhToanDialogController {
                 tienHangkhach = BigDecimal.ZERO;
             }
             giamGia = giamGia.add(tienHangkhach);
+            tongThanhToan = tongThanhToan.subtract(giamGia).subtract(tienCoc);
+            hoaDon.setTongTien(tongThanhToan);
+            hoaDonDAO2.capNhatHoaDon(hoaDon);
 
-            tongThanhToan = tongThanhToan.subtract(giamGia);
+
+
 
             // Hiển thị lên UI
             lblTongTienPhong.setText(String.format("%,.0f ₫", tienPhong));
@@ -345,6 +346,8 @@ public class ThanhToanDialogController {
         txtMaGiamGia.clear();
         rbtnTienMat.setSelected(false);
         rbtnTheNganHang.setSelected(false);
+        hoaDon.setMaGG(null);
+        tinhTongThanhToan();
     }
     private void thanhToan() {
         // 1. Kiểm tra lại phương thức thanh toán
@@ -386,7 +389,33 @@ public class ThanhToanDialogController {
             ThongBaoUtil.hienThiLoi("Lỗi", "Không thể lưu thông tin thanh toán vào hệ thống.");
         }
     }
+    @FXML
+    private void handleChonGiamGia() {
+        try{
+            // ... (Phần load FXML và stage giữ nguyên) ...
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/khuyen-mai-screen.fxml"));
+            Parent parent = loader.load();
+            ChonKhuyenMaiController khuyenMaiController = loader.getController();
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("Chọn mã giảm giá");
+            stage.setScene(new Scene(parent));
+            stage.showAndWait();
+            MaGiamGia maDuocChon = khuyenMaiController.getMaGiamGiaDuocChon();
 
+            if (maDuocChon != null) {
+                // 3. Nếu có mã giảm giá được chọn, cập nhật vào TextField
+                txtMaGiamGia.setText(maDuocChon.getMaGG());
+                hoaDon.setMaGG(txtMaGiamGia.getText());
+                tinhTongThanhToan();
+            }
+
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+
+
+    }
     static void main() throws SQLException {
         String maCTHDP = "HD006";
         CTHoaDonPhongDAO cthoaDonPhongDAO = new CTHoaDonPhongDAO();

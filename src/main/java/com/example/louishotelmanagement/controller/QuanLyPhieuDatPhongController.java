@@ -344,19 +344,24 @@ public class QuanLyPhieuDatPhongController implements Initializable {
     @FXML
     private void handleSuaPhieuDatPhong(PhieuDatPhong phieuDatPhong) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/phieu-dat-phong-form-dialog.fxml"));
-            Stage dialog = new Stage();
-            dialog.setTitle("Sửa Thông Tin Phiếu Đặt Phòng"); // Sửa tiêu đề
-            dialog.initModality(Modality.APPLICATION_MODAL);
-            dialog.setScene(new Scene(loader.load()));
+            if(phieuDatPhong.getTrangThai().equalsIgnoreCase(TrangThaiPhieuDatPhong.DA_DAT.toString())){
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/phieu-dat-phong-form-dialog.fxml"));
+                Stage dialog = new Stage();
+                dialog.setTitle("Sửa Thông Tin Phiếu Đặt Phòng"); // Sửa tiêu đề
+                dialog.initModality(Modality.APPLICATION_MODAL);
+                dialog.setScene(new Scene(loader.load()));
 
-            // Thiết lập controller và dữ liệu
-            PhieuDatPhongFormDialogController controller = loader.getController(); // Lấy đúng controller
-            controller.setPhieuDatPhong(phieuDatPhong); // Truyền đối tượng Phiếu Đặt Phòng
-            dialog.showAndWait();
+                // Thiết lập controller và dữ liệu
+                PhieuDatPhongFormDialogController controller = loader.getController(); // Lấy đúng controller
+                controller.setPhieuDatPhong(phieuDatPhong); // Truyền đối tượng Phiếu Đặt Phòng
+                dialog.showAndWait();
 
-            // Làm mới dữ liệu sau khi sửa
-            taiDuLieu();
+                // Làm mới dữ liệu sau khi sửa
+                taiDuLieu();
+            }
+            else{
+                ThongBaoUtil.hienThiLoi("Lỗi","Chỉ được cập nhật phiếu đã đặt");
+            }
 
         } catch (IOException e) {
             ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể mở form sửa phiếu đặt phòng: " + e.getMessage());

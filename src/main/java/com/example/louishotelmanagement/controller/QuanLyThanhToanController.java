@@ -5,6 +5,7 @@ import com.example.louishotelmanagement.dao.KhachHangDAO;
 import com.example.louishotelmanagement.dao.MaGiamGiaDAO;
 import com.example.louishotelmanagement.model.*;
 import com.example.louishotelmanagement.util.Refreshable;
+import com.example.louishotelmanagement.util.ThongBaoUtil;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -156,12 +157,16 @@ public class QuanLyThanhToanController implements Refreshable {
     }
 
     private void handleInHoaDon(HoaDon hoaDon) {
-
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Thông báo");
-        alert.setHeaderText("Chức năng đang phát triển");
-        alert.setContentText("Logic in hóa đơn cho hóa đơn " + hoaDon.getMaHD() + " sẽ được triển khai ở đây.");
-        alert.showAndWait();
+        if(hoaDon.getTrangThai().equals(TrangThaiHoaDon.DA_THANH_TOAN)){
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Thông báo");
+            alert.setHeaderText("Chức năng đang phát triển");
+            alert.setContentText("Logic in hóa đơn cho hóa đơn " + hoaDon.getMaHD() + " sẽ được triển khai ở đây.");
+            alert.showAndWait();
+        }
+        else{
+            ThongBaoUtil.hienThiLoi("Lỗi","Vui lòng thanh toán hóa đơn trước khi xem");
+        }
     }
 
 
@@ -169,21 +174,26 @@ public class QuanLyThanhToanController implements Refreshable {
 
 
         try {
-            com.example.louishotelmanagement.util.HoaDonTxtGenerator generator = new com.example.louishotelmanagement.util.HoaDonTxtGenerator();
-            String noiDungHoaDon = generator.taoNoiDungHoaDon(hoaDon);
+            if(hoaDon.getTrangThai().equals(TrangThaiHoaDon.DA_THANH_TOAN)){
+                com.example.louishotelmanagement.util.HoaDonTxtGenerator generator = new com.example.louishotelmanagement.util.HoaDonTxtGenerator();
+                String noiDungHoaDon = generator.taoNoiDungHoaDon(hoaDon);
 
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/xem-hoa-don-txt.fxml"));
-            Parent root = loader.load();
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/xem-hoa-don-txt.fxml"));
+                Parent root = loader.load();
 
-            XemHoaDonTxtController controller = loader.getController();
-            controller.initData(noiDungHoaDon);
+                XemHoaDonTxtController controller = loader.getController();
+                controller.initData(noiDungHoaDon);
 
-            Stage stage = new Stage();
-            stage.setTitle("Chi Tiết Hóa Đơn (Xem file TXT): " + hoaDon.getMaHD());
-            stage.setScene(new Scene(root));
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.showAndWait();
+                Stage stage = new Stage();
+                stage.setTitle("Chi Tiết Hóa Đơn (Xem file TXT): " + hoaDon.getMaHD());
+                stage.setScene(new Scene(root));
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.showAndWait();
+            }
+            else{
+                ThongBaoUtil.hienThiLoi("Lỗi","Vui lòng thanh toán hóa đơn trước khi xem");
+            }
 
         } catch (SQLException e) {
             // Đã xóa e.printStackTrace()
@@ -294,25 +304,29 @@ public class QuanLyThanhToanController implements Refreshable {
             showAlert(Alert.AlertType.WARNING, "Chưa chọn hóa đơn", "Vui lòng chọn 1 hóa đơn trong bảng để thanh toán.");
             return;
         }
+        if(selected.getTrangThai().equals(TrangThaiHoaDon.CHUA_THANH_TOAN)){
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/thanh-toan-dialog.fxml"));
+                Parent root = loader.load();
 
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/thanh-toan-dialog.fxml"));
-            Parent root = loader.load();
+                ThanhToanDialogController dialogController = loader.getController();
+                dialogController.setHoaDon(selected);
 
-            ThanhToanDialogController dialogController = loader.getController();
-            dialogController.setHoaDon(selected);
+                Stage dialogStage = new Stage();
+                dialogStage.initModality(Modality.APPLICATION_MODAL);
+                dialogStage.setTitle("Thanh Toán - " + selected.getMaHD());
+                dialogStage.setScene(new Scene(root));
+                dialogStage.showAndWait();
 
-            Stage dialogStage = new Stage();
-            dialogStage.initModality(Modality.APPLICATION_MODAL);
-            dialogStage.setTitle("Thanh Toán - " + selected.getMaHD());
-            dialogStage.setScene(new Scene(root));
-            dialogStage.showAndWait();
-
-            loadHoaDonChuaThanhToan();
-        } catch (IOException | SQLException e) {
-            showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể mở form thanh toán: " + e.getMessage());
-            e.printStackTrace();
+                loadHoaDonChuaThanhToan();
+            } catch (IOException | SQLException e) {
+                showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể mở form thanh toán: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }else{
+            ThongBaoUtil.hienThiThongBao("Hóa đơn đã được thanh toán","Bạn có thể xem chi tiết nội dung của hóa đơn ở nút xem phía dưới");
         }
+
     }
 
     private void showAlert(Alert.AlertType type, String title, String message) {
