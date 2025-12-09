@@ -46,7 +46,7 @@
                         <Insets bottom="20.0" left="16.0" right="16.0" top="20.0" />
                     </padding>
                      <Label prefHeight="26.0" prefWidth="210.0" styleClass="menu-label" text="MENU" />
-                     <ScrollPane fitToWidth="true" stylesheets="@../css/menu-vbox.css" styleClass="menu-scroll-pane" VBox.vgrow="ALWAYS">
+                     <ScrollPane fitToWidth="true" styleClass="menu-scroll-pane" VBox.vgrow="ALWAYS">
                         <VBox fx:id="menuContainer" styleClass="menu-container" />
                      </ScrollPane>
                 </VBox>

@@ -61,8 +61,6 @@ public class QuanLyPhongController implements Initializable {
     @FXML
     private TableColumn<Phong, String> colTenLoaiPhong;
     @FXML
-    private TableColumn<Phong, Double> colDonGia;
-    @FXML
     public TableColumn<Phong, Void> colThaoTac;
 
     private PhongDAO phongDAO;
@@ -144,12 +142,6 @@ public class QuanLyPhongController implements Initializable {
                     javafx.beans.binding.Bindings.createStringBinding(() -> "");
         });
 
-        colDonGia.setCellValueFactory(cellData -> {
-            LoaiPhong loaiPhong = cellData.getValue().getLoaiPhong();
-            return loaiPhong != null ?
-                    javafx.beans.binding.Bindings.createObjectBinding(loaiPhong::getDonGia) :
-                    javafx.beans.binding.Bindings.createObjectBinding(() -> -0.0);
-        });
 
         colThaoTac.setCellFactory(_ -> new TableCell<>() {
 
@@ -399,22 +391,18 @@ public class QuanLyPhongController implements Initializable {
         String message = "Bạn có chắc chắn muốn xóa phòng này?\nPhòng: " + phong.getMaPhong() + " - Tầng: " + phong.getTang();
         if (ThongBaoUtil.hienThiXacNhan("Xác nhận xóa", message)) {
             try {
-                // Kiểm tra xem phòng có đang được sử dụng không
-                if (phongDAO.kiemTraPhongDuocSuDung(phong.getMaPhong())) {
-                    ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể xóa phòng này vì đang được sử dụng!");
-                    return;
-                }
-
-                // Xóa phòng
-                if (phongDAO.xoaPhong(phong.getMaPhong())) {
-                    ThongBaoUtil.hienThiThongBao("Thành công", "Đã xóa phòng thành công!");
-                    taiDuLieu();
+                // Xóa phòng (stored procedure sẽ tự kiểm tra phòng có tồn tại và có đang được sử dụng không)
+                phongDAO.xoaPhong(phong.getMaPhong());
+                ThongBaoUtil.hienThiThongBao("Thành công", "Đã xóa phòng thành công!");
+                taiDuLieu();
+            } catch (SQLException e) {
+                // Hiển thị thông báo lỗi từ stored procedure (RAISERROR)
+                String errorMessage = e.getMessage();
+                if (errorMessage != null && !errorMessage.isEmpty()) {
+                    ThongBaoUtil.hienThiThongBao("Lỗi", errorMessage);
                 } else {
                     ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể xóa phòng!");
                 }
-
-            } catch (SQLException e) {
-                ThongBaoUtil.hienThiThongBao("Lỗi", "Lỗi khi xóa phòng: " + e.getMessage());
             }
         }
     }

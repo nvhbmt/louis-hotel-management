@@ -1,4 +1,4 @@
-package com.example.louishotelmanagement.controller;
+package com.example.louishotelmanagement.util;
 
 public interface ContentSwitcher {
     /**
@@ -23,3 +23,4 @@ public interface ContentSwitcher {
         switchContent("/com/example/louishotelmanagement/fxml/trang-chu-view.fxml");
     }
 }
+

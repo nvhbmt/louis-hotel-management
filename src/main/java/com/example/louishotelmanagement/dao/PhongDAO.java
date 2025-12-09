@@ -7,8 +7,10 @@ import com.example.louishotelmanagement.model.TrangThaiPhong;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class PhongDAO {
@@ -206,5 +208,49 @@ public class PhongDAO {
             }
         }
         return false;
+    }
+
+    /**
+     * Lấy danh sách phòng trống trong khoảng thời gian đã chỉ định.
+     * 
+     * @param ngayDen Ngày đến (check-in), không được null
+     * @param ngayDi Ngày đi (check-out), không được null và phải sau ngayDen
+     * @return Danh sách phòng trống trong khoảng thời gian
+     * @throws SQLException Nếu có lỗi khi truy vấn database
+     * @throws IllegalArgumentException Nếu ngayDen hoặc ngayDi là null
+     */
+    public ArrayList<Phong> layDSPhongTrongTheoKhoangThoiGian(LocalDate ngayDen, LocalDate ngayDi) throws SQLException {
+        // Validate input
+        if (ngayDen == null || ngayDi == null) {
+            throw new IllegalArgumentException("Ngày đến và ngày đi không được null");
+        }
+        
+        if (ngayDi.isBefore(ngayDen) || ngayDi.isEqual(ngayDen)) {
+            throw new IllegalArgumentException("Ngày đi phải sau ngày đến");
+        }
+        
+        LoaiPhongDAO loaiPhongDAO = new LoaiPhongDAO();
+        ArrayList<Phong> ds = new ArrayList<>();
+        String sql = "{call sp_LayDSPhongTrongTheoKhoangThoiGian(?,?)}";
+        try (Connection con = CauHinhDatabase.getConnection();
+             CallableStatement cs = con.prepareCall(sql)) {
+
+            cs.setDate(1, Date.valueOf(ngayDen));
+            cs.setDate(2, Date.valueOf(ngayDi));
+            ResultSet rs = cs.executeQuery();
+
+            while (rs.next()) {
+                LoaiPhong loaiPhong = loaiPhongDAO.layLoaiPhongTheoMa(rs.getString("maLoaiPhong"));
+                Phong phong = new Phong(
+                        rs.getString("maPhong"),
+                        rs.getObject("tang", Integer.class),
+                        TrangThaiPhong.fromString(rs.getString("trangThai")),
+                        rs.getString("moTa"),
+                        loaiPhong
+                );
+                ds.add(phong);
+            }
+        }
+        return ds;
     }
 }

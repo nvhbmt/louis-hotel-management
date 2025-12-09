@@ -5,6 +5,7 @@ import com.dlsc.formsfx.model.validators.RegexValidator;
 import com.dlsc.formsfx.model.validators.StringLengthValidator;
 import com.dlsc.formsfx.view.renderer.FormRenderer;
 import com.example.louishotelmanagement.dao.KhachHangDAO;
+import com.example.louishotelmanagement.model.HangKhach;
 import com.example.louishotelmanagement.model.KhachHang;
 import com.example.louishotelmanagement.model.TrangThaiKhachHang;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
@@ -175,7 +176,7 @@ public class KhachHangDialogController implements Initializable {
                 kh.getNgaySinh(),
                 kh.getGhiChu(),
                 kh.getCCCD(),
-                kh.getHangKhach(),
+                kh.getHangKhach().toString(),
                 kh.getTrangThai().getTenHienThi()
         );
 
@@ -218,7 +219,7 @@ public class KhachHangDialogController implements Initializable {
         kh.setNgaySinh(ngaySinhField.valueProperty().get());
         kh.setGhiChu(ghiChuField.valueProperty().get());
         kh.setCCCD(cccdField.valueProperty().get());
-        kh.setHangKhach(hangKhachField.selectionProperty().get());
+        kh.setHangKhach(HangKhach.fromString(hangKhachField.selectionProperty().get()));
         kh.setTrangThai(TrangThaiKhachHang.fromString(trangThaiField.selectionProperty().get()));
 
         return kh;

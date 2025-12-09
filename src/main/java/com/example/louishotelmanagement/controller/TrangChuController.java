@@ -1,5 +1,7 @@
 package com.example.louishotelmanagement.controller;
 
+import com.example.louishotelmanagement.util.ContentSwitcher;
+import com.example.louishotelmanagement.util.ContentManager;
 import javafx.fxml.FXML;
 
 public class TrangChuController {

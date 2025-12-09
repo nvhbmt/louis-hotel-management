@@ -190,7 +190,7 @@ public class QuanLyKhachHangController implements Initializable {
         int tongSoKhach = dsKhachHang.size();
 
         int soKhachVip = (int) dsKhachHang.stream()
-                .filter(kh -> "Khách VIP".equalsIgnoreCase(kh.getHangKhach()))
+                .filter(kh -> "Khách VIP".equalsIgnoreCase(kh.getHangKhach().toString()))
                 .count();
 
         int soKhachDangLuuTru = (int) dsKhachHang.stream()
@@ -251,7 +251,7 @@ public class QuanLyKhachHangController implements Initializable {
                     (kh.getEmail() != null && kh.getEmail().toLowerCase().contains(timKiem));
 
             boolean matchHang = hangFilter == null || "Tất cả hạng".equals(hangFilter) ||
-                    (kh.getHangKhach() != null && kh.getHangKhach().equalsIgnoreCase(hangFilter));
+                    (kh.getHangKhach() != null && kh.getHangKhach().toString().equalsIgnoreCase(hangFilter));
 
             boolean matchTrangThai = trangThaiFilter == null || kh.getTrangThai() == trangThaiFilter;
 

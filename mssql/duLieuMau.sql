@@ -81,8 +81,7 @@ VALUES ('KH001', N'Nguyễn Thanh Tùng', '0912345678', 'tung.nguyen@company.com
         N'Khách du lịch nước ngoài (đặt phòng VIP)', '012345678902', N'Khách VIP', 'DA_DAT'),
        ('KH003', N'Lê Văn Chiến', '0934567890', 'chien.le@web.com', N'Đà Nẵng', '2000-09-10', N'Khách ở lần đầu',
         '012345678903', N'Khách thường', 'CHECK_OUT'),
-       ('KH004', N'Phạm Thị Yến', '0945678901', 'yen.ph----------------------
--- 3. NhanVien (Nhân viên)am@private.com', N'Hải Phòng', '1992-03-20',
+       ('KH004', N'Phạm Thị Yến', '0945678901', 'yen.pham@private.com', N'Hải Phòng', '1992-03-20',
         N'Khách quen, thích phòng tầng cao', '012345678904', N'Khách quen', 'DANG_LUU_TRU'),
        ('KH005', N'Hoàng Anh Dũng', '0956789012', 'dung.hoang@contact.com', N'Quảng Ninh', '1989-11-05',
         N'Thanh toán bằng thẻ tín dụng', '012345678905', N'Khách VIP', 'DA_DAT'),
@@ -156,9 +155,9 @@ VALUES
 ('PD004', '2025-10-20', '2025-10-22', '2025-10-25', N'Hoàn thành', N'Đặt trước', 'KH004', 'NV003', 300000.00),
 ('PD005', '2025-10-21', '2025-10-24', '2025-10-26', N'Hoàn thành', N'Đặt trước', 'KH005', 'NV004', 200000.00),
 -- Đã đặt (Đặt trực tiếp): tiền cọc = 0
-('PD006', '2025-10-24', '2025-10-24', null, N'Đang sử dụng', N'Đặt trực tiếp', 'KH003', 'NV001', 0.00),
+('PD006', '2025-11-30', '2025-11-30', '2025-12-02', N'Đang sử dụng', N'Đặt trực tiếp', 'KH003', 'NV001', 0.00),
 -- Đã đặt (Đặt trước): tiền cọc = 20% tổng chi phí phòng
-('PD007', '2025-10-25', '2025-10-25', null, N'Đang sử dụng', N'Đặt trước', 'KH004', 'NV003', 510000.00);
+('PD007', '2025-11-25', '2025-11-30', '2025-12-01', N'Đang sử dụng', N'Đặt trước', 'KH004', 'NV003', 510000.00);
 GO
 
 
@@ -172,8 +171,8 @@ VALUES ('HD001', '2025-10-12', N'Chuyển khoản', N'Đã thanh toán', 4500000
        ('HD003', '2025-10-17', N'Ví điện tử', N'Đã thanh toán', 3600000, 'KH003', 'NV002', 'GG002'),
        ('HD004', '2025-10-23', N'Tiền mặt', N'Đã thanh toán', 2000000, 'KH004', 'NV003', NULL),
        ('HD005', '2025-10-24', N'Chuyển khoản', N'Đã thanh toán', 2200000, 'KH005', 'NV004', NULL),
-       ('HD006', '2025-10-24', null, N'Chưa thanh toán', 1800000, 'KH003', 'NV001', NULL),
-       ('HD007', '2025-10-25', null, N'Chưa thanh toán', 3500000, 'KH001', 'NV002', NULL);
+       ('HD006', '2025-11-30', null, N'Chưa thanh toán', 0, 'KH003', 'NV001', NULL),
+       ('HD007', '2025-11-30', null, N'Chưa thanh toán', 0, 'KH004', 'NV002', NULL);
 GO
 
 
@@ -194,9 +193,9 @@ VALUES
 -- HD005/PD005 (P102 - 2 ngày)
 ('HD005', 'PD005', 'P102', '2025-10-24', '2025-10-26', 500000),
 -- HD006 (Liên kết với PD006) - P204 (Đang sử dụng)
-('HD006', 'PD006', 'P204', '2025-10-24', NULL, 850000),
+('HD006', 'PD006', 'P204', '2025-11-30', NULL, 850000),
 -- HD007 (Liên kết với PD007) - P205 (Đang sử dụng)
-('HD007', 'PD007', 'P205', '2025-10-25', NULL, 850000);
+('HD007', 'PD007', 'P205', '2025-11-30', NULL, 850000);
 GO
 
 -------------------------------------------------------------------

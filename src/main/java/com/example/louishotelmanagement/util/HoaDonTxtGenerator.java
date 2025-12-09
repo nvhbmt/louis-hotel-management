@@ -1,4 +1,5 @@
-package com.example.louishotelmanagement.controller;
+package com.example.louishotelmanagement.util;
+
 import com.example.louishotelmanagement.dao.HoaDonDAO2;
 import com.example.louishotelmanagement.dao.MaGiamGiaDAO;
 import com.example.louishotelmanagement.model.*;
@@ -93,7 +94,7 @@ public class HoaDonTxtGenerator {
             }
         }
 
-        BigDecimal thueVAT = tongTienCuoiCung.subtract(congTienHang.subtract(giamGia));
+        BigDecimal thueVAT = tongTienCuoiCung.multiply(BigDecimal.valueOf(0.1));
         if (thueVAT.compareTo(BigDecimal.ZERO) < 0) {
             thueVAT = BigDecimal.ZERO;
         }
@@ -123,3 +124,4 @@ public class HoaDonTxtGenerator {
         return sb.toString();
     }
 }
+

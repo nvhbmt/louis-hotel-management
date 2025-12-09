@@ -75,6 +75,7 @@ public class CTHoaDonPhong {
     }
 
     public BigDecimal getThanhTien() {
+        this.thanhTien = tinhThanhTien();
         return thanhTien;
     }
 
@@ -86,8 +87,8 @@ public class CTHoaDonPhong {
      * Tính tiền tự động theo số ngày ở và giá phòng.
      */
     public BigDecimal tinhThanhTien() {
-        if (ngayDen != null && ngayDi != null && giaPhong != null) {
-            long soNgay = java.time.temporal.ChronoUnit.DAYS.between(ngayDen, ngayDi);
+        if (ngayDen != null && giaPhong != null && ngayDi == null) {
+            long soNgay = java.time.temporal.ChronoUnit.DAYS.between(ngayDen, LocalDate.now());
             if (soNgay < 0) soNgay = 0;
             return giaPhong.multiply(BigDecimal.valueOf(soNgay));
         }

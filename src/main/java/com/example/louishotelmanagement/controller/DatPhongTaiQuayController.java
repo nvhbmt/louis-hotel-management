@@ -4,6 +4,7 @@ import com.example.louishotelmanagement.dao.*;
 import com.example.louishotelmanagement.model.*;
 import com.example.louishotelmanagement.service.AuthService;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
+import com.example.louishotelmanagement.util.Refreshable;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -403,7 +404,7 @@ public class DatPhongTaiQuayController implements Initializable,Refreshable {
                 BigDecimal.valueOf(p.getLoaiPhong().getDonGia())
         );
         // Cập nhật trạng thái phòng thành ĐÃ ĐẶT (DA_DAT)
-        Pdao.capNhatTrangThaiPhong(p.getMaPhong(), TrangThaiPhong.DA_DAT.toString());
+        Pdao.capNhatTrangThaiPhong(p.getMaPhong(), TrangThaiPhong.DANG_SU_DUNG.toString());
         cthdpDao.themCTHoaDonPhong(cthdp);
     }
 

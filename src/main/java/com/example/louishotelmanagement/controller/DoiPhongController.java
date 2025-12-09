@@ -4,6 +4,7 @@ import com.example.louishotelmanagement.dao.*;
 import com.example.louishotelmanagement.model.*;
 import com.example.louishotelmanagement.service.AuthService;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
+import com.example.louishotelmanagement.util.Refreshable;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
