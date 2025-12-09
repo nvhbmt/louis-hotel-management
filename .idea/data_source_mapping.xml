@@ -2,6 +2,7 @@
 <project version="4">
   <component name="DataSourcePerFileMappings">
     <file url="file://$PROJECT_DIR$/mssql/duLieuMau.sql" value="459ee73b-4ed6-4b39-873d-b03de0ad361d" />
+    <file url="file://$PROJECT_DIR$/mssql/indexesPhongDatPhong.sql" value="459ee73b-4ed6-4b39-873d-b03de0ad361d" />
     <file url="file://$PROJECT_DIR$/mssql/khoiTaoDataBase.sql" value="459ee73b-4ed6-4b39-873d-b03de0ad361d" />
     <file url="file://$PROJECT_DIR$/mssql/storedProceduresCTHoaDonDichVu.sql" value="459ee73b-4ed6-4b39-873d-b03de0ad361d" />
     <file url="file://$PROJECT_DIR$/mssql/storedProceduresCTHoaDonPhong.sql" value="459ee73b-4ed6-4b39-873d-b03de0ad361d" />
@@ -15,5 +16,6 @@
     <file url="file://$PROJECT_DIR$/mssql/storedProceduresPhong.sql" value="459ee73b-4ed6-4b39-873d-b03de0ad361d" />
     <file url="file://$PROJECT_DIR$/mssql/storedProceduresTaiKhoan.sql" value="459ee73b-4ed6-4b39-873d-b03de0ad361d" />
     <file url="file://$PROJECT_DIR$/mssql/storedProceduresThongKe.sql" value="459ee73b-4ed6-4b39-873d-b03de0ad361d" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/example/louishotelmanagement/dao/HoaDonDAO.java" value="459ee73b-4ed6-4b39-873d-b03de0ad361d" />
   </component>
 </project>

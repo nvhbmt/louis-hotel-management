@@ -213,7 +213,7 @@ public class NhanPhongController implements Initializable,Refreshable {
     public void handleNhanPhong(ActionEvent actionEvent) throws Exception {
         if (check) {
             if(ngayDen.getValue().isAfter(LocalDate.now())){
-                boolean xacNhan = ThongBaoUtil.hienThiXacNhan("Xác nhận","Bạn có chắc là muốn nhận phòng sớm và phát sinh chi phí thêm");
+                boolean xacNhan = ThongBaoUtil.hienThiXacNhan("Xác nhận","Bạn có chắc là muốn nhận phòng sớm hay không?");
                 if(xacNhan){
                     NhanPhong();
                 }else{

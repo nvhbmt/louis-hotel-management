@@ -118,14 +118,20 @@ CREATE TABLE PhieuDichVu
     FOREIGN KEY (maNV) REFERENCES NhanVien(maNV)
 );
 GO
--- Bảng hóa đơn
+-- Sửa đổi Bảng HoaDon để lưu trữ chi tiết tính toán
 CREATE TABLE HoaDon
 (
     maHD nvarchar(10) PRIMARY KEY,
     ngayLap DATE,
     phuongThuc NVARCHAR(50),
     trangThai NVARCHAR(50) check (trangThai in(N'Chưa thanh toán',N'Đã thanh toán')),
-    tongTien DECIMAL(18,2),
+    tongTien DECIMAL(18,2), -- Tổng tiền cuối cùng đã thanh toán
+    -- THÊM CÁC TRƯỜNG LƯU TRỮ CHI TIẾT KHI ĐÃ THANH TOÁN
+    TienPhat DECIMAL(18,2) NULL,        -- Tiền phạt trả phòng trễ
+    TongGiamGia DECIMAL(18,2) NULL,     -- Tổng giảm giá (Mã GG + Hạng Khách)
+    TongVAT DECIMAL(18,2) NULL,         -- Tổng VAT đã tính
+    NgayCheckOut DATE NULL,             -- Ngày trả phòng thực tế (đã có trong code Java, nên lưu vào DB)
+
     maKH nvarchar(10),
     maNV nvarchar(10),
     maGG nvarchar(10) NULL,
@@ -143,7 +149,13 @@ CREATE TABLE CTHoaDonPhong
     ngayDen DATE,
     ngayDi DATE,
     giaPhong DECIMAL(18,2),
-    thanhTien AS (DATEDIFF(DAY, ngayDen, ngayDi) * giaPhong) PERSISTED,
+    thanhTien AS (
+        CASE
+            WHEN DATEDIFF(DAY, ngayDen, ngayDi) = 0
+                THEN giaPhong * 1 -- Tính 1 ngày/đêm nếu đến và đi cùng ngày
+            ELSE DATEDIFF(DAY, ngayDen, ngayDi) * giaPhong
+            END
+        ) PERSISTED,
     PRIMARY KEY (maHD, maPhong),
     FOREIGN KEY (maHD) REFERENCES HoaDon(maHD),
     FOREIGN KEY (maPhieu) REFERENCES PhieuDatPhong(maPhieu),
