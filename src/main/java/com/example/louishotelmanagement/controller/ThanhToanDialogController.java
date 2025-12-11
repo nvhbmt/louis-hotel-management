@@ -282,7 +282,8 @@ public class ThanhToanDialogController {
             }
 
             // Lấy thông tin phòng
-            txtSoPhong.setText(hoaDon.getSoPhong() != null ? hoaDon.getSoPhong() : "N/A");
+            int soPhong = cthddpDao.getCTHoaDonPhongTheoMaHD(hoaDon.getMaHD()).size();
+            txtSoPhong.setText(String.valueOf(soPhong));
             txtNgayNhan.setText(hoaDon.getNgayLap() != null ? hoaDon.getNgayLap().toString() : "N/A");
 
             // Lấy Ngày trả phòng đã lưu (nếu có)
@@ -469,11 +470,8 @@ public class ThanhToanDialogController {
         String maCTHDP = "HD006";
         CTHoaDonPhongDAO cthoaDonPhongDAO = new CTHoaDonPhongDAO();
         PhieuDatPhongDAO phieuDatPhongDAO = new PhieuDatPhongDAO();
-        List<CTHoaDonPhong> list = cthoaDonPhongDAO.getCTHoaDonPhongTheoMaHD(maCTHDP);
-        for(CTHoaDonPhong cthoaDonPhong : list) {
-            PhieuDatPhong pdp = phieuDatPhongDAO.layPhieuDatPhongTheoMa(cthoaDonPhong.getMaPhieu());
-            System.out.println(cthoaDonPhong);
-            System.out.println(cthoaDonPhong.tinhThanhTien());
-        }
+        HoaDonDAO hoaDonDAO = new HoaDonDAO();
+        HoaDon hd = hoaDonDAO.timHoaDonTheoMa(maCTHDP);
+        System.out.println(hd.getSoPhong());
     }
 }

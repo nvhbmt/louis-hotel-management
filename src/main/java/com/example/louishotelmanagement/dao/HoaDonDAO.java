@@ -246,6 +246,9 @@ public class HoaDonDAO {
         return null;
     }
 
+
+
+
     // 🔹 Cập nhật tổng tiền hóa đơn bằng store procedure (Giữ nguyên)
     public boolean capNhatTongTienHoaDon(String maHD) throws SQLException {
         String sql = "{CALL sp_CapNhatTongTienHoaDon(?)}";

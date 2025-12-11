@@ -137,13 +137,17 @@ public class QuanLyThanhToanController implements Refreshable {
 
         colThaoTac.setCellFactory(param -> new TableCell<>() {
             private final Button btnView = new Button("Xem");
-            private final HBox pane = new HBox(10, btnView);
+            private final Button btnIn = new Button("In");
+            private final HBox pane = new HBox(10,btnIn, btnView);
             {
                 pane.setAlignment(Pos.CENTER);
                 double buttonWidth = 70;
                 btnView.setPrefWidth(buttonWidth);
-                btnView.setStyle("-fx-background-color: #28a745; -fx-text-fill: white; -fx-border-radius: 10;");
+                btnView.setStyle("-fx-background-color: #f0f0f0;-fx-border-radius: 10");
                 btnView.setOnAction(event -> handleXemChiTiet(getTableView().getItems().get(getIndex())));
+                btnIn.setPrefWidth(buttonWidth);
+                btnIn.setStyle("-fx-background-color: #28a745; -fx-text-fill: white; -fx-border-radius: 10;");
+                btnIn.setOnAction(event -> handleInChiTiet(getTableView().getItems().get(getIndex())));
             }
             @Override
             protected void updateItem(Void item, boolean empty) {
@@ -155,21 +159,41 @@ public class QuanLyThanhToanController implements Refreshable {
         tableViewKhachHang.setItems(masterList);
     }
 
-    private void handleInHoaDon(HoaDon hoaDon) {
-        if(hoaDon.getTrangThai().equals(TrangThaiHoaDon.DA_THANH_TOAN)){
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Thông báo");
-            alert.setHeaderText("Chức năng đang phát triển");
-            alert.setContentText("Logic in hóa đơn cho hóa đơn " + hoaDon.getMaHD() + " sẽ được triển khai ở đây.");
-            alert.showAndWait();
+    private void XemChiTiet(HoaDon hoaDon){
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/com/example/louishotelmanagement/fxml/xem-chi-tiet-hoa-don.fxml")
+            );
+
+            Parent ui = loader.load();
+            XemChiTietHoaDonController ctr = loader.getController();
+            ctr.loadData(hoaDon.getMaHD());
+
+            Stage st = new Stage();
+            st.setTitle("Chi tiết hóa đơn");
+            st.setScene(new Scene(ui));
+            st.showAndWait();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
-        else{
-            ThongBaoUtil.hienThiLoi("Lỗi","Vui lòng thanh toán hóa đơn trước khi xem");
+    }
+    private void handleXemChiTiet(HoaDon hoaDon) {
+        if (hoaDon == null) return;
+        if(hoaDon.getTrangThai().equals(TrangThaiHoaDon.CHUA_THANH_TOAN)){
+            if(ThongBaoUtil.hienThiXacNhan("Xác nhận","Bạn có thể sẽ không thấy đầy đủ số liệu nếu chưa trả phòng")){
+                XemChiTiet(hoaDon);
+            }
+        }else{
+            XemChiTiet(hoaDon);
         }
+
+
     }
 
 
-    private void handleXemChiTiet(HoaDon hoaDon) {
+
+    private void handleInChiTiet(HoaDon hoaDon) {
 
         // 1. Kiểm tra trạng thái hóa đơn (Giữ nguyên logic kiểm tra)
         if (!hoaDon.getTrangThai().equals(TrangThaiHoaDon.DA_THANH_TOAN)){
