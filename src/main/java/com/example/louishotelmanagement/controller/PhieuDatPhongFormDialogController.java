@@ -8,10 +8,12 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
 public class PhieuDatPhongFormDialogController implements Initializable {
@@ -29,11 +31,13 @@ public class PhieuDatPhongFormDialogController implements Initializable {
 
     private PhieuDatPhongDAO phieuDatPhongDAO;
     private PhieuDatPhong phieuDatPhongHienTai; // Phiếu được truyền vào để sửa
+    private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         phieuDatPhongDAO = new PhieuDatPhongDAO();
         // Cấu hình ban đầu nếu cần
+        khoiTaoDinhDangNgay();
     }
 
     /**
@@ -58,8 +62,45 @@ public class PhieuDatPhongFormDialogController implements Initializable {
             dpNgayDen.setValue(phieuDatPhongHienTai.getNgayDen());
             dpNgayDi.setValue(phieuDatPhongHienTai.getNgayDi());
 
+
             // Bạn có thể thêm logic load các trường khác như maKH, tienCoc, etc. ở đây
         }
+    }
+
+    private void khoiTaoDinhDangNgay() {
+        // Định dạng ngày tháng mong muốn (ví dụ: 25/10/2025)
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        // Tạo StringConverter tùy chỉnh cho DatePicker
+        StringConverter<LocalDate> converter = new StringConverter<>() {
+            @Override
+            public String toString(LocalDate date) {
+                // Chuyển LocalDate sang String để hiển thị
+                return (date != null) ? formatter.format(date) : "";
+            }
+
+            @Override
+            public LocalDate fromString(String string) {
+                // Chuyển String nhập vào (hoặc từ FXML) sang LocalDate
+                if (string != null && !string.isEmpty()) {
+                    try {
+                        return LocalDate.parse(string, formatter);
+                    } catch (java.time.format.DateTimeParseException e) {
+                        // Xử lý lỗi nếu người dùng nhập sai định dạng
+                        System.err.println("Lỗi định dạng ngày: " + string);
+                        return null;
+                    }
+                }
+                return null;
+            }
+        };
+
+        // Áp dụng converter cho cả hai DatePicker
+        dpNgayDen.setConverter(converter);
+        dpNgayDi.setConverter(converter);
+
+        // *Tùy chọn:* Đảm bảo DatePicker có thể hiển thị ngày hôm nay nếu người dùng chưa chọn
+        // ngayDen.setValue(LocalDate.now());
     }
 
     // -------------------------------------------------------------------------

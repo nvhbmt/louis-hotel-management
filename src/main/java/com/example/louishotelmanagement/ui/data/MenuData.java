@@ -59,14 +59,8 @@ public class MenuData {
         );
 
         TreeItem<MenuItemModel> hoaDonGroup = new TreeItem<>(
-                new MenuItemModel("Hóa đơn", "mdi2c-cash-multiple", null)
+                new MenuItemModel("Hóa đơn", "mdi2c-cash-multiple", "/com/example/louishotelmanagement/fxml/thanh-toan-view.fxml")
         );
-        hoaDonGroup.getChildren().addAll(List.of(
-                new TreeItem<>(new MenuItemModel("Quản lí hóa đơn", "mdi2c-cash",
-                        "/com/example/louishotelmanagement/fxml/thanh-toan-view.fxml"))
-//                new TreeItem<>(new MenuItemModel("Giảm giá", "mdi2s-sale",
-//                        "/com/example/louishotelmanagement/fxml/quan-ly-giam-gia-view.fxml"))
-        ));
 
 //        if ("Manager".equals(userRole)) {
 //            hoaDonGroup.getChildren().addAll(List.of(
