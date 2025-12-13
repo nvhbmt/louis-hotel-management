@@ -169,7 +169,6 @@ public class QuanLyHoaDonController implements Initializable {
     }
 
 
-    // --- Các hàm xử lý sự kiện ---
     private void handleInHoaDon(HoaDon hoaDon) {
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -244,5 +243,11 @@ public class QuanLyHoaDonController implements Initializable {
 
 
         taiDuLieuHoaDon();
+    }
+
+    @FXML
+    public void handleAutoRefreshOnMouseEntered() {
+        taiDuLieuHoaDon();
+        // Auto refresh cập nhật mới thông tin hóa đơn mỗi khi di chuyển chuột qua
     }
 }

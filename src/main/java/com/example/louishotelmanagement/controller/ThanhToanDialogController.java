@@ -252,6 +252,7 @@ public class ThanhToanDialogController {
 
         } catch (Exception e) {
             e.printStackTrace();
+            ThongBaoUtil.hienThiLoi("Lỗi tính tiền", "Chi tiết: " + e.getMessage());
         }
     }
     // -------------------------------------------------------------
@@ -339,7 +340,6 @@ public class ThanhToanDialogController {
                 btnThanhToan.setDisable(true);
                 moManHinhQRCode();
             } else {
-                // Trường hợp 3: Không chọn gì
                 btnThanhToan.setDisable(true);
             }
         });
@@ -350,7 +350,6 @@ public class ThanhToanDialogController {
     }
     private void moManHinhQRCode() {
         try {
-            // ... (Phần load FXML và stage giữ nguyên) ...
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/ma-qr-view.fxml"));
             Parent parent = loader.load();
             QRController qrController = loader.getController();
@@ -359,18 +358,15 @@ public class ThanhToanDialogController {
             stage.setTitle("Mã QR Thanh Toán");
             stage.setScene(new Scene(parent));
 
-            stage.showAndWait(); // Chờ cửa sổ QR đóng
+            stage.showAndWait();
 
-            // === LOGIC KIỂM TRA KẾT QUẢ TỪ QR CONTROLLER ===
             if (qrController.isTransactionConfirmed()) {
-                // CHỈ kích hoạt nút nếu người dùng đã Xác nhận
                 btnThanhToan.setDisable(false);
                 rbtnTienMat.setDisable(true);
                 Alert successAlert = new Alert(Alert.AlertType.INFORMATION, "Xác nhận chuyển khoản thành công.");
                 successAlert.setHeaderText(null);
                 successAlert.showAndWait();
             } else {
-                // Hủy giao dịch (hoặc đóng) -> Vô hiệu hóa nút và bỏ chọn RadioButton
                 btnThanhToan.setDisable(true);
                 rbtnTienMat.getToggleGroup().selectToggle(null);
             }
@@ -393,7 +389,6 @@ public class ThanhToanDialogController {
         tinhTongThanhToan();
     }
     private void thanhToan() {
-        // 1. Kiểm tra lại phương thức thanh toán
         PhuongThucThanhToan phuongThuc;
 
         if(rbtnTienMat.isSelected()) {
@@ -406,7 +401,6 @@ public class ThanhToanDialogController {
             return;
         }
 
-        // 2. Cập nhật thông tin hóa đơn
         try {
             // Lấy tổng tiền đã tính toán (đã lưu tạm trong hoaDon.tongTien)
             String tongThanhToanText = lblTongThanhToan.getText()
@@ -429,7 +423,6 @@ public class ThanhToanDialogController {
             // Cập nhật vào cơ sở dữ liệu (DAO phải xử lý các trường mới)
             hoaDonDAO2.capNhatHoaDon(hoaDon);
 
-            // 3. Thông báo thành công và đóng form
             ThongBaoUtil.hienThiThongBao("Thành công", "Thanh toán hóa đơn #" + hoaDon.getMaHD() + " đã hoàn tất.");
             // Đóng form thanh toán
             dongForm();
