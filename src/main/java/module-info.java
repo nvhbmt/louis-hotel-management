@@ -15,6 +15,7 @@ module com.example.louishotelmanagement {
     requires javafx.base;
     requires javafx.graphics;
     requires javafx.swing;
+    requires itextpdf;
 
 
     opens com.example.louishotelmanagement.fxml to javafx.fxml;

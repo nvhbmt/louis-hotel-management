@@ -2,6 +2,7 @@
 <project version="4">
   <component name="SqlDialectMappings">
     <file url="file://$PROJECT_DIR$/mssql/duLieuMau.sql" dialect="TSQL" />
+    <file url="file://$PROJECT_DIR$/mssql/indexesPhongDatPhong.sql" dialect="TSQL" />
     <file url="file://$PROJECT_DIR$/mssql/khoiTaoDataBase.sql" dialect="TSQL" />
     <file url="file://$PROJECT_DIR$/mssql/storedProceduresCTHoaDonDichVu.sql" dialect="TSQL" />
     <file url="file://$PROJECT_DIR$/mssql/storedProceduresCTHoaDonPhong.sql" dialect="TSQL" />

@@ -154,16 +154,25 @@ END
 GO
 
 -- 8. sp_TinhTongTienPhongTheoHD (Tính Tổng Tiền Phòng)
--- Lưu ý: Logic tính tổng tiền đơn giản: (Số ngày * Giá phòng)
-CREATE PROCEDURE sp_TinhTongTienPhongTheoHD @maHD NVARCHAR(10)
+CREATE OR ALTER PROCEDURE sp_TinhTongTienPhongTheoHD
+@maHD NVARCHAR(10)
 AS
 BEGIN
     SET NOCOUNT ON;
-    SELECT SUM(
-                   DATEDIFF(day, ISNULL(ngayDen, GETDATE()), ISNULL(ngayDi, GETDATE())) * giaPhong
-           ) AS TongTien
-    FROM CTHoaDonPhong
-    WHERE maHD = @maHD;
+
+    SELECT
+        SUM(
+            -- Tính số ngày lưu trú (tối thiểu là 1 ngày)
+                CASE
+                    WHEN DATEDIFF(day, C.ngayDen, C.ngayDi) = 0 THEN 1
+                    ELSE DATEDIFF(day, C.ngayDen, C.ngayDi)
+                    END
+                    * C.giaPhong
+        ) AS TongTienPhong
+    FROM
+        CTHoaDonPhong C
+    WHERE
+        C.maHD = @maHD;
 END
 GO
 

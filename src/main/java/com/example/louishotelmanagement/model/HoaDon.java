@@ -13,9 +13,17 @@ public class HoaDon {
     private String maNV;
     private String maGG; // Có thể null
     private KhachHang khachHang;
-
     private String soPhong;
     private LocalDate ngayCheckOut;
+
+    // =======================================================
+    // TRƯỜNG MỚI ĐƯỢC THÊM (ĐỒNG BỘ VỚI CƠ SỞ DỮ LIỆU)
+    // =======================================================
+    private BigDecimal tienPhat;     // Tiền phạt (Phí trả trễ)
+    private BigDecimal tongGiamGia;  // Tổng Giảm giá đã áp dụng (Mã GG + Hạng Khách)
+    private BigDecimal tongVAT;      // Tổng VAT đã tính
+    // =======================================================
+
 
     // Constructor không tham số
     public HoaDon() {
@@ -26,7 +34,8 @@ public class HoaDon {
     }
 
     // Constructor đầy đủ tham số
-    public HoaDon(String maHD, LocalDate ngayLap, PhuongThucThanhToan phuongThuc,TrangThaiHoaDon trangThai,
+    // LƯU Ý: Không nên sửa Constructor này nếu nó không được dùng để khởi tạo đầy đủ các trường mới.
+    public HoaDon(String maHD, LocalDate ngayLap, PhuongThucThanhToan phuongThuc, TrangThaiHoaDon trangThai,
                   BigDecimal tongTien, String maKH, String maNV, String maGG) {
         this.maHD = maHD;
         this.ngayLap = ngayLap;
@@ -39,7 +48,38 @@ public class HoaDon {
         this.khachHang = new KhachHang();
     }
 
-    // Getters & Setters
+    // *******************************************************
+    // GETTERS & SETTERS CHO CÁC TRƯỜNG MỚI
+    // *******************************************************
+
+    public BigDecimal getTienPhat() {
+        return tienPhat;
+    }
+
+    public void setTienPhat(BigDecimal tienPhat) {
+        this.tienPhat = tienPhat;
+    }
+
+    public BigDecimal getTongGiamGia() {
+        return tongGiamGia;
+    }
+
+    public void setTongGiamGia(BigDecimal tongGiamGia) {
+        this.tongGiamGia = tongGiamGia;
+    }
+
+    public BigDecimal getTongVAT() {
+        return tongVAT;
+    }
+
+    public void setTongVAT(BigDecimal tongVAT) {
+        this.tongVAT = tongVAT;
+    }
+
+    // *******************************************************
+    // GETTERS & SETTERS CŨ (Giữ nguyên)
+    // *******************************************************
+
     public String getMaHD() {
         return maHD;
     }
@@ -130,15 +170,20 @@ public class HoaDon {
 
     @Override
     public String toString() {
+        // 1. Thêm placeholder '%s' và label 'TongGiamGia=%,.0f' vào chuỗi định dạng
         return String.format(
-                "HoaDon{maHD='%s', ngayLap=%s, phuongThuc='%s', tongTien=%,.0f, maKH='%s', maNV='%s', maGG='%s'}",
+                "HoaDon{maHD='%s', ngayLap=%s, phuongThuc='%s', tongTien=%,.0f, maKH='%s', maNV='%s', maGG='%s', TongGiamGia=%,.0f, TienPhat=%,.0f, TongVAT=%,.0f}", // <--- Đã sửa chuỗi định dạng
                 maHD,
                 ngayLap,
                 phuongThuc,
                 tongTien != null ? tongTien.doubleValue() : 0,
                 maKH,
                 maNV,
-                maGG
+                maGG,
+                // 2. Thêm tham số tongGiamGia vào danh sách
+                tongGiamGia != null ? tongGiamGia.doubleValue() : 0, // <--- Đã thêm tham số
+                tienPhat != null ? tienPhat.doubleValue() : 0,
+                tongVAT != null ? tongVAT.doubleValue() : 0
         );
     }
 }
