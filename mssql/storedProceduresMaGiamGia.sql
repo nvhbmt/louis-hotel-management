@@ -82,3 +82,29 @@ BEGIN
     WHERE maGG = @maGG;
 END
 GO
+
+-- Store Procedure: sp_LayMaGiamGiaTheoMa
+-- Mục đích: Lấy thông tin chi tiết của một mã giảm giá dựa trên Mã GG (maGG)
+CREATE OR ALTER PROCEDURE sp_LayMaGiamGiaTheoMa
+@maGG NVARCHAR(10)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        maGG,
+        code,
+        giamGia,
+        kieuGiamGia,
+        ngayBatDau,
+        ngayKetThuc,
+        tongTienToiThieu,
+        moTa,
+        trangThai,
+        maNV
+    FROM
+        MaGiamGia
+    WHERE
+        maGG = @maGG;
+END;
+GO

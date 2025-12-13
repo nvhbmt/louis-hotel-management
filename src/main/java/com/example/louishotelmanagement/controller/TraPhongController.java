@@ -3,6 +3,8 @@ package com.example.louishotelmanagement.controller;
 import com.example.louishotelmanagement.dao.*;
 import com.example.louishotelmanagement.model.*;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
+import com.example.louishotelmanagement.util.Refreshable;
+import com.example.louishotelmanagement.util.ContentSwitcher;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -69,6 +71,7 @@ public class TraPhongController implements Initializable, Refreshable {
                 if (newValue != null) {
                     try {
                         laydsPhieuTheoKhachHang();
+                        laydsPhongTheoPhieu();
                     } catch (SQLException e) {
                         throw new RuntimeException(e);
                     }
@@ -146,10 +149,17 @@ public class TraPhongController implements Initializable, Refreshable {
     public void laydsPhieuTheoKhachHang() throws SQLException {
         dsPhieu.getItems().clear();
         ArrayList<PhieuDatPhong> listpdp = phieuDatPhongDAO.layDSPhieuDatPhongTheoKhachHang(dsMaKH.get(dsKhachHang.getSelectionModel().getSelectedIndex()));
-        for (PhieuDatPhong phieuDatPhong : listpdp) {
-            if(phieuDatPhong.getTrangThai().equals(TrangThaiPhieuDatPhong.DANG_SU_DUNG))
-            dsPhieu.getItems().add(phieuDatPhong.getMaPhieu());
+        if(listpdp.size()>0){
+            for (PhieuDatPhong phieuDatPhong : listpdp) {
+                if(phieuDatPhong.getTrangThai().equalsIgnoreCase(TrangThaiPhieuDatPhong.DANG_SU_DUNG.toString())){
+                    dsPhieu.getItems().add(phieuDatPhong.getMaPhieu());
+                }
+
+            }
+        }else{
+            dsPhieu.getItems().clear();
         }
+
         dsPhieu.getSelectionModel().selectFirst();
     }
 
@@ -199,7 +209,7 @@ public class TraPhongController implements Initializable, Refreshable {
         // 0. Kiểm tra xem đã có thông tin phiếu được hiển thị chưa
         String maPhieu = maPhieuThue.getText();
         if (maPhieu == null || maPhieu.isEmpty()) {
-            ThongBaoUtil.hienThiLoi("Lỗi trả phòng", "Vui lòng Kiểm tra phiếu đặt phòng trước khi Trả phòng.");
+            ThongBaoUtil.hienThiLoi("Lỗi trả phòng", "Vui lòng Kiểm tra phiếu đặt phòng trước khi trả phòng.");
             return;
         }
 
@@ -216,7 +226,7 @@ public class TraPhongController implements Initializable, Refreshable {
         CTHoaDonPhong ctHoaDonPhong = listCTHDP.getFirst();
 
         // 4. Kiểm tra và xử lý Hóa đơn
-        if (ctHoaDonPhong != null) {
+        if (ctHoaDonPhong != null && (ctHoaDonPhong.getNgayDi().isEqual(LocalDate.now())||ctHoaDonPhong.getNgayDi().isBefore(LocalDate.now()))) {
             HoaDon hd = hdDao.timHoaDonTheoMa(ctHoaDonPhong.getMaHD());
 
             if (hd != null) {
@@ -230,6 +240,8 @@ public class TraPhongController implements Initializable, Refreshable {
                     // Cập nhật trạng thái từng phòng thành TRỐNG
                     for (CTHoaDonPhong ctHd : listCTHDP) {
                         phDao.capNhatTrangThaiPhong(ctHd.getMaPhong(), TrangThaiPhong.TRONG.toString());
+                        ctHd.setNgayDi(LocalDate.now());
+                        cthdpDao.capNhatNgayDiThucTe(ctHd.getMaHD(),ctHd.getMaPhong(),LocalDate.now());
                     }
 
                     ThongBaoUtil.hienThiThongBao("Thành công", "Trả phòng và dọn phòng thành công!");
@@ -238,13 +250,38 @@ public class TraPhongController implements Initializable, Refreshable {
             } else {
                 ThongBaoUtil.hienThiLoi("Lỗi trả phòng", "Không tìm thấy Hóa đơn phòng có mã: " + ctHoaDonPhong.getMaHD());
             }
+        }else{
+            if(ThongBaoUtil.hienThiXacNhan("Xác nhận","Bạn đang trả phòng sớm hơn dự kiến!!!")){{
+                HoaDon hd = hdDao.timHoaDonTheoMa(ctHoaDonPhong.getMaHD());
+
+                if (hd != null) {
+                    if (hd.getTrangThai().equals(TrangThaiHoaDon.CHUA_THANH_TOAN)) {
+                        moDialogThanhToan(hd);
+                    } else {
+
+                        // 💡 TRẠNG THÁI 2: ĐÃ THANH TOÁN -> HOÀN TẤT VÀ DỌN PHÒNG
+                        phieuDatPhongDAO.capNhatTrangThaiPhieuDatPhong(maPhieu, TrangThaiPhieuDatPhong.HOAN_THANH.toString());
+
+                        // Cập nhật trạng thái từng phòng thành TRỐNG
+                        for (CTHoaDonPhong ctHd : listCTHDP) {
+                            phDao.capNhatTrangThaiPhong(ctHd.getMaPhong(), TrangThaiPhong.TRONG.toString());
+                            ctHd.setNgayDi(LocalDate.now());
+                            cthdpDao.capNhatNgayDiThucTe(ctHd.getMaHD(),ctHd.getMaPhong(),LocalDate.now());
+                        }
+
+                        ThongBaoUtil.hienThiThongBao("Thành công", "Trả phòng và dọn phòng thành công!");
+                        refreshData();
+                    }
+                } else {
+                    ThongBaoUtil.hienThiLoi("Lỗi trả phòng", "Không tìm thấy Hóa đơn phòng có mã: " + ctHoaDonPhong.getMaHD());
+                }
+            }}
         }
     }
     // Trong TraPhongController.java
     private void moDialogThanhToan(HoaDon hoaDonCanThanhToan) {
         try {
             // 1. Load FXML của Dialog Thanh Toán
-            // Đảm bảo đường dẫn FXML là chính xác!
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/thanh-toan-dialog.fxml"));
             Parent root = loader.load();
 
@@ -258,12 +295,8 @@ public class TraPhongController implements Initializable, Refreshable {
             Stage stage = new Stage();
             stage.setTitle("Thanh Toán Hóa Đơn #" + hoaDonCanThanhToan.getMaHD());
             stage.setScene(new Scene(root));
-            stage.initModality(Modality.APPLICATION_MODAL); // Chặn tương tác với cửa sổ cha
+            stage.initModality(Modality.APPLICATION_MODAL);
             stage.showAndWait(); // Hiển thị và chờ người dùng đóng Dialog
-
-            // 5. Sau khi Dialog đóng, refresh dữ liệu trên màn hình TraPhong
-            refreshData();
-
         } catch (IOException e) {
             ThongBaoUtil.hienThiLoi("Lỗi mở màn hình", "Không tìm thấy file FXML Thanh Toán hoặc lỗi tải: " + e.getMessage());
             e.printStackTrace();

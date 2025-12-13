@@ -167,7 +167,8 @@ public class HoaDonDAO2 {
     }
 
     public boolean capNhatHoaDon(HoaDon hd) throws SQLException {
-        String sql = "{CALL sp_SuaHoaDon(?, ?, ?, ?, ?, ?, ?, ?)}";
+        // Cần 12 tham số
+        String sql = "{CALL sp_SuaHoaDon(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}";
         try (Connection conn = CauHinhDatabase.getConnection();
              CallableStatement cs = conn.prepareCall(sql)) {
 
@@ -200,6 +201,23 @@ public class HoaDonDAO2 {
             } else {
                 cs.setNull(8, Types.NVARCHAR);
             }
+
+            // 9. NgayCheckOut
+            if (hd.getNgayCheckOut() != null) {
+                cs.setDate(9, Date.valueOf(hd.getNgayCheckOut()));
+            } else {
+                cs.setNull(9, Types.DATE);
+            }
+
+            // 10. TienPhat
+            cs.setBigDecimal(10, hd.getTienPhat());
+
+            // 11. TongGiamGia
+            cs.setBigDecimal(11, hd.getTongGiamGia());
+
+            // 12. TongVAT
+            cs.setBigDecimal(12, hd.getTongVAT());
+
 
             return cs.executeUpdate() > 0;
         }

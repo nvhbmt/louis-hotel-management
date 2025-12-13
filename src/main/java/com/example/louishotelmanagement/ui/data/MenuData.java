@@ -36,7 +36,9 @@ public class MenuData {
                                 "/com/example/louishotelmanagement/fxml/quan-ly-loai-phong-view.fxml"))
                 ));
             }
-
+        TreeItem<MenuItemModel> PhieuDatPhongGroup = new TreeItem<>(
+                new MenuItemModel("Phiếu đặt phòng", "mdi2t-ticket-account", "/com/example/louishotelmanagement/fxml/quan-ly-phieu-dat-phong.fxml")
+        );
         TreeItem<MenuItemModel> dichVuGroup = new TreeItem<>(
                 new MenuItemModel("Dịch vụ", "mdi2c-coffee", null)
         );
@@ -57,21 +59,15 @@ public class MenuData {
         );
 
         TreeItem<MenuItemModel> hoaDonGroup = new TreeItem<>(
-                new MenuItemModel("Hóa đơn", "mdi2c-cash-multiple", null)
+                new MenuItemModel("Hóa đơn", "mdi2c-cash-multiple", "/com/example/louishotelmanagement/fxml/thanh-toan-view.fxml")
         );
-        hoaDonGroup.getChildren().addAll(List.of(
-                new TreeItem<>(new MenuItemModel("Thanh toán", "mdi2c-cash",
-                        "/com/example/louishotelmanagement/fxml/thanh-toan-view.fxml"))
-//                new TreeItem<>(new MenuItemModel("Giảm giá", "mdi2s-sale",
-//                        "/com/example/louishotelmanagement/fxml/quan-ly-giam-gia-view.fxml"))
-        ));
 
-        if ("Manager".equals(userRole)) {
-            hoaDonGroup.getChildren().addAll(List.of(
-                new TreeItem<>(new MenuItemModel("Quản lí hóa đơn", "mdi2f-file-document",
-                "/com/example/louishotelmanagement/fxml/hoa-don-view.fxml"))
-            ));
-        }
+//        if ("Manager".equals(userRole)) {
+//            hoaDonGroup.getChildren().addAll(List.of(
+//                new TreeItem<>(new MenuItemModel("Quản lí hóa đơn", "mdi2f-file-document",
+//                "/com/example/louishotelmanagement/fxml/hoa-don-view.fxml"))
+//            ));
+//        }
 
         TreeItem<MenuItemModel> thongKe = new TreeItem<>(
                 new MenuItemModel("Thống kê", "mdi2c-chart-bar", "/com/example/louishotelmanagement/fxml/thong-ke-view.fxml")
@@ -96,6 +92,7 @@ public class MenuData {
         List<TreeItem<MenuItemModel>> menuItems = new ArrayList<>();
         menuItems.add(trangChu);
         menuItems.add(phongGroup);
+        menuItems.add(PhieuDatPhongGroup);
         menuItems.add(dichVuGroup);
         menuItems.add(khuyenMai);
         menuItems.add(hoaDonGroup);

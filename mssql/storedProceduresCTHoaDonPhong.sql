@@ -6,7 +6,7 @@
 USE QuanLyKhachSan;
 GO
 
--- 1. sp_ThemCTHoaDonPhong (Thêm mới)
+-- 1. sp_ThemCTHoaDonPhong (Thêm mới) - Có kiểm tra conflict để tránh race condition
 CREATE PROCEDURE sp_ThemCTHoaDonPhong @maHD NVARCHAR(10),
                                       @maPhieu NVARCHAR(10),
                                       @maPhong NVARCHAR(10),
@@ -16,6 +16,60 @@ CREATE PROCEDURE sp_ThemCTHoaDonPhong @maHD NVARCHAR(10),
 AS
 BEGIN
     SET NOCOUNT ON;
+    
+    -- Validate input
+    IF @maHD IS NULL OR @maPhieu IS NULL OR @maPhong IS NULL
+    BEGIN
+        RAISERROR('Mã hóa đơn, mã phiếu và mã phòng không được để trống', 16, 1);
+        RETURN;
+    END
+    
+    IF @ngayDen IS NULL OR @ngayDi IS NULL
+    BEGIN
+        RAISERROR('Ngày đến và ngày đi không được để trống', 16, 1);
+        RETURN;
+    END
+    
+    IF @ngayDi <= @ngayDen
+    BEGIN
+        RAISERROR('Ngày đi phải sau ngày đến', 16, 1);
+        RETURN;
+    END
+    
+    -- Kiểm tra phòng đã được đặt trong khoảng thời gian này chưa (Race condition protection)
+    IF EXISTS (
+        SELECT 1 
+        FROM CTHoaDonPhong cthdp
+        INNER JOIN PhieuDatPhong pdp ON cthdp.maPhieu = pdp.maPhieu
+        WHERE cthdp.maPhong = @maPhong
+          AND pdp.trangThai NOT IN (N'Đã hủy', N'Hoàn thành')  -- Chỉ xét booking còn hiệu lực
+          AND cthdp.ngayDen <= @ngayDi  -- Overlap check
+          AND cthdp.ngayDi >= @ngayDen
+          AND cthdp.maPhieu != @maPhieu  -- Loại trừ chính booking hiện tại (nếu đang update)
+    )
+    BEGIN
+        DECLARE @errorMsg NVARCHAR(500);
+        SET @errorMsg = N'Phòng ' + @maPhong + N' đã được đặt trong khoảng thời gian từ ' + 
+                        CONVERT(NVARCHAR(10), @ngayDen, 103) + N' đến ' + 
+                        CONVERT(NVARCHAR(10), @ngayDi, 103);
+        RAISERROR(@errorMsg, 16, 1);
+        RETURN;
+    END
+    
+    -- Kiểm tra phòng có tồn tại và không phải bảo trì
+    IF NOT EXISTS (SELECT 1 FROM Phong WHERE maPhong = @maPhong)
+    BEGIN
+        RAISERROR('Phòng %s không tồn tại', 16, 1, @maPhong);
+        RETURN;
+    END
+    
+    IF EXISTS (SELECT 1 FROM Phong WHERE maPhong = @maPhong AND trangThai = N'Bảo trì')
+    BEGIN
+        RAISERROR('Phòng %s đang trong trạng thái bảo trì, không thể đặt', 16, 1, @maPhong);
+        RETURN;
+    END
+    
+    -- Insert nếu không có conflict
     INSERT INTO CTHoaDonPhong
         (maHD, maPhieu, maPhong, ngayDen, ngayDi, giaPhong)
     VALUES (@maHD, @maPhieu, @maPhong, @ngayDen, @ngayDi, @giaPhong);
@@ -100,16 +154,25 @@ END
 GO
 
 -- 8. sp_TinhTongTienPhongTheoHD (Tính Tổng Tiền Phòng)
--- Lưu ý: Logic tính tổng tiền đơn giản: (Số ngày * Giá phòng)
-CREATE PROCEDURE sp_TinhTongTienPhongTheoHD @maHD NVARCHAR(10)
+CREATE OR ALTER PROCEDURE sp_TinhTongTienPhongTheoHD
+@maHD NVARCHAR(10)
 AS
 BEGIN
     SET NOCOUNT ON;
-    SELECT SUM(
-                   DATEDIFF(day, ISNULL(ngayDen, GETDATE()), ISNULL(ngayDi, GETDATE())) * giaPhong
-           ) AS TongTien
-    FROM CTHoaDonPhong
-    WHERE maHD = @maHD;
+
+    SELECT
+        SUM(
+            -- Tính số ngày lưu trú (tối thiểu là 1 ngày)
+                CASE
+                    WHEN DATEDIFF(day, C.ngayDen, C.ngayDi) = 0 THEN 1
+                    ELSE DATEDIFF(day, C.ngayDen, C.ngayDi)
+                    END
+                    * C.giaPhong
+        ) AS TongTienPhong
+    FROM
+        CTHoaDonPhong C
+    WHERE
+        C.maHD = @maHD;
 END
 GO
 

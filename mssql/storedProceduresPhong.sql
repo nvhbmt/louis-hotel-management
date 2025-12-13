@@ -377,6 +377,7 @@ GO
 CREATE PROCEDURE sp_XoaPhong @maPhong NVARCHAR(10)
 AS
 BEGIN
+    SET NOCOUNT ON;
 
     -- Kiểm tra phòng có tồn tại không
     IF NOT EXISTS (SELECT 1 FROM Phong WHERE maPhong = @maPhong)
@@ -385,28 +386,11 @@ BEGIN
             RETURN;
         END
 
-    -- Kiểm tra phòng có đang được sử dụng không
-    IF EXISTS (SELECT 1 FROM CTPhieuDatPhong WHERE maPhong = @maPhong)
-        BEGIN
-            RAISERROR ('Không thể xóa phòng này vì đang được sử dụng!', 16, 1);
-            RETURN;
-        END
-
     -- Xóa phòng
     DELETE FROM Phong WHERE maPhong = @maPhong;
 END
 GO
 
--- Kiểm tra phòng có được sử dụng không
-CREATE PROCEDURE sp_KiemTraPhongDuocSuDung @maPhong NVARCHAR(10)
-AS
-BEGIN
-
-    SELECT COUNT(*) as count
-    FROM CTPhieuDatPhong
-    WHERE maPhong = @maPhong;
-END
-GO
 
 -- =============================================
 -- Stored Procedures bổ sung cho thống kê và báo cáo
@@ -496,6 +480,68 @@ BEGIN
 
     -- Tạo mã loại phòng tiếp theo
     SET @maLoaiPhongTiepTheo = 'LP' + RIGHT('000' + CAST(@maxSo + 1 AS VARCHAR(3)), 3);
+END
+GO
+
+-- =============================================
+-- Lấy danh sách phòng trống theo khoảng thời gian
+-- =============================================
+CREATE PROCEDURE sp_LayDSPhongTrongTheoKhoangThoiGian 
+    @ngayDen DATE, 
+    @ngayDi DATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    
+    -- Validate input
+    IF @ngayDen IS NULL OR @ngayDi IS NULL
+    BEGIN
+        RAISERROR('Ngày đến và ngày đi không được để trống', 16, 1);
+        RETURN;
+    END
+    
+    IF @ngayDi <= @ngayDen
+    BEGIN
+        RAISERROR('Ngày đi phải sau ngày đến', 16, 1);
+        RETURN;
+    END
+    
+    -- Lấy danh sách phòng trống trong khoảng thời gian
+    -- Sử dụng LEFT JOIN thay vì NOT IN để optimize performance
+    SELECT DISTINCT 
+        p.maPhong,
+        p.tang,
+        p.trangThai,
+        p.moTa,
+        p.maLoaiPhong,
+        lp.tenLoai,
+        lp.donGia
+    FROM Phong p
+    LEFT JOIN LoaiPhong lp ON p.maLoaiPhong = lp.maLoaiPhong
+    LEFT JOIN (
+        -- Phòng đã được đặt trong khoảng thời gian
+        SELECT DISTINCT cthdp.maPhong
+        FROM CTHoaDonPhong cthdp
+        INNER JOIN PhieuDatPhong pdp ON cthdp.maPhieu = pdp.maPhieu
+        WHERE pdp.trangThai NOT IN (N'Đã hủy', N'Hoàn thành')  -- Chỉ xét booking còn hiệu lực
+          AND cthdp.ngayDen <= @ngayDi  -- Overlap check
+          AND cthdp.ngayDi >= @ngayDen
+    ) booked ON p.maPhong = booked.maPhong
+    WHERE p.trangThai != N'Bảo trì'  -- Loại trừ phòng bảo trì
+      AND booked.maPhong IS NULL  -- Phòng không có trong danh sách đã đặt
+      -- Xử lý phòng đang sử dụng nhưng sẽ trống
+      AND (
+          p.trangThai != N'Đang sử dụng' 
+          OR NOT EXISTS (
+              SELECT 1
+              FROM CTHoaDonPhong cthdp2
+              INNER JOIN PhieuDatPhong pdp2 ON cthdp2.maPhieu = pdp2.maPhieu
+              WHERE cthdp2.maPhong = p.maPhong
+                AND pdp2.trangThai = N'Đang sử dụng'
+                AND cthdp2.ngayDi >= @ngayDen  -- Sẽ không trống trước ngày đến mới
+          )
+      )
+    ORDER BY p.tang, p.maPhong;
 END
 GO
 

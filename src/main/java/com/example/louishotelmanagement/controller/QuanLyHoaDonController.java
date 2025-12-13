@@ -3,11 +3,13 @@ package com.example.louishotelmanagement.controller;
 import com.example.louishotelmanagement.dao.HoaDonDAO2;
 import com.example.louishotelmanagement.model.HoaDon;
 import com.example.louishotelmanagement.model.KhachHang;
+import com.example.louishotelmanagement.util.HoaDonTxtGenerator;
 
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -20,7 +22,6 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -179,13 +180,33 @@ public class QuanLyHoaDonController implements Initializable {
 
 
     private void handleXemChiTiet(HoaDon hoaDon) {
-
+        // *LƯU Ý: Thêm kiểm tra trạng thái DA_THANH_TOAN nếu chưa có ở đây, dựa trên code cũ.*
 
         try {
-            com.example.louishotelmanagement.controller.HoaDonTxtGenerator generator = new com.example.louishotelmanagement.controller.HoaDonTxtGenerator();
-            String noiDungHoaDon = generator.taoNoiDungHoaDon(hoaDon);
+            // Lấy Mã Hóa Đơn từ đối tượng được chọn trên TableView
+            String maHD = hoaDon.getMaHD();
+
+            // 1. Tải lại hóa đơn HOÀN CHỈNH từ database (sử dụng maHD)
+            // Gọi phương thức DAO đã được chứng minh là tải đầy đủ dữ liệu (TongGiamGia, TongVAT)
+            // GIẢ ĐỊNH: Lớp Controller có thể truy cập 'this.hoaDonDAO2'
+            HoaDon hoaDonHoanChinh = this.hoaDonDAO2.timHoaDonTheoMa(maHD);
+
+            if (hoaDonHoanChinh == null) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Lỗi Dữ Liệu");
+                alert.setHeaderText("Không thể tìm thấy hóa đơn chi tiết.");
+                alert.setContentText("Không tìm thấy dữ liệu hóa đơn hoàn chỉnh cho mã: " + maHD);
+                alert.showAndWait();
+                return;
+            }
+
+            // 2. Khởi tạo Generator và tạo nội dung TXT
+            HoaDonTxtGenerator generator = new HoaDonTxtGenerator();
+            // SỬ DỤNG đối tượng HOÀN CHỈNH đã tải lại
+            String noiDungHoaDon = generator.taoNoiDungHoaDon(hoaDonHoanChinh);
 
 
+            // 3. Load giao diện và hiển thị
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/xem-hoa-don-txt.fxml"));
             Parent root = loader.load();
 
@@ -193,7 +214,7 @@ public class QuanLyHoaDonController implements Initializable {
             controller.initData(noiDungHoaDon);
 
             Stage stage = new Stage();
-            stage.setTitle("Chi Tiết Hóa Đơn (Xem file TXT): " + hoaDon.getMaHD());
+            stage.setTitle("Chi Tiết Hóa Đơn (Xem file TXT): " + maHD);
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.showAndWait();
@@ -201,11 +222,10 @@ public class QuanLyHoaDonController implements Initializable {
         } catch (SQLException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Lỗi Truy Vấn Dữ Liệu");
-            alert.setHeaderText("Không thể tạo chi tiết hóa đơn.");
+            alert.setHeaderText("Không thể tải chi tiết hóa đơn.");
             alert.setContentText("Lỗi SQL: " + e.getMessage());
             alert.showAndWait();
         } catch (IOException e) {
-            // Đã xóa e.printStackTrace()
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Lỗi Giao Diện");
             alert.setHeaderText("Không thể mở màn hình xem hóa đơn.");
@@ -214,7 +234,7 @@ public class QuanLyHoaDonController implements Initializable {
         }
     }
 
-    public void handleLamMoi(javafx.event.ActionEvent actionEvent) {
+    public void handleLamMoi(ActionEvent actionEvent) {
 
         txtTimKiem.clear();
 

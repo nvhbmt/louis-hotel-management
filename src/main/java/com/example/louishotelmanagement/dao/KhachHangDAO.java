@@ -1,6 +1,7 @@
 package com.example.louishotelmanagement.dao;
 
 import com.example.louishotelmanagement.config.CauHinhDatabase;
+import com.example.louishotelmanagement.model.HangKhach;
 import com.example.louishotelmanagement.model.KhachHang;
 import com.example.louishotelmanagement.model.TrangThaiKhachHang;
 
@@ -23,7 +24,7 @@ public class KhachHangDAO {
             cs.setObject(6, khachHang.getNgaySinh() != null ? Date.valueOf(khachHang.getNgaySinh()) : null);
             cs.setString(7, khachHang.getGhiChu());
             cs.setString(8, khachHang.getCCCD());
-            cs.setString(9, khachHang.getHangKhach()); // thêm hangKhach
+            cs.setString(9, khachHang.getHangKhach().toString()); // thêm hangKhach
             cs.setString(10, khachHang.getTrangThai().getTenHienThi()); // sửa thành getTenHienThi()
 
             return cs.executeUpdate() > 0;
@@ -120,7 +121,7 @@ public class KhachHangDAO {
             cs.setObject(6, khachHang.getNgaySinh() != null ? Date.valueOf(khachHang.getNgaySinh()) : null);
             cs.setString(7, khachHang.getGhiChu());
             cs.setString(8, khachHang.getCCCD());
-            cs.setString(9, khachHang.getHangKhach()); // thêm hangKhach
+            cs.setString(9, khachHang.getHangKhach().toString()); // thêm hangKhach
             cs.setString(10, khachHang.getTrangThai().getTenHienThi()); // sửa thành getTenHienThi()
 
             return cs.executeUpdate() > 0;
@@ -183,7 +184,7 @@ public class KhachHangDAO {
                 rs.getDate("ngaySinh") != null ? rs.getDate("ngaySinh").toLocalDate() : null,
                 rs.getString("ghiChu"),
                 rs.getString("CCCD"),
-                rs.getString("hangKhach"),
+                HangKhach.fromString(rs.getString("hangKhach")),
                 trangThai
         );
     }

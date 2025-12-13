@@ -15,7 +15,7 @@
     <content>
         <BorderPane>
             <center>
-                <VBox fx:id="thanhToanContent" prefHeight="823.0" prefWidth="934.0" spacing="20.0" VBox.vgrow="ALWAYS">
+                <VBox fx:id="thanhToanContent" prefHeight="823.0" prefWidth="1200.0" spacing="20.0" VBox.vgrow="ALWAYS">
                     <padding>
                         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                     </padding>
@@ -85,8 +85,12 @@
                         <children>
                             <VBox prefHeight="214.0" prefWidth="434.0" spacing="50.0" styleClass="chart-container" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
                                 <Label styleClass="section-title" text="Mã giảm giá" />
-                                <Region prefHeight="10.0" prefWidth="378.0" />
-                                <TextField fx:id="txtMaGiamGia" prefHeight="25.0" prefWidth="378.0" HBox.hgrow="ALWAYS" />
+                                <Region prefHeight="21.6" />
+                                <TextField fx:id="txtMaGiamGia" prefHeight="25.0" prefWidth="378.0" HBox.hgrow="ALWAYS">
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin></TextField>
+                        <Button mnemonicParsing="false" onAction="#handleChonGiamGia" prefHeight="26.0" prefWidth="94.0" styleClass="button-chon-ma" text="Chọn mã" />
                             </VBox>
                             <Region />
                             <VBox alignment="TOP_LEFT" prefHeight="215.0" prefWidth="472.0" spacing="15.0" styleClass="chart-container" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
@@ -109,27 +113,39 @@
                     <!-- Thông tin thanh toán -->
                     <HBox alignment="CENTER" spacing="10" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
                         <children>
-                            <VBox alignment="TOP_LEFT" maxWidth="Infinity" prefWidth="150" spacing="5.0" styleClass="chart-container" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
+                            <VBox alignment="TOP_LEFT" maxWidth="Infinity" prefHeight="59.0" prefWidth="90.0" spacing="5.0" styleClass="chart-container" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
                                 <Label styleClass="summary-label" text="Tổng số tiền phòng" />
                                 <Label fx:id="lblTongTienPhong" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #1e88e5;" text="3.000.000 ₫" />
                             </VBox>
 
-                            <VBox alignment="TOP_LEFT" maxWidth="Infinity" prefWidth="150" spacing="5.0" styleClass="chart-container" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
+                            <VBox alignment="TOP_LEFT" maxWidth="Infinity" prefWidth="90.0" spacing="5.0" styleClass="chart-container" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
                                 <Label styleClass="summary-label" text="Tổng số tiền dịch vụ" />
                                 <Label fx:id="lblTongTienDichVu" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #ff9800;" text="1.500.000 ₫" />
                             </VBox>
 
-                            <VBox alignment="TOP_LEFT" maxWidth="Infinity" prefWidth="150" spacing="5.0" styleClass="chart-container" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
+                            <VBox alignment="TOP_LEFT" maxWidth="Infinity" prefHeight="86.0" prefWidth="88.0" spacing="5.0" styleClass="chart-container" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
                                 <Label styleClass="summary-label" text="VAT" />
                                 <Label fx:id="lblVat" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #9c27b0;" text="69.000 ₫" />
                             </VBox>
 
-                            <VBox alignment="TOP_LEFT" maxWidth="Infinity" prefWidth="150" spacing="5.0" styleClass="chart-container" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
+                            <VBox alignment="TOP_LEFT" maxWidth="Infinity" prefHeight="80.0" prefWidth="88.0" spacing="5.0" styleClass="chart-container" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
                                 <Label styleClass="summary-label" text="Tổng giảm giá" />
                                 <Label fx:id="lblTongGiamGia" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #e53935;" text="69.000 ₫" />
                             </VBox>
-
-                            <VBox alignment="TOP_LEFT" maxWidth="Infinity" prefWidth="150" spacing="5.0" styleClass="chart-container" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
+                     <VBox alignment="TOP_LEFT" maxWidth="Infinity" prefHeight="50.0" prefWidth="154.0" spacing="5.0" styleClass="chart-container">
+                        <children>
+                           <Label styleClass="summary-label" text="Tiền cọc" />
+                           <Label fx:id="lblTienCoc" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #FF00FF;" text="3.000.000 ₫" />
+                        </children>
+                     </VBox>
+                     <VBox alignment="TOP_LEFT" maxWidth="Infinity" prefHeight="108.0" prefWidth="160.0" spacing="5.0" styleClass="chart-container">
+                        <children>
+                           <Label styleClass="summary-label" text="Tiền phạt" />
+                           <Label fx:id="lblTienPhat" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #999999;" text="3.000.000 ₫" />
+                        </children>
+                     </VBox>
+      
+                                  <VBox alignment="TOP_LEFT" maxWidth="Infinity" prefWidth="110.0" spacing="5.0" styleClass="chart-container" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
                                 <Label styleClass="summary-label" text="Tổng thanh toán" />
                                 <Label fx:id="lblTongThanhToan" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #43a047;" text="3.500.000 ₫" />
                             </VBox>

@@ -1,6 +1,6 @@
-package com.example.louishotelmanagement.controller;
-import com.example.louishotelmanagement.dao.HoaDonDAO2;
-import com.example.louishotelmanagement.dao.MaGiamGiaDAO;
+package com.example.louishotelmanagement.util;
+
+import com.example.louishotelmanagement.dao.*;
 import com.example.louishotelmanagement.model.*;
 
 import java.math.BigDecimal;
@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+
 
 public class HoaDonTxtGenerator {
 
@@ -20,15 +21,23 @@ public class HoaDonTxtGenerator {
 
     private HoaDonDAO2 hoaDonDAO;
     private MaGiamGiaDAO maGiamGiaDAO;
+    private KhachHangDAO khachHangDAO;
+    private CTHoaDonPhongDAO ctHoaDonPhongDAO;
+    private PhieuDatPhongDAO phieuDatPhongDAO;
 
     public HoaDonTxtGenerator() {
         this.hoaDonDAO = new HoaDonDAO2();
         this.maGiamGiaDAO = new MaGiamGiaDAO();
+        this.khachHangDAO = new KhachHangDAO();
+        this.phieuDatPhongDAO = new PhieuDatPhongDAO();
+        this.ctHoaDonPhongDAO = new CTHoaDonPhongDAO();
     }
 
     public String taoNoiDungHoaDon(HoaDon hoaDon) throws SQLException {
         StringBuilder sb = new StringBuilder();
-
+        final BigDecimal TI_LE_PHAT = new BigDecimal("0.10"); // 10%
+        final int SCALE = 2; // Làm tròn 2 chữ số thập phân (ví dụ: 0.00)
+        final int SCALE_DISPLAY = 0; // Làm tròn 0 chữ số cho hiển thị
         sb.append(LINE);
         sb.append(String.format("%-40s %33s\n", "LOUIS HOTEL & RESORT", "HÓA ĐƠN THANH TOÁN"));
         sb.append(String.format("%-40s %33s\n", "Địa chỉ: 283/17 Phạm Ngũ Lão, Q.1, TP.HCM", "Số HĐ: " + hoaDon.getMaHD()));
@@ -38,7 +47,7 @@ public class HoaDonTxtGenerator {
         sb.append(LINE);
         sb.append("THÔNG TIN KHÁCH HÀNG\n");
 
-        KhachHang kh = hoaDon.getKhachHang();
+        KhachHang kh = khachHangDAO.layKhachHangTheoMa(hoaDon.getMaKH() );
         String hoTen = (kh != null && kh.getHoTen() != null) ? kh.getHoTen() : "Khách vãng lai";
         String soDT = (kh != null && kh.getSoDT() != null) ? kh.getSoDT() : "N/A";
         String diaChi = (kh != null && kh.getDiaChi() != null) ? kh.getDiaChi() : "N/A";
@@ -73,27 +82,13 @@ public class HoaDonTxtGenerator {
             }
         }
         sb.append(SUB_LINE);
-
+        PhieuDatPhong phieuDatPhong = phieuDatPhongDAO.layPhieuDatPhongTheoMa(ctHoaDonPhongDAO.getCTHoaDonPhongTheoMaHD(hoaDon.getMaHD()).getFirst().getMaPhieu());
+        BigDecimal tienCoc = phieuDatPhong.getTienCoc()!=null?phieuDatPhong.getTienCoc():BigDecimal.ZERO;
         BigDecimal tongTienCuoiCung = hoaDon.getTongTien() != null ? hoaDon.getTongTien() : BigDecimal.ZERO;
-        BigDecimal giamGia = BigDecimal.ZERO;
-        String maGGCuaHoaDon = hoaDon.getMaGG();
-
-        if (maGGCuaHoaDon != null && !maGGCuaHoaDon.isEmpty()) {
-            MaGiamGia mgm = maGiamGiaDAO.layMaGiamGiaThepMa(maGGCuaHoaDon);
-
-            if (mgm != null) {
-                if (mgm.getKieuGiamGia() == KieuGiamGia.AMOUNT) {
-                    giamGia = BigDecimal.valueOf(mgm.getGiamGia());
-                } else if (mgm.getKieuGiamGia() == KieuGiamGia.PERCENT) {
-                    BigDecimal percentValue = BigDecimal.valueOf(mgm.getGiamGia()).divide(new BigDecimal("100"));
-                    giamGia = congTienHang.multiply(percentValue).setScale(2, RoundingMode.HALF_UP);
-                }
-            } else {
-                System.err.println("Không tìm thấy chi tiết cho maGG: " + maGGCuaHoaDon);
-            }
-        }
-
-        BigDecimal thueVAT = tongTienCuoiCung.subtract(congTienHang.subtract(giamGia));
+        BigDecimal giamGia = hoaDon.getTongGiamGia()!=null?hoaDon.getTongGiamGia():BigDecimal.ZERO;
+        BigDecimal baseAmount = congTienHang.subtract(giamGia);
+        BigDecimal tienPhat = hoaDon.getTienPhat()!=null?hoaDon.getTienPhat():BigDecimal.ZERO;
+        BigDecimal thueVAT = baseAmount.multiply(new BigDecimal("0.1")).setScale(SCALE, RoundingMode.HALF_UP);
         if (thueVAT.compareTo(BigDecimal.ZERO) < 0) {
             thueVAT = BigDecimal.ZERO;
         }
@@ -103,10 +98,18 @@ public class HoaDonTxtGenerator {
                 "Cộng tiền hàng:",
                 currencyFormatter.format(congTienHang)));
 
-        sb.append(String.format("  Trạng thái:   %-25s %21s %13s\n",
+        sb.append(String.format("  Trạng thái:   %-25s %17s %13s\n",
                 hoaDon.getTrangThai() != null ? hoaDon.getTrangThai().toString() : "N/A",
                 "Giảm giá:",
                 "- " + currencyFormatter.format(giamGia)));
+
+        sb.append(String.format("%59s %13s\n",
+                "Tiền cọc:",
+                currencyFormatter.format(tienCoc)));
+
+        sb.append(String.format("%59s %13s\n",
+                "Tiền phạt:",
+                currencyFormatter.format(tienPhat)));
 
         sb.append(String.format("%59s %13s\n",
                 "Thuế VAT:",
@@ -122,4 +125,12 @@ public class HoaDonTxtGenerator {
 
         return sb.toString();
     }
+
+    static void main() throws SQLException {
+        HoaDonDAO hoaDonDAO = new HoaDonDAO();
+        HoaDon hd = hoaDonDAO.timHoaDonTheoMa("HD007");
+        System.out.println(hd);
+
+    }
 }
+
