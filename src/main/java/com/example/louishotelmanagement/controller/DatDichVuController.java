@@ -1,5 +1,23 @@
 package com.example.louishotelmanagement.controller;
 
+import com.example.louishotelmanagement.dao.*;
+import com.example.louishotelmanagement.model.*;
+import com.example.louishotelmanagement.service.AuthService;
+import com.example.louishotelmanagement.util.ThongBaoUtil;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.VBox;
+
 import java.math.BigDecimal;
 import java.net.URL;
 import java.sql.SQLException;
@@ -8,66 +26,24 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import com.example.louishotelmanagement.dao.CTHoaDonDichVuDAO;
-import com.example.louishotelmanagement.dao.CTHoaDonPhongDAO;
-import com.example.louishotelmanagement.dao.DichVuDAO;
-import com.example.louishotelmanagement.dao.HoaDonDAO;
-import com.example.louishotelmanagement.dao.KhachHangDAO;
-import com.example.louishotelmanagement.dao.PhieuDatPhongDAO;
-import com.example.louishotelmanagement.dao.PhieuDichVuDAO;
-import com.example.louishotelmanagement.dao.PhongDAO;
-import com.example.louishotelmanagement.model.CTHoaDonDichVu;
-import com.example.louishotelmanagement.model.CTHoaDonPhong;
-import com.example.louishotelmanagement.model.DichVu;
-import com.example.louishotelmanagement.model.KhachHang;
-import com.example.louishotelmanagement.model.PhieuDatPhong;
-import com.example.louishotelmanagement.model.PhieuDichVu;
-import com.example.louishotelmanagement.model.TrangThaiPhieuDatPhong;
-import com.example.louishotelmanagement.service.AuthService;
-import com.example.louishotelmanagement.util.ThongBaoUtil;
-import com.example.louishotelmanagement.util.Refreshable;
+public class DatDichVuController implements Initializable {
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.VBox;
+    @FXML
+    private FlowPane pnDanhSachDichVu; // Panel chứa các thẻ dịch vụ (Bên trái)
+    @FXML
+    private TextField txtTimKiem;
 
-public class DatDichVuController implements Initializable,Refreshable {
+    @FXML
+    private TableView<CTHoaDonDichVu> tblGioHang;
+    @FXML
+    private TableColumn<CTHoaDonDichVu, String> colGH_Ten;
+    @FXML
+    private TableColumn<CTHoaDonDichVu, Integer> colGH_SL;
+    @FXML
+    private TableColumn<CTHoaDonDichVu, String> colGH_ThanhTien;
+    @FXML
+    private TableColumn<CTHoaDonDichVu, Void> colGH_Xoa;
 
-
-
-    public TableView tblChiTietTam;
-    public TableColumn colDVMa;
-    public TableColumn colDVTen;
-    public TableColumn colDVSL;
-    public TableColumn colDVGia;
-    public ComboBox cboDichVu;
-    public TextField txtSoLuong;
-    public Button btnThemDV;
-    public TextArea txtGhiChu;
-    public VBox dsDichVuDaDat;
-    public Label lblTongTienTam;
-    public Button btnXacNhanLapPhieu;
-    public ComboBox dsPhong;
-    public ComboBox dsKhachHang;
-    public TableColumn colDVMoTa;
-    public TableColumn colDVConKinhDoanh;
-    public TextField maNV;
     @FXML
     private ComboBox dsPhong;
     @FXML
@@ -147,17 +123,6 @@ public class DatDichVuController implements Initializable,Refreshable {
         allDichVu = dvDao.layTatCaDichVu(true); // Lấy dịch vụ còn kinh doanh
         renderServiceCards(allDichVu);
     }
-    public void laydsPhongTheoKhachHang() throws SQLException {
-        dsPhong.getItems().clear();
-        ArrayList<PhieuDatPhong> dsPhieu = phieuDatPhongDAO.layDSPhieuDatPhongTheoKhachHang(dsMaKH.get(dsKhachHang.getSelectionModel().getSelectedIndex()));
-        if (dsPhieu.size() > 0) {
-            for (PhieuDatPhong p : dsPhieu) {
-                if (p.getTrangThai() != null && p.getTrangThai().equalsIgnoreCase(TrangThaiPhieuDatPhong.DANG_SU_DUNG.toString())) {
-                    ArrayList<CTHoaDonPhong> dsCTP = ctHoaDondao.getCTHoaDonPhongTheoMaPhieu(p.getMaPhieu());
-                    for (CTHoaDonPhong ctp : dsCTP) {
-                        dsPhong.getItems().add(ctp.getMaPhong());
-                    }
-                }
 
     // Hàm quan trọng: Vẽ các thẻ dịch vụ
     private void renderServiceCards(List<DichVu> listDv) {
@@ -319,9 +284,8 @@ public class DatDichVuController implements Initializable,Refreshable {
         CTHoaDonPhong cthdp = cthddphongDao.getDSCTHoaDonPhongTheoMaPhong(dsPhong.getSelectionModel().getSelectedItem().toString()).getLast();
         PhieuDatPhong phieuDatPhong = phieuDatPhongDAO.layPhieuDatPhongTheoMa(cthdp.getMaPhieu());
 
-        if (phieuDatPhong.getNgayDi().isAfter(LocalDate.now())&&phieuDatPhong.getTrangThai().equalsIgnoreCase(TrangThaiPhieuDatPhong.DANG_SU_DUNG.toString())) {
-
-            // Setup và lưu Phiếu Dịch Vụ chính
+        if (phieuDatPhong.getTrangThai().equals(TrangThaiPhieuDatPhong.DANG_SU_DUNG)) {
+            // Setup Phiếu Dịch Vụ
             AuthService auth = AuthService.getInstance();
             PhieuDichVu pdv = new PhieuDichVu(maPhieuDV, cthdp.getMaHD(), LocalDate.now(), auth.getCurrentUser().getNhanVien().getMaNV(), txtGhiChu.getText(), auth.getCurrentUser().getNhanVien(), hdDao.timHoaDonTheoMa(cthdp.getMaHD()));
             pdvDao.themPhieuDichVu(pdv);
@@ -391,7 +355,7 @@ public class DatDichVuController implements Initializable,Refreshable {
         }
     }
 
-    @Override
+
     public void refreshData() throws Exception {
         laydsKh();
         dsPhong.getItems().clear();
