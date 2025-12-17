@@ -8,6 +8,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -17,262 +18,168 @@ import java.math.RoundingMode;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ThanhToanDialogController {
 
-    public Label lblTienPhat;
-    public Label lblTienCoc;
-    @FXML
-    private TextField txtMaKhachHang;
-    @FXML
-    private TextField txtHoTen;
-    @FXML
-    private TextField txtSoDienThoai;
-    @FXML
-    private TextField txtEmail;
-    @FXML
-    private TextField txtHangkhach;
-    @FXML
-    private TextField txtSoPhong;
-    @FXML
-    private TextField txtNgayNhan;
-    @FXML
-    private TextField txtNgayTra;
-    @FXML
-    private TextField txtMaGiamGia;
+    @FXML private TextField txtMaKhachHang, txtHoTen, txtSoDienThoai, txtEmail;
+    @FXML private TextField txtHangkhach, txtSoPhong, txtNgayNhan, txtNgayTra, txtMaGiamGia;
+    @FXML private RadioButton rbtnTienMat, rbtnTheNganHang;
+    @FXML private Button btnThanhToan, btnHuy, btnLamMoi;
 
-    @FXML
-    private RadioButton rbtnTienMat;
-    @FXML
-    private RadioButton rbtnTheNganHang;
+    // Label thống kê
+    @FXML private Label lblTongTienPhong, lblTongTienDichVu, lblVat, lblTienCoc, lblTamTinh, lblTongThanhToan;
+    @FXML private Label lblTongTienPhat, lblPhatNhanTre, lblPhatTraSom, lblPhatTraTre;
+    @FXML private Label lblGiamGiaMaGG, lblGiamGiaHangKH;
 
+    // TableView chi tiết
+    @FXML private TableView<HoaDonChiTietItem> tblChiTietHoaDon;
+    @FXML private TableColumn<HoaDonChiTietItem, Integer> colStt;
+    @FXML private TableColumn<HoaDonChiTietItem, String> colTen;
+    @FXML private TableColumn<HoaDonChiTietItem, Integer> colSL;
+    @FXML private TableColumn<HoaDonChiTietItem, BigDecimal> colDonGia, colThanhTien;
 
-    @FXML
-    private Button btnThanhToan;
-    @FXML
-    private Button btnHuy;
-    @FXML
-    private Button btnLamMoi;
-
-    @FXML
-    private Label lblTongTienPhong;
-    @FXML
-    private Label lblTongTienDichVu;
-    @FXML
-    private Label lblVat;
-    @FXML
-    private Label lblTongGiamGia;
-    @FXML
-    private Label lblTongThanhToan;
-
+    private final PhieuDatPhongDAO pdpDao = new PhieuDatPhongDAO();
+    private final CTHoaDonPhongDAO cthddpDao = new CTHoaDonPhongDAO();
     private CTHoaDonDichVuDAO cthddv;
-
-    private PhieuDatPhongDAO pdpDao = new PhieuDatPhongDAO();
-    private CTHoaDonPhongDAO cthddpDao = new CTHoaDonPhongDAO();
-    private HoaDon hoaDon;
-
     private final KhachHangDAO khachHangDAO = new KhachHangDAO();
     private final MaGiamGiaDAO maGiamGiaDAO = new MaGiamGiaDAO();
+    private final HoaDonDAO hoaDonDAO = new HoaDonDAO();
     private final HoaDonDAO2 hoaDonDAO2 = new HoaDonDAO2();
-    private boolean needNavigateToTraPhong = false;
 
-    // Khai báo các biến lưu trữ kết quả tính toán cuối cùng (ở cấp độ Controller)
+    private HoaDon hoaDon;
+
+    // ================= KHAI BÁO CÁC BIẾN LƯU TRỮ (MÀ BẠN ĐÃ HỎI) =================
     private BigDecimal finalTienPhat = BigDecimal.ZERO;
-    private BigDecimal finalGiamGia = BigDecimal.ZERO;
+    private BigDecimal finalTongGiamGia = BigDecimal.ZERO;
     private BigDecimal finalVat = BigDecimal.ZERO;
 
-    // Nhận hóa đơn từ controller trước
+    // Biến phụ trợ hiển thị chi tiết lên UI
+    private BigDecimal phatNhanTreChiTiet = BigDecimal.ZERO;
+    private BigDecimal phatTraSomChiTiet = BigDecimal.ZERO;
+    private BigDecimal phatTraTreChiTiet = BigDecimal.ZERO;
+    private BigDecimal giamGiaMaGGChiTiet = BigDecimal.ZERO;
+    private BigDecimal giamGiaHangKHChiTiet = BigDecimal.ZERO;
+
+    @FXML
+    private void initialize() {
+        ToggleGroup group = new ToggleGroup();
+        rbtnTienMat.setToggleGroup(group);
+        rbtnTheNganHang.setToggleGroup(group);
+        btnThanhToan.setDisable(true);
+        group.selectedToggleProperty().addListener((obs, o, n) -> btnThanhToan.setDisable(n == null));
+
+        cthddv = new CTHoaDonDichVuDAO();
+        btnThanhToan.setOnAction(e -> thanhToan());
+        btnHuy.setOnAction(e -> dongForm());
+        btnLamMoi.setOnAction(e -> lamMoiForm());
+
+        // Ánh xạ cột TableView (Lưu ý: STT nếu getter trong Model là getSTT)
+        colStt.setCellValueFactory(new PropertyValueFactory<>("STT"));
+        colTen.setCellValueFactory(new PropertyValueFactory<>("tenChiTiet"));
+        colSL.setCellValueFactory(new PropertyValueFactory<>("soLuong"));
+        colDonGia.setCellValueFactory(new PropertyValueFactory<>("donGia"));
+        colThanhTien.setCellValueFactory(new PropertyValueFactory<>("thanhTien"));
+    }
+
     public void setHoaDon(HoaDon hoaDon) {
         this.hoaDon = hoaDon;
-
-        try {
-            // Tìm hóa đơn đầy đủ trong danh sách
-            for (HoaDon hd : hoaDonDAO2.layDanhSachHoaDon()) {
-                if (hd.getMaHD().equals(hoaDon.getMaHD())) {
-                    this.hoaDon = hd;
-                    break;
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
         hienThiThongTinHoaDon();
         tinhTongThanhToan();
+        hienThiChiTietHoaDon();
     }
-    // Getter mới
-    public boolean isNeedNavigateToTraPhong() {
-        return needNavigateToTraPhong;
-    }
+
     private void tinhTongThanhToan() {
         try {
             BigDecimal tienPhong = BigDecimal.ZERO;
             BigDecimal tienDichVu = BigDecimal.ZERO;
-            BigDecimal vat =BigDecimal.ZERO;
-            BigDecimal giamGia = BigDecimal.ZERO;
-            BigDecimal tongThanhToan = BigDecimal.ZERO;
-            BigDecimal tienPhat = BigDecimal.ZERO;
             BigDecimal tienCoc = BigDecimal.ZERO;
 
-            // Khai báo tỷ lệ phạt và độ chính xác (Scaling)
-            final BigDecimal TI_LE_PHAT_TRA_TRE = new BigDecimal("0.10"); // 10%
-            final BigDecimal TI_LE_PHAT_TRA_SOM = new BigDecimal("0.30");
-            final BigDecimal TI_LE_PHAT_NHAN_PHONG_TRE = new BigDecimal("0.50");
-            final int SCALE = 2; // Làm tròn 2 chữ số thập phân (ví dụ: 0.00)
-            final int SCALE_DISPLAY = 0; // Làm tròn 0 chữ số cho hiển thị
-            BigDecimal tongTienPhaiTra = BigDecimal.ZERO;
-            List<CTHoaDonPhong> dsctHoaDonPhong = cthddpDao.getCTHoaDonPhongTheoMaHD(hoaDon.getMaHD());
+            // Reset biến chi tiết trước khi tính
+            phatNhanTreChiTiet = BigDecimal.ZERO;
+            phatTraSomChiTiet = BigDecimal.ZERO;
+            phatTraTreChiTiet = BigDecimal.ZERO;
+            giamGiaMaGGChiTiet = BigDecimal.ZERO;
+            giamGiaHangKHChiTiet = BigDecimal.ZERO;
 
-            for(CTHoaDonPhong cthdp : dsctHoaDonPhong){
-                // Lấy thông tin cần thiết
-                PhieuDatPhong pdp = pdpDao.layPhieuDatPhongTheoMa(cthdp.getMaPhieu());
+            final BigDecimal PHAT_P_TRE = new BigDecimal("0.10");
+            final BigDecimal PHAT_P_SOM = new BigDecimal("0.30");
+            final BigDecimal PHAT_N_TRE = new BigDecimal("0.50");
 
-                // Tiền cọc (Giả định lấy từ phiếu đầu tiên)
-                if (pdp != null && pdp.getTienCoc() != null) {
-                    tienCoc = pdp.getTienCoc();
-                }
+            List<CTHoaDonPhong> ds = cthddpDao.getCTHoaDonPhongTheoMaHD(hoaDon.getMaHD());
+            KhachHang kh = khachHangDAO.layKhachHangTheoMa(hoaDon.getMaKH());
 
-                // Tiền gốc cần thanh toán
-                BigDecimal tienGoc = cthdp.getThanhTien();
+            for (CTHoaDonPhong ct : ds) {
+                PhieuDatPhong pdp = pdpDao.layPhieuDatPhongTheoMa(ct.getMaPhieu());
+                if (pdp != null && pdp.getTienCoc() != null) tienCoc = pdp.getTienCoc();
 
-                BigDecimal phiPhatNhanTre = BigDecimal.ZERO;
-                if (pdp != null && cthdp.getNgayDen().isAfter(pdp.getNgayDen())) {
-                    // Tính số ngày nhận phòng trễ
-                    long soNgayNhanTre = tinhSoNgayTraTre(pdp.getNgayDen(), cthdp.getNgayDen());
-                    BigDecimal soNgay = new BigDecimal(soNgayNhanTre);
-
-                    // Lấy giá phòng một ngày (Giả định cthdp.getThanhTien() là tổng tiền,
-                    // bạn cần chia cho số ngày để có giá 1 ngày)
-                    // Cần đảm bảo hàm tinhSoNgayTraTre() trả về số ngày đúng, hoặc lấy số ngày đặt từ PhieuDatPhong
-
-                    // GIẢ ĐỊNH: cthdp.getGiaPhong() là giá phòng 1 đêm
-                    BigDecimal giaPhongMotDem = cthdp.getGiaPhong();
-
-                    phiPhatNhanTre = giaPhongMotDem
-                            .multiply(TI_LE_PHAT_NHAN_PHONG_TRE) // 50%
-                            .multiply(soNgay)
-                            .setScale(SCALE, RoundingMode.HALF_UP);
-
-                    tienPhat = tienPhat.add(phiPhatNhanTre); // Cộng dồn vào tiền phạt chung
-                }
-
+                BigDecimal tienGoc = ct.getThanhTien();
                 tienPhong = tienPhong.add(tienGoc);
-                if(cthdp.getNgayDi().isAfter(LocalDate.now())){
-                    long soNgayTraSom = tinhSoNgayTraTre(LocalDate.now(), cthdp.getNgayDi());
-                    BigDecimal soNgay = new BigDecimal(soNgayTraSom);
-                    // 2. Tính Phí phạt
-                    BigDecimal phiPhat = tienGoc
-                            .multiply(TI_LE_PHAT_TRA_SOM)
-                            .multiply(soNgay)
-                            .setScale(SCALE, RoundingMode.HALF_UP);
 
-                    tienPhat = tienPhat.add(phiPhat); // Cộng dồn tiền phạt
-
-                    // 3. Tổng tiền phải trả = Tiền gốc + Phí phạt
-                    tongTienPhaiTra = tienPhong.add(phiPhat);
-
-                }else {
-                    // Trường hợp 2: Trả phòng trễ (NgayDi đã qua LocalDate.now())
-                    long soNgayTraTre = tinhSoNgayTraTre(cthdp.getNgayDi(), LocalDate.now());
-                    BigDecimal soNgay = new BigDecimal(soNgayTraTre);
-
-                    // 2. Tính Phí phạt
-                    BigDecimal phiPhat = tienGoc
-                            .multiply(TI_LE_PHAT_TRA_TRE)
-                            .multiply(soNgay)
-                            .setScale(SCALE, RoundingMode.HALF_UP);
-
-                    tienPhat = tienPhat.add(phiPhat); // Cộng dồn tiền phạt
-
-                    // 3. Tổng tiền phải trả = Tiền gốc + Phí phạt
-                    tongTienPhaiTra = tienPhong.add(phiPhat);
-
+                // Tính phạt
+                if (ct.getNgayDen().isAfter(pdp.getNgayDen())) {
+                    long days = ChronoUnit.DAYS.between(pdp.getNgayDen(), ct.getNgayDen());
+                    phatNhanTreChiTiet = phatNhanTreChiTiet.add(ct.getGiaPhong().multiply(PHAT_N_TRE).multiply(BigDecimal.valueOf(days)));
+                }
+                if (ct.getNgayDi().isAfter(LocalDate.now())) {
+                    long days = ChronoUnit.DAYS.between(LocalDate.now(), ct.getNgayDi());
+                    phatTraSomChiTiet = phatTraSomChiTiet.add(tienGoc.multiply(PHAT_P_SOM).multiply(BigDecimal.valueOf(days)));
+                } else if (ct.getNgayDi().isBefore(LocalDate.now())) {
+                    long days = ChronoUnit.DAYS.between(ct.getNgayDi(), LocalDate.now());
+                    phatTraTreChiTiet = phatTraTreChiTiet.add(tienGoc.multiply(PHAT_P_TRE).multiply(BigDecimal.valueOf(days)));
                 }
             }
-            // Hiển thị Tiền phạt đã tính
-            lblTienPhat.setText(String.format("%,." + SCALE_DISPLAY + "f ₫", tienPhat));
 
-            // Tính giảm giá nếu có mã giảm
-            BigDecimal tienPhongGocChoGG = tongTienPhaiTra.subtract(tienPhat); // Tiền phòng gốc (trước phạt)
+            finalTienPhat = phatNhanTreChiTiet.add(phatTraSomChiTiet).add(phatTraTreChiTiet).setScale(0, RoundingMode.HALF_UP);
+            tienDichVu = cthddv.tinhTongTienDichVu(hoaDon.getMaHD());
+
+            // 1. Giảm giá mã Voucher
             if (hoaDon.getMaGG() != null) {
                 MaGiamGia mgg = maGiamGiaDAO.layMaGiamGiaThepMa(hoaDon.getMaGG());
                 if (mgg != null) {
-                    if (mgg.getKieuGiamGia() == KieuGiamGia.PERCENT) {
-                        giamGia = tienPhongGocChoGG.multiply(BigDecimal.valueOf((mgg.getGiamGia() / 100.0)) ).setScale(SCALE, RoundingMode.HALF_UP) ;
-                    } else if (mgg.getKieuGiamGia() == KieuGiamGia.AMOUNT) {
-                        giamGia = BigDecimal.valueOf(mgg.getGiamGia()).setScale(SCALE, RoundingMode.HALF_UP);
-                    }
-                }
-            }
-            tienDichVu = cthddv.tinhTongTienDichVu(hoaDon.getMaHD()).setScale(SCALE, RoundingMode.HALF_UP);
-
-            // VAT 10% chỉ tính trên phần còn lại sau khi giảm giá
-            BigDecimal baseAmount = tongTienPhaiTra.add(tienDichVu).subtract(giamGia); // Tiền phòng(gốc+phạt) + Dịch vụ - GG Mã GG
-            vat = baseAmount.multiply(new BigDecimal("0.1")).setScale(SCALE, RoundingMode.HALF_UP);
-
-            // Tổng tạm thời (trước khi trừ GG Hạng Khách và Cọc)
-            tongThanhToan = baseAmount.add(vat);
-
-            // Tính giảm giá theo hạng khách hàng
-            BigDecimal tienHangkhach =  BigDecimal.ZERO;
-            KhachHang kh = khachHangDAO.layKhachHangTheoMa(hoaDon.getMaKH());
-            if (kh != null) {
-                if(kh.getHangKhach().equals(HangKhach.KHACH_QUEN)){
-                    tienHangkhach = tongThanhToan.multiply(BigDecimal.valueOf(0.05)).setScale(SCALE, RoundingMode.HALF_UP);
-                }else if(kh.getHangKhach().equals(HangKhach.KHACH_DOANH_NGHIEP)){
-                    tienHangkhach = tongThanhToan.multiply(BigDecimal.valueOf(0.1)).setScale(SCALE, RoundingMode.HALF_UP);
-                }else if(kh.getHangKhach().equals(HangKhach.KHACH_VIP)){
-                    tienHangkhach = tongThanhToan.multiply(BigDecimal.valueOf(0.15)).setScale(SCALE, RoundingMode.HALF_UP);
+                    if (mgg.getKieuGiamGia() == KieuGiamGia.PERCENT)
+                        giamGiaMaGGChiTiet = tienPhong.multiply(BigDecimal.valueOf(mgg.getGiamGia() / 100.0));
+                    else
+                        giamGiaMaGGChiTiet = BigDecimal.valueOf(mgg.getGiamGia());
                 }
             }
 
-            // Tổng Giảm giá cuối cùng
-            giamGia = giamGia.add(tienHangkhach);
+            // 2. Logic giảm giá theo HangKhach của bạn
+            if (kh != null && kh.getHangKhach() != null) {
+                BigDecimal phanTram = BigDecimal.ZERO;
+                switch (kh.getHangKhach()) {
+                    case KHACH_QUEN: phanTram = new BigDecimal("0.05"); break; // 5%
+                    case KHACH_VIP: phanTram = new BigDecimal("0.10"); break; // 10%
+                    case KHACH_DOANH_NGHIEP: phanTram = new BigDecimal("0.15"); break; // 15%
+                    default: phanTram = BigDecimal.ZERO; break; // Khách thường 0%
+                }
+                giamGiaHangKHChiTiet = tienPhong.multiply(phanTram);
+            }
 
-            // Tổng Thanh Toán Cuối Cùng
-            tongThanhToan = tongThanhToan.subtract(tienHangkhach).subtract(tienCoc);
+            finalTongGiamGia = giamGiaMaGGChiTiet.add(giamGiaHangKHChiTiet).setScale(0, RoundingMode.HALF_UP);
+            BigDecimal tamTinh = tienPhong.add(finalTienPhat).add(tienDichVu).subtract(finalTongGiamGia);
+            finalVat = tamTinh.multiply(new BigDecimal("0.1")).setScale(0, RoundingMode.HALF_UP);
+            BigDecimal tongThanhToan = tamTinh.add(finalVat).subtract(tienCoc);
 
-            // Lưu trữ kết quả tính toán vào biến của Controller để dùng trong thanhToan()
-            finalTienPhat = tienPhat;
-            finalGiamGia = giamGia;
-            finalVat = vat;
+            // Gán UI
+            lblTongTienPhong.setText(String.format("%,.0f ₫", tienPhong));
+            lblTongTienDichVu.setText(String.format("%,.0f ₫", tienDichVu));
+            lblTienCoc.setText(String.format("%,.0f ₫", tienCoc));
+            lblTamTinh.setText(String.format("%,.0f ₫", tamTinh));
+            lblVat.setText(String.format("%,.0f ₫", finalVat));
+            lblTongThanhToan.setText(String.format("%,.0f ₫", tongThanhToan));
+            lblTongTienPhat.setText(String.format("%,.0f ₫", finalTienPhat));
+            lblPhatNhanTre.setText(String.format("%,.0f ₫", phatNhanTreChiTiet));
+            lblPhatTraSom.setText(String.format("%,.0f ₫", phatTraSomChiTiet));
+            lblPhatTraTre.setText(String.format("%,.0f ₫", phatTraTreChiTiet));
+            lblGiamGiaMaGG.setText(String.format("%,.0f ₫", giamGiaMaGGChiTiet));
+            lblGiamGiaHangKH.setText(String.format("%,.0f ₫", giamGiaHangKHChiTiet));
 
-            // Cập nhật tongTien trong đối tượng hoaDon (không cập nhật DB ở đây)
-            hoaDon.setTongTien(tongThanhToan.setScale(SCALE, RoundingMode.HALF_UP));
-
-            // Hiển thị lên UI
-            lblTongTienPhong.setText(String.format("%,." + SCALE_DISPLAY + "f ₫", tienPhong));
-            lblTongTienDichVu.setText(String.format("%,." + SCALE_DISPLAY + "f ₫", tienDichVu));
-            lblVat.setText(String.format("%,." + SCALE_DISPLAY + "f ₫", vat));
-            lblTongGiamGia.setText(String.format("%,." + SCALE_DISPLAY + "f ₫", giamGia));
-            lblTienCoc.setText(String.format("%,." + SCALE_DISPLAY + "f ₫", tienCoc));
-            lblTongThanhToan.setText(String.format("%,." + SCALE_DISPLAY + "f ₫", tongThanhToan));
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            ThongBaoUtil.hienThiLoi("Lỗi tính tiền", "Chi tiết: " + e.getMessage());
-        }
-    }
-    // -------------------------------------------------------------
-    // Hàm mẫu để tính số ngày trả trễ (Cần đặt ngoài vòng lặp hoặc trong class)
-    // Giả định: NgayDi là ngày phải trả phòng, ngayHienTai là ngày thanh toán
-    public long tinhSoNgayTraTre(LocalDate ngayDi, LocalDate ngayHienTai) {
-        // Chỉ tính ngày trễ nếu ngayHienTai là SAU ngayDi
-        if (ngayHienTai.isAfter(ngayDi)) {
-            // Cộng 1 ngày nếu bạn muốn ngày trễ đầu tiên là 1 (ví dụ: trễ 1 ngày)
-            return java.time.temporal.ChronoUnit.DAYS.between(ngayDi, ngayHienTai);
-        }
-        return 0; // Không trễ
+        } catch (Exception e) { e.printStackTrace(); }
     }
 
-    // Hiển thị thông tin hóa đơn ra form
     private void hienThiThongTinHoaDon() {
-        if (hoaDon == null) return;
-
         try {
-            // Lấy thông tin khách hàng
             KhachHang kh = khachHangDAO.layKhachHangTheoMa(hoaDon.getMaKH());
             if (kh != null) {
                 txtMaKhachHang.setText(kh.getMaKH());
@@ -281,190 +188,101 @@ public class ThanhToanDialogController {
                 txtEmail.setText(kh.getEmail());
                 txtHangkhach.setText(kh.getHangKhach().toString());
             }
+            txtSoPhong.setText(String.valueOf(cthddpDao.getCTHoaDonPhongTheoMaHD(hoaDon.getMaHD()).size()));
+            txtNgayNhan.setText(hoaDon.getNgayLap().toString());
+            txtNgayTra.setText(LocalDate.now().toString());
+        } catch (SQLException e) { e.printStackTrace(); }
+    }
 
-            // Lấy thông tin phòng
-            int soPhong = cthddpDao.getCTHoaDonPhongTheoMaHD(hoaDon.getMaHD()).size();
-            txtSoPhong.setText(String.valueOf(soPhong));
-            txtNgayNhan.setText(hoaDon.getNgayLap() != null ? hoaDon.getNgayLap().toString() : "N/A");
+    private void hienThiChiTietHoaDon() {
+        try {
+            List<HoaDonChiTietItem> list = hoaDonDAO.layChiTietHoaDon(hoaDon.getMaHD());
+            tblChiTietHoaDon.getItems().setAll(list);
+        } catch (SQLException e) { e.printStackTrace(); }
+    }
 
-            // Lấy Ngày trả phòng đã lưu (nếu có)
-            if (hoaDon.getNgayCheckOut() == null) {
-                txtNgayTra.setText(java.time.LocalDate.now().toString());
+    private void xuLyThanhToan(PhuongThucThanhToan phuongThuc) {
+        try {
+            // 1. Gán thông tin trạng thái và hình thức
+            hoaDon.setPhuongThuc(phuongThuc);
+            hoaDon.setTrangThai(TrangThaiHoaDon.DA_THANH_TOAN);
+            hoaDon.setNgayCheckOut(LocalDate.now());
+
+            // 2. Lấy tổng tiền cuối cùng (loại bỏ ký tự tiền tệ)
+            String cleanedTongTien = lblTongThanhToan.getText().replaceAll("[^0-9]", "");
+            hoaDon.setTongTien(new BigDecimal(cleanedTongTien));
+
+            // 3. QUAN TRỌNG: Gán các giá trị phạt và giảm giá đã tính được vào Object
+            // Các biến này đã được bạn tính toán trong hàm tinhTongThanhToan()
+            hoaDon.setPhatNhanPhongTre(phatNhanTreChiTiet);
+            hoaDon.setPhatTraPhongSom(phatTraSomChiTiet);
+            hoaDon.setPhatTraPhongTre(phatTraTreChiTiet);
+
+            hoaDon.setGiamGiaTheoMa(giamGiaMaGGChiTiet);
+            hoaDon.setGiamGiaTheoHangKH(giamGiaHangKHChiTiet);
+
+            hoaDon.setTongVAT(finalVat);
+            // Lưu ý: Đảm bảo hoaDon.setTienPhat(finalTienPhat) nếu DB có cột tổng phạt
+
+            // 4. Gọi DAO để thực thi Stored Procedure
+            boolean success = hoaDonDAO2.capNhatHoaDon(hoaDon);
+
+            if (success) {
+                ThongBaoUtil.hienThiThongBao("Thành công", "Hóa đơn " + hoaDon.getMaHD() + " đã được thanh toán và lưu trữ chi tiết.");
+                dongForm();
             } else {
-                txtNgayTra.setText(hoaDon.getNgayCheckOut().toString());
+                ThongBaoUtil.hienThiLoi("Thất bại", "Không thể cập nhật hóa đơn vào database.");
             }
-
-            // Lấy mã giảm giá
-            if (hoaDon.getMaGG() != null) {
-                MaGiamGia mgg = maGiamGiaDAO.layMaGiamGiaThepMa(hoaDon.getMaGG());
-                if (mgg != null)
-                    txtMaGiamGia.setText(mgg.getCode());
-            } else {
-                txtMaGiamGia.setText("");
-            }
-
-            if (hoaDon.getPhuongThuc() != null) {
-                switch (hoaDon.getPhuongThuc()) {
-                    case TIEN_MAT -> rbtnTienMat.setSelected(true);
-                    case CHUYEN_KHOAN -> rbtnTheNganHang.setSelected(true);
-                    default -> {
-                        rbtnTienMat.setSelected(false);
-                        rbtnTheNganHang.setSelected(false);
-                    }
-                }
-            } else {
-                rbtnTienMat.setSelected(true);
-            }
-
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
+            ThongBaoUtil.hienThiLoi("Lỗi", "Lỗi xử lý dữ liệu: " + e.getMessage());
         }
     }
 
-
-    @FXML
-    private void initialize() {
-        ToggleGroup group = new ToggleGroup();
-        rbtnTienMat.setToggleGroup(group);
-        rbtnTheNganHang.setToggleGroup(group);
-        // Vô hiệu hóa nút thanh toán lúc ban đầu
-        btnThanhToan.setDisable(true);
-
-        // Logic xử lý khi chọn phương thức thanh toán
-        group.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue == rbtnTienMat) {
-                // Trường hợp 1: Tiền Mặt
-                btnThanhToan.setDisable(false); // Kích hoạt ngay
-            } else if (newValue == rbtnTheNganHang) {
-                // Trường hợp 2: Chuyển Khoản/Thẻ
-                btnThanhToan.setDisable(true);
-                moManHinhQRCode();
-            } else {
-                btnThanhToan.setDisable(true);
-            }
-        });
-        cthddv = new CTHoaDonDichVuDAO();
-        btnHuy.setOnAction(e -> dongForm());
-        btnLamMoi.setOnAction(e -> lamMoiForm());
-        btnThanhToan.setOnAction(e -> thanhToan());
+    private void thanhToan() {
+        if (rbtnTienMat.isSelected()) xuLyThanhToan(PhuongThucThanhToan.TIEN_MAT);
+        else if (rbtnTheNganHang.isSelected()) moManHinhQRCode();
     }
+
     private void moManHinhQRCode() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/ma-qr-view.fxml"));
-            Parent parent = loader.load();
-            QRController qrController = loader.getController();
+            Parent p = loader.load();
+            QRController qr = loader.getController();
             Stage stage = new Stage();
             stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setTitle("Mã QR Thanh Toán");
-            stage.setScene(new Scene(parent));
-
+            stage.setScene(new Scene(p));
             stage.showAndWait();
+            if (qr.isTransactionConfirmed()) xuLyThanhToan(PhuongThucThanhToan.CHUYEN_KHOAN);
+        } catch (IOException e) { e.printStackTrace(); }
+    }
 
-            if (qrController.isTransactionConfirmed()) {
-                btnThanhToan.setDisable(false);
-                rbtnTienMat.setDisable(true);
-                Alert successAlert = new Alert(Alert.AlertType.INFORMATION, "Xác nhận chuyển khoản thành công.");
-                successAlert.setHeaderText(null);
-                successAlert.showAndWait();
-            } else {
-                btnThanhToan.setDisable(true);
-                rbtnTienMat.getToggleGroup().selectToggle(null);
+    @FXML private void handleChonGiamGia() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/khuyen-mai-screen.fxml"));
+            Parent p = loader.load();
+            ChonKhuyenMaiController ctrl = loader.getController();
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setScene(new Scene(p));
+            stage.showAndWait();
+            MaGiamGia selected = ctrl.getMaGiamGiaDuocChon();
+            if (selected != null) {
+                txtMaGiamGia.setText(selected.getMaGG());
+                hoaDon.setMaGG(selected.getMaGG());
+                tinhTongThanhToan();
+                hienThiChiTietHoaDon();
             }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            btnThanhToan.setDisable(true);
-        }
-    }
-    private void dongForm() {
-        Stage stage = (Stage) btnHuy.getScene().getWindow();
-        stage.close();
+        } catch (IOException e) { e.printStackTrace(); }
     }
 
+    private void dongForm() { ((Stage) btnHuy.getScene().getWindow()).close(); }
     private void lamMoiForm() {
         txtMaGiamGia.clear();
         rbtnTienMat.setSelected(false);
         rbtnTheNganHang.setSelected(false);
         hoaDon.setMaGG(null);
         tinhTongThanhToan();
-    }
-    private void thanhToan() {
-        PhuongThucThanhToan phuongThuc;
-
-        if(rbtnTienMat.isSelected()) {
-            phuongThuc = PhuongThucThanhToan.TIEN_MAT;
-        } else if (rbtnTheNganHang.isSelected()) {
-            phuongThuc = PhuongThucThanhToan.CHUYEN_KHOAN;
-        } else {
-            Alert alert = new Alert(Alert.AlertType.WARNING, "Vui lòng chọn phương thức thanh toán trước khi xác nhận.");
-            alert.showAndWait();
-            return;
-        }
-
-        try {
-            // Lấy tổng tiền đã tính toán (đã lưu tạm trong hoaDon.tongTien)
-            String tongThanhToanText = lblTongThanhToan.getText()
-                    .replaceAll("[^0-9]", "");
-            BigDecimal tongThanhToan = new BigDecimal(tongThanhToanText);
-
-            // Cập nhật các trường cần thiết
-            hoaDon.setPhuongThuc(phuongThuc);
-            hoaDon.setTrangThai(TrangThaiHoaDon.DA_THANH_TOAN);
-            hoaDon.setNgayCheckOut(LocalDate.now());
-            hoaDon.setTongTien(tongThanhToan);
-
-            // ************ LƯU KẾT QUẢ TÍNH TOÁN CHI TIẾT VÀO HOA ĐƠN ************
-            // Lấy kết quả từ các biến đã lưu trong Controller
-            hoaDon.setTienPhat(finalTienPhat);
-            hoaDon.setTongGiamGia(finalGiamGia);
-            hoaDon.setTongVAT(finalVat);
-            // *******************************************************************
-
-            // Cập nhật vào cơ sở dữ liệu (DAO phải xử lý các trường mới)
-            hoaDonDAO2.capNhatHoaDon(hoaDon);
-
-            ThongBaoUtil.hienThiThongBao("Thành công", "Thanh toán hóa đơn #" + hoaDon.getMaHD() + " đã hoàn tất.");
-            // Đóng form thanh toán
-            dongForm();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            ThongBaoUtil.hienThiLoi("Lỗi", "Không thể lưu thông tin thanh toán vào hệ thống.");
-        }
-    }
-    @FXML
-    private void handleChonGiamGia() {
-        try{
-            // ... (Phần load FXML và stage giữ nguyên) ...
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/khuyen-mai-screen.fxml"));
-            Parent parent = loader.load();
-            ChonKhuyenMaiController khuyenMaiController = loader.getController();
-            Stage stage = new Stage();
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setTitle("Chọn mã giảm giá");
-            stage.setScene(new Scene(parent));
-            stage.showAndWait();
-            MaGiamGia maDuocChon = khuyenMaiController.getMaGiamGiaDuocChon();
-
-            if (maDuocChon != null) {
-                // 3. Nếu có mã giảm giá được chọn, cập nhật vào TextField
-                txtMaGiamGia.setText(maDuocChon.getMaGG());
-                hoaDon.setMaGG(txtMaGiamGia.getText());
-                tinhTongThanhToan();
-            }
-
-        }catch (IOException e){
-            e.printStackTrace();
-        }
-
-
-    }
-    static void main() throws SQLException {
-        String maCTHDP = "HD006";
-        CTHoaDonPhongDAO cthoaDonPhongDAO = new CTHoaDonPhongDAO();
-        PhieuDatPhongDAO phieuDatPhongDAO = new PhieuDatPhongDAO();
-        HoaDonDAO hoaDonDAO = new HoaDonDAO();
-        HoaDon hd = hoaDonDAO.timHoaDonTheoMa(maCTHDP);
-        System.out.println(hd.getSoPhong());
+        hienThiChiTietHoaDon();
     }
 }

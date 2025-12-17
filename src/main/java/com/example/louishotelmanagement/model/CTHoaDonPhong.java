@@ -2,30 +2,41 @@ package com.example.louishotelmanagement.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 public class CTHoaDonPhong {
+
     private String maHD;
     private String maPhieu;
     private String maPhong;
+
     private LocalDate ngayDen;
     private LocalDate ngayDi;
+
     private BigDecimal giaPhong;
     private BigDecimal thanhTien;
 
-    public CTHoaDonPhong() {
-    }
+    // ===== XÓA MỀM =====
+    private boolean daHuy = false;
+    private LocalDate ngayHuy;
 
     public CTHoaDonPhong(String maHD, String maPhieu, String maPhong,
-                         LocalDate ngayDen, LocalDate ngayDi, BigDecimal giaPhong) {
+                         LocalDate ngayDen, LocalDate ngayDi,
+                         BigDecimal giaPhong) {
         this.maHD = maHD;
         this.maPhieu = maPhieu;
         this.maPhong = maPhong;
         this.ngayDen = ngayDen;
         this.ngayDi = ngayDi;
         this.giaPhong = giaPhong;
+
+        // mặc định
+        this.daHuy = false;
+        this.ngayHuy = null;
         this.thanhTien = tinhThanhTien();
     }
 
+    // ===== GET / SET =====
     public String getMaHD() {
         return maHD;
     }
@@ -79,28 +90,53 @@ public class CTHoaDonPhong {
         return thanhTien;
     }
 
-    public void setThanhTien(BigDecimal thanhTien) {
-        this.thanhTien = thanhTien;
+    public boolean isDaHuy() {
+        return daHuy;
+    }
+
+    public LocalDate getNgayHuy() {
+        return ngayHuy;
+    }
+
+
+    public void setDaHuy(boolean daHuy) {
+        this.daHuy = daHuy;
+    }
+
+
+    public void setNgayHuy(LocalDate ngayHuy) {
+        this.ngayHuy = ngayHuy;
+    }
+
+
+    // ===== NGHIỆP VỤ =====
+
+    /**
+     * Hủy (xóa mềm) phòng khỏi phiếu
+     */
+    public void huyPhong() {
+        this.daHuy = true;
+        this.ngayHuy = LocalDate.now();
     }
 
     /**
-     * Tính tiền tự động theo số ngày ở và giá phòng.
+     * Tính tiền theo số đêm
      */
     public BigDecimal tinhThanhTien() {
-        if (ngayDen != null && giaPhong != null && ngayDi!=null) {
-            long soNgay = java.time.temporal.ChronoUnit.DAYS.between(ngayDen, ngayDi);
-            if (soNgay <= 0) soNgay = 1;
-            return giaPhong.multiply(BigDecimal.valueOf(soNgay));
+        if (ngayDen == null || ngayDi == null || giaPhong == null) {
+            return BigDecimal.ZERO;
         }
-        return BigDecimal.ZERO;
+
+        long soDem = ChronoUnit.DAYS.between(ngayDen, ngayDi);
+        if (soDem <= 0) soDem = 1;
+
+        return giaPhong.multiply(BigDecimal.valueOf(soDem));
     }
 
-    @Override
-    public String toString() {
-        return String.format("CTHoaDonPhong{maHD='%s', maPhieu='%s', maPhong='%s', ngayDen=%s, ngayDi=%s, giaPhong=%,.0f, thanhTien=%,.0f}",
-                maHD, maPhieu, maPhong,
-                ngayDen, ngayDi,
-                giaPhong != null ? giaPhong.doubleValue() : 0,
-                thanhTien != null ? thanhTien.doubleValue() : 0);
+    /**
+     * Tiện cho UI
+     */
+    public boolean isConHieuLuc() {
+        return !daHuy;
     }
 }

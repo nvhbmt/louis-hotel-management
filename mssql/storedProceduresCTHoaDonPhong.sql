@@ -1,160 +1,155 @@
--- =========================================================
--- KHỞI TẠO LẠI CÁC STORES PROCEDURES MỚI
--- (Sử dụng CTHoaDonPhong)
--- =========================================================
-
 USE QuanLyKhachSan;
 GO
 
--- 1. sp_ThemCTHoaDonPhong (Thêm mới) - Có kiểm tra conflict để tránh race condition
-CREATE PROCEDURE sp_ThemCTHoaDonPhong @maHD NVARCHAR(10),
-                                      @maPhieu NVARCHAR(10),
-                                      @maPhong NVARCHAR(10),
-                                      @ngayDen DATE,
-                                      @ngayDi DATE,
-                                      @giaPhong DECIMAL(18, 2)
+/* =========================================================
+   1. THÊM CHI TIẾT HÓA ĐƠN PHÒNG (CHECK CONFLICT – daHuy = 0)
+   ========================================================= */
+CREATE PROCEDURE sp_ThemCTHoaDonPhong
+    @maHD NVARCHAR(10),
+    @maPhieu NVARCHAR(10),
+    @maPhong NVARCHAR(10),
+    @ngayDen DATE,
+    @ngayDi DATE,
+    @giaPhong DECIMAL(18,2)
 AS
 BEGIN
     SET NOCOUNT ON;
-    
-    -- Validate input
-    IF @maHD IS NULL OR @maPhieu IS NULL OR @maPhong IS NULL
-    BEGIN
-        RAISERROR('Mã hóa đơn, mã phiếu và mã phòng không được để trống', 16, 1);
-        RETURN;
-    END
-    
-    IF @ngayDen IS NULL OR @ngayDi IS NULL
-    BEGIN
-        RAISERROR('Ngày đến và ngày đi không được để trống', 16, 1);
-        RETURN;
-    END
-    
+
     IF @ngayDi <= @ngayDen
-    BEGIN
-        RAISERROR('Ngày đi phải sau ngày đến', 16, 1);
-        RETURN;
-    END
-    
-    -- Kiểm tra phòng đã được đặt trong khoảng thời gian này chưa (Race condition protection)
+        BEGIN
+            RAISERROR(N'Ngày đi phải sau ngày đến', 16, 1);
+            RETURN;
+        END
+
+    -- Check phòng trùng lịch (CHỈ phòng chưa hủy)
     IF EXISTS (
-        SELECT 1 
-        FROM CTHoaDonPhong cthdp
-        INNER JOIN PhieuDatPhong pdp ON cthdp.maPhieu = pdp.maPhieu
-        WHERE cthdp.maPhong = @maPhong
-          AND pdp.trangThai NOT IN (N'Đã hủy', N'Hoàn thành')  -- Chỉ xét booking còn hiệu lực
-          AND cthdp.ngayDen <= @ngayDi  -- Overlap check
-          AND cthdp.ngayDi >= @ngayDen
-          AND cthdp.maPhieu != @maPhieu  -- Loại trừ chính booking hiện tại (nếu đang update)
+        SELECT 1
+        FROM CTHoaDonPhong c
+                 JOIN PhieuDatPhong p ON c.maPhieu = p.maPhieu
+        WHERE c.maPhong = @maPhong
+          AND c.daHuy = 0
+          AND p.trangThai NOT IN (N'Đã hủy', N'Hoàn thành')
+          AND c.ngayDen <= @ngayDi
+          AND c.ngayDi >= @ngayDen
+          AND c.maPhieu <> @maPhieu
     )
-    BEGIN
-        DECLARE @errorMsg NVARCHAR(500);
-        SET @errorMsg = N'Phòng ' + @maPhong + N' đã được đặt trong khoảng thời gian từ ' + 
-                        CONVERT(NVARCHAR(10), @ngayDen, 103) + N' đến ' + 
-                        CONVERT(NVARCHAR(10), @ngayDi, 103);
-        RAISERROR(@errorMsg, 16, 1);
-        RETURN;
-    END
-    
-    -- Kiểm tra phòng có tồn tại và không phải bảo trì
-    IF NOT EXISTS (SELECT 1 FROM Phong WHERE maPhong = @maPhong)
-    BEGIN
-        RAISERROR('Phòng %s không tồn tại', 16, 1, @maPhong);
-        RETURN;
-    END
-    
-    IF EXISTS (SELECT 1 FROM Phong WHERE maPhong = @maPhong AND trangThai = N'Bảo trì')
-    BEGIN
-        RAISERROR('Phòng %s đang trong trạng thái bảo trì, không thể đặt', 16, 1, @maPhong);
-        RETURN;
-    END
-    
-    -- Insert nếu không có conflict
+        BEGIN
+            RAISERROR(N'Phòng đã được đặt trong khoảng thời gian này', 16, 1);
+            RETURN;
+        END
+
     INSERT INTO CTHoaDonPhong
-        (maHD, maPhieu, maPhong, ngayDen, ngayDi, giaPhong)
-    VALUES (@maHD, @maPhieu, @maPhong, @ngayDen, @ngayDi, @giaPhong);
+    (maHD, maPhieu, maPhong, ngayDen, ngayDi, giaPhong, daHuy)
+    VALUES
+        (@maHD, @maPhieu, @maPhong, @ngayDen, @ngayDi, @giaPhong, 0);
 END
 GO
 
--- 2. SP_SelectCTHoaDonPhongByMaPhieu (Lấy theo Mã Phiếu)
-CREATE PROCEDURE SP_SelectCTHoaDonPhongByMaPhieu @maPhieu NVARCHAR(10)
+
+/* =========================================================
+   2. LẤY CHI TIẾT THEO MÃ PHIẾU (KHÔNG LỌC daHuy)
+   ========================================================= */
+CREATE PROCEDURE sp_SelectCTHoaDonPhongByMaPhieu
+@maPhieu NVARCHAR(10)
 AS
 BEGIN
     SET NOCOUNT ON;
-    SELECT maHD, maPhieu, maPhong, ngayDen, ngayDi, giaPhong
+
+    SELECT maHD, maPhieu, maPhong,
+           ngayDen, ngayDi, giaPhong,
+           thanhTien, daHuy, ngayHuy
     FROM CTHoaDonPhong
-    WHERE maPhieu = @maPhieu;
+    WHERE maPhieu = @maPhieu
+      AND daHuy = 0;
 END
 GO
 
--- 3. sp_CapNhatNgayDenThucTe (Cập nhật Ngày Đến thực tế)
-CREATE PROCEDURE sp_CapNhatNgayDenThucTe @maHD NVARCHAR(10),
-                                         @maPhong NVARCHAR(10),
-                                         @ngayDen DATE
+
+/* =========================================================
+   3. LẤY CHI TIẾT THEO MÃ HÓA ĐƠN (KHÔNG LỌC daHuy)
+   ========================================================= */
+CREATE PROCEDURE sp_GetCTHoaDonPhongTheoMaHD
+@maHD NVARCHAR(10)
 AS
 BEGIN
     SET NOCOUNT ON;
-    UPDATE CTHoaDonPhong
-    SET ngayDen = @ngayDen
+
+    SELECT maHD, maPhieu, maPhong,
+           ngayDen, ngayDi, giaPhong,
+           thanhTien, daHuy, ngayHuy
+    FROM CTHoaDonPhong
     WHERE maHD = @maHD
-      AND maPhong = @maPhong;
+    and daHuy = 0;
 END
 GO
 
--- 4. sp_CapNhatNgayDiThucTe (Cập nhật Ngày Đi thực tế)
-CREATE PROCEDURE sp_CapNhatNgayDiThucTe @maHD NVARCHAR(10),
-                                        @maPhong NVARCHAR(10),
-                                        @ngayDi DATE
-AS
-BEGIN
-    SET NOCOUNT ON;
-    UPDATE CTHoaDonPhong
-    SET ngayDi = @ngayDi
-    WHERE maHD = @maHD
-      AND maPhong = @maPhong;
-END
-GO
 
--- 5. sp_CapNhatMaPhongVaGia (Cập nhật Mã Phòng và Giá)
-CREATE PROCEDURE sp_CapNhatMaPhongVaGia @maPhieu NVARCHAR(10),
-                                        @maPhongCu NVARCHAR(10),
-                                        @maPhongMoi NVARCHAR(10),
-                                        @giaPhongMoi DECIMAL(18, 2)
+/******************************************************
+   4. ĐỔI PHÒNG + CẬP NHẬT GIÁ (CHỈ PHÒNG CHƯA HỦY)
+******************************************************/
+CREATE PROCEDURE sp_CapNhatMaPhongVaGia
+    @maPhieu NVARCHAR(10),
+    @maPhongCu NVARCHAR(10),
+    @maPhongMoi NVARCHAR(10),
+    @giaPhongMoi DECIMAL(18, 2)
 AS
 BEGIN
     SET NOCOUNT ON;
+
     UPDATE CTHoaDonPhong
     SET maPhong  = @maPhongMoi,
         giaPhong = @giaPhongMoi
     WHERE maPhieu = @maPhieu
-      AND maPhong = @maPhongCu;
+      AND maPhong = @maPhongCu
+      AND daHuy = 0;
 END
 GO
 
--- 6. sp_GetCTHoaDonPhongTheoMaPhong (Lấy theo Mã Phòng)
-CREATE PROCEDURE sp_GetCTHoaDonPhongTheoMaPhong @maPhong NVARCHAR(10)
+
+/******************************************************
+   5. CẬP NHẬT NGÀY ĐẾN THỰC TẾ (CHỈ PHÒNG CHƯA HỦY)
+******************************************************/
+CREATE PROCEDURE sp_CapNhatNgayDenThucTe
+    @maHD NVARCHAR(10),
+    @maPhong NVARCHAR(10),
+    @ngayDen DATE
 AS
 BEGIN
     SET NOCOUNT ON;
-    SELECT maHD, maPhieu, maPhong, ngayDen, ngayDi, giaPhong
-    FROM CTHoaDonPhong
-    WHERE maPhong = @maPhong;
+
+    UPDATE CTHoaDonPhong
+    SET ngayDen = @ngayDen
+    WHERE maHD = @maHD
+      AND maPhong = @maPhong
+      AND daHuy = 0;
 END
 GO
 
--- 7. sp_GetCTHoaDonPhongTheoMaHD (Lấy theo Mã Hóa Đơn)
-CREATE PROCEDURE sp_GetCTHoaDonPhongTheoMaHD @maHD NVARCHAR(10)
+
+/******************************************************
+   6. CẬP NHẬT NGÀY ĐI THỰC TẾ (CHỈ PHÒNG CHƯA HỦY)
+******************************************************/
+CREATE PROCEDURE sp_CapNhatNgayDiThucTe
+    @maHD NVARCHAR(10),
+    @maPhong NVARCHAR(10),
+    @ngayDi DATE
 AS
 BEGIN
     SET NOCOUNT ON;
-    SELECT maHD, maPhieu, maPhong, ngayDen, ngayDi, giaPhong
-    FROM CTHoaDonPhong
-    WHERE maHD = @maHD;
+
+    UPDATE CTHoaDonPhong
+    SET ngayDi = @ngayDi
+    WHERE maHD = @maHD
+      AND maPhong = @maPhong
+      AND daHuy = 0;
 END
 GO
 
--- 8. sp_TinhTongTienPhongTheoHD (Tính Tổng Tiền Phòng)
-CREATE OR ALTER PROCEDURE sp_TinhTongTienPhongTheoHD
+
+/******************************************************
+   7. TÍNH TỔNG TIỀN PHÒNG THEO HÓA ĐƠN (daHuy = 0)
+******************************************************/
+CREATE PROCEDURE sp_TinhTongTienPhongTheoHD
 @maHD NVARCHAR(10)
 AS
 BEGIN
@@ -162,29 +157,59 @@ BEGIN
 
     SELECT
         SUM(
-            -- Tính số ngày lưu trú (tối thiểu là 1 ngày)
                 CASE
-                    WHEN DATEDIFF(day, C.ngayDen, C.ngayDi) = 0 THEN 1
-                    ELSE DATEDIFF(day, C.ngayDen, C.ngayDi)
+                    WHEN DATEDIFF(DAY, ngayDen, ngayDi) = 0 THEN giaPhong
+                    ELSE DATEDIFF(DAY, ngayDen, ngayDi) * giaPhong
                     END
-                    * C.giaPhong
         ) AS TongTienPhong
-    FROM
-        CTHoaDonPhong C
-    WHERE
-        C.maHD = @maHD;
+    FROM CTHoaDonPhong
+    WHERE maHD = @maHD
+      AND daHuy = 0;
 END
 GO
 
--- 9. sp_XoaCTHoaDonPhong (Xóa)
-CREATE PROCEDURE sp_XoaCTHoaDonPhong @maHD NVARCHAR(10),
-                                     @maPhong NVARCHAR(10)
+
+/******************************************************
+   8. XÓA MỀM PHÒNG KHỎI PHIẾU ĐẶT
+******************************************************/
+CREATE PROCEDURE sp_HuyPhongKhoiPhieu
+    @maHD NVARCHAR(10),
+    @maPhong NVARCHAR(10),
+    @ketQua INT OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
-    DELETE
-    FROM CTHoaDonPhong
+
+    UPDATE CTHoaDonPhong
+    SET daHuy = 1,
+        ngayHuy = GETDATE()
     WHERE maHD = @maHD
-      AND maPhong = @maPhong;
+      AND maPhong = @maPhong
+      AND daHuy = 0;
+
+    SET @ketQua = @@ROWCOUNT;
 END
 GO
+
+CREATE PROCEDURE sp_GetCTHoaDonPhongTheoMaPhong
+@maPhong NVARCHAR(10)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        maHD,
+        maPhieu,
+        maPhong,
+        ngayDen,
+        ngayDi,
+        giaPhong,
+        thanhTien,
+        daHuy,
+        ngayHuy
+    FROM CTHoaDonPhong
+    WHERE maPhong = @maPhong
+      AND daHuy = 0; -- chỉ lấy các chi tiết chưa bị hủy
+END
+GO
+

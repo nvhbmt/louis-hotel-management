@@ -4,15 +4,6 @@
     -fx-background-radius: 15;
     -fx-padding: 15;
     -fx-spacing: 10;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 1);
-    -fx-cursor: hand;
-}
-
-.chart-container:hover {
-    -fx-background-color: #e0f7ff;
-    -fx-scale-x: 1.02;
-    -fx-scale-y: 1.02;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.25), 8, 0, 0, 2);
 }
 
 /* Buttons */
@@ -22,13 +13,6 @@
     -fx-font-weight: bold;
     -fx-background-radius: 20;
     -fx-border-radius: 20;
-    -fx-cursor: hand;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 3, 0, 0, 1);
-}
-
-.btn-info:hover {
-    -fx-background-color: #1AA3CC;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 5, 0, 0, 2);
 }
 
 /* Success button */
@@ -38,11 +22,6 @@
     -fx-font-weight: bold;
     -fx-background-radius: 20;
     -fx-border-radius: 20;
-    -fx-cursor: hand;
-}
-
-.btn-success:hover {
-    -fx-background-color: #57B300;
 }
 
 /* Cancel button */
@@ -52,11 +31,6 @@
     -fx-font-weight: bold;
     -fx-background-radius: 20;
     -fx-border-radius: 20;
-    -fx-cursor: hand;
-}
-
-.btn-cancel:hover {
-    -fx-background-color: #AAAAAA;
 }
 
 /* Labels */
@@ -83,31 +57,11 @@
     -fx-text-fill: #1e88e5;
 }
 
+/* Button chọn mã */
 .button-chon-ma {
-    /* Đổi màu nền (dựa trên màu xanh dương nhạt đang có trên giao diện) */
     -fx-background-color: #6398b1;
-
-    /* Màu chữ trắng để nổi bật trên nền xanh */
     -fx-text-fill: white;
-
-    /* Bo tròn góc để trông mềm mại hơn */
+    -fx-font-size: 14px;
     -fx-border-radius: 4px;
     -fx-background-radius: 4px;
-
-    /* Tăng kích thước phông chữ một chút */
-    -fx-font-size: 14px;
-
-    /* Thêm một chút đổ bóng (optional, tùy theo sở thích) */
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 5, 0.5, 0, 1);
-}
-
-/* Hiệu ứng khi di chuột qua */
-.button-chon-ma:hover {
-    -fx-background-color: #4b8098; /* Màu xanh đậm hơn một chút */
-    -fx-cursor: hand;
-}
-
-/* Hiệu ứng khi nhấn nút */
-.button-chon-ma:pressed {
-    -fx-background-color: #3f7082; /* Màu xanh đậm nhất khi nhấn */
 }

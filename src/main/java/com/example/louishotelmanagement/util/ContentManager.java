@@ -106,7 +106,6 @@ public class ContentManager {
     public static boolean isCached(String fxmlPath) {
         return cachedViews.containsKey(fxmlPath);
     }
-
     /**
      * Helper: safe switch with null guard and error handling
      */

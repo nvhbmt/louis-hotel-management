@@ -15,6 +15,7 @@ import com.example.louishotelmanagement.util.MenuBuilder;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -90,7 +91,19 @@ public class LayoutController implements Initializable, ContentSwitcher {
             e.printStackTrace();
         }
     }
+    @Override
+    public void switchContent(Parent root) {
+        if (root != null) {
+            // Sử dụng đúng biến mainBorderPane của class LayoutController
+            this.mainBorderPane.setCenter(root);
 
+            // Vì đây là trang được nạp động (dynamic), ta nên xóa trạng thái active của menu cũ
+            if (currentActiveButton != null) {
+                currentActiveButton.getStyleClass().remove("active");
+                currentActiveButton = null;
+            }
+        }
+    }
     /** Khởi tạo VBox menu và xử lý sự kiện */
     private void setupMenuVBox() {
         menuContainer.getChildren().clear();
