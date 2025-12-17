@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class HoaDon {
+
     private String maHD;
     private LocalDate ngayLap;
     private PhuongThucThanhToan phuongThuc;
@@ -11,21 +12,35 @@ public class HoaDon {
     private BigDecimal tongTien;
     private String maKH;
     private String maNV;
-    private String maGG; // Có thể null
+    private String maGG;
     private KhachHang khachHang;
     private String soPhong;
     private LocalDate ngayCheckOut;
 
     // =======================================================
-    // TRƯỜNG MỚI ĐƯỢC THÊM (ĐỒNG BỘ VỚI CƠ SỞ DỮ LIỆU)
+    // ====== TỔNG TIỀN (DB ĐANG DÙNG) =======================
     // =======================================================
-    private BigDecimal tienPhat;     // Tiền phạt (Phí trả trễ)
-    private BigDecimal tongGiamGia;  // Tổng Giảm giá đã áp dụng (Mã GG + Hạng Khách)
-    private BigDecimal tongVAT;      // Tổng VAT đã tính
+    private BigDecimal tienPhat;        // Tổng tiền phạt
+    private BigDecimal tongGiamGia;     // Tổng giảm giá
+    private BigDecimal tongVAT;         // Tổng VAT
+
+    // =======================================================
+    // ====== CHI TIẾT TIỀN PHẠT (UI / TƯƠNG LAI) ============
+    // =======================================================
+    private BigDecimal phatNhanPhongTre;   // Nhận phòng trễ
+    private BigDecimal phatTraPhongSom;    // Trả phòng sớm
+    private BigDecimal phatTraPhongTre;    // Trả phòng trễ
+
+    // =======================================================
+    // ====== CHI TIẾT GIẢM GIÁ (UI / TƯƠNG LAI) ==============
+    // =======================================================
+    private BigDecimal giamGiaTheoMa;       // Mã giảm giá
+    private BigDecimal giamGiaTheoHangKH;   // Hạng khách hàng
+
+    // =======================================================
+    // ================= CONSTRUCTOR =========================
     // =======================================================
 
-
-    // Constructor không tham số
     public HoaDon() {
     }
 
@@ -33,10 +48,9 @@ public class HoaDon {
         this.maHD = maHD;
     }
 
-    // Constructor đầy đủ tham số
-    // LƯU Ý: Không nên sửa Constructor này nếu nó không được dùng để khởi tạo đầy đủ các trường mới.
-    public HoaDon(String maHD, LocalDate ngayLap, PhuongThucThanhToan phuongThuc, TrangThaiHoaDon trangThai,
-                  BigDecimal tongTien, String maKH, String maNV, String maGG) {
+    public HoaDon(String maHD, LocalDate ngayLap, PhuongThucThanhToan phuongThuc,
+                  TrangThaiHoaDon trangThai, BigDecimal tongTien,
+                  String maKH, String maNV, String maGG) {
         this.maHD = maHD;
         this.ngayLap = ngayLap;
         this.phuongThuc = phuongThuc;
@@ -48,101 +62,63 @@ public class HoaDon {
         this.khachHang = new KhachHang();
     }
 
-    // *******************************************************
-    // GETTERS & SETTERS CHO CÁC TRƯỜNG MỚI
-    // *******************************************************
+    // =======================================================
+    // ================== GETTER / SETTER ====================
+    // =======================================================
 
-    public BigDecimal getTienPhat() {
-        return tienPhat;
-    }
+    public String getMaHD() { return maHD; }
+    public void setMaHD(String maHD) { this.maHD = maHD; }
 
-    public void setTienPhat(BigDecimal tienPhat) {
-        this.tienPhat = tienPhat;
-    }
+    public LocalDate getNgayLap() { return ngayLap; }
+    public void setNgayLap(LocalDate ngayLap) { this.ngayLap = ngayLap; }
 
-    public BigDecimal getTongGiamGia() {
-        return tongGiamGia;
-    }
+    public PhuongThucThanhToan getPhuongThuc() { return phuongThuc; }
+    public void setPhuongThuc(PhuongThucThanhToan phuongThuc) { this.phuongThuc = phuongThuc; }
 
-    public void setTongGiamGia(BigDecimal tongGiamGia) {
-        this.tongGiamGia = tongGiamGia;
-    }
+    public TrangThaiHoaDon getTrangThai() { return trangThai; }
+    public void setTrangThai(TrangThaiHoaDon trangThai) { this.trangThai = trangThai; }
 
-    public BigDecimal getTongVAT() {
-        return tongVAT;
-    }
+    public BigDecimal getTongTien() { return tongTien; }
+    public void setTongTien(BigDecimal tongTien) { this.tongTien = tongTien; }
 
-    public void setTongVAT(BigDecimal tongVAT) {
-        this.tongVAT = tongVAT;
-    }
+    public String getMaKH() { return maKH; }
+    public void setMaKH(String maKH) { this.maKH = maKH; }
 
-    // *******************************************************
-    // GETTERS & SETTERS CŨ (Giữ nguyên)
-    // *******************************************************
+    public String getMaNV() { return maNV; }
+    public void setMaNV(String maNV) { this.maNV = maNV; }
 
-    public String getMaHD() {
-        return maHD;
-    }
+    public String getMaGG() { return maGG; }
+    public void setMaGG(String maGG) { this.maGG = maGG; }
 
-    public void setMaHD(String maHD) {
-        this.maHD = maHD;
-    }
+    public LocalDate getNgayCheckOut() { return ngayCheckOut; }
+    public void setNgayCheckOut(LocalDate ngayCheckOut) { this.ngayCheckOut = ngayCheckOut; }
 
-    public LocalDate getNgayLap() {
-        return ngayLap;
-    }
+    // ===== TỔNG =====
+    public BigDecimal getTienPhat() { return tienPhat; }
+    public void setTienPhat(BigDecimal tienPhat) { this.tienPhat = tienPhat; }
 
-    public void setNgayLap(LocalDate ngayLap) {
-        this.ngayLap = ngayLap;
-    }
+    public BigDecimal getTongGiamGia() { return tongGiamGia; }
+    public void setTongGiamGia(BigDecimal tongGiamGia) { this.tongGiamGia = tongGiamGia; }
 
-    public PhuongThucThanhToan getPhuongThuc() {
-        return phuongThuc;
-    }
+    public BigDecimal getTongVAT() { return tongVAT; }
+    public void setTongVAT(BigDecimal tongVAT) { this.tongVAT = tongVAT; }
 
-    public void setPhuongThuc(PhuongThucThanhToan phuongThuc) {
-        this.phuongThuc = phuongThuc;
-    }
+    // ===== PHẠT CHI TIẾT =====
+    public BigDecimal getPhatNhanPhongTre() { return phatNhanPhongTre; }
+    public void setPhatNhanPhongTre(BigDecimal v) { this.phatNhanPhongTre = v; }
 
-    public BigDecimal getTongTien() {
-        return tongTien;
-    }
+    public BigDecimal getPhatTraPhongSom() { return phatTraPhongSom; }
+    public void setPhatTraPhongSom(BigDecimal v) { this.phatTraPhongSom = v; }
 
-    public void setTongTien(BigDecimal tongTien) {
-        this.tongTien = tongTien;
-    }
+    public BigDecimal getPhatTraPhongTre() { return phatTraPhongTre; }
+    public void setPhatTraPhongTre(BigDecimal v) { this.phatTraPhongTre = v; }
 
-    public String getMaKH() {
-        return maKH;
-    }
+    // ===== GIẢM GIÁ CHI TIẾT =====
+    public BigDecimal getGiamGiaTheoMa() { return giamGiaTheoMa; }
+    public void setGiamGiaTheoMa(BigDecimal v) { this.giamGiaTheoMa = v; }
 
-    public void setMaKH(String maKH) {
-        this.maKH = maKH;
-    }
-
-    public String getMaNV() {
-        return maNV;
-    }
-
-    public void setMaNV(String maNV) {
-        this.maNV = maNV;
-    }
-
-    public String getMaGG() {
-        return maGG;
-    }
-
-    public void setMaGG(String maGG) {
-        this.maGG = maGG;
-    }
-
-    public TrangThaiHoaDon getTrangThai() {
-        return trangThai;
-    }
-
-    public void setTrangThai(TrangThaiHoaDon trangThai) {
-        this.trangThai = trangThai;
-    }
+    public BigDecimal getGiamGiaTheoHangKH() { return giamGiaTheoHangKH; }
+    public void setGiamGiaTheoHangKH(BigDecimal v) { this.giamGiaTheoHangKH = v; }
 
     public KhachHang getKhachHang() {
         return khachHang;
@@ -160,30 +136,22 @@ public class HoaDon {
         this.soPhong = soPhong;
     }
 
-    public LocalDate getNgayCheckOut() {
-        return ngayCheckOut;
+    // =======================================================
+    // ================== HELPER (OPTIONAL) ==================
+    // =======================================================
+
+    public BigDecimal tinhTongTienPhat() {
+        return safe(phatNhanPhongTre)
+                .add(safe(phatTraPhongSom))
+                .add(safe(phatTraPhongTre));
     }
 
-    public void setNgayCheckOut(LocalDate ngayCheckOut) {
-        this.ngayCheckOut = ngayCheckOut;
+    public BigDecimal tinhTongGiamGia() {
+        return safe(giamGiaTheoMa)
+                .add(safe(giamGiaTheoHangKH));
     }
 
-    @Override
-    public String toString() {
-        // 1. Thêm placeholder '%s' và label 'TongGiamGia=%,.0f' vào chuỗi định dạng
-        return String.format(
-                "HoaDon{maHD='%s', ngayLap=%s, phuongThuc='%s', tongTien=%,.0f, maKH='%s', maNV='%s', maGG='%s', TongGiamGia=%,.0f, TienPhat=%,.0f, TongVAT=%,.0f}", // <--- Đã sửa chuỗi định dạng
-                maHD,
-                ngayLap,
-                phuongThuc,
-                tongTien != null ? tongTien.doubleValue() : 0,
-                maKH,
-                maNV,
-                maGG,
-                // 2. Thêm tham số tongGiamGia vào danh sách
-                tongGiamGia != null ? tongGiamGia.doubleValue() : 0, // <--- Đã thêm tham số
-                tienPhat != null ? tienPhat.doubleValue() : 0,
-                tongVAT != null ? tongVAT.doubleValue() : 0
-        );
+    private BigDecimal safe(BigDecimal v) {
+        return v == null ? BigDecimal.ZERO : v;
     }
 }

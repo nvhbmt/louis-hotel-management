@@ -21,8 +21,8 @@ PRINT N'-- 2. Đang thêm dữ liệu bảng Phong...';
 INSERT INTO Phong (maPhong, tang, trangThai, moTa, maLoaiPhong)
 VALUES
 -- Tầng 1
-('P101', 1, N'Đã đặt', N'Phòng đơn tầng 1, cửa sổ hướng sân vườn', 'LP001'),
-('P102', 1, N'Đã đặt', N'Phòng đơn tầng 1, cửa sổ hướng đường lớn', 'LP001'),
+('P101', 1, N'Trống', N'Phòng đơn tầng 1, cửa sổ hướng sân vườn', 'LP001'),
+('P102', 1, N'Trống', N'Phòng đơn tầng 1, cửa sổ hướng đường lớn', 'LP001'),
 ('P103', 1, N'Trống', N'Phòng đơn tầng 1, yên tĩnh', 'LP001'),
 ('P104', 1, N'Trống', N'Phòng đôi tầng 1, cửa sổ hướng sân', 'LP002'),
 ('P105', 1, N'Trống', N'Phòng đôi tầng 1, cửa sổ hướng đường', 'LP002'),
@@ -167,28 +167,55 @@ PRINT N'-- 9. Đang thêm dữ liệu bảng HoaDon (Sửa Tổng Tiền)...';
 -- XÓA DỮ LIỆU CŨ CỦA HoaDon (Nếu bạn chạy script nhiều lần)
 DELETE FROM HoaDon WHERE maHD IN ('HD001', 'HD002', 'HD003', 'HD004', 'HD005', 'HD006', 'HD007');
 
-INSERT INTO HoaDon (maHD, ngayLap, phuongThuc, trangThai, tongTien, maKH, maNV, maGG, NgayCheckOut, TienPhat, TongGiamGia, TongVAT)
+INSERT INTO HoaDon
+(
+    maHD, ngayLap, phuongThuc, trangThai, tongTien,
+    PhatNhanPhongTre, PhatTraPhongSom, PhatTraPhongTre,
+    GiamGiaMaGG, GiamGiaHangKH,
+    TongVAT, NgayCheckOut, maKH, maNV, maGG
+)
 VALUES
--- HD001: (2.6M + 470k) * 0.9 (GG001: 10%) = 2,763,000
-('HD001', '2025-10-12', N'Chuyển khoản', N'Đã thanh toán', 2763000.00, 'KH001', 'NV002', 'GG001', '2025-10-12', 0.00, 307000.00, 276300.00),
+-- HD001: Giảm giá 10% qua mã GG001 (307k), không phạt
+('HD001', '2025-10-12', N'Chuyển khoản', N'Đã thanh toán', 2763000.00,
+ 0.00, 0.00, 0.00,
+ 307000.00, 0.00,
+ 276300.00, '2025-10-12', 'KH001', 'NV002', 'GG001'),
 
--- HD002: (2.2M + 780k) = 2,980,000 (Khách VIP - GG Hạng Khách 15%)
-('HD002', '2025-10-15', N'Tiền mặt', N'Đã thanh toán', 2980000.00, 'KH002', 'NV004', NULL, '2025-10-15', 0.00, 447000.00, 298000.00),
+-- HD002: Khách VIP - Giảm giá hạng khách 15% (447k), không phạt
+('HD002', '2025-10-15', N'Tiền mặt', N'Đã thanh toán', 2980000.00,
+ 0.00, 0.00, 0.00,
+ 0.00, 447000.00,
+ 298000.00, '2025-10-15', 'KH002', 'NV004', NULL),
 
--- HD003: (850k + 360k) = 1,210,000. Áp GG002 (500k) -> 710,000
-('HD003', '2025-10-17', N'Ví điện tử', N'Đã thanh toán', 710000.00, 'KH003', 'NV002', 'GG002', '2025-10-17', 0.00, 500000.00, 71000.00),
+-- HD003: Áp mã GG002 giảm 500k, không phạt
+('HD003', '2025-10-17', N'Ví điện tử', N'Đã thanh toán', 710000.00,
+ 0.00, 0.00, 0.00,
+ 500000.00, 0.00,
+ 71000.00, '2025-10-17', 'KH003', 'NV002', 'GG002'),
 
--- HD004: (1.5M + 0) = 1,500,000. (Khách quen - GG Hạng Khách 5%)
-('HD004', '2025-10-23', N'Tiền mặt', N'Đã thanh toán', 1575000.00, 'KH004', 'NV003', NULL, '2025-10-25', 0.00, 75000.00, 75000.00),
+-- HD004: Khách quen - Giảm giá hạng khách 5% (75k), không phạt
+('HD004', '2025-10-23', N'Tiền mặt', N'Đã thanh toán', 1575000.00,
+ 0.00, 0.00, 0.00,
+ 0.00, 75000.00,
+ 75000.00, '2025-10-25', 'KH004', 'NV003', NULL),
 
--- HD005: (1.0M + 0) = 1,000,000 (Khách VIP - GG Hạng Khách 15%)
-('HD005', '2025-10-24', N'Chuyển khoản', N'Đã thanh toán', 1150000.00, 'KH005', 'NV004', NULL, '2025-10-26', 0.00, 172500.00, 115000.00),
+-- HD005: Khách VIP - Giảm giá hạng khách 15% (172.5k), không phạt
+('HD005', '2025-10-24', N'Chuyển khoản', N'Đã thanh toán', 1150000.00,
+ 0.00, 0.00, 0.00,
+ 0.00, 172500.00,
+ 115000.00, '2025-10-26', 'KH005', 'NV004', NULL),
 
--- HD006 (Chưa thanh toán - Tạm tính 1.7M)
-('HD006', '2025-12-03', NULL, N'Chưa thanh toán', 0.00, 'KH003', 'NV001', NULL, NULL, 0.00, 0.00, 0.00),
+-- HD006: Chưa thanh toán, các giá trị tiền bằng 0
+('HD006', '2025-12-03', NULL, N'Chưa thanh toán', 0.00,
+ 0.00, 0.00, 0.00,
+ 0.00, 0.00,
+ 0.00, NULL, 'KH003', 'NV001', NULL),
 
--- HD007 (Chưa thanh toán - Tạm tính 850k - Có tiền cọc)
-('HD007', '2025-12-06', NULL, N'Chưa thanh toán', 0.00, 'KH004', 'NV002', NULL, NULL, 0.00, 0.00, 0.00);
+-- HD007: Chưa thanh toán, các giá trị tiền bằng 0
+('HD007', '2025-12-06', NULL, N'Chưa thanh toán', 0.00,
+ 0.00, 0.00, 0.00,
+ 0.00, 0.00,
+ 0.00, NULL, 'KH004', 'NV002', NULL);
 GO
 -------------------------------------------------------------------
 -- 10. CTHoaDonPhong (Chi tiết hóa đơn phòng)

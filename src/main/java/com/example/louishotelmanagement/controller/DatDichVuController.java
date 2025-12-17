@@ -28,6 +28,11 @@ import java.util.ResourceBundle;
 
 public class DatDichVuController implements Initializable {
 
+    public ComboBox dsKhachHang;
+    public ComboBox dsPhong;
+    public TextField maNV;
+    public TextArea txtGhiChu;
+    public Label lblTongTienTam;
     @FXML
     private FlowPane pnDanhSachDichVu; // Panel chứa các thẻ dịch vụ (Bên trái)
     @FXML
@@ -44,18 +49,7 @@ public class DatDichVuController implements Initializable {
     @FXML
     private TableColumn<CTHoaDonDichVu, Void> colGH_Xoa;
 
-    @FXML
-    private ComboBox dsPhong;
-    @FXML
-    private ComboBox dsKhachHang;
-    @FXML
-    private TextField maNV;
-    @FXML
-    private TextArea txtGhiChu;
-    @FXML
-    private Label lblTongTienTam;
-    @FXML
-    private Button btnXacNhanLapPhieu;
+
 
     public KhachHangDAO kDao;
     public PhongDAO pDao;
@@ -284,7 +278,7 @@ public class DatDichVuController implements Initializable {
         CTHoaDonPhong cthdp = cthddphongDao.getDSCTHoaDonPhongTheoMaPhong(dsPhong.getSelectionModel().getSelectedItem().toString()).getLast();
         PhieuDatPhong phieuDatPhong = phieuDatPhongDAO.layPhieuDatPhongTheoMa(cthdp.getMaPhieu());
 
-        if (phieuDatPhong.getTrangThai().equals(TrangThaiPhieuDatPhong.DANG_SU_DUNG)) {
+        if (phieuDatPhong.getTrangThai().equalsIgnoreCase(TrangThaiPhieuDatPhong.DANG_SU_DUNG.toString())) {
             // Setup Phiếu Dịch Vụ
             AuthService auth = AuthService.getInstance();
             PhieuDichVu pdv = new PhieuDichVu(maPhieuDV, cthdp.getMaHD(), LocalDate.now(), auth.getCurrentUser().getNhanVien().getMaNV(), txtGhiChu.getText(), auth.getCurrentUser().getNhanVien(), hdDao.timHoaDonTheoMa(cthdp.getMaHD()));
@@ -344,7 +338,7 @@ public class DatDichVuController implements Initializable {
         ArrayList<PhieuDatPhong> dsPhieu = phieuDatPhongDAO.layDSPhieuDatPhongTheoKhachHang(dsMaKH.get(dsKhachHang.getSelectionModel().getSelectedIndex()));
         if (dsPhieu.size() > 0) {
             for (PhieuDatPhong p : dsPhieu) {
-                if (p.getTrangThai() != null && p.getTrangThai().equals(TrangThaiPhieuDatPhong.DANG_SU_DUNG)) {
+                if (p.getTrangThai() != null && p.getTrangThai().equalsIgnoreCase(TrangThaiPhieuDatPhong.DANG_SU_DUNG.toString())) {
                     ArrayList<CTHoaDonPhong> dsCTP = cthddphongDao.getCTHoaDonPhongTheoMaPhieu(p.getMaPhieu());
                     for (CTHoaDonPhong ctp : dsCTP) {
                         dsPhong.getItems().add(ctp.getMaPhong());

@@ -4,6 +4,8 @@ import com.example.louishotelmanagement.dao.PhongDAO;
 import com.example.louishotelmanagement.model.LoaiPhong;
 import com.example.louishotelmanagement.model.Phong;
 import com.example.louishotelmanagement.model.TrangThaiPhong;
+import com.example.louishotelmanagement.util.ContentManager;
+import com.example.louishotelmanagement.util.ThongBaoUtil;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -12,10 +14,13 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.text.NumberFormat;
@@ -24,6 +29,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 import com.example.louishotelmanagement.util.ContentSwitcher;
+import javafx.scene.layout.BorderPane;
 
 
 public class PhongController implements Initializable {
@@ -263,7 +269,36 @@ public class PhongController implements Initializable {
 
     @FXML
     private void moHuy(ActionEvent actionEvent) {
-        if (switcher != null) switcher.switchContent("/com/example/louishotelmanagement/fxml/tra-phong-view.fxml");
+        // 1. Lấy phòng đang chọn từ TableView
+        Phong selected = tableViewPhong.getSelectionModel().getSelectedItem();
+        if (selected == null || !selected.getTrangThai().equals(TrangThaiPhong.DANG_SU_DUNG)) {
+            ThongBaoUtil.hienThiLoi("Thông báo", "Vui lòng chọn một phòng đang sử dụng để trả phòng!");
+            return;
+        }
+
+        if (switcher != null) {
+            try {
+                // 2. Load FXML thủ công
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/tra-phong-view.fxml"));
+                Parent root = loader.load();
+
+                // 3. Lấy Controller và nạp dữ liệu
+                TraPhongController controller = loader.getController();
+
+                // QUAN TRỌNG: Gán switcher lại cho màn hình mới để điều hướng menu không bị hỏng
+                controller.setContentSwitcher(this.switcher);
+
+                // Nạp dữ liệu phòng vào màn hình trả phòng
+                controller.truyenDuLieuTuPhong(selected.getMaPhong());
+
+                // 4. Hiển thị thông qua LayoutController (switcher)
+                switcher.switchContent(root);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                ThongBaoUtil.hienThiLoi("Lỗi", "Không thể tải giao diện trả phòng!");
+            }
+        }
     }
 
     @FXML

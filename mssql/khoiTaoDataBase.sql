@@ -121,25 +121,41 @@ GO
 -- Sửa đổi Bảng HoaDon để lưu trữ chi tiết tính toán
 CREATE TABLE HoaDon
 (
-    maHD nvarchar(10) PRIMARY KEY,
+    maHD NVARCHAR(10) PRIMARY KEY,
+
     ngayLap DATE,
     phuongThuc NVARCHAR(50),
-    trangThai NVARCHAR(50) check (trangThai in(N'Chưa thanh toán',N'Đã thanh toán')),
-    tongTien DECIMAL(18,2), -- Tổng tiền cuối cùng đã thanh toán
-    -- THÊM CÁC TRƯỜNG LƯU TRỮ CHI TIẾT KHI ĐÃ THANH TOÁN
-    TienPhat DECIMAL(18,2) NULL,        -- Tiền phạt trả phòng trễ
-    TongGiamGia DECIMAL(18,2) NULL,     -- Tổng giảm giá (Mã GG + Hạng Khách)
-    TongVAT DECIMAL(18,2) NULL,         -- Tổng VAT đã tính
-    NgayCheckOut DATE NULL,             -- Ngày trả phòng thực tế (đã có trong code Java, nên lưu vào DB)
 
-    maKH nvarchar(10),
-    maNV nvarchar(10),
-    maGG nvarchar(10) NULL,
+    trangThai NVARCHAR(50)
+        CHECK (trangThai IN (N'Chưa thanh toán', N'Đã thanh toán')),
+
+    -- ========= TIỀN PHÒNG + TỔNG =========
+    tongTien DECIMAL(18,2),              -- Tổng tiền cuối cùng phải thanh toán
+
+    -- ========= PHÍ / PHẠT =========
+    PhatNhanPhongTre DECIMAL(18,2) NULL DEFAULT 0,   -- Nhận phòng trễ
+    PhatTraPhongSom  DECIMAL(18,2) NULL DEFAULT 0,   -- Trả phòng sớm
+    PhatTraPhongTre  DECIMAL(18,2) NULL DEFAULT 0,   -- Trả phòng trễ
+
+    -- ========= GIẢM GIÁ =========
+    GiamGiaMaGG   DECIMAL(18,2) NULL DEFAULT 0,      -- Giảm theo mã GG
+    GiamGiaHangKH DECIMAL(18,2) NULL DEFAULT 0,      -- Giảm theo hạng KH
+
+    -- ========= THUẾ / NGÀY THỰC TẾ =========
+    TongVAT DECIMAL(18,2) NULL,                      -- Tổng VAT
+    NgayCheckOut DATE NULL,                          -- Ngày trả phòng thực tế
+
+    -- ========= KHÓA NGOẠI =========
+    maKH NVARCHAR(10),
+    maNV NVARCHAR(10),
+    maGG NVARCHAR(10) NULL,
+
     FOREIGN KEY (maKH) REFERENCES KhachHang(maKH),
     FOREIGN KEY (maNV) REFERENCES NhanVien(maNV),
     FOREIGN KEY (maGG) REFERENCES MaGiamGia(maGG)
 );
 GO
+
 -- Chi tiết hóa đơn
 CREATE TABLE CTHoaDonPhong
 (
@@ -156,6 +172,8 @@ CREATE TABLE CTHoaDonPhong
             ELSE DATEDIFF(DAY, ngayDen, ngayDi) * giaPhong
             END
         ) PERSISTED,
+    daHuy BIT NOT NULL DEFAULT 0,
+    ngayHuy DATETIME NULL,
     PRIMARY KEY (maHD, maPhong),
     FOREIGN KEY (maHD) REFERENCES HoaDon(maHD),
     FOREIGN KEY (maPhieu) REFERENCES PhieuDatPhong(maPhieu),

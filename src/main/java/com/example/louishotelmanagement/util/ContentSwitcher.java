@@ -1,12 +1,14 @@
 package com.example.louishotelmanagement.util;
 
+import javafx.scene.Parent;
+
 public interface ContentSwitcher {
     /**
      * Chuyển đổi nội dung hiển thị
      * @param fxmlPath Đường dẫn đến file FXML
      */
     void switchContent(String fxmlPath);
-    
+    void switchContent(Parent root);
     /**
      * Chuyển đổi nội dung và cập nhật trạng thái active trong menu
      * @param fxmlPath Đường dẫn đến file FXML

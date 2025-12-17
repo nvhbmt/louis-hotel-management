@@ -21,7 +21,10 @@ import java.util.stream.Collectors;
 public class XemChiTietHoaDonController {
 
     @FXML private Label lblMaHD, lblNgayLap, lblNgayCheckout, lblTenKH;
-    @FXML private Label lblPhuongThuc, lblTrangThai, lblTongTien, lblTongGiamGia, lblVAT, lblTienPhat;
+    @FXML private Label lblPhuongThuc, lblTrangThai, lblTongTien, lblVAT;
+
+    // Các nhãn chi tiết mới bổ sung
+    @FXML private Label lblGiamGiaMa, lblGiamGiaHang, lblPhatNhanTre, lblPhatTraSom, lblPhatTraTre;
 
     @FXML private TableView<HoaDonChiTietItem> tableChiTiet;
     @FXML private TableColumn<HoaDonChiTietItem, String> colTenDV;
@@ -39,46 +42,48 @@ public class XemChiTietHoaDonController {
     private final HoaDonDAO hoaDonDAO = new HoaDonDAO();
     private final KhachHangDAO khachHangDAO = new KhachHangDAO();
 
-    // ============================================
-    // LOAD DATA
-    // ============================================
     public void loadData(String maHD) throws SQLException {
         HoaDon hd = hoaDonDAO.timHoaDonTheoMa(maHD);
 
         if (hd == null) {
-            showAlert("Không tìm thấy hóa đơn!");
+            showAlert("Không tìm thấy hóa đơn mã: " + maHD);
             return;
         }
 
+        // 1. Thông tin cơ bản
         lblMaHD.setText(hd.getMaHD());
-        lblNgayLap.setText(hd.getNgayLap() != null ? hd.getNgayLap().format(dateFormat) : "");
-        lblNgayCheckout.setText(hd.getNgayCheckOut() != null ? hd.getNgayCheckOut().format(dateFormat) : "");
+        lblNgayLap.setText(hd.getNgayLap() != null ? hd.getNgayLap().format(dateFormat) : "N/A");
+        lblNgayCheckout.setText(hd.getNgayCheckOut() != null ? hd.getNgayCheckOut().format(dateFormat) : "Chưa checkout");
 
         KhachHang kh = khachHangDAO.layKhachHangTheoMa(hd.getMaKH());
-        lblTenKH.setText(kh != null ? kh.getHoTen() : "Không có");
+        lblTenKH.setText(kh != null ? kh.getHoTen() : "Khách vãng lai");
 
-        lblPhuongThuc.setText(hd.getPhuongThuc() != null ? hd.getPhuongThuc().toString() : "");
-        lblTrangThai.setText(hd.getTrangThai().toString());
+        lblPhuongThuc.setText(hd.getPhuongThuc() != null ? hd.getPhuongThuc().toString() : "Chưa chọn");
+        lblTrangThai.setText(hd.getTrangThai() != null ? hd.getTrangThai().toString() : "N/A");
 
+        // 2. Thông tin tiền tệ chi tiết
         lblTongTien.setText(formatMoney(hd.getTongTien()));
-        lblTongGiamGia.setText(formatMoney(hd.getTongGiamGia()));
         lblVAT.setText(formatMoney(hd.getTongVAT()));
-        lblTienPhat.setText(formatMoney(hd.getTienPhat()));
 
-        // Load chi tiết
+        // Hiển thị các khoản giảm giá
+        lblGiamGiaMa.setText(formatMoney(hd.getGiamGiaTheoMa()));
+        lblGiamGiaHang.setText(formatMoney(hd.getGiamGiaTheoHangKH()));
+
+        // Hiển thị các khoản phạt
+        lblPhatNhanTre.setText(formatMoney(hd.getPhatNhanPhongTre()));
+        lblPhatTraSom.setText(formatMoney(hd.getPhatTraPhongSom()));
+        lblPhatTraTre.setText(formatMoney(hd.getPhatTraPhongTre()));
+
+        // 3. Load danh sách dịch vụ/phòng vào TableView
         fullList = hoaDonDAO.layChiTietHoaDon(maHD);
 
-        // Mapping TableColumn
         colTenDV.setCellValueFactory(c ->
                 new javafx.beans.property.SimpleStringProperty(c.getValue().getTenChiTiet()));
 
         colSoLuong.setCellValueFactory(c -> {
             HoaDonChiTietItem item = c.getValue();
-
-            String suffix = item.isPhong() ? " ngày" : " lần";
-            String result = item.getSoLuong() + suffix;
-
-            return new javafx.beans.property.SimpleStringProperty(result);
+            String unit = item.isPhong() ? " đêm" : " lần";
+            return new javafx.beans.property.SimpleStringProperty(item.getSoLuong() + unit);
         });
 
         colDonGia.setCellValueFactory(c ->
@@ -89,24 +94,22 @@ public class XemChiTietHoaDonController {
 
         tableChiTiet.setItems(FXCollections.observableArrayList(fullList));
 
-        // ComboBox filter
-        cbFilter.getItems().addAll("Tất cả", "Phòng", "Dịch vụ");
-        cbFilter.setValue("Tất cả");
-
+        // 4. Cấu hình Filter ComboBox
+        if (cbFilter.getItems().isEmpty()) {
+            cbFilter.getItems().addAll("Tất cả", "Phòng", "Dịch vụ");
+            cbFilter.setValue("Tất cả");
+        }
         cbFilter.setOnAction(e -> applyFilter());
 
-        // Nút đóng
+        // 5. Nút đóng
         btnClose.setOnAction(e -> ((Stage) btnClose.getScene().getWindow()).close());
     }
 
-    // ============================================
-    // FILTER
-    // ============================================
     private void applyFilter() {
         String f = cbFilter.getValue();
+        if (fullList == null) return;
 
         List<HoaDonChiTietItem> filtered;
-
         switch (f) {
             case "Phòng":
                 filtered = fullList.stream().filter(HoaDonChiTietItem::isPhong).collect(Collectors.toList());
@@ -117,17 +120,17 @@ public class XemChiTietHoaDonController {
             default:
                 filtered = fullList;
         }
-
         tableChiTiet.setItems(FXCollections.observableArrayList(filtered));
     }
 
-    // ============================================
     private String formatMoney(BigDecimal v) {
-        return v == null ? "0" : currency.format(v);
+        if (v == null || v.compareTo(BigDecimal.ZERO) == 0) return "0 ₫";
+        return currency.format(v);
     }
 
     private void showAlert(String msg) {
-        Alert a = new Alert(Alert.AlertType.ERROR, msg, ButtonType.OK);
+        Alert a = new Alert(Alert.AlertType.WARNING, msg, ButtonType.OK);
+        a.setHeaderText(null);
         a.show();
     }
 }
