@@ -6,6 +6,7 @@ public class Phong {
     private TrangThaiPhong trangThai;
     private String moTa;
     private LoaiPhong loaiPhong;
+    private boolean selected; // For checkbox selection
 
     public Phong() {
         this.maPhong = "";
@@ -13,6 +14,7 @@ public class Phong {
         this.trangThai = TrangThaiPhong.TRONG;
         this.moTa = "";
         this.loaiPhong = null;
+        this.selected = false;
     }
 
     public Phong(String maPhong, Integer tang, TrangThaiPhong trangThai, String moTa, LoaiPhong loaiPhong) {
@@ -70,6 +72,14 @@ public class Phong {
 
     public void setLoaiPhong(LoaiPhong loaiPhong) {
         this.loaiPhong = loaiPhong;
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
     }
 
     @Override

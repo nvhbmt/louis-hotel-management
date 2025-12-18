@@ -178,16 +178,24 @@ public class DatPhongTaiQuayController implements Initializable,Refreshable {
                 btnThem.setOnAction(_ -> {
                     Phong phong = getTableView().getItems().get(getIndex());
                     tablePhong.getSelectionModel().select(phong);
-                    boolean isContain = listPhongDuocDat.contains(phong);
-                    if(isContain) {
-                        listPhongDuocDat.remove(phong);
-                        SoPhongDaChon.setText(String.valueOf(listPhongDuocDat.size()));
-                        TongTien.setText(String.valueOf(TinhTongTien(listPhongDuocDat)));
+                    
+                    // So sánh theo mã phòng
+                    Phong phongDaChon = listPhongDuocDat.stream()
+                        .filter(p -> p.getMaPhong().equals(phong.getMaPhong()))
+                        .findFirst()
+                        .orElse(null);
+                    
+                    if(phongDaChon != null) {
+                        // Đã có trong list -> Xóa
+                        listPhongDuocDat.remove(phongDaChon);
                     }else{
+                        // Chưa có -> Thêm
                         listPhongDuocDat.add(phong);
-                        SoPhongDaChon.setText(String.valueOf(listPhongDuocDat.size()));
-                        TongTien.setText(String.valueOf(TinhTongTien(listPhongDuocDat)));
                     }
+                    
+                    // Cập nhật UI
+                    SoPhongDaChon.setText(String.valueOf(listPhongDuocDat.size()));
+                    TongTien.setText(String.format("%,.0f VNĐ", TinhTongTien(listPhongDuocDat)));
                     getTableView().refresh();
                 });
             }
@@ -200,7 +208,10 @@ public class DatPhongTaiQuayController implements Initializable,Refreshable {
                     setGraphic(null);
                 } else {
                     Phong phong = getTableView().getItems().get(getIndex());
-                    boolean isAdded = listPhongDuocDat.contains(phong);
+                    // So sánh theo mã phòng
+                    boolean isAdded = listPhongDuocDat.stream()
+                        .anyMatch(p -> p.getMaPhong().equals(phong.getMaPhong()));
+                    
                     btnThem.getStyleClass().removeAll("btn", "btn-xs", "btn-info", "btn-table-add", "btn-danger","btn-table-remove");
                     if(isAdded) {
                         btnThem.setText("Bỏ chọn");
@@ -219,7 +230,8 @@ public class DatPhongTaiQuayController implements Initializable,Refreshable {
         colDaChon.setCellFactory(_ -> new TableCell<>() {
             private CheckBox checkBox = new CheckBox();
             {
-
+                // Disable user interaction - chỉ hiển thị trạng thái
+                checkBox.setDisable(true);
             }
             @Override
             protected void updateItem(Void item, boolean empty) {
@@ -228,7 +240,9 @@ public class DatPhongTaiQuayController implements Initializable,Refreshable {
                     setGraphic(null);
                 }else{
                     Phong phong = getTableView().getItems().get(getIndex());
-                    boolean isChecked = listPhongDuocDat.contains(phong);
+                    // So sánh theo mã phòng thay vì object reference
+                    boolean isChecked = listPhongDuocDat.stream()
+                        .anyMatch(p -> p.getMaPhong().equals(phong.getMaPhong()));
                     checkBox.setSelected(isChecked);
                     HBox box = new HBox(8, checkBox);
                     box.setAlignment(Pos.CENTER);
@@ -499,5 +513,39 @@ public class DatPhongTaiQuayController implements Initializable,Refreshable {
     @FXML
     private void handleLocLoaiPhong() {
         apDungFilter();
+    }
+    
+    /**
+     * Nhận danh sách phòng đã chọn từ màn hình quản lý phòng
+     * @param dsPhongDaChon Danh sách phòng đã được chọn
+     */
+    public void nhanDanhSachPhongDaChon(ArrayList<Phong> dsPhongDaChon) {
+        if (dsPhongDaChon != null && !dsPhongDaChon.isEmpty()) {
+            // Đảm bảo danh sách rỗng trước khi thêm
+            listPhongDuocDat.clear();
+            
+            // Thêm các phòng đã chọn vào danh sách
+            // Chỉ thêm những phòng có trong danhSachPhong (phòng trống)
+            for (Phong phongChon : dsPhongDaChon) {
+                // Tìm phòng tương ứng trong danhSachPhong
+                Phong phongTrongList = danhSachPhong.stream()
+                    .filter(p -> p.getMaPhong().equals(phongChon.getMaPhong()))
+                    .findFirst()
+                    .orElse(null);
+                
+                if (phongTrongList != null) {
+                    listPhongDuocDat.add(phongTrongList);
+                }
+            }
+            
+            // Cập nhật UI
+            SoPhongDaChon.setText(String.valueOf(listPhongDuocDat.size()));
+            TongTien.setText(String.format("%,.0f VNĐ", TinhTongTien(listPhongDuocDat)));
+            
+            // Refresh table để cập nhật checkbox và button - sử dụng Platform.runLater
+            javafx.application.Platform.runLater(() -> {
+                tablePhong.refresh();
+            });
+        }
     }
 }

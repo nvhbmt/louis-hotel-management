@@ -211,6 +211,36 @@ public class PhongDAO {
     }
 
     /**
+     * Kiểm tra xem một phòng có trống trong khoảng thời gian hay không.
+     * 
+     * @param maPhong Mã phòng cần kiểm tra
+     * @param ngayDen Ngày đến (check-in)
+     * @param ngayDi Ngày đi (check-out)
+     * @return true nếu phòng trống trong khoảng thời gian, false nếu không
+     * @throws SQLException Nếu có lỗi khi truy vấn database
+     */
+    public boolean kiemTraPhongTrongTheoKhoangThoiGian(String maPhong, LocalDate ngayDen, LocalDate ngayDi) throws SQLException {
+        if (ngayDen == null || ngayDi == null || maPhong == null) {
+            return false;
+        }
+        
+        String sql = "{call sp_KiemTraPhongTrongTheoKhoangThoiGian(?,?,?)}";
+        try (Connection con = CauHinhDatabase.getConnection();
+             CallableStatement cs = con.prepareCall(sql)) {
+            
+            cs.setString(1, maPhong);
+            cs.setDate(2, Date.valueOf(ngayDen));
+            cs.setDate(3, Date.valueOf(ngayDi));
+            
+            ResultSet rs = cs.executeQuery();
+            if (rs.next()) {
+                return rs.getBoolean("isTrong");
+            }
+        }
+        return false;
+    }
+    
+    /**
      * Lấy danh sách phòng trống trong khoảng thời gian đã chỉ định.
      * 
      * @param ngayDen Ngày đến (check-in), không được null

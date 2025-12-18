@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.text.NumberFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -42,15 +43,21 @@ public class PhongController implements Initializable {
     @FXML
     private ComboBox<String> cbxTang;
     @FXML
-    private ComboBox<String> cbxTrangThai; // THÊM MỚI
+    private ComboBox<String> cbxTrangThai;
+    @FXML
+    private DatePicker dpTuNgay;
+    @FXML
+    private DatePicker dpDenNgay;
     @FXML
     private TableView<Phong> tableViewPhong;
+    @FXML
+    private TableColumn<Phong, Boolean> chonPhong;
     @FXML
     private TableColumn<Phong, String> maPhong;
     @FXML
     private TableColumn<Phong, String> loaiPhong;
     @FXML
-    private TableColumn<Phong, Double> donGia; // Sửa thành BigDecimal
+    private TableColumn<Phong, Double> donGia;
     @FXML
     private TableColumn<Phong, TrangThaiPhong> trangThai;
     @FXML
@@ -74,6 +81,7 @@ public class PhongController implements Initializable {
 
         cauHinhBang();
         cauHinhCBX();
+        cauHinhDatePicker(); // Thiết lập listener cho DatePicker
         cauHinhLoc(); // Thiết lập bộ lọc tự động
         taiBang();
     }
@@ -85,6 +93,44 @@ public class PhongController implements Initializable {
         phongObservableList = FXCollections.observableArrayList();
         filteredPhongList = new FilteredList<>(phongObservableList, p -> true);
         tableViewPhong.setItems(filteredPhongList);
+        
+        // Cột Checkbox
+        chonPhong.setCellValueFactory(new PropertyValueFactory<>("selected"));
+        chonPhong.setCellFactory(column -> new TableCell<Phong, Boolean>() {
+            private final CheckBox checkBox = new CheckBox();
+            
+            {
+                checkBox.setOnAction(event -> {
+                    Phong phong = getTableView().getItems().get(getIndex());
+                    phong.setSelected(checkBox.isSelected());
+                });
+                setStyle("-fx-alignment: CENTER;");
+            }
+            
+            @Override
+            protected void updateItem(Boolean item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || getIndex() < 0 || getIndex() >= getTableView().getItems().size()) {
+                    setGraphic(null);
+                } else {
+                    Phong phong = getTableView().getItems().get(getIndex());
+                    checkBox.setSelected(phong.isSelected());
+                    
+                    // Disable checkbox nếu phòng không TRONG hoặc không có ngày chọn
+                    boolean coTheChon = kiemTraCoTheChonPhong(phong);
+                    checkBox.setDisable(!coTheChon);
+                    
+                    // Nếu disable, bỏ chọn
+                    if (!coTheChon && phong.isSelected()) {
+                        phong.setSelected(false);
+                        checkBox.setSelected(false);
+                    }
+                    
+                    setGraphic(checkBox);
+                }
+            }
+        });
+        
         //các cột
         maPhong.setCellValueFactory(new PropertyValueFactory<>("maPhong"));
 
@@ -121,19 +167,69 @@ public class PhongController implements Initializable {
             @Override
             protected void updateItem(TrangThaiPhong item, boolean empty) {
                 super.updateItem(item, empty);
-                if (empty || item == null) {
+                if (empty || item == null || getIndex() < 0 || getIndex() >= getTableView().getItems().size()) {
                     setText(null);
-                    setStyle("");
+                    setGraphic(null);
+                    setStyle("-fx-alignment: CENTER;");
                 } else {
-                    setText(item.toString());
-                    String backgroundColor = switch (item) {
-                        case DANG_SU_DUNG -> "#ffcdd2"; // Đỏ nhạt
-                        case TRONG -> "#c8e6c9";        // Lục nhạt
-                        case BAO_TRI -> "#bbdefb";      // Xanh nhạt
-                        case DA_DAT -> "#fff9c4";       // Vàng nhạt
-                        default -> "transparent";
-                    };
-                    setStyle("-fx-background-color: " + backgroundColor + "; -fx-alignment: CENTER;");
+                    Phong phong = getTableView().getItems().get(getIndex());
+
+                    // Lấy trạng thái theo khoảng thời gian
+                    TrangThaiPhong trangThaiHienThi = layTrangThaiPhongTheoNgay(phong);
+
+                    // Tạo badge label
+                    Label badge = new Label(trangThaiHienThi.toString());
+                    
+                    // Style cho badge theo trạng thái
+                    String backgroundColor, textColor;
+                    switch (trangThaiHienThi) {
+                        case TRONG -> {
+                            backgroundColor = "#d1fae5"; // Xanh lá nhạt
+                            textColor = "#065f46";       // Xanh lá đậm
+                        }
+                        case DANG_SU_DUNG -> {
+                            backgroundColor = "#fef3c7"; // Vàng nhạt
+                            textColor = "#92400e";       // Vàng đậm
+                        }
+                        case DA_DAT -> {
+                            backgroundColor = "#fce7f3"; // Hồng nhạt
+                            textColor = "#9f1239";       // Hồng đậm
+                        }
+                        case BAO_TRI -> {
+                            backgroundColor = "#dbeafe"; // Xanh dương nhạt
+                            textColor = "#1e40af";       // Xanh dương đậm
+                        }
+                        default -> {
+                            backgroundColor = "#f3f4f6";
+                            textColor = "#6b7280";
+                        }
+                    }
+                    
+                    // Nếu có chọn ngày và phòng trống, highlight đậm hơn
+                    if (dpTuNgay.getValue() != null && dpDenNgay.getValue() != null
+                        && trangThaiHienThi == TrangThaiPhong.TRONG) {
+                        badge.setStyle(
+                            "-fx-background-color: " + backgroundColor + ";" +
+                            "-fx-text-fill: " + textColor + ";" +
+                            "-fx-padding: 6px 16px;" +
+                            "-fx-background-radius: 12px;" +
+                            "-fx-font-size: 12px;" +
+                            "-fx-font-weight: bold;"
+                        );
+                    } else {
+                        badge.setStyle(
+                            "-fx-background-color: " + backgroundColor + ";" +
+                            "-fx-text-fill: " + textColor + ";" +
+                            "-fx-padding: 6px 16px;" +
+                            "-fx-background-radius: 12px;" +
+                            "-fx-font-size: 12px;" +
+                            "-fx-font-weight: 600;"
+                        );
+                    }
+                    
+                    setText(null);
+                    setGraphic(badge);
+                    setStyle("-fx-alignment: CENTER;");
                 }
             }
         });
@@ -142,12 +238,26 @@ public class PhongController implements Initializable {
 
     public void taiBang() {
         try {
+            // Luôn lấy TẤT CẢ phòng
             ArrayList<Phong> dsPhong = phongDAO.layDSPhong();
+            
+            // Nếu có chọn khoảng thời gian, validate
+            if (dpTuNgay.getValue() != null && dpDenNgay.getValue() != null) {
+                if (dpDenNgay.getValue().isBefore(dpTuNgay.getValue())) {
+                    ThongBaoUtil.hienThiLoi("Lỗi", "Ngày kết thúc phải sau ngày bắt đầu!");
+                    return;
+                }
+            }
+            
             phongObservableList.clear();
             phongObservableList.addAll(dsPhong);
             capNhatThongKe();
+            
+            // Refresh table để cập nhật checkbox state và trạng thái
+            tableViewPhong.refresh();
         } catch (SQLException e) {
             e.printStackTrace();
+            ThongBaoUtil.hienThiLoi("Lỗi", "Không thể tải dữ liệu phòng: " + e.getMessage());
         }
     }
 
@@ -173,6 +283,37 @@ public class PhongController implements Initializable {
 
         cbxTrangThai.setItems(danhSachTrangThai);
         cbxTrangThai.setValue("Tất cả trạng thái");
+    }
+    
+    /**
+     * Thiết lập listener cho DatePicker để tự động lọc khi chọn ngày
+     */
+    private void cauHinhDatePicker() {
+        // Listener cho "Từ ngày"
+        dpTuNgay.valueProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null && dpDenNgay.getValue() != null) {
+                // Kiểm tra ngày hợp lệ
+                if (dpDenNgay.getValue().isBefore(newVal)) {
+                    ThongBaoUtil.hienThiCanhBao("Cảnh báo", "Ngày kết thúc phải sau ngày bắt đầu!");
+                    dpTuNgay.setValue(oldVal);
+                    return;
+                }
+                taiBang(); // Tải lại dữ liệu khi có thay đổi
+            }
+        });
+        
+        // Listener cho "Đến ngày"
+        dpDenNgay.valueProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null && dpTuNgay.getValue() != null) {
+                // Kiểm tra ngày hợp lệ
+                if (newVal.isBefore(dpTuNgay.getValue())) {
+                    ThongBaoUtil.hienThiCanhBao("Cảnh báo", "Ngày kết thúc phải sau ngày bắt đầu!");
+                    dpDenNgay.setValue(oldVal);
+                    return;
+                }
+                taiBang(); // Tải lại dữ liệu khi có thay đổi
+            }
+        });
     }
 
 
@@ -232,12 +373,18 @@ public class PhongController implements Initializable {
 
     @FXML
     private void handleLamMoi(ActionEvent event) {
-
         cbxTang.setValue("Tất cả các tầng");
         cbxTrangThai.setValue("Tất cả trạng thái");
-
-
+        dpTuNgay.setValue(null);
+        dpDenNgay.setValue(null);
+        
+        // Bỏ chọn tất cả các checkbox
+        phongObservableList.forEach(phong -> phong.setSelected(false));
+        
         taiBang();
+        
+        // Refresh table để cập nhật UI
+        tableViewPhong.refresh();
     }
     // huyển trang
     private ContentSwitcher switcher;
@@ -251,15 +398,147 @@ public class PhongController implements Initializable {
         if (switcher != null) switcher.switchContent("/com/example/louishotelmanagement/fxml/nhan-phong-view.fxml");
     }
 
+    /**
+     * Lấy trạng thái phòng theo khoảng thời gian đã chọn
+     * @param phong Phòng cần kiểm tra
+     * @return Trạng thái phòng (Trống hoặc trạng thái gốc)
+     */
+    private TrangThaiPhong layTrangThaiPhongTheoNgay(Phong phong) {
+        // Nếu không chọn khoảng thời gian, trả về trạng thái gốc
+        if (dpTuNgay.getValue() == null || dpDenNgay.getValue() == null) {
+            return phong.getTrangThai();
+        }
+        
+        // Kiểm tra phòng có trống trong khoảng thời gian không
+        try {
+            boolean isTrong = phongDAO.kiemTraPhongTrongTheoKhoangThoiGian(
+                phong.getMaPhong(), 
+                dpTuNgay.getValue(), 
+                dpDenNgay.getValue()
+            );
+            
+            return isTrong ? TrangThaiPhong.TRONG : TrangThaiPhong.DA_DAT;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return phong.getTrangThai(); // Fallback về trạng thái gốc
+        }
+    }
+    
+    /**
+     * Kiểm tra xem phòng có thể được chọn hay không
+     * @param phong Phòng cần kiểm tra
+     * @return true nếu có thể chọn, false nếu không
+     */
+    private boolean kiemTraCoTheChonPhong(Phong phong) {
+        // Nếu không chọn khoảng thời gian, chỉ cho phép chọn phòng TRONG
+        if (dpTuNgay.getValue() == null || dpDenNgay.getValue() == null) {
+            return phong.getTrangThai() == TrangThaiPhong.TRONG;
+        }
+        
+        // Nếu có chọn khoảng thời gian, kiểm tra phòng có trống không
+        try {
+            return phongDAO.kiemTraPhongTrongTheoKhoangThoiGian(
+                phong.getMaPhong(), 
+                dpTuNgay.getValue(), 
+                dpDenNgay.getValue()
+            );
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    /**
+     * Lấy danh sách các phòng đã chọn
+     */
+    private ArrayList<Phong> layPhongDaChon() {
+        ArrayList<Phong> dsPhongDaChon = new ArrayList<>();
+        for (Phong phong : phongObservableList) {
+            if (phong.isSelected()) {
+                dsPhongDaChon.add(phong);
+            }
+        }
+        return dsPhongDaChon;
+    }
+
     @FXML
     private void moDatPhong(ActionEvent actionEvent) {
-        if (switcher != null) switcher.switchContent("/com/example/louishotelmanagement/fxml/dat-phong-view.fxml");
+        ArrayList<Phong> dsPhongDaChon = layPhongDaChon();
+        
+        if (dsPhongDaChon.isEmpty()) {
+            ThongBaoUtil.hienThiCanhBao("Thông báo", "Vui lòng chọn ít nhất một phòng để đặt trước!");
+            return;
+        }
+        
+        // Kiểm tra xem có chọn ngày hay không
+        if (dpTuNgay.getValue() == null || dpDenNgay.getValue() == null) {
+            ThongBaoUtil.hienThiCanhBao("Thông báo", "Vui lòng chọn khoảng thời gian đặt phòng!");
+            return;
+        }
+        
+        // Kiểm tra ngày hợp lệ
+        if (dpDenNgay.getValue().isBefore(dpTuNgay.getValue())) {
+            ThongBaoUtil.hienThiLoi("Lỗi", "Ngày kết thúc phải sau ngày bắt đầu!");
+            return;
+        }
+        
+        if (switcher != null) {
+            try {
+                // Load FXML và truyền dữ liệu
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/dat-phong-view.fxml"));
+                Parent root = loader.load();
+                
+                // Lấy Controller và truyền dữ liệu
+                DatPhongController controller = loader.getController();
+                controller.setContentSwitcher(switcher);
+                
+                // Truyền dữ liệu phòng đã chọn và khoảng thời gian
+                controller.nhanDuLieuTuPhongView(dsPhongDaChon, dpTuNgay.getValue(), dpDenNgay.getValue());
+                
+                // Hiển thị
+                switcher.switchContent(root);
+            } catch (IOException e) {
+                e.printStackTrace();
+                ThongBaoUtil.hienThiLoi("Lỗi", "Không thể tải giao diện đặt phòng!");
+            }
+        }
     }
 
     @FXML
     private void moDatTT(ActionEvent actionEvent) {
-        if (switcher != null)
-            switcher.switchContent("/com/example/louishotelmanagement/fxml/dat-phong-truc-tiep-view.fxml");
+        // Lấy danh sách phòng đã chọn (nếu có)
+        ArrayList<Phong> dsPhongDaChon = layPhongDaChon();
+        
+        // Nếu có phòng được chọn và có chọn ngày, kiểm tra ngày phải là hôm nay
+        if (!dsPhongDaChon.isEmpty() && dpTuNgay.getValue() != null) {
+            if (!dpTuNgay.getValue().equals(LocalDate.now())) {
+                ThongBaoUtil.hienThiCanhBao("Thông báo", "Đặt trực tiếp chỉ áp dụng cho ngày hôm nay!");
+                return;
+            }
+        }
+        
+        if (switcher != null) {
+            try {
+                // Load FXML thủ công để truyền dữ liệu
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/dat-phong-truc-tiep-view.fxml"));
+                Parent root = loader.load();
+                
+                // Lấy controller
+                DatPhongTaiQuayController controller = loader.getController();
+                
+                // Nếu có phòng đã chọn, truyền sang
+                if (!dsPhongDaChon.isEmpty()) {
+                    controller.nhanDanhSachPhongDaChon(dsPhongDaChon);
+                }
+                
+                // Hiển thị
+                switcher.switchContent(root);
+                
+            } catch (IOException e) {
+                e.printStackTrace();
+                ThongBaoUtil.hienThiLoi("Lỗi", "Không thể tải giao diện đặt phòng trực tiếp!");
+            }
+        }
     }
 
     @FXML

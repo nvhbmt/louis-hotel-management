@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourcePerFileMappings">
+    <file url="file://$PROJECT_DIR$/database/sp_KiemTraPhongTrongTheoKhoangThoiGian.sql" value="7764714a-7dde-4a94-870e-3cf896d8993c" />
     <file url="file://$PROJECT_DIR$/mssql/duLieuMau.sql" value="7764714a-7dde-4a94-870e-3cf896d8993c" />
     <file url="file://$PROJECT_DIR$/mssql/indexesPhongDatPhong.sql" value="7764714a-7dde-4a94-870e-3cf896d8993c" />
     <file url="file://$PROJECT_DIR$/mssql/khoiTaoDataBase.sql" value="7764714a-7dde-4a94-870e-3cf896d8993c" />
