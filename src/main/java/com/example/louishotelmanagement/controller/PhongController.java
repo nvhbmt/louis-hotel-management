@@ -4,7 +4,6 @@ import com.example.louishotelmanagement.dao.PhongDAO;
 import com.example.louishotelmanagement.model.LoaiPhong;
 import com.example.louishotelmanagement.model.Phong;
 import com.example.louishotelmanagement.model.TrangThaiPhong;
-import com.example.louishotelmanagement.util.ContentManager;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleObjectProperty;
@@ -30,7 +29,6 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 import com.example.louishotelmanagement.util.ContentSwitcher;
-import javafx.scene.layout.BorderPane;
 
 
 public class PhongController implements Initializable {

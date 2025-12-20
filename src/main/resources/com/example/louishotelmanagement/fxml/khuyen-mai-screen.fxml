@@ -55,9 +55,9 @@
             </HBox>
             <VBox styleClass="table-container" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
                <children>
-                  <TableView fx:id="tableViewMaGiamGia" VBox.vgrow="ALWAYS">
+                  <TableView fx:id="tableViewKhuyenMai" VBox.vgrow="ALWAYS">
                      <columns>
-                        <TableColumn fx:id="colMaGG" maxWidth="Infinity" minWidth="80.0" prefWidth="98.0" text="Mã Giảm Giá" />
+                        <TableColumn fx:id="colMaKM" maxWidth="Infinity" minWidth="80.0" prefWidth="98.0" text="Mã Khuyến Mãi" />
                         <TableColumn fx:id="colCode" maxWidth="Infinity" minWidth="73.60001373291016" prefWidth="73.60001373291016" text="Code" />
                         <TableColumn fx:id="colGiamGia" maxWidth="Infinity" minWidth="84.0" prefWidth="118.39996337890625" text="Giá Trị" />
                         <TableColumn fx:id="colKieuGiamGia" maxWidth="Infinity" minWidth="69.5999755859375" prefWidth="98.39996337890625" text="Kiểu" />

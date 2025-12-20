@@ -98,10 +98,10 @@ VALUES ('KH001', N'Nguyễn Thanh Tùng', '0912345678', 'tung.nguyen@company.com
 GO
 
 -------------------------------------------------------------------
--- 6. MaGiamGia (Mã giảm giá)
+-- 6. KhuyenMai (Mã giảm giá)
 -------------------------------------------------------------------
-PRINT N'-- 6. Đang thêm dữ liệu bảng MaGiamGia...';
-INSERT INTO MaGiamGia (maGG, code, giamGia, kieuGiamGia, ngayBatDau, ngayKetThuc, tongTienToiThieu, moTa, trangThai, maNV)
+PRINT N'-- 6. Đang thêm dữ liệu bảng KhuyenMai...';
+INSERT INTO KhuyenMai (maGG, code, giamGia, kieuGiamGia, ngayBatDau, ngayKetThuc, tongTienToiThieu, moTa, trangThai, maNV)
 VALUES
     -- GG001: Khuyến mãi cả năm (Active)
     -- Giảm 10% (PERCENT)

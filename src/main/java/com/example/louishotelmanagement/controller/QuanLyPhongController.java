@@ -1,5 +1,11 @@
 package com.example.louishotelmanagement.controller;
 
+import java.io.IOException;
+import java.net.URL;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ResourceBundle;
 import com.example.louishotelmanagement.dao.LoaiPhongDAO;
 import com.example.louishotelmanagement.dao.PhongDAO;
 import com.example.louishotelmanagement.model.LoaiPhong;
@@ -14,19 +20,20 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-
-import java.io.IOException;
-import java.net.URL;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
 
 public class QuanLyPhongController implements Initializable {
     @FXML
@@ -111,25 +118,57 @@ public class QuanLyPhongController implements Initializable {
         colTrangThai.setCellValueFactory(new PropertyValueFactory<>("trangThai"));
         colMoTa.setCellValueFactory(new PropertyValueFactory<>("moTa"));
 
-        colTrangThai.setCellFactory(_ -> new TableCell<>() {
+        colTrangThai.setCellFactory(column -> new TableCell<>() {
             @Override
             protected void updateItem(TrangThaiPhong item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty || item == null) {
                     setText(null);
-                    getStyleClass().clear();
+                    setGraphic(null);
+                    setStyle("-fx-alignment: CENTER;");
                 } else {
-                    setText(item.toString());
-                    getStyleClass().clear();
+                    // Tạo badge label
+                    Label badge = new Label(item.toString());
+
+
+                    // Style cho badge theo trạng thái
+                    String backgroundColor, textColor;
                     switch (item) {
-                        case TrangThaiPhong.TRONG -> getStyleClass().add("status-trong");
-                        case TrangThaiPhong.DA_DAT -> getStyleClass().add("status-da-dat");
-                        case TrangThaiPhong.DANG_SU_DUNG -> getStyleClass().add("status-dang-su-dung");
-                        case TrangThaiPhong.BAO_TRI -> getStyleClass().add("status-bao-tri");
+                        case TRONG -> {
+                            backgroundColor =  "#d1fae5"; // Xanh đậm khi selected
+                            textColor = "#065f46";       // Trắng khi selected
+                        }
+                        case DA_DAT -> {
+                            backgroundColor = "#fce7f3"; // Hồng đậm khi selected
+                            textColor = "#9f1239";       // Trắng khi selected
+                        }
+                        case DANG_SU_DUNG -> {
+                            backgroundColor =  "#fef3c7"; // Vàng đậm khi selected
+                            textColor = "#92400e";       // Trắng khi selected
+                        }
+                        case BAO_TRI -> {
+                            backgroundColor =  "#dbeafe"; // Xanh dương đậm khi selected
+                            textColor = "#1e40af";       // Trắng khi selected
+                        }
                         default -> {
-                            // Không thêm style class nào
+                            backgroundColor = "#f3f4f6";
+                            textColor = "#ffffff"; // Luôn trắng khi selected cho default
                         }
                     }
+
+                    // Áp dụng style cho badge
+                    badge.setStyle(
+                        "-fx-background-color: " + backgroundColor + ";" +
+                        "-fx-text-fill: " + textColor + ";" +
+                        "-fx-padding: 4px 12px;" +
+                        "-fx-background-radius: 12px;" +
+                        "-fx-font-size: 12px;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-alignment: CENTER;"
+                    );
+
+                    setGraphic(badge);
+                    setText(null);
                 }
             }
         });

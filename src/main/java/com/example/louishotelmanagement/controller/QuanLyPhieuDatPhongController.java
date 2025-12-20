@@ -2,7 +2,7 @@ package com.example.louishotelmanagement.controller;
 
 import com.example.louishotelmanagement.dao.CTHoaDonPhongDAO;
 import com.example.louishotelmanagement.dao.KhachHangDAO;
-import com.example.louishotelmanagement.dao.MaGiamGiaDAO;
+import com.example.louishotelmanagement.dao.KhuyenMaiDAO;
 import com.example.louishotelmanagement.dao.PhieuDatPhongDAO;
 import com.example.louishotelmanagement.model.*;
 import com.example.louishotelmanagement.util.ThongBaoUtil;

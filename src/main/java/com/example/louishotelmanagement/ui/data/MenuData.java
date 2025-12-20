@@ -55,7 +55,7 @@ public class MenuData {
         }
 
         TreeItem<MenuItemModel> khuyenMai = new TreeItem<>(
-                new MenuItemModel("Khuyến mãi", "mdi2c-chart-bar", "/com/example/louishotelmanagement/fxml/quan-ly-giam-gia-view.fxml")
+                new MenuItemModel("Khuyến mãi", "mdi2c-chart-bar", "/com/example/louishotelmanagement/fxml/quan-ly-khuyen-mai-view.fxml")
         );
 
         TreeItem<MenuItemModel> hoaDonGroup = new TreeItem<>(

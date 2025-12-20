@@ -257,23 +257,23 @@ GO
 -- ================================================
 -- 13. Thống kê sử dụng mã giảm giá
 -- ================================================
-CREATE PROCEDURE sp_ThongKeSuDungMaGiamGia
+CREATE PROCEDURE sp_ThongKeSuDungKhuyenMai
     @tuNgay DATE,
     @denNgay DATE
 AS
 BEGIN
     SELECT
-        mgg.code as maGiamGia,
-        mgg.giamGia,
-        mgg.kieuGiamGia,
+        km.code as maKhuyenMai,
+        km.giamGia,
+        km.kieuGiamGia,
         COUNT(hd.maHD) as soLanSuDung,
         ISNULL(SUM(cthdp.thanhTien), 0) + ISNULL(SUM(cthddv.thanhTien), 0) as tongDoanhThu
-    FROM MaGiamGia mgg
-        LEFT JOIN HoaDon hd ON mgg.maGG = hd.maGG
+    FROM KhuyenMai km
+        LEFT JOIN HoaDon hd ON km.maGG = hd.maGG
         LEFT JOIN CTHoaDonPhong cthdp ON hd.maHD = cthdp.maHD
         LEFT JOIN CTHoaDonDichVu cthddv ON hd.maHD = cthddv.maHD
     WHERE hd.ngayLap BETWEEN @tuNgay AND @denNgay
-    GROUP BY mgg.maGG, mgg.code, mgg.giamGia, mgg.kieuGiamGia
+    GROUP BY km.code, km.giamGia, km.kieuGiamGia
     ORDER BY COUNT(hd.maHD) DESC;
 END;
 GO

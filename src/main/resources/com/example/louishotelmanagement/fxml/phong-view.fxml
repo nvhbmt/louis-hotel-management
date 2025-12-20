@@ -162,9 +162,6 @@
                         <columnResizePolicy>
                             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                         </columnResizePolicy>
-                        <stylesheets>
-                            <String fx:value="@../css/table-style.css" />
-                        </stylesheets>
                     </TableView>
                 </VBox>
                 <VBox alignment="TOP_CENTER" prefHeight="408.0" prefWidth="280.0" spacing="16" style="-fx-background-color: white; -fx-padding: 24; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);" HBox.hgrow="NEVER">

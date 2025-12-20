@@ -27,6 +27,21 @@ public class TrangChuController {
         ContentManager.safeSwitch(switcher, "/com/example/louishotelmanagement/fxml/thong-ke-view.fxml");
     }
 
+    @FXML
+    public void moDatPhong() {
+        ContentManager.safeSwitch(switcher, "/com/example/louishotelmanagement/fxml/dat-phong-truc-tiep-view.fxml");
+    }
+
+    @FXML
+    public void moNhanPhong() {
+        ContentManager.safeSwitch(switcher, "/com/example/louishotelmanagement/fxml/nhan-phong-view.fxml");
+    }
+
+    @FXML
+    public void moTraPhong() {
+        ContentManager.safeSwitch(switcher, "/com/example/louishotelmanagement/fxml/tra-phong-view.fxml");
+    }
+
     public void setContentSwitcher(ContentSwitcher switcher) {
         this.switcher = switcher;
     }
