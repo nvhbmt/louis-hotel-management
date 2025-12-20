@@ -104,7 +104,7 @@ public class TraPhongController implements Initializable, Refreshable {
 
             for (CTHoaDonPhong ct : listCT) {
                 PhieuDatPhong pdp = phieuDatPhongDAO.layPhieuDatPhongTheoMa(ct.getMaPhieu());
-                if (pdp != null && pdp.getTrangThai().equalsIgnoreCase(TrangThaiPhieuDatPhong.DANG_SU_DUNG.toString())) {
+                if (pdp != null && pdp.getTrangThai().equals(TrangThaiPhieuDatPhong.DANG_SU_DUNG)) {
                     activeCT = ct;
                     break;
                 }
@@ -170,7 +170,7 @@ public class TraPhongController implements Initializable, Refreshable {
 
         ArrayList<PhieuDatPhong> listpdp = phieuDatPhongDAO.layDSPhieuDatPhongTheoKhachHang(listMaKH.get(index));
         for (PhieuDatPhong pdp : listpdp) {
-            if (pdp.getTrangThai().equalsIgnoreCase(TrangThaiPhieuDatPhong.DANG_SU_DUNG.toString())) {
+            if (pdp.getTrangThai().equals(TrangThaiPhieuDatPhong.DANG_SU_DUNG)) {
                 dsPhieu.getItems().add(pdp.getMaPhieu());
             }
         }

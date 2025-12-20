@@ -143,7 +143,7 @@ public class NhanPhongController implements Initializable,Refreshable {
         ArrayList<PhieuDatPhong> dsPhieu = phieuDatPhongDAO.layDSPhieuDatPhongTheoKhachHang(dsMaKH.get(dsKhachHang.getSelectionModel().getSelectedIndex()));
         if (dsPhieu.size() > 0) {
             for (PhieuDatPhong p : dsPhieu) {
-                    if (p.getTrangThai() != null && p.getTrangThai().equalsIgnoreCase(TrangThaiPhieuDatPhong.DA_DAT.toString())) {
+                    if (p.getTrangThai() != null && p.getTrangThai().equals(TrangThaiPhieuDatPhong.DA_DAT)) {
                         dspdp.add(p);
                         ArrayList<CTHoaDonPhong> dsCTP = ctHoaDondao.getCTHoaDonPhongTheoMaPhieu(p.getMaPhieu());
                         for (CTHoaDonPhong ctp : dsCTP) {

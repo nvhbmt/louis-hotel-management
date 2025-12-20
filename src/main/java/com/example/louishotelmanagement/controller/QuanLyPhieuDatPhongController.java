@@ -99,13 +99,13 @@ public class QuanLyPhieuDatPhongController implements Initializable {
 
         int tongPhieuDatPhong = dsPhieuDatPhong.size();
         long tongPhieuDatPhongDaDat = dsPhieuDatPhong.stream()
-                .filter(PDP->PDP.getTrangThai().equalsIgnoreCase(TrangThaiPhieuDatPhong.DA_DAT.toString()))
+                .filter(PDP->PDP.getTrangThai().equals(TrangThaiPhieuDatPhong.DA_DAT))
                 .count();
         long tongPhieuDatPhongDangSuDung = dsPhieuDatPhong.stream()
-                .filter(PDP->PDP.getTrangThai().equalsIgnoreCase(TrangThaiPhieuDatPhong.DANG_SU_DUNG.toString()))
+                .filter(PDP->PDP.getTrangThai().equals(TrangThaiPhieuDatPhong.DANG_SU_DUNG))
                 .count();
         long tongPhieuDatPhongDaHoanThanh = dsPhieuDatPhong.stream()
-                .filter(PDP->PDP.getTrangThai().equalsIgnoreCase(TrangThaiPhieuDatPhong.HOAN_THANH.toString()))
+                .filter(PDP->PDP.getTrangThai().equals(TrangThaiPhieuDatPhong.HOAN_THANH))
                 .count();
         lblTongSoPhieu.setText(Long.toString(tongPhieuDatPhong));
         lblSoPhieuDaDat.setText(String.valueOf(tongPhieuDatPhongDaDat));
@@ -338,7 +338,7 @@ public class QuanLyPhieuDatPhongController implements Initializable {
                     // Filter theo trạng thái
                     String trangThaiFilter = cbTrangThai.getValue();
                     if (trangThaiFilter != null && (phieuDatPhong.getTrangThai() == null ||
-                            !phieuDatPhong.getTrangThai().equalsIgnoreCase(trangThaiFilter))) {
+                            !phieuDatPhong.getTrangThai().equals(trangThaiFilter))) {
                         return false;
                     }
 
@@ -355,7 +355,7 @@ public class QuanLyPhieuDatPhongController implements Initializable {
     @FXML
     private void handleSuaPhieuDatPhong(PhieuDatPhong phieuDatPhong) {
         try {
-            if(phieuDatPhong.getTrangThai().equalsIgnoreCase(TrangThaiPhieuDatPhong.DA_DAT.toString())){
+            if(phieuDatPhong.getTrangThai().equals(TrangThaiPhieuDatPhong.DA_DAT)){
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/phieu-dat-phong-form-dialog.fxml"));
                 Stage dialog = new Stage();
                 dialog.setTitle("Sửa Thông Tin Phiếu Đặt Phòng"); // Sửa tiêu đề
