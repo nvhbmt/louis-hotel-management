@@ -3,7 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
-<BorderPane prefHeight="1000.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/24"
+<BorderPane prefHeight="1000.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/22"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.example.louishotelmanagement.controller.DangNhapController"
             stylesheets="@../css/dang-nhap.css">

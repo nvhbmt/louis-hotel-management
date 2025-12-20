@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import java.net.URL?>
 <BorderPane fx:id="rootPane" prefHeight="1054.0" prefWidth="1014.0" styleClass="main-background main-content-padding"
-            stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/24" xmlns:fx="http://javafx.com/fxml/1"
+            stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.example.louishotelmanagement.controller.QuanLyPhieuDatPhongController">
     <center>
         <VBox spacing="32.0" styleClass="spacing-normal" BorderPane.alignment="CENTER">

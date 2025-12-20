@@ -7,7 +7,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <BorderPane prefHeight="864.0" prefWidth="1014.4" stylesheets="@../css/huy-dat-phong.css"
-            xmlns="http://javafx.com/javafx/24" xmlns:fx="http://javafx.com/fxml/1"
+            xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.example.louishotelmanagement.controller.HuyDatPhongController">
     <center>
         <VBox alignment="TOP_CENTER" BorderPane.alignment="CENTER">

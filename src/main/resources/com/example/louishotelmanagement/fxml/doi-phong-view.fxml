@@ -5,7 +5,7 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <BorderPane prefHeight="864.0" prefWidth="1014.4" stylesheets="@../css/doi-phong.css, @../css/dat-phong.css"
-            xmlns="http://javafx.com/javafx/24" xmlns:fx="http://javafx.com/fxml/1"
+            xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.example.louishotelmanagement.controller.DoiPhongController">
     <center>
         <VBox alignment="TOP_CENTER" fillWidth="false" prefHeight="474.0" prefWidth="922.0"

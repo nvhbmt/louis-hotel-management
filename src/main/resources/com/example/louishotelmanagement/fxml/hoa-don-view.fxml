@@ -6,7 +6,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<BorderPane prefHeight="900.0" prefWidth="1602.0" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/24"
+<BorderPane prefHeight="900.0" prefWidth="1602.0" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/22"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.example.louishotelmanagement.controller.QuanLyHoaDonController">
     <center>

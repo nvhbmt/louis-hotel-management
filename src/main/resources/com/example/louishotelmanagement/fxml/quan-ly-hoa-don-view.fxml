@@ -5,7 +5,7 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import java.net.URL?>
-<BorderPane fx:id="rootPane" prefHeight="1018.0" prefWidth="1340.0" xmlns="http://javafx.com/javafx/25"
+<BorderPane fx:id="rootPane" prefHeight="1018.0" prefWidth="1340.0" xmlns="http://javafx.com/javafx/22"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.example.louishotelmanagement.controller.QuanLyThanhToanController">
     <center>

@@ -5,7 +5,7 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <BorderPane fx:id="rootPane" styleClass="main-background" stylesheets="@../css/main.css"
-            xmlns="http://javafx.com/javafx/24" xmlns:fx="http://javafx.com/fxml/1"
+            xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.example.louishotelmanagement.controller.QuanLyDichVuController">
     <center>
         <VBox styleClass="spacing-normal" spacing="32.0" BorderPane.alignment="CENTER">
