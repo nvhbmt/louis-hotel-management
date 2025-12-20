@@ -6,6 +6,7 @@ import com.example.louishotelmanagement.util.ThongBaoUtil;
 import com.example.louishotelmanagement.util.Refreshable;
 import com.example.louishotelmanagement.util.ContentSwitcher;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
@@ -26,26 +27,25 @@ import java.util.ResourceBundle;
 
 public class TraPhongController implements Initializable, Refreshable {
 
-    public Button btnCheck;
-    public ComboBox dsPhong;
-    public ComboBox dsKhachHang;
-    public Button btnTraPhong;
+    @FXML public Button btnCheck;
+    @FXML public ComboBox<String> dsPhong;
+    @FXML public ComboBox<String> dsKhachHang;
+    @FXML public ComboBox<String> dsPhieu;
+    @FXML public Button btnTraPhong;
+    @FXML public DatePicker ngayTraPhong;
+    @FXML public TextField hoTen;
+    @FXML public TextField maPhieuThue;
+    @FXML public DatePicker ngayDen;
+    @FXML public TextField soLuongPhong;
+    @FXML public Button btnXemChiTiet;
+
     public KhachHangDAO khDao;
     public PhongDAO phDao;
     public CTHoaDonPhongDAO cthdpDao;
     public PhieuDatPhongDAO phieuDatPhongDAO;
-    public DatePicker ngayTraPhong;
-    public TextField hoTen;
-    public TextField maPhieuThue;
-    public DatePicker ngayDen;
-    public TextField soLuongPhong;
-    public Label lblCheDo;
-    public Button btnXemChiTiet;
-    public ComboBox dsPhieu;
-    private ArrayList<String> dsMaKH = new ArrayList<>();
-    private ArrayList<PhieuDatPhong> dspdp;
     private HoaDonDAO hdDao;
-    private List<CTHoaDonPhong> listCTHoaDonPhong = new ArrayList<>();
+
+    private ArrayList<String> listMaKH = new ArrayList<>();
     private ContentSwitcher switcher;
 
     public void setContentSwitcher(ContentSwitcher switcher) {
@@ -59,313 +59,232 @@ public class TraPhongController implements Initializable, Refreshable {
         cthdpDao = new CTHoaDonPhongDAO();
         phieuDatPhongDAO = new PhieuDatPhongDAO();
         hdDao = new HoaDonDAO();
+
         btnXemChiTiet.setDisable(true);
+        khoiTaoDinhDangNgay();
+        setDisableFields();
 
         try {
             laydsKhachHang();
-            laydsPhieuTheoKhachHang();
-            laydsPhongTheoPhieu();
-            khoiTaoDinhDangNgay();
-            setDisable();
-            dsKhachHang.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-                if (newValue != null) {
+
+            // Listener cho khách hàng -> load phiếu
+            dsKhachHang.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+                if (newVal != null) {
                     try {
                         laydsPhieuTheoKhachHang();
-                        laydsPhongTheoPhieu();
-                    } catch (SQLException e) {
-                        throw new RuntimeException(e);
-                    }
+                    } catch (SQLException e) { e.printStackTrace(); }
                 }
             });
-            dsPhieu.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-                if (newValue != null) {
+
+            // Listener cho phiếu -> load các phòng trong phiếu đó
+            dsPhieu.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+                if (newVal != null) {
                     try {
                         laydsPhongTheoPhieu();
-                    } catch (SQLException e) {
-                        throw new RuntimeException(e);
-                    }
+                    } catch (SQLException e) { e.printStackTrace(); }
                 }
-                setDisable();
             });
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-    private void setDisable(){
-        if(ngayDen!=null){
-            ngayDen.setDisable(true);
-            ngayDen.setStyle("-fx-opacity: 1; -fx-text-fill: black; -fx-background-color: #eee;");
-        }
-        if(ngayTraPhong!=null){
-            ngayTraPhong.setDisable(true);
-            ngayTraPhong.setStyle("-fx-opacity: 1; -fx-text-fill: black; -fx-background-color: #eee;");
-        }
-    }
-    private void khoiTaoDinhDangNgay() {
-        // Định dạng ngày tháng mong muốn (ví dụ: 25/10/2025)
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-        // Tạo StringConverter tùy chỉnh cho DatePicker
-        StringConverter<LocalDate> converter = new StringConverter<>() {
-            @Override
-            public String toString(LocalDate date) {
-                // Chuyển LocalDate sang String để hiển thị
-                return (date != null) ? formatter.format(date) : "";
+            ngayTraPhong.setValue(LocalDate.now());
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * PHƯƠNG THỨC QUAN TRỌNG: Nhận mã phòng từ màn hình Quản lý phòng
+     * Tự động chọn Khách hàng -> Chọn Phiếu -> Load thông tin
+     */
+    public void truyenDuLieuTuPhong(String maPhongTruyenVao) {
+        try {
+            // 1. Tìm CTHDP đang sử dụng của phòng này
+            ArrayList<CTHoaDonPhong> listCT = cthdpDao.getDSCTHoaDonPhongTheoMaPhong(maPhongTruyenVao);
+            CTHoaDonPhong activeCT = null;
+
+            for (CTHoaDonPhong ct : listCT) {
+                PhieuDatPhong pdp = phieuDatPhongDAO.layPhieuDatPhongTheoMa(ct.getMaPhieu());
+                if (pdp != null && pdp.getTrangThai().equalsIgnoreCase(TrangThaiPhieuDatPhong.DANG_SU_DUNG.toString())) {
+                    activeCT = ct;
+                    break;
+                }
             }
 
-            @Override
-            public LocalDate fromString(String string) {
-                // Chuyển String nhập vào (hoặc từ FXML) sang LocalDate
-                if (string != null && !string.isEmpty()) {
-                    try {
-                        return LocalDate.parse(string, formatter);
-                    } catch (java.time.format.DateTimeParseException e) {
-                        // Xử lý lỗi nếu người dùng nhập sai định dạng
-                        System.err.println("Lỗi định dạng ngày: " + string);
-                        return null;
-                    }
-                }
-                return null;
+            if (activeCT != null) {
+                PhieuDatPhong pdp = phieuDatPhongDAO.layPhieuDatPhongTheoMa(activeCT.getMaPhieu());
+                KhachHang kh = khDao.layKhachHangTheoMa(pdp.getMaKH());
+
+                // 2. Set ComboBox Khách hàng
+                dsKhachHang.getSelectionModel().select(kh.getHoTen());
+
+                // 3. Set ComboBox Phiếu
+                laydsPhieuTheoKhachHang(); // Load lại list phiếu của KH này
+                dsPhieu.getSelectionModel().select(pdp.getMaPhieu());
+
+                // 4. Set ComboBox Phòng
+                laydsPhongTheoPhieu(); // Load lại list phòng của phiếu này
+                dsPhong.getSelectionModel().select(maPhongTruyenVao);
+
+                // 5. Tự động nhấn nút Kiểm tra để hiện thông tin xuống dưới
+                handleCheck(null);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setDisableFields() {
+        ngayDen.setDisable(true);
+        ngayDen.setStyle("-fx-opacity: 1; -fx-text-fill: black; -fx-background-color: #eee;");
+        ngayTraPhong.setDisable(true);
+        ngayTraPhong.setStyle("-fx-opacity: 1; -fx-text-fill: black; -fx-background-color: #eee;");
+    }
+
+    private void khoiTaoDinhDangNgay() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        StringConverter<LocalDate> converter = new StringConverter<>() {
+            @Override public String toString(LocalDate date) { return (date != null) ? formatter.format(date) : ""; }
+            @Override public LocalDate fromString(String string) {
+                return (string != null && !string.isEmpty()) ? LocalDate.parse(string, formatter) : null;
             }
         };
-
-        // Áp dụng converter cho cả hai DatePicker
         ngayTraPhong.setConverter(converter);
         ngayDen.setConverter(converter);
-
-        // *Tùy chọn:* Đảm bảo DatePicker có thể hiển thị ngày hôm nay nếu người dùng chưa chọn
-        // ngayDen.setValue(LocalDate.now());
     }
 
     public void laydsKhachHang() throws SQLException {
+        dsKhachHang.getItems().clear();
+        listMaKH.clear();
         ArrayList<KhachHang> khs = khDao.layDSKhachHang();
-        for (KhachHang khachHang : khs) {
-            dsKhachHang.getItems().add(khachHang.getHoTen());
-            dsMaKH.add(khachHang.getMaKH());
+        for (KhachHang kh : khs) {
+            dsKhachHang.getItems().add(kh.getHoTen());
+            listMaKH.add(kh.getMaKH());
         }
-        dsKhachHang.getSelectionModel().selectFirst();
+        if (!dsKhachHang.getItems().isEmpty()) dsKhachHang.getSelectionModel().selectFirst();
     }
 
     public void laydsPhieuTheoKhachHang() throws SQLException {
         dsPhieu.getItems().clear();
-        ArrayList<PhieuDatPhong> listpdp = phieuDatPhongDAO.layDSPhieuDatPhongTheoKhachHang(dsMaKH.get(dsKhachHang.getSelectionModel().getSelectedIndex()));
-        if(listpdp.size()>0){
-            for (PhieuDatPhong phieuDatPhong : listpdp) {
-                if(phieuDatPhong.getTrangThai().equalsIgnoreCase(TrangThaiPhieuDatPhong.DANG_SU_DUNG.toString())){
-                    dsPhieu.getItems().add(phieuDatPhong.getMaPhieu());
-                }
+        int index = dsKhachHang.getSelectionModel().getSelectedIndex();
+        if (index < 0) return;
 
+        ArrayList<PhieuDatPhong> listpdp = phieuDatPhongDAO.layDSPhieuDatPhongTheoKhachHang(listMaKH.get(index));
+        for (PhieuDatPhong pdp : listpdp) {
+            if (pdp.getTrangThai().equalsIgnoreCase(TrangThaiPhieuDatPhong.DANG_SU_DUNG.toString())) {
+                dsPhieu.getItems().add(pdp.getMaPhieu());
             }
-        }else{
-            dsPhieu.getItems().clear();
         }
-
-        dsPhieu.getSelectionModel().selectFirst();
+        if (!dsPhieu.getItems().isEmpty()) dsPhieu.getSelectionModel().selectFirst();
     }
 
     public void laydsPhongTheoPhieu() throws SQLException {
         dsPhong.getItems().clear();
-        if(dsPhieu.getSelectionModel().getSelectedItem()!=null){
-            ArrayList<CTHoaDonPhong> ctHoaDonPhongs = cthdpDao.getCTHoaDonPhongTheoMaPhieu(dsPhieu.getSelectionModel().getSelectedItem().toString());
-            for (CTHoaDonPhong ctHoaDonPhong : ctHoaDonPhongs) {
-                dsPhong.getItems().add(ctHoaDonPhong.getMaPhong());
+        String selectedPhieu = dsPhieu.getSelectionModel().getSelectedItem();
+        if (selectedPhieu != null) {
+            ArrayList<CTHoaDonPhong> listCT = cthdpDao.getCTHoaDonPhongTheoMaPhieu(selectedPhieu);
+            for (CTHoaDonPhong ct : listCT) {
+                dsPhong.getItems().add(ct.getMaPhong());
             }
-            dsPhong.getSelectionModel().selectFirst();
-        }else{
-            dsPhong.getItems().clear();
+            if (!dsPhong.getItems().isEmpty()) dsPhong.getSelectionModel().selectFirst();
         }
-
     }
 
-    public void handleCheck(javafx.event.ActionEvent actionEvent) throws Exception {
-        boolean IsCheck = false;
-        if (dsPhieu.getSelectionModel().getSelectedItem() != null) {
-            PhieuDatPhong phieuDatPhong = phieuDatPhongDAO.layPhieuDatPhongTheoMa(dsPhieu.getSelectionModel().getSelectedItem().toString());
-            if (phieuDatPhong != null) {
-                KhachHang khachHang = khDao.layKhachHangTheoMa(phieuDatPhong.getMaKH());
-                hoTen.setText(khachHang.getHoTen());
-                maPhieuThue.setText(phieuDatPhong.getMaPhieu());
-                ngayDen.setValue(phieuDatPhong.getNgayDen());
-                ArrayList<CTHoaDonPhong> listCTHDPTheoPhieu = cthdpDao.getCTHoaDonPhongTheoMaPhieu(phieuDatPhong.getMaPhieu());
-                soLuongPhong.setText(String.valueOf(listCTHDPTheoPhieu.size()));
-                IsCheck = true;
-            } else {
-                ThongBaoUtil.hienThiLoi("Lỗi kiểm tra", "Không tìm thấy bất kì phiếu đặt phòng nào");
-                refreshData();
+    @FXML
+    public void handleCheck(ActionEvent actionEvent) throws Exception {
+        String selectedPhieuId = dsPhieu.getSelectionModel().getSelectedItem();
+        if (selectedPhieuId != null) {
+            PhieuDatPhong pdp = phieuDatPhongDAO.layPhieuDatPhongTheoMa(selectedPhieuId);
+            if (pdp != null) {
+                KhachHang kh = khDao.layKhachHangTheoMa(pdp.getMaKH());
+                hoTen.setText(kh.getHoTen());
+                maPhieuThue.setText(pdp.getMaPhieu());
+
+                ArrayList<CTHoaDonPhong> listCT = cthdpDao.getCTHoaDonPhongTheoMaPhieu(pdp.getMaPhieu());
+                if (!listCT.isEmpty()) {
+                    ngayDen.setValue(listCT.get(0).getNgayDen());
+                    soLuongPhong.setText(String.valueOf(listCT.size()));
+                }
+                btnXemChiTiet.setDisable(false);
             }
         } else {
-            ThongBaoUtil.hienThiLoi("Lỗi kiểm tra", "Vui lòng chọn phiếu muốn kiểm tra");
-            refreshData();
+            ThongBaoUtil.hienThiLoi("Lỗi", "Vui lòng chọn phiếu để kiểm tra");
+            btnXemChiTiet.setDisable(true);
         }
-        btnXemChiTiet.setDisable(!IsCheck);
     }
 
-    // Trong com.example.louishotelmanagement.controller.TraPhongController.java
-
-    // Trong com.example.louishotelmanagement.controller.TraPhongController.java
-
+    @FXML
     public void handleTraPhong(ActionEvent actionEvent) throws Exception {
-
-        // 0. Kiểm tra xem đã có thông tin phiếu được hiển thị chưa
         String maPhieu = maPhieuThue.getText();
         if (maPhieu == null || maPhieu.isEmpty()) {
-            ThongBaoUtil.hienThiLoi("Lỗi trả phòng", "Vui lòng Kiểm tra phiếu đặt phòng trước khi trả phòng.");
+            ThongBaoUtil.hienThiLoi("Lỗi", "Vui lòng Kiểm tra phiếu trước.");
             return;
         }
 
-        // 1. Lấy danh sách chi tiết hóa đơn phòng theo mã phiếu
-        ArrayList<CTHoaDonPhong> listCTHDP = cthdpDao.getCTHoaDonPhongTheoMaPhieu(maPhieu);
+        ArrayList<CTHoaDonPhong> listCT = cthdpDao.getCTHoaDonPhongTheoMaPhieu(maPhieu);
+        if (listCT.isEmpty()) return;
 
-        // 2. Kiểm tra danh sách có rỗng không
-        if (listCTHDP.isEmpty()) {
-            ThongBaoUtil.hienThiLoi("Lỗi trả phòng", "Không tìm thấy bất kì chi tiết hóa đơn phòng nào liên kết.");
-            return;
-        }
+        CTHoaDonPhong activeCT = listCT.get(0);
+        HoaDon hd = hdDao.timHoaDonTheoMa(activeCT.getMaHD());
 
-        // 3. Lấy Chi tiết đầu tiên để tìm MaHD
-        CTHoaDonPhong ctHoaDonPhong = listCTHDP.getFirst();
-
-        // 4. Kiểm tra và xử lý Hóa đơn
-        if (ctHoaDonPhong != null && (ctHoaDonPhong.getNgayDi().isEqual(LocalDate.now())||ctHoaDonPhong.getNgayDi().isBefore(LocalDate.now()))) {
-            HoaDon hd = hdDao.timHoaDonTheoMa(ctHoaDonPhong.getMaHD());
-
-            if (hd != null) {
-                if (hd.getTrangThai().equals(TrangThaiHoaDon.CHUA_THANH_TOAN)) {
-                    moDialogThanhToan(hd);
-                } else {
-
-                    // 💡 TRẠNG THÁI 2: ĐÃ THANH TOÁN -> HOÀN TẤT VÀ DỌN PHÒNG
-                    phieuDatPhongDAO.capNhatTrangThaiPhieuDatPhong(maPhieu, TrangThaiPhieuDatPhong.HOAN_THANH.toString());
-
-                    // Cập nhật trạng thái từng phòng thành TRỐNG
-                    for (CTHoaDonPhong ctHd : listCTHDP) {
-                        phDao.capNhatTrangThaiPhong(ctHd.getMaPhong(), TrangThaiPhong.TRONG.toString());
-                        ctHd.setNgayDi(LocalDate.now());
-                        cthdpDao.capNhatNgayDiThucTe(ctHd.getMaHD(),ctHd.getMaPhong(),LocalDate.now());
-                    }
-
-                    ThongBaoUtil.hienThiThongBao("Thành công", "Trả phòng và dọn phòng thành công!");
-                    refreshData();
-                }
+        if (hd != null) {
+            if (hd.getTrangThai().equals(TrangThaiHoaDon.CHUA_THANH_TOAN)) {
+                moDialogThanhToan(hd);
             } else {
-                ThongBaoUtil.hienThiLoi("Lỗi trả phòng", "Không tìm thấy Hóa đơn phòng có mã: " + ctHoaDonPhong.getMaHD());
-            }
-        }else{
-            if(ThongBaoUtil.hienThiXacNhan("Xác nhận","Bạn đang trả phòng sớm hơn dự kiến!!!")){{
-                HoaDon hd = hdDao.timHoaDonTheoMa(ctHoaDonPhong.getMaHD());
-
-                if (hd != null) {
-                    if (hd.getTrangThai().equals(TrangThaiHoaDon.CHUA_THANH_TOAN)) {
-                        moDialogThanhToan(hd);
-                    } else {
-
-                        // 💡 TRẠNG THÁI 2: ĐÃ THANH TOÁN -> HOÀN TẤT VÀ DỌN PHÒNG
-                        phieuDatPhongDAO.capNhatTrangThaiPhieuDatPhong(maPhieu, TrangThaiPhieuDatPhong.HOAN_THANH.toString());
-
-                        // Cập nhật trạng thái từng phòng thành TRỐNG
-                        for (CTHoaDonPhong ctHd : listCTHDP) {
-                            phDao.capNhatTrangThaiPhong(ctHd.getMaPhong(), TrangThaiPhong.TRONG.toString());
-                            ctHd.setNgayDi(LocalDate.now());
-                            cthdpDao.capNhatNgayDiThucTe(ctHd.getMaHD(),ctHd.getMaPhong(),LocalDate.now());
-                        }
-
-                        ThongBaoUtil.hienThiThongBao("Thành công", "Trả phòng và dọn phòng thành công!");
-                        refreshData();
-                    }
-                } else {
-                    ThongBaoUtil.hienThiLoi("Lỗi trả phòng", "Không tìm thấy Hóa đơn phòng có mã: " + ctHoaDonPhong.getMaHD());
+                // Xử lý hoàn tất trả phòng nếu đã thanh toán
+                phieuDatPhongDAO.capNhatTrangThaiPhieuDatPhong(maPhieu, TrangThaiPhieuDatPhong.HOAN_THANH.toString());
+                for (CTHoaDonPhong ct : listCT) {
+                    phDao.capNhatTrangThaiPhong(ct.getMaPhong(), TrangThaiPhong.TRONG.toString());
+                    cthdpDao.capNhatNgayDiThucTe(ct.getMaHD(), ct.getMaPhong(), LocalDate.now());
                 }
-            }}
+                ThongBaoUtil.hienThiThongBao("Thành công", "Đã trả phòng!");
+                refreshData();
+            }
         }
     }
-    // Trong TraPhongController.java
-    private void moDialogThanhToan(HoaDon hoaDonCanThanhToan) {
+
+    private void moDialogThanhToan(HoaDon hoaDon) {
         try {
-            // 1. Load FXML của Dialog Thanh Toán
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/thanh-toan-dialog.fxml"));
             Parent root = loader.load();
+            ThanhToanDialogController controller = loader.getController();
+            controller.setHoaDon(hoaDon);
 
-            // 2. Truy cập Controller của Dialog mới
-            ThanhToanDialogController thanhToanController = loader.getController();
-
-            // 3. Truyền đối tượng HoaDon sang Controller mới
-            thanhToanController.setHoaDon(hoaDonCanThanhToan);
-
-            // 4. Tạo Stage và hiển thị Dialog
             Stage stage = new Stage();
-            stage.setTitle("Thanh Toán Hóa Đơn #" + hoaDonCanThanhToan.getMaHD());
+            stage.setTitle("Thanh Toán #" + hoaDon.getMaHD());
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);
-            stage.showAndWait(); // Hiển thị và chờ người dùng đóng Dialog
-        } catch (IOException e) {
-            ThongBaoUtil.hienThiLoi("Lỗi mở màn hình", "Không tìm thấy file FXML Thanh Toán hoặc lỗi tải: " + e.getMessage());
-            e.printStackTrace();
-        } catch (Exception e) {
-            ThongBaoUtil.hienThiLoi("Lỗi hệ thống", "Lỗi xảy ra trong quá trình mở Dialog Thanh Toán: " + e.getMessage());
-            e.printStackTrace();
-        }
+            stage.showAndWait();
+
+            // Sau khi đóng dialog thanh toán, refresh lại để xem trạng thái mới
+            handleCheck(null);
+        } catch (Exception e) { e.printStackTrace(); }
     }
 
-
+    @FXML
     public void handleXemChiTiet(ActionEvent actionEvent) throws SQLException {
-// 1. Lấy phiếu đặt phòng được chọn
-        PhieuDatPhong selectedPhieu = phieuDatPhongDAO.layPhieuDatPhongTheoMa(dsPhieu.getSelectionModel().getSelectedItem().toString());
-
-        if (selectedPhieu == null) {
-            ThongBaoUtil.hienThiLoi("Lỗi", "Vui lòng chọn một phiếu đặt phòng để xem chi tiết.");
-            return;
-        }
+        String maPhieu = dsPhieu.getSelectionModel().getSelectedItem();
+        if (maPhieu == null) return;
 
         try {
-            // 2. Lấy danh sách chi tiết phòng (CTHoaDonPhong) từ DAO
-            ArrayList<CTHoaDonPhong> dsCTP = cthdpDao.getCTHoaDonPhongTheoMaPhieu(selectedPhieu.getMaPhieu());
-
-            if (dsCTP.isEmpty()) {
-                ThongBaoUtil.hienThiLoi("Thông báo", "Phiếu này không chứa thông tin chi tiết phòng nào.");
-                return;
-            }
-
-            // 3. Load FXML của màn hình chi tiết
-            // Đảm bảo đường dẫn FXML là chính xác theo cấu trúc dự án của bạn!
+            ArrayList<CTHoaDonPhong> dsCTP = cthdpDao.getCTHoaDonPhongTheoMaPhieu(maPhieu);
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/chi-tiet-phong-trong-phieu-view.fxml"));
             Parent root = loader.load();
+            ChiTietPhongTrongPhieuController ctrl = loader.getController();
+            ctrl.setChiTietData(maPhieu, dsCTP);
 
-            // 4. Truy cập Controller của màn hình mới
-            ChiTietPhongTrongPhieuController chiTietController = loader.getController();
-
-            // 5. Truyền dữ liệu sang Controller mới
-            // Hàm setChiTietData sẽ lấy MaPhieu và danh sách CTHoaDonPhong để hiển thị
-            chiTietController.setChiTietData(selectedPhieu.getMaPhieu(), dsCTP);
-
-            // 6. Tạo Stage và hiển thị
             Stage stage = new Stage();
-            stage.setTitle("Chi Tiết Phòng Đặt - Phiếu " + selectedPhieu.getMaPhieu());
             stage.setScene(new Scene(root));
-            stage.initModality(Modality.APPLICATION_MODAL); // Chặn tương tác với cửa sổ cha
-            stage.showAndWait(); // Hiển thị và chờ người dùng đóng cửa sổ
-
-        } catch (IOException e) {
-            // Lỗi khi không tìm thấy hoặc không load được file FXML
-            ThongBaoUtil.hienThiLoi("Lỗi mở màn hình", "Không tìm thấy file FXML Chi Tiết Phòng hoặc lỗi tải: " + e.getMessage());
-            System.err.println("Lỗi FXML: ");
-            e.printStackTrace();
-        } catch (SQLException e) {
-            // Lỗi xảy ra khi truy vấn DB trong quá trình lấy chi tiết phòng
-            ThongBaoUtil.hienThiLoi("Lỗi dữ liệu", "Lỗi khi truy xuất chi tiết phòng: " + e.getMessage());
-            System.err.println("Lỗi SQL: ");
-            e.printStackTrace();
-        }
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+        } catch (IOException e) { e.printStackTrace(); }
     }
-
     @Override
-    public void refreshData() throws SQLException, Exception {
+    public void refreshData() throws Exception {
         laydsKhachHang();
-        laydsPhieuTheoKhachHang();
-        laydsPhongTheoPhieu();
-        ngayTraPhong.setValue(LocalDate.now());
-        hoTen.setText(null);
-        maPhieuThue.setText(null);
+        hoTen.clear();
+        maPhieuThue.clear();
         ngayDen.setValue(null);
-        soLuongPhong.setText(null);
+        soLuongPhong.clear();
+        btnXemChiTiet.setDisable(true);
     }
 }

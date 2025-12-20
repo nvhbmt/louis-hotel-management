@@ -1,7 +1,8 @@
 package com.example.louishotelmanagement.controller;
 
+import com.example.louishotelmanagement.dao.CTHoaDonPhongDAO;
 import com.example.louishotelmanagement.dao.KhachHangDAO;
-import com.example.louishotelmanagement.dao.MaGiamGiaDAO;
+import com.example.louishotelmanagement.dao.KhuyenMaiDAO;
 import com.example.louishotelmanagement.dao.PhieuDatPhongDAO;
 import com.example.louishotelmanagement.model.*;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
@@ -12,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -68,14 +70,17 @@ public class QuanLyPhieuDatPhongController implements Initializable {
 
     private PhieuDatPhongDAO phieuDatPhongDAO;
     private KhachHangDAO khachHangDAO;
+    private CTHoaDonPhongDAO cthdpDao;
     private ObservableList<PhieuDatPhong> danhSachPhieuDatPhong;
     private ObservableList<PhieuDatPhong> danhSachPhieuDatPhongFiltered;
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
             phieuDatPhongDAO = new PhieuDatPhongDAO();
             khachHangDAO = new KhachHangDAO();
+            cthdpDao = new CTHoaDonPhongDAO();
             // Khởi tạo dữ liệu
             khoiTaoDuLieu();
             khoiTaoTableView();
@@ -217,11 +222,16 @@ public class QuanLyPhieuDatPhongController implements Initializable {
         colThaoTac.setCellFactory(_ -> new TableCell<>() {
             private final Button btnEdit = new Button("Sửa");
             private final Button btnDelete = new Button("Xóa");
+            private final Button btnView = new Button("Xem chi tiết");
 
             {
                 btnEdit.getStyleClass().addAll("btn", "btn-xs", "btn-info", "btn-table-edit");
                 btnDelete.getStyleClass().addAll("btn", "btn-xs", "btn-danger", "btn-table-delete");
-
+                btnView.setStyle("-fx-background-color: #f0f0f0;-fx-border-radius: 10");
+                btnView.setOnAction(_->{
+                    PhieuDatPhong phieuDatPhong = getTableView().getItems().get(getIndex());
+                    handleXemChiTiet(phieuDatPhong);
+                });
                 btnEdit.setOnAction(_ -> {
                     PhieuDatPhong phieuDatPhong = getTableView().getItems().get(getIndex());
                     handleSuaPhieuDatPhong(phieuDatPhong);
@@ -240,7 +250,8 @@ public class QuanLyPhieuDatPhongController implements Initializable {
                 if (empty) {
                     setGraphic(null);
                 } else {
-                    HBox box = new HBox(8, btnEdit, btnDelete);
+                    HBox box = new HBox(8, btnView, btnEdit, btnDelete);
+
                     box.setAlignment(Pos.CENTER);
                     setGraphic(box);
                 }
@@ -365,6 +376,8 @@ public class QuanLyPhieuDatPhongController implements Initializable {
 
         } catch (IOException e) {
             ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể mở form sửa phiếu đặt phòng: " + e.getMessage());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -385,6 +398,53 @@ public class QuanLyPhieuDatPhongController implements Initializable {
             } catch (SQLException e) {
                 ThongBaoUtil.hienThiThongBao("Lỗi", "Lỗi khi xóa mã giảm giá: " + e.getMessage());
             }
+        }
+    }
+
+    private void handleXemChiTiet(PhieuDatPhong phieuDatPhong) {
+        if (phieuDatPhong == null) {
+            ThongBaoUtil.hienThiLoi("Lỗi", "Vui lòng chọn một phiếu đặt phòng để xem chi tiết.");
+            return;
+        }
+
+        try {
+            // 2. Lấy danh sách chi tiết phòng (CTHoaDonPhong) từ DAO
+            ArrayList<CTHoaDonPhong> dsCTP = cthdpDao.getCTHoaDonPhongTheoMaPhieu(phieuDatPhong.getMaPhieu());
+
+            if (dsCTP.isEmpty()) {
+                ThongBaoUtil.hienThiLoi("Thông báo", "Phiếu này không chứa thông tin chi tiết phòng nào.");
+                return;
+            }
+
+            // 3. Load FXML của màn hình chi tiết
+            // Đảm bảo đường dẫn FXML là chính xác theo cấu trúc dự án của bạn!
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/chi-tiet-phong-trong-phieu-view.fxml"));
+            Parent root = loader.load();
+
+            // 4. Truy cập Controller của màn hình mới
+            ChiTietPhongTrongPhieuController chiTietController = loader.getController();
+
+            // 5. Truyền dữ liệu sang Controller mới
+            // Hàm setChiTietData sẽ lấy MaPhieu và danh sách CTHoaDonPhong để hiển thị
+            chiTietController.setChiTietData(phieuDatPhong.getMaPhieu(), dsCTP);
+
+            // 6. Tạo Stage và hiển thị
+            Stage stage = new Stage();
+            stage.setTitle("Chi Tiết Phòng Đặt - Phiếu " + phieuDatPhong.getMaPhieu());
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL); // Chặn tương tác với cửa sổ cha
+            stage.showAndWait(); // Hiển thị và chờ người dùng đóng cửa sổ
+
+        } catch (IOException e) {
+            // Lỗi khi không tìm thấy hoặc không load được file FXML
+            ThongBaoUtil.hienThiLoi("Lỗi mở màn hình", "Không tìm thấy file FXML Chi Tiết Phòng hoặc lỗi tải: " + e.getMessage());
+            System.err.println("Lỗi FXML: ");
+            e.printStackTrace();
+        } catch (SQLException e) {
+            // Lỗi xảy ra khi truy vấn DB trong quá trình lấy chi tiết phòng
+            ThongBaoUtil.hienThiLoi("Lỗi dữ liệu", "Lỗi khi truy xuất chi tiết phòng: " + e.getMessage());
+            System.err.println("Lỗi SQL: ");
+            e.printStackTrace();
         }
     }
 

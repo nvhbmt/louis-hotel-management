@@ -2,8 +2,8 @@ package com.example.louishotelmanagement.model;
 
 import java.time.LocalDate;
 
-public class MaGiamGia {
-    private String maGG;
+public class KhuyenMai {
+    private String maKM;
     private String code;
     private double giamGia;
     private KieuGiamGia kieuGiamGia;
@@ -16,11 +16,11 @@ public class MaGiamGia {
 
 
     // Constructor mặc định
-    public MaGiamGia() {
+    public KhuyenMai() {
     }
 
-    public MaGiamGia(String maGG, String code, double giamGia, KieuGiamGia kieuGiamGia, LocalDate ngayBatDau, LocalDate ngayKetThuc, double tongTienToiThieu, String moTa, String trangThai, String maNhanVien) {
-        this.maGG = maGG;
+    public KhuyenMai(String maKM, String code, double giamGia, KieuGiamGia kieuGiamGia, LocalDate ngayBatDau, LocalDate ngayKetThuc, double tongTienToiThieu, String moTa, String trangThai, String maNhanVien) {
+        this.maKM = maKM;
         this.code = code;
         this.giamGia = giamGia;
         this.kieuGiamGia = kieuGiamGia;
@@ -32,12 +32,12 @@ public class MaGiamGia {
         this.maNhanVien = maNhanVien;
     }
 
-    public String getMaGG() {
-        return maGG;
+    public String getMaKM() {
+        return maKM;
     }
 
-    public void setMaGG(String maGG) {
-        this.maGG = maGG;
+    public void setMaKM(String maGG) {
+        this.maKM = maGG;
     }
 
     public String getCode() {
@@ -114,8 +114,8 @@ public class MaGiamGia {
 
     @Override
     public String toString() {
-        return "MaGiamGia{" +
-                "maGG='" + maGG + '\'' +
+        return "KhuyenMai{" +
+                "maGG='" + maKM + '\'' +
                 ", code='" + code + '\'' +
                 ", giamGia=" + giamGia +
                 ", kieuGiamGia='" + kieuGiamGia + '\'' +

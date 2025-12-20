@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="566.0" prefWidth="700.0" stylesheets="@../css/formsfx.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.MaGiamGiaDialogController">
+<BorderPane prefHeight="566.0" prefWidth="700.0" stylesheets="@../css/formsfx.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.KhuyenMaiDialogController">
     <center>
         <VBox prefHeight="457.0" prefWidth="636.0" spacing="20.0" styleClass="dialog-container">
             <!-- Header -->

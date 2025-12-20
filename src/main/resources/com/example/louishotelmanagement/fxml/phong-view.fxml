@@ -3,10 +3,13 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.cell.CheckBoxTableCell?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
@@ -16,21 +19,24 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import java.lang.String?>
 
-<BorderPane prefHeight="737.0" prefWidth="1153.0" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.PhongController">
+<BorderPane prefHeight="737.0" prefWidth="1153.0" style="-fx-background-color: #f3f4f6;" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.PhongController">
     <center>
         <!-- Main Content Area -->
-        <VBox prefHeight="904.0" prefWidth="1462.0" spacing="32.0" BorderPane.alignment="CENTER">
+        <VBox prefHeight="904.0" prefWidth="1462.0" spacing="24.0" BorderPane.alignment="CENTER">
             <HBox spacing="16.0">
-                <ImageView fitHeight="72.0" fitWidth="72.0" pickOnBounds="true" preserveRatio="true">
-                    <Image url="@../image/interior-design.png" />
-                </ImageView>
-                <VBox HBox.hgrow="ALWAYS">
-                    <Label style="-fx-font-size: 28px; -fx-font-weight: bold;" text="Phòng" textFill="#2c3e50" />
-                    <Label style="-fx-font-size: 14px;" text="Màn hình chính các chức năng phòng" textFill="#7f8c8d" />
+                <VBox alignment="CENTER" style="-fx-background-color: #d1fae5; -fx-background-radius: 12; -fx-padding: 16;">
+                    <ImageView fitHeight="56.0" fitWidth="56.0" pickOnBounds="true" preserveRatio="true">
+                        <Image url="@../image/interior-design.png" />
+                    </ImageView>
+                </VBox>
+                <VBox HBox.hgrow="ALWAYS" spacing="4">
+                    <Label style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #111827;" text="Quản lý Phòng" />
+                    <Label style="-fx-font-size: 14px; -fx-text-fill: #6b7280;" text="Màn hình chính các chức năng phòng" />
                 </VBox>
             </HBox>
-            <GridPane hgap="20.0" prefHeight="80.0">
+            <GridPane hgap="20.0" prefHeight="100.0">
                 <columnConstraints>
                     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -43,93 +49,112 @@
                 <VBox.margin>
                     <Insets />
                 </VBox.margin>
-                <VBox styleClass="stat-box">
+                <VBox style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);">
                     <HBox alignment="CENTER_LEFT" spacing="16">
-                        <VBox alignment="CENTER_LEFT" spacing="10" HBox.hgrow="ALWAYS">
-                            <Label styleClass="stat-title" text="Tổng phòng" />
-                            <Label fx:id="lblTongPhong" styleClass="stat-number" text="0" />
+                        <VBox alignment="CENTER_LEFT" spacing="8" HBox.hgrow="ALWAYS">
+                            <Label style="-fx-text-fill: #6b7280; -fx-font-size: 13px;" text="Tổng phòng" />
+                            <Label fx:id="lblTongPhong" style="-fx-text-fill: #10b981; -fx-font-size: 32px; -fx-font-weight: bold;" text="24" />
                         </VBox>
-                        <ImageView fitHeight="45" fitWidth="45" preserveRatio="true">
-                            <Image url="@../image/double-bed.png" />
-                        </ImageView>
+                        <VBox alignment="CENTER" style="-fx-background-color: #d1fae5; -fx-background-radius: 8; -fx-padding: 12;">
+                            <ImageView fitHeight="40" fitWidth="40" preserveRatio="true">
+                                <Image url="@../image/double-bed.png" />
+                            </ImageView>
+                        </VBox>
                     </HBox>
                 </VBox>
-                <VBox styleClass="stat-box" GridPane.columnIndex="1">
+                <VBox style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);" GridPane.columnIndex="1">
                     <HBox alignment="CENTER_LEFT" spacing="16">
-                        <VBox alignment="CENTER_LEFT" spacing="10" HBox.hgrow="ALWAYS">
-                            <Label styleClass="stat-title" text="Phòng Trống" />
-                            <Label fx:id="lblPhongTrong" styleClass="stat-number" text="0" />
+                        <VBox alignment="CENTER_LEFT" spacing="8" HBox.hgrow="ALWAYS">
+                            <Label style="-fx-text-fill: #6b7280; -fx-font-size: 13px;" text="Phòng trống" />
+                            <Label fx:id="lblPhongTrong" style="-fx-text-fill: #10b981; -fx-font-size: 32px; -fx-font-weight: bold;" text="8" />
                         </VBox>
-                        <ImageView fitHeight="45" fitWidth="45" pickOnBounds="true" preserveRatio="true">
-                            <Image url="@../image/door-open.png" />
-                        </ImageView>
+                        <VBox alignment="CENTER" style="-fx-background-color: #d1fae5; -fx-background-radius: 8; -fx-padding: 12;">
+                            <ImageView fitHeight="40" fitWidth="40" pickOnBounds="true" preserveRatio="true">
+                                <Image url="@../image/door-open.png" />
+                            </ImageView>
+                        </VBox>
                     </HBox>
                 </VBox>
-                <VBox styleClass="stat-box" GridPane.columnIndex="2">
+                <VBox style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);" GridPane.columnIndex="2">
                     <HBox alignment="CENTER_LEFT" spacing="16">
-                        <VBox alignment="CENTER_LEFT" spacing="10" HBox.hgrow="ALWAYS">
-                            <Label styleClass="stat-title" text="Phòng sử dụng" />
-                            <Label fx:id="lblPhongSuDung" styleClass="stat-number" text="0" />
+                        <VBox alignment="CENTER_LEFT" spacing="8" HBox.hgrow="ALWAYS">
+                            <Label style="-fx-text-fill: #6b7280; -fx-font-size: 13px;" text="Đang sử dụng" />
+                            <Label fx:id="lblPhongSuDung" style="-fx-text-fill: #f59e0b; -fx-font-size: 32px; -fx-font-weight: bold;" text="14" />
                         </VBox>
-                        <ImageView fitHeight="45" fitWidth="45" pickOnBounds="true" preserveRatio="true">
-                            <Image url="@../image/key-chain.png" />
-                        </ImageView>
+                        <VBox alignment="CENTER" style="-fx-background-color: #fef3c7; -fx-background-radius: 8; -fx-padding: 12;">
+                            <ImageView fitHeight="40" fitWidth="40" pickOnBounds="true" preserveRatio="true">
+                                <Image url="@../image/key-chain.png" />
+                            </ImageView>
+                        </VBox>
                     </HBox>
                 </VBox>
-                <VBox styleClass="stat-box" GridPane.columnIndex="3">
+                <VBox style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);" GridPane.columnIndex="3">
                     <HBox alignment="CENTER_LEFT" spacing="16">
-                        <VBox alignment="CENTER_LEFT" spacing="10" HBox.hgrow="ALWAYS">
-                            <Label styleClass="stat-title" text="Bảo trì" />
-                            <Label fx:id="lblPhongBaoTri" styleClass="stat-number" text="0" />
+                        <VBox alignment="CENTER_LEFT" spacing="8" HBox.hgrow="ALWAYS">
+                            <Label style="-fx-text-fill: #6b7280; -fx-font-size: 13px;" text="Bảo trì" />
+                            <Label fx:id="lblPhongBaoTri" style="-fx-text-fill: #3b82f6; -fx-font-size: 32px; -fx-font-weight: bold;" text="2" />
                         </VBox>
-                        <ImageView fitHeight="45" fitWidth="45" pickOnBounds="true" preserveRatio="true">
-                            <Image url="@../image/maintenance.png" />
-                        </ImageView>
+                        <VBox alignment="CENTER" style="-fx-background-color: #dbeafe; -fx-background-radius: 8; -fx-padding: 12;">
+                            <ImageView fitHeight="40" fitWidth="40" pickOnBounds="true" preserveRatio="true">
+                                <Image url="@../image/maintenance.png" />
+                            </ImageView>
+                        </VBox>
                     </HBox>
                 </VBox>
             </GridPane>
-            <HBox prefHeight="20.0" prefWidth="821.0" style="-fx-border-color: black; -fx-border-radius: 10; -fx-padding: 10 15 10 15;">
-                <VBox.margin>
-                    <Insets />
-                </VBox.margin>
-                <VBox prefHeight="20.0" prefWidth="509.0">
-                    <Label style="-fx-padding: 0 5 10 5;" text="Chọn Tầng">
-                        <font>
-                            <Font name="System Bold" size="14.0" />
-                        </font>
-                    </Label>
-                    <ComboBox fx:id="cbxTang" prefHeight="43.0" prefWidth="400.0" promptText="Tầng 1" style="-fx-background-color: white; -fx-border-color: black; -fx-border-radius: 10;">
-                        <cursor>
-                            <Cursor fx:constant="DEFAULT" />
-                        </cursor>
-                    </ComboBox>
-                </VBox>
-                <VBox prefHeight="20.0" prefWidth="380.0">
-                    <opaqueInsets>
-                        <Insets />
-                    </opaqueInsets>
-                    <Label style="-fx-padding: 0 5 10 5;" text="Trạng Thái">
-                        <font>
-                            <Font name="System Bold" size="14.0" />
-                        </font>
-                    </Label>
-                    <ComboBox fx:id="cbxTrangThai" prefHeight="43.0" prefWidth="400.0" promptText="Trống" style="-fx-background-color: white; -fx-border-color: black; -fx-border-radius: 10;" />
-                </VBox>
-                <VBox alignment="BOTTOM_CENTER" prefHeight="74.0" prefWidth="230.0">
-                    <padding>
-                        <Insets left="80.0" />
-                    </padding>
-                    <Button fx:id="btnLamMoi" mnemonicParsing="false" onAction="#handleLamMoi" prefHeight="45.0" prefWidth="150.0" styleClass="btn-lam-moi" text="🔄 Làm Mới" />
-                </VBox>
-            </HBox>
-            <HBox prefHeight="408.0" prefWidth="819.0" spacing="40.0" VBox.vgrow="ALWAYS">
-                <VBox prefHeight="408.0" prefWidth="950.0" HBox.hgrow="ALWAYS">
-                    <TableView fx:id="tableViewPhong" fixedCellSize="40.0" prefHeight="408.0" prefWidth="950.0" style="-fx-border-color: Black; -fx-border-radius: 10;" VBox.vgrow="ALWAYS">
+            <VBox spacing="16.0">
+                <HBox alignment="CENTER_LEFT" spacing="16.0" style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);">
+                    <VBox spacing="8" prefWidth="200.0" minWidth="200.0" maxWidth="200.0">
+                        <Label style="-fx-font-size: 13px; -fx-text-fill: #374151; -fx-font-weight: bold;" text="Trạng thái" />
+                        <ComboBox fx:id="cbxTrangThai" prefHeight="45.0" prefWidth="200.0" minWidth="200.0" maxWidth="200.0" promptText="Tất cả trạng thái" style="-fx-background-color: #f9fafb; -fx-border-color: #e5e7eb; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 8 12;">
+                            <cursor>
+                                <Cursor fx:constant="HAND" />
+                            </cursor>
+                        </ComboBox>
+                    </VBox>
+                    <VBox spacing="8" prefWidth="180.0" minWidth="180.0" maxWidth="180.0">
+                        <Label style="-fx-font-size: 13px; -fx-text-fill: #374151; -fx-font-weight: bold;" text="Tầng" />
+                        <ComboBox fx:id="cbxTang" prefHeight="45.0" prefWidth="180.0" minWidth="180.0" maxWidth="180.0" promptText="Tất cả tầng" style="-fx-background-color: #f9fafb; -fx-border-color: #e5e7eb; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 8 12;">
+                            <cursor>
+                                <Cursor fx:constant="HAND" />
+                            </cursor>
+                        </ComboBox>
+                    </VBox>
+                    <VBox spacing="8" prefWidth="200.0" minWidth="200.0" maxWidth="200.0">
+                        <Label style="-fx-font-size: 13px; -fx-text-fill: #374151; -fx-font-weight: bold;" text="Từ ngày" />
+                        <DatePicker fx:id="dpTuNgay" prefHeight="45.0" prefWidth="200.0" minWidth="200.0" maxWidth="200.0" promptText="Chọn ngày bắt đầu" style="-fx-background-color: #f9fafb; -fx-border-color: #e5e7eb; -fx-border-radius: 8; -fx-background-radius: 8;">
+                            <cursor>
+                                <Cursor fx:constant="HAND" />
+                            </cursor>
+                        </DatePicker>
+                    </VBox>
+                    <VBox spacing="8" prefWidth="200.0" minWidth="200.0" maxWidth="200.0">
+                        <Label style="-fx-font-size: 13px; -fx-text-fill: #374151; -fx-font-weight: bold;" text="Đến ngày" />
+                        <DatePicker fx:id="dpDenNgay" prefHeight="45.0" prefWidth="200.0" minWidth="200.0" maxWidth="200.0" promptText="Chọn ngày kết thúc" style="-fx-background-color: #f9fafb; -fx-border-color: #e5e7eb; -fx-border-radius: 8; -fx-background-radius: 8;">
+                            <cursor>
+                                <Cursor fx:constant="HAND" />
+                            </cursor>
+                        </DatePicker>
+                    </VBox>
+                    <VBox alignment="BOTTOM_RIGHT" spacing="8" HBox.hgrow="ALWAYS">
+                        <Label style="-fx-opacity: 0;" text="." />
+                        <Button fx:id="btnLamMoi" mnemonicParsing="false" onAction="#handleLamMoi" prefHeight="45.0" prefWidth="140.0" minWidth="140.0" maxWidth="140.0" style="-fx-background-color: #f3f4f6; -fx-text-fill: #374151; -fx-background-radius: 8; -fx-font-size: 14px; -fx-font-weight: bold; -fx-cursor: hand;" text="🔄 Làm mới">
+                            <cursor>
+                                <Cursor fx:constant="HAND" />
+                            </cursor>
+                        </Button>
+                    </VBox>
+                </HBox>
+            </VBox>
+            <HBox prefHeight="408.0" prefWidth="819.0" spacing="20.0" VBox.vgrow="ALWAYS">
+                <VBox prefHeight="408.0" prefWidth="950.0" style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);" HBox.hgrow="ALWAYS">
+                    <TableView fx:id="tableViewPhong" fixedCellSize="56.0" prefHeight="408.0" prefWidth="950.0" VBox.vgrow="ALWAYS">
                         <columns>
-                            <TableColumn fx:id="maPhong" prefWidth="148.00000882148743" text="Mã Phòng" />
-                            <TableColumn fx:id="loaiPhong" minWidth="0.0" prefWidth="207.19998168945312" text="Loại" />
-                            <TableColumn fx:id="donGia" prefWidth="190.4000244140625" text="Đơn giá" />
-                            <TableColumn fx:id="trangThai" prefWidth="205.60002441406255" text="Trạng thái" />
+                            <TableColumn fx:id="chonPhong" prefWidth="60.0" text="" sortable="false" style="-fx-alignment: CENTER;" />
+                            <TableColumn fx:id="maPhong" prefWidth="140.0" text="Mã Phòng" style="-fx-alignment: CENTER-LEFT; -fx-font-weight: bold;" />
+                            <TableColumn fx:id="loaiPhong" minWidth="0.0" prefWidth="200.0" text="Loại phòng" style="-fx-alignment: CENTER-LEFT;" />
+                            <TableColumn fx:id="donGia" prefWidth="180.0" text="Đơn giá" style="-fx-alignment: CENTER-LEFT;" />
+                            <TableColumn fx:id="trangThai" prefWidth="200.0" text="Trạng thái" style="-fx-alignment: CENTER;" />
                         </columns>
                         <VBox.margin>
                             <Insets />
@@ -139,38 +164,60 @@
                         </columnResizePolicy>
                     </TableView>
                 </VBox>
-                <VBox alignment="CENTER" prefHeight="408.0" style="-fx-border-color: Black; -fx-padding: 10 10 10 10; -fx-border-radius: 10;" HBox.hgrow="NEVER">
-                    <Label alignment="CENTER" prefHeight="27.0" prefWidth="155.0" text="Thao tác">
-                        <font>
-                            <Font name="System Bold" size="18.0" />
-                        </font>
+                <VBox alignment="TOP_CENTER" prefHeight="408.0" prefWidth="280.0" spacing="16" style="-fx-background-color: white; -fx-padding: 24; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);" HBox.hgrow="NEVER">
+                    <Label alignment="CENTER" text="Thao tác" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #1f2937;">
+                        <VBox.margin>
+                            <Insets bottom="8" />
+                        </VBox.margin>
                     </Label>
-                    <VBox alignment="CENTER" prefHeight="345.0" prefWidth="201.0" stylesheets="@../css/style.css">
-                        <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="74.0" prefWidth="140.0">
-                            <Button fx:id="btnDatTT" maxHeight="40.0" maxWidth="132.0" minHeight="40.0" minWidth="132.0" mnemonicParsing="false" onAction="#moDatTT" prefHeight="40.0" prefWidth="132.0" style="-fx-background-color: #6F84DA;" styleClass="btn-lam-moi" text="Đặt trực tiếp" textFill="WHITE" />
-                        </HBox>
-                        <HBox alignment="CENTER" prefHeight="74.0" prefWidth="140.0">
-                            <Button fx:id="btnDatPhong" mnemonicParsing="false" onAction="#moDatPhong" prefHeight="40.0" prefWidth="132.0" style="-fx-background-color: #6F84DA;" styleClass="btn-lam-moi" text="Đặt trước" textFill="WHITE" />
-                        </HBox>
-                        <HBox alignment="CENTER" layoutX="40.0" layoutY="155.0" prefHeight="74.0" prefWidth="140.0">
-                            <Button fx:id="btnNhanPhong" mnemonicParsing="false" onAction="#moNhanPhong" prefHeight="40.0" prefWidth="132.0" style="-fx-background-color: #6F84DA;" styleClass="btn-lam-moi" text="Nhận phòng" textFill="WHITE" />
-                        </HBox>
-                        <HBox alignment="CENTER" layoutX="40.0" layoutY="144.0" prefHeight="74.0" prefWidth="140.0">
-                            <Button fx:id="btnDoiPhong" mnemonicParsing="false" onAction="#moDoiPhong" prefHeight="40.0" prefWidth="132.0" style="-fx-background-color: #6F84DA;" styleClass="btn-lam-moi" text="Đổi phòng" textFill="WHITE" />
-                        </HBox>
-                        <HBox alignment="CENTER" prefHeight="74.0" prefWidth="140.0">
-                            <Button fx:id="btnHuy" mnemonicParsing="false" onAction="#moHuy" prefHeight="40.0" prefWidth="132.0" style="-fx-background-color: #6F84DA;" styleClass="btn-lam-moi" text="Trả phòng" textFill="WHITE" />
-                        </HBox>
-                        <HBox alignment="CENTER" layoutX="40.0" layoutY="180.0" prefHeight="74.0" prefWidth="140.0">
-                            <Button fx:id="btnHuyDat" mnemonicParsing="false" onAction="#moHuyDat" prefHeight="40.0" prefWidth="132.0" style="-fx-background-color: #6F84DA;" styleClass="btn-lam-moi" text="Hủy đặt phòng" textFill="WHITE" />
-                        </HBox>
-                        <HBox alignment="CENTER" layoutX="40.0" layoutY="218.0" prefHeight="74.0" prefWidth="140.0">
-                            <Button fx:id="btnDichVu" mnemonicParsing="false" onAction="#moDichVu" prefHeight="40.0" prefWidth="132.0" style="-fx-background-color: #6F84DA;" styleClass="btn-lam-moi" text="Dịch vụ" textFill="WHITE" />
-                        </HBox>
-                        <HBox alignment="CENTER" layoutX="10.0" layoutY="306.0" prefHeight="74.0" prefWidth="140.0">
-                            <Button fx:id="btnThanhToan" mnemonicParsing="false" onAction="#moThanhToan" prefHeight="40.0" prefWidth="132.0" style="-fx-background-color: #6F84DA;" styleClass="btn-lam-moi" text="Thanh toán" textFill="WHITE" />
-                        </HBox>
-                    </VBox>
+                    
+                    <Button fx:id="btnDatTT" maxWidth="Infinity" minHeight="50.0" mnemonicParsing="false" onAction="#moDatTT" prefHeight="50.0" style="-fx-background-color: #10b981; -fx-text-fill: white; -fx-background-radius: 8; -fx-font-size: 14px; -fx-font-weight: bold;" text="📋 Đặt trực tiếp">
+                        <cursor>
+                            <Cursor fx:constant="HAND" />
+                        </cursor>
+                    </Button>
+                    
+                    <Button fx:id="btnDatPhong" maxWidth="Infinity" minHeight="50.0" mnemonicParsing="false" onAction="#moDatPhong" prefHeight="50.0" style="-fx-background-color: #3b82f6; -fx-text-fill: white; -fx-background-radius: 8; -fx-font-size: 14px; -fx-font-weight: bold;" text="📅 Đặt trước">
+                        <cursor>
+                            <Cursor fx:constant="HAND" />
+                        </cursor>
+                    </Button>
+                    
+                    <Button fx:id="btnNhanPhong" maxWidth="Infinity" minHeight="50.0" mnemonicParsing="false" onAction="#moNhanPhong" prefHeight="50.0" style="-fx-background-color: white; -fx-text-fill: #374151; -fx-border-color: #e5e7eb; -fx-border-width: 1.5; -fx-background-radius: 8; -fx-border-radius: 8; -fx-font-size: 14px; -fx-font-weight: bold;" text="🔑 Nhận phòng">
+                        <cursor>
+                            <Cursor fx:constant="HAND" />
+                        </cursor>
+                    </Button>
+                    
+                    <Button fx:id="btnDoiPhong" maxWidth="Infinity" minHeight="50.0" mnemonicParsing="false" onAction="#moDoiPhong" prefHeight="50.0" style="-fx-background-color: white; -fx-text-fill: #374151; -fx-border-color: #e5e7eb; -fx-border-width: 1.5; -fx-background-radius: 8; -fx-border-radius: 8; -fx-font-size: 14px; -fx-font-weight: bold;" text="🔄 Đổi phòng">
+                        <cursor>
+                            <Cursor fx:constant="HAND" />
+                        </cursor>
+                    </Button>
+                    
+                    <Button fx:id="btnHuy" maxWidth="Infinity" minHeight="50.0" mnemonicParsing="false" onAction="#moHuy" prefHeight="50.0" style="-fx-background-color: white; -fx-text-fill: #374151; -fx-border-color: #e5e7eb; -fx-border-width: 1.5; -fx-background-radius: 8; -fx-border-radius: 8; -fx-font-size: 14px; -fx-font-weight: bold;" text="🚪 Trả phòng">
+                        <cursor>
+                            <Cursor fx:constant="HAND" />
+                        </cursor>
+                    </Button>
+                    
+                    <Button fx:id="btnHuyDat" maxWidth="Infinity" minHeight="50.0" mnemonicParsing="false" onAction="#moHuyDat" prefHeight="50.0" style="-fx-background-color: #ef4444; -fx-text-fill: white; -fx-background-radius: 8; -fx-font-size: 14px; -fx-font-weight: bold;" text="❌ Hủy đặt phòng">
+                        <cursor>
+                            <Cursor fx:constant="HAND" />
+                        </cursor>
+                    </Button>
+                    
+                    <Button fx:id="btnDichVu" maxWidth="Infinity" minHeight="50.0" mnemonicParsing="false" onAction="#moDichVu" prefHeight="50.0" style="-fx-background-color: white; -fx-text-fill: #374151; -fx-border-color: #e5e7eb; -fx-border-width: 1.5; -fx-background-radius: 8; -fx-border-radius: 8; -fx-font-size: 14px; -fx-font-weight: bold;" text="⚙️ Dịch vụ">
+                        <cursor>
+                            <Cursor fx:constant="HAND" />
+                        </cursor>
+                    </Button>
+                    
+                    <Button fx:id="btnThanhToan" maxWidth="Infinity" minHeight="50.0" mnemonicParsing="false" onAction="#moThanhToan" prefHeight="50.0" style="-fx-background-color: #14b8a6; -fx-text-fill: white; -fx-background-radius: 8; -fx-font-size: 14px; -fx-font-weight: bold;" text="💳 Thanh toán">
+                        <cursor>
+                            <Cursor fx:constant="HAND" />
+                        </cursor>
+                    </Button>
                 </VBox>
             </HBox>
         </VBox>

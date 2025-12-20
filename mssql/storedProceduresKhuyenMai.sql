@@ -6,7 +6,7 @@ USE QuanLyKhachSan;
 GO
 
 -- 1. Lấy toàn bộ danh sách mã giảm giá
-CREATE PROCEDURE sp_LayDSMaGiamGia
+CREATE PROCEDURE sp_LayDSKhuyenMai
 AS
 BEGIN
     SELECT maGG,
@@ -19,23 +19,23 @@ BEGIN
            moTa,
            trangThai,
            maNV
-    FROM MaGiamGia;
+    FROM KhuyenMai;
 END
 GO
 
 -- 2. Lấy danh sách mã giảm giá đang hoạt động
-CREATE PROCEDURE sp_LayMaGiamGiaDangHoatDong
+CREATE PROCEDURE sp_LayKhuyenMaiDangHoatDong
 AS
 BEGIN
     SELECT *
-    FROM MaGiamGia
+    FROM KhuyenMai
     WHERE trangThai = N'Đang diễn ra'
       AND GETDATE() BETWEEN ngayBatDau AND ngayKetThuc;
 END
 GO
 
 -- 3. Thêm mã giảm giá mới
-CREATE PROCEDURE sp_ThemMaGiamGia @maGG NVARCHAR(10), -- Mã giảm giá
+CREATE PROCEDURE sp_ThemKhuyenMai @maGG NVARCHAR(10), -- Mã giảm giá
                                   @code NVARCHAR(50), -- Code giảm giá
                                   @giamGia DECIMAL(18, 2), -- Giá trị giảm
                                   @kieuGiamGia NVARCHAR(10), -- Kiểu giảm (PERCENT / AMOUNT)
@@ -47,7 +47,7 @@ CREATE PROCEDURE sp_ThemMaGiamGia @maGG NVARCHAR(10), -- Mã giảm giá
                                   @maNV NVARCHAR(10) -- Nhân viên tạo mã
 AS
 BEGIN
-    INSERT INTO MaGiamGia(maGG, code, giamGia, kieuGiamGia, ngayBatDau, ngayKetThuc,
+    INSERT INTO KhuyenMai(maGG, code, giamGia, kieuGiamGia, ngayBatDau, ngayKetThuc,
                           tongTienToiThieu, moTa, trangThai, maNV)
     VALUES (@maGG, @code, @giamGia, @kieuGiamGia, @ngayBatDau, @ngayKetThuc,
             @tongTienToiThieu, @moTa, @trangThai, @maNV);
@@ -55,7 +55,8 @@ END
 GO
 
 -- 4. Cập nhật mã giảm giá
-CREATE PROCEDURE sp_CapNhatMaGiamGia @maGG NVARCHAR(10), -- Mã giảm giá
+CREATE PROCEDURE sp_CapNhatKhuyenMai @maGG NVARCHAR(10), -- Mã giảm giá
+                                     @code NVARCHAR(50), -- Code giảm giá
                                      @giamGia DECIMAL(18, 2), -- Giá trị giảm
                                      @kieuGiamGia NVARCHAR(10), -- Kiểu giảm
                                      @ngayKetThuc DATE, -- Ngày kết thúc mới
@@ -63,8 +64,9 @@ CREATE PROCEDURE sp_CapNhatMaGiamGia @maGG NVARCHAR(10), -- Mã giảm giá
                                      @trangThai NVARCHAR(50) -- Trạng thái mới
 AS
 BEGIN
-    UPDATE MaGiamGia
-    SET giamGia     = @giamGia,
+    UPDATE KhuyenMai
+    SET code        = @code,
+        giamGia     = @giamGia,
         kieuGiamGia = @kieuGiamGia,
         ngayKetThuc = @ngayKetThuc,
         moTa        = @moTa,
@@ -74,18 +76,18 @@ END
 GO
 
 -- 5. Xóa mã giảm giá
-CREATE PROCEDURE sp_XoaMaGiamGia @maGG NVARCHAR(10) -- Mã giảm giá cần xóa
+CREATE PROCEDURE sp_XoaKhuyenMai @maGG NVARCHAR(10) -- Mã giảm giá cần xóa
 AS
 BEGIN
     DELETE
-    FROM MaGiamGia
+    FROM KhuyenMai
     WHERE maGG = @maGG;
 END
 GO
 
--- Store Procedure: sp_LayMaGiamGiaTheoMa
+-- Store Procedure: sp_LayKhuyenMaiTheoMa
 -- Mục đích: Lấy thông tin chi tiết của một mã giảm giá dựa trên Mã GG (maGG)
-CREATE OR ALTER PROCEDURE sp_LayMaGiamGiaTheoMa
+CREATE PROCEDURE sp_LayKhuyenMaiTheoMa
 @maGG NVARCHAR(10)
 AS
 BEGIN
@@ -103,8 +105,49 @@ BEGIN
         trangThai,
         maNV
     FROM
-        MaGiamGia
+        KhuyenMai
     WHERE
         maGG = @maGG;
+END;
+GO
+
+-- Store Procedure: sp_layMaKMTiepTheo
+-- Mục đích: Lấy mã khuyến mãi tiếp theo
+CREATE OR ALTER PROCEDURE sp_layMaKMTiepTheo
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    -- Lấy mã lớn nhất hiện tại và tăng lên 1
+    DECLARE @maxMaGG NVARCHAR(10);
+    DECLARE @nextNumber INT;
+
+    SELECT @maxMaGG = MAX(maGG)
+    FROM KhuyenMai
+    WHERE maGG LIKE 'GG%';
+
+    IF @maxMaGG IS NULL
+    BEGIN
+        SET @nextNumber = 1;
+    END
+    ELSE
+    BEGIN
+        -- Lấy số từ mã (bỏ 'GG' prefix)
+        SET @nextNumber = CAST(SUBSTRING(@maxMaGG, 3, LEN(@maxMaGG) - 2) AS INT) + 1;
+    END
+
+    -- Trả về mã mới
+    SELECT 'GG' + RIGHT('00000' + CAST(@nextNumber AS NVARCHAR(5)), 5) AS maGG;
+END;
+GO
+
+CREATE PROCEDURE sp_layMaKMTiepTheo
+AS
+BEGIN
+    SELECT TOP 1 maGG
+    FROM KhuyenMai
+    ORDER BY maGG DESC;
+    SELECT 'GG' + RIGHT('000' + CAST(RIGHT(MAX(maGG), 3) + 1 AS VARCHAR(3)), 3) AS maGG
+    FROM KhuyenMai;
 END;
 GO

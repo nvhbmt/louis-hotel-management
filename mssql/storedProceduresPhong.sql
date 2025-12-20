@@ -544,4 +544,72 @@ BEGIN
     ORDER BY p.tang, p.maPhong;
 END
 GO
+-- =============================================
+-- Stored Procedure: sp_KiemTraPhongTrongTheoKhoangThoiGian
+-- Mô tả: Kiểm tra xem một phòng có trống trong khoảng thời gian hay không
+-- Tham số:
+--   @maPhong: Mã phòng cần kiểm tra
+--   @ngayDen: Ngày check-in
+--   @ngayDi: Ngày check-out
+-- Trả về: 
+--   isTrong (bit): 1 nếu phòng trống, 0 nếu đã được đặt/sử dụng
+-- =============================================
+CREATE PROCEDURE sp_KiemTraPhongTrongTheoKhoangThoiGian
+    @maPhong NVARCHAR(10),
+    @ngayDen DATE,
+    @ngayDi DATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    
+    DECLARE @isTrong BIT = 1;
+    
+    -- Kiểm tra xem phòng có bị đặt hoặc đang sử dụng trong khoảng thời gian không
+    -- Logic overlap: Booking bận nếu có booking mà:
+    --   - Booking bắt đầu trước khi khoảng thời gian kết thúc (@ngayDi)
+    --   - Booking kết thúc sau khi khoảng thời gian bắt đầu (@ngayDen)
+    
+    -- Kiểm tra trong bảng CTHoaDonPhong (đã đặt hoặc đang sử dụng)
+    -- Schema: CTHoaDonPhong có cả maPhong, maPhieu, ngayDen, ngayDi
+    IF EXISTS (
+        SELECT 1 
+        FROM CTHoaDonPhong cthdp
+        INNER JOIN HoaDon hd ON cthdp.maHD = hd.maHD
+        WHERE cthdp.maPhong = @maPhong
+            AND cthdp.daHuy = 0  -- Chỉ kiểm tra booking chưa bị hủy
+            AND hd.trangThai IN (N'Chưa thanh toán', N'Đã thanh toán')
+            AND (
+                -- Overlap condition: booking overlaps with requested period
+                cthdp.ngayDen < @ngayDi AND cthdp.ngayDi > @ngayDen
+            )
+    )
+    BEGIN
+        SET @isTrong = 0;
+    END
+    
+    -- Kiểm tra trạng thái phòng hiện tại (bảo trì)
+    -- Nếu phòng đang bảo trì thì không available bất kể thời gian nào
+    IF EXISTS (
+        SELECT 1 
+        FROM Phong 
+        WHERE maPhong = @maPhong 
+            AND trangThai = N'Bảo trì'
+    )
+    BEGIN
+        SET @isTrong = 0;
+    END
+    
+    -- Trả về kết quả
+    SELECT @isTrong AS isTrong;
+END;
+GO
 
+-- =============================================
+-- Test Script
+-- =============================================
+
+-- Test 1: Kiểm tra phòng trống (không có booking)
+-- EXEC sp_KiemTraPhongTrongTheoKhoangThoiGian @maPhong = '101', @ngayDen = '2024-12-25', @ngayDi = '2024-12-27';
+
+-- Test 2: Kiểm tra phòng đã được đặt
+-- EXEC sp_KiemTraPhongTrongTheoKhoangThoiGian @maPhong = '102', @ngayDen = '2024-12-20', @ngayDi = '2024-12-22';

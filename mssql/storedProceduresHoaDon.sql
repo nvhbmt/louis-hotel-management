@@ -1,12 +1,7 @@
 USE QuanLyKhachSan;
 GO
 
--- =============================================
--- ========== CÁC STORED PROCEDURE HÓA ĐƠN ======
--- =============================================
-
--- 1. Thêm hóa đơn (Thêm các cột chi tiết)
--- Khớp với 12 tham số trong DAO
+-- 1. CẬP NHẬT PROCEDURE THÊM HÓA ĐƠN (MẶC ĐỊNH HÓA)
 CREATE PROCEDURE sp_ThemHoaDon
     @maHD NVARCHAR(10),
     @ngayLap DATE,
@@ -16,22 +11,33 @@ CREATE PROCEDURE sp_ThemHoaDon
     @maNV NVARCHAR(10),
     @maGG NVARCHAR(10) = NULL,
     @trangThai NVARCHAR(50),
-    -- CỘT MỚI: Đảm bảo chấp nhận NULL
     @ngayCheckOut DATE = NULL,
-    @tienPhat DECIMAL(18,2) = 0.0,
-    @tongGiamGia DECIMAL(18,2) = 0.0,
-    @tongVAT DECIMAL(18,2) = 0.0
+    -- Các trường dưới đây sẽ tự động bằng 0 nếu Java không truyền vào
+    @phatNhanTre DECIMAL(18,2) = 0,
+    @phatTraSom DECIMAL(18,2) = 0,
+    @phatTraTre DECIMAL(18,2) = 0,
+    @giamGiaMaGG DECIMAL(18,2) = 0,
+    @giamGiaHangKH DECIMAL(18,2) = 0,
+    @tongVAT DECIMAL(18,2) = 0
 AS
 BEGIN
     SET NOCOUNT ON;
-
-    INSERT INTO HoaDon (maHD, ngayLap, phuongThuc, trangThai, tongTien, maKH, maNV, maGG, NgayCheckOut, TienPhat, TongGiamGia, TongVAT)
-    VALUES (@maHD, @ngayLap, @phuongThuc, @trangThai, @tongTien, @maKH, @maNV, @maGG, @ngayCheckOut, @tienPhat, @tongGiamGia, @tongVAT);
+    INSERT INTO HoaDon (
+        maHD, ngayLap, phuongThuc, trangThai, tongTien,
+        PhatNhanPhongTre, PhatTraPhongSom, PhatTraPhongTre,
+        GiamGiaMaGG, GiamGiaHangKH, TongVAT, NgayCheckOut,
+        maKH, maNV, maGG
+    )
+    VALUES (
+               @maHD, @ngayLap, @phuongThuc, @trangThai, @tongTien,
+               @phatNhanTre, @phatTraSom, @phatTraTre,
+               @giamGiaMaGG, @giamGiaHangKH, @tongVAT, @ngayCheckOut,
+               @maKH, @maNV, @maGG
+           );
 END;
 GO
 
--- 2. Cập nhật hóa đơn (sp_SuaHoaDon)
--- Khớp với 12 tham số trong DAO, cập nhật tất cả các cột
+-- 2. CẬP NHẬT PROCEDURE SỬA HÓA ĐƠN
 CREATE PROCEDURE sp_SuaHoaDon
     @maHD NVARCHAR(10),
     @ngayLap DATE,
@@ -41,15 +47,15 @@ CREATE PROCEDURE sp_SuaHoaDon
     @maNV NVARCHAR(10),
     @maGG NVARCHAR(10),
     @trangThai NVARCHAR(50),
-    -- CỘT MỚI
     @ngayCheckOut DATE,
-    @tienPhat DECIMAL(18,2),
-    @tongGiamGia DECIMAL(18,2),
+    @phatNhanTre DECIMAL(18,2),
+    @phatTraSom DECIMAL(18,2),
+    @phatTraTre DECIMAL(18,2),
+    @giamGiaMaGG DECIMAL(18,2),
+    @giamGiaHangKH DECIMAL(18,2),
     @tongVAT DECIMAL(18,2)
 AS
 BEGIN
-    SET NOCOUNT ON;
-
     UPDATE HoaDon
     SET ngayLap = @ngayLap,
         phuongThuc = @phuongThuc,
@@ -58,68 +64,80 @@ BEGIN
         maNV = @maNV,
         maGG = @maGG,
         trangThai = @trangThai,
-        -- Cập nhật các trường mới
         NgayCheckOut = @ngayCheckOut,
-        TienPhat = @tienPhat,
-        TongGiamGia = @tongGiamGia,
+        PhatNhanPhongTre = @phatNhanTre,
+        PhatTraPhongSom = @phatTraSom,
+        PhatTraPhongTre = @phatTraTre,
+        GiamGiaMaGG = @giamGiaMaGG,
+        GiamGiaHangKH = @giamGiaHangKH,
         TongVAT = @tongVAT
     WHERE maHD = @maHD;
 END;
 GO
 
--- 3. Xóa hóa đơn (sp_XoaHoaDon)
+
+/* =====================================================
+   3. XÓA HÓA ĐƠN (XÓA CỨNG – ĐÚNG NGHIỆP VỤ)
+   ===================================================== */
 CREATE PROCEDURE sp_XoaHoaDon
 @maHD NVARCHAR(10)
 AS
 BEGIN
     SET NOCOUNT ON;
 
-    DELETE FROM HoaDon WHERE maHD = @maHD;
+    DELETE FROM HoaDon
+    WHERE maHD = @maHD;
 END;
 GO
 
--- 4. Lấy danh sách hóa đơn (sp_LayDanhSachHoaDon)
--- Đảm bảo SELECT tất cả các cột của HoaDon (bao gồm các cột mới)
+
+/* =====================================================
+   4. LẤY DANH SÁCH HÓA ĐƠN
+   ===================================================== */
 CREATE PROCEDURE sp_LayDanhSachHoaDon
 AS
 BEGIN
     SET NOCOUNT ON;
 
-    WITH RankedCTP AS (
+    WITH PhongGanNhat AS (
         SELECT
             ctp.maHD,
             ctp.maPhong,
-            ctp.ngayDi,
-            ROW_NUMBER() OVER(PARTITION BY ctp.maHD ORDER BY ctp.ngayDi DESC) as rn
+            ROW_NUMBER() OVER(PARTITION BY ctp.maHD ORDER BY ctp.ngayDi DESC) AS rn
         FROM CTHoaDonPhong ctp
+        WHERE ctp.daHuy = 0
     )
     SELECT
-        hd.*, -- Bao gồm tất cả các cột trong HoaDon (maHD, tongTien, NgayCheckOut, TienPhat, TongGiamGia, TongVAT...)
+        hd.*,
         kh.hoTen,
         kh.soDT,
         kh.diaChi,
-        r_ctp.maPhong AS soPhong
+        pgn.maPhong AS soPhong
     FROM HoaDon hd
              LEFT JOIN KhachHang kh ON hd.maKH = kh.maKH
-             LEFT JOIN RankedCTP r_ctp ON hd.maHD = r_ctp.maHD AND r_ctp.rn = 1;
-
+             LEFT JOIN PhongGanNhat pgn ON hd.maHD = pgn.maHD AND pgn.rn = 1;
 END;
 GO
 
--- 5. Tìm hóa đơn theo mã (sp_TimHoaDonTheoMa)
--- Đảm bảo SELECT * để trả về tất cả các cột cho DAO
+
+/* =====================================================
+   5. TÌM HÓA ĐƠN THEO MÃ
+   ===================================================== */
 CREATE PROCEDURE sp_TimHoaDonTheoMa
 @maHD NVARCHAR(10)
 AS
 BEGIN
     SET NOCOUNT ON;
 
-    SELECT * FROM HoaDon WHERE maHD = @maHD;
+    SELECT * FROM HoaDon
+    WHERE maHD = @maHD;
 END;
 GO
 
--- 6. Tạo mã hóa đơn tiếp theo (sp_TaoMaHoaDonTiepTheo)
--- DAO2 đang gọi với OUT parameter, nhưng code cũ dùng SELECT. Tôi sẽ sửa lại dùng SELECT như code gốc của bạn
+
+/* =====================================================
+   6. TẠO MÃ HÓA ĐƠN TIẾP THEO
+   ===================================================== */
 CREATE PROCEDURE sp_TaoMaHoaDonTiepTheo
 AS
 BEGIN
@@ -129,8 +147,7 @@ BEGIN
     DECLARE @so INT;
     DECLARE @maMoi NVARCHAR(10);
 
-    SELECT @maCu = MAX(maHD)
-    FROM HoaDon;
+    SELECT @maCu = MAX(maHD) FROM HoaDon;
 
     IF @maCu IS NULL
         SET @maMoi = 'HD001';
@@ -140,12 +157,14 @@ BEGIN
             SET @maMoi = 'HD' + RIGHT('000' + CAST(@so AS NVARCHAR(3)), 3);
         END
 
-    -- Trả kết quả ra dưới dạng cột
     SELECT @maMoi AS maHDMoi;
 END;
-GO;
+GO
 
--- 7. Cập nhật trạng thái hóa đơn (sp_CapNhatTrangThaiHoaDon)
+
+/* =====================================================
+   7. CẬP NHẬT TRẠNG THÁI HÓA ĐƠN
+   ===================================================== */
 CREATE PROCEDURE sp_CapNhatTrangThaiHoaDon
     @maHD NVARCHAR(10),
     @trangThaiMoi NVARCHAR(50)
@@ -159,8 +178,10 @@ BEGIN
 END;
 GO
 
--- 8. Lấy chi tiết hóa đơn (sp_LayChiTietHoaDonTheoMaHD)
--- Cần OR ALTER vì SP này đã tồn tại
+
+/* =====================================================
+   8. LẤY CHI TIẾT HÓA ĐƠN
+   ===================================================== */
 CREATE PROCEDURE sp_LayChiTietHoaDonTheoMaHD
 @maHD NVARCHAR(10)
 AS
@@ -169,147 +190,59 @@ BEGIN
 
     WITH ChiTiet AS (
         SELECT
-            (lp.tenLoai + N' (' + p.maPhong + N')') AS TenChiTiet,
-
-            -- Cột 1: Tính Số Lượng (Số Ngày)
-            (CASE
-                 WHEN DATEDIFF(day, ctp.ngayDen, ISNULL(ctp.ngayDi, GETDATE())) = 0 THEN 1
-                 ELSE DATEDIFF(day, ctp.ngayDen, ISNULL(ctp.ngayDi, GETDATE()))
-                END) AS SoLuong,
-
+            lp.tenLoai + N' (' + p.maPhong + N')' AS TenChiTiet,
+            CASE
+                WHEN DATEDIFF(DAY, ctp.ngayDen, ctp.ngayDi) = 0 THEN 1
+                ELSE DATEDIFF(DAY, ctp.ngayDen, ctp.ngayDi)
+                END AS SoLuong,
             ctp.giaPhong AS DonGia,
-
-            -- Cột 3: TÍNH LẠI THÀNH TIỀN (SỬA LỖI: Nhân DonGia với Số Lượng đã tính)
-            (ctp.giaPhong * (CASE
-                                 WHEN DATEDIFF(day, ctp.ngayDen, ISNULL(ctp.ngayDi, GETDATE())) = 0 THEN 1
-                                 ELSE DATEDIFF(day, ctp.ngayDen, ISNULL(ctp.ngayDi, GETDATE()))
-                END)
-                ) AS ThanhTien,
-
-            1 AS UuTienSapXep
-        FROM
-            CTHoaDonPhong AS ctp
-                JOIN
-            Phong AS p ON ctp.maPhong = p.maPhong
-                JOIN
-            LoaiPhong AS lp ON p.maLoaiPhong = lp.maLoaiPhong
-        WHERE
-            ctp.maHD = @maHD
+            ctp.thanhTien AS ThanhTien,
+            1 AS UuTien
+        FROM CTHoaDonPhong ctp
+                 JOIN Phong p ON ctp.maPhong = p.maPhong
+                 JOIN LoaiPhong lp ON p.maLoaiPhong = lp.maLoaiPhong
+        WHERE ctp.maHD = @maHD
+          AND ctp.daHuy = 0
 
         UNION ALL
 
-        -- Phần Dịch Vụ (Giữ nguyên, vì ThanhTien dịch vụ thường được lưu vật lý)
         SELECT
-            dv.tenDV AS TenChiTiet,
-            ctdv.soLuong AS SoLuong,
-            ctdv.donGia AS DonGia,
-            ctdv.thanhTien AS ThanhTien,
-            2 AS UuTienSapXep
-        FROM
-            CTHoaDonDichVu AS ctdv
-                JOIN
-            DichVu AS dv ON ctdv.maDV = dv.maDV
-        WHERE
-            ctdv.maHD = @maHD
+            dv.tenDV,
+            ctdv.soLuong,
+            ctdv.donGia,
+            ctdv.thanhTien,
+            2
+        FROM CTHoaDonDichVu ctdv
+                 JOIN DichVu dv ON ctdv.maDV = dv.maDV
+        WHERE ctdv.maHD = @maHD
     )
-
     SELECT
-        ROW_NUMBER() OVER (ORDER BY UuTienSapXep, TenChiTiet) AS STT,
-        TenChiTiet,
-        SoLuong,
-        DonGia,
-        ThanhTien
-    FROM
-        ChiTiet
-    ORDER BY
-        UuTienSapXep, TenChiTiet;
-
+        ROW_NUMBER() OVER(ORDER BY UuTien, TenChiTiet) AS STT,
+        TenChiTiet, SoLuong, DonGia, ThanhTien
+    FROM ChiTiet;
 END;
 GO
 
--- 9. Cập nhật Tổng Tiền Hóa Đơn (sp_CapNhatTongTienHoaDon)
--- Giữ nguyên logic tính tổng gốc từ chi tiết (không bao gồm VAT/GG)
+
 CREATE PROCEDURE sp_CapNhatTongTienHoaDon
 @maHD NVARCHAR(10)
 AS
 BEGIN
     SET NOCOUNT ON;
 
-    DECLARE @TongThanhToanGoc DECIMAL(18, 2);
+    DECLARE @tongPhong DECIMAL(18,2) = 0;
+    DECLARE @tongDV DECIMAL(18,2) = 0;
 
-    SET @TongThanhToanGoc = (
-                                SELECT ISNULL(SUM(ThanhTien), 0)
-                                FROM CTHoaDonPhong
-                                WHERE maHD = @maHD
-                            ) + (
-                                SELECT ISNULL(SUM(ThanhTien), 0)
-                                FROM CTHoaDonDichVu
-                                WHERE maHD = @maHD
-                            );
+    SELECT @tongPhong = ISNULL(SUM(thanhTien), 0)
+    FROM CTHoaDonPhong
+    WHERE maHD = @maHD AND daHuy = 0;
 
-    UPDATE HoaDon
-    SET tongTien = @TongThanhToanGoc
+    SELECT @tongDV = ISNULL(SUM(thanhTien), 0)
+    FROM CTHoaDonDichVu
     WHERE maHD = @maHD;
 
-END;
-GO
-
-CREATE PROCEDURE sp_LayChiTietHoaDonTheoMaHD
-@maHD NVARCHAR(10)
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    WITH ChiTiet AS (
-        SELECT
-            (lp.tenLoai + N' (' + p.maPhong + N')') AS TenChiTiet,
-
-            -- Tính Số Lượng (Số Ngày) dựa trên GETDATE() nếu chưa check-out
-            (CASE
-                 WHEN DATEDIFF(day, ctp.ngayDen, ISNULL(ctp.ngayDi, GETDATE())) = 0 THEN 1
-                 ELSE DATEDIFF(day, ctp.ngayDen, ISNULL(ctp.ngayDi, GETDATE()))
-                END) AS SoLuong,
-
-            ctp.giaPhong AS DonGia,
-
-            ctp.thanhTien AS ThanhTien, -- Lấy giá trị đã lưu
-            1 AS UuTienSapXep
-        FROM
-            CTHoaDonPhong AS ctp
-                JOIN
-            Phong AS p ON ctp.maPhong = p.maPhong
-                JOIN
-            LoaiPhong AS lp ON p.maLoaiPhong = lp.maLoaiPhong
-        WHERE
-            ctp.maHD = @maHD
-
-        UNION ALL
-
-        -- Phần Dịch Vụ
-        SELECT
-            dv.tenDV AS TenChiTiet,
-            ctdv.soLuong AS SoLuong,
-            ctdv.donGia AS DonGia,
-            ctdv.thanhTien AS ThanhTien,
-            2 AS UuTienSapXep
-        FROM
-            CTHoaDonDichVu AS ctdv
-                JOIN
-            DichVu AS dv ON ctdv.maDV = dv.maDV
-        WHERE
-            ctdv.maHD = @maHD
-    )
-
-    SELECT
-        ROW_NUMBER() OVER (ORDER BY UuTienSapXep, TenChiTiet) AS STT,
-        TenChiTiet,
-        SoLuong,
-        DonGia,
-        ThanhTien
-    FROM
-        ChiTiet
-    ORDER BY
-        UuTienSapXep, TenChiTiet;
-
+    UPDATE HoaDon
+    SET tongTien = @tongPhong + @tongDV
+    WHERE maHD = @maHD;
 END;
 GO

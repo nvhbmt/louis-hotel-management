@@ -1,10 +1,8 @@
 package com.example.louishotelmanagement.controller;
 
-import com.example.louishotelmanagement.dao.MaGiamGiaDAO;
-import com.example.louishotelmanagement.model.KhachHang;
+import com.example.louishotelmanagement.dao.KhuyenMaiDAO;
 import com.example.louishotelmanagement.model.KieuGiamGia;
-import com.example.louishotelmanagement.model.MaGiamGia;
-import com.example.louishotelmanagement.model.PhieuDatPhong;
+import com.example.louishotelmanagement.model.KhuyenMai;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
@@ -29,15 +27,17 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class QuanLyGiamGiaController implements Initializable {
+public class QuanLyKhuyenMaiController implements Initializable {
     @FXML
-    public Label lblTongSoMaGiamGia;
+    public Label lblTongSoKhuyenMai;
     @FXML
-    public Label lblSoMaDangHoatDong;
+    public Label lblSoMaDangSuDung;
     @FXML
     public Label lblSoMaHetHan;
     @FXML
     public Label lblSoMaChuaBatDau;
+    @FXML
+    public Label lblSoMaVoHieuHoa;
     @FXML
     public BorderPane rootPane;
     @FXML
@@ -52,36 +52,36 @@ public class QuanLyGiamGiaController implements Initializable {
     private ComboBox<String> cbTrangThai;
 
     @FXML
-    private TableView<MaGiamGia> tableViewMaGiamGia;
+    private TableView<KhuyenMai> tableViewKhuyenMai;
     @FXML
-    private TableColumn<MaGiamGia, String> colMaGG;
+    private TableColumn<KhuyenMai, String> colMaKM;
     @FXML
-    private TableColumn<MaGiamGia, String> colCode;
+    private TableColumn<KhuyenMai, String> colCode;
     @FXML
-    private TableColumn<MaGiamGia, Double> colGiamGia;
+    private TableColumn<KhuyenMai, Double> colGiamGia;
     @FXML
-    private TableColumn<MaGiamGia, KieuGiamGia> colKieuGiamGia;
+    private TableColumn<KhuyenMai, KieuGiamGia> colKieuGiamGia;
     @FXML
-    private TableColumn<MaGiamGia, LocalDate> colNgayBatDau;
+    private TableColumn<KhuyenMai, LocalDate> colNgayBatDau;
     @FXML
-    private TableColumn<MaGiamGia, LocalDate> colNgayKetThuc;
+    private TableColumn<KhuyenMai, LocalDate> colNgayKetThuc;
     @FXML
-    private TableColumn<MaGiamGia, Double> colTongTienToiThieu;
+    private TableColumn<KhuyenMai, Double> colTongTienToiThieu;
     @FXML
-    private TableColumn<MaGiamGia, String> colTrangThai;
+    private TableColumn<KhuyenMai, String> colTrangThai;
     @FXML
-    private TableColumn<MaGiamGia, String> colMoTa;
+    private TableColumn<KhuyenMai, String> colMoTa;
     @FXML
-    public TableColumn<MaGiamGia, Void> colThaoTac;
+    public TableColumn<KhuyenMai, Void> colThaoTac;
 
-    private MaGiamGiaDAO maGiamGiaDAO;
-    private ObservableList<MaGiamGia> danhSachMaGiamGia;
-    private ObservableList<MaGiamGia> danhSachMaGiamGiaFiltered;
+    private KhuyenMaiDAO khuyenMaiDAO;
+    private ObservableList<KhuyenMai> danhSachKhuyenMai;
+    private ObservableList<KhuyenMai> danhSachKhuyenMaiFiltered;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
-            maGiamGiaDAO = new MaGiamGiaDAO();
+            khuyenMaiDAO = new KhuyenMaiDAO();
 
             // Khởi tạo dữ liệu
             khoiTaoDuLieu();
@@ -97,38 +97,40 @@ public class QuanLyGiamGiaController implements Initializable {
     }
 
     private void capNhatThongKe() throws SQLException {
-        List<MaGiamGia> dsMaGiamGia = maGiamGiaDAO.layDSMaGiamGia();
-        List<MaGiamGia> dsMaDangHoatDong = maGiamGiaDAO.layMaGiamGiaDangHoatDong();
+        List<KhuyenMai> dsKhuyenMai = khuyenMaiDAO.layDSKhuyenMai();
+        List<KhuyenMai> dsMaDangHoatDong = khuyenMaiDAO.layKhuyenMaiDangHoatDong();
 
-        int tongSoMaGiamGia = dsMaGiamGia.size();
-        int soMaDangHoatDong = dsMaDangHoatDong.size();
+        int tongSoKhuyenMai = dsKhuyenMai.size();
+        int soMaDangSuDung = 0;
         int soMaHetHan = 0;
         int soMaChuaBatDau = 0;
+        int soMaVoHieuHoa = 0;
 
-        LocalDate ngayHienTai = LocalDate.now();
-
-        for (MaGiamGia mg : dsMaGiamGia) {
-            if (mg.getNgayKetThuc().isBefore(ngayHienTai)) {
-                soMaHetHan++;
-            } else if (mg.getNgayBatDau().isAfter(ngayHienTai)) {
-                soMaChuaBatDau++;
+        for (KhuyenMai km : dsKhuyenMai) {
+            String trangThai = km.getTrangThai();
+            switch (trangThai) {
+                case "Đang sử dụng" -> soMaDangSuDung++;
+                case "Đã hết hạn" -> soMaHetHan++;
+                case "Chưa bắt đầu" -> soMaChuaBatDau++;
+                case "Vô hiệu hóa" -> soMaVoHieuHoa++;
             }
         }
 
-        lblTongSoMaGiamGia.setText(String.valueOf(tongSoMaGiamGia));
-        lblSoMaDangHoatDong.setText(String.valueOf(soMaDangHoatDong));
+        lblTongSoKhuyenMai.setText(String.valueOf(tongSoKhuyenMai));
+        lblSoMaDangSuDung.setText(String.valueOf(soMaDangSuDung));
         lblSoMaHetHan.setText(String.valueOf(soMaHetHan));
         lblSoMaChuaBatDau.setText(String.valueOf(soMaChuaBatDau));
+        lblSoMaVoHieuHoa.setText(String.valueOf(soMaVoHieuHoa));
     }
 
     private void khoiTaoDuLieu() {
-        danhSachMaGiamGia = FXCollections.observableArrayList();
-        danhSachMaGiamGiaFiltered = FXCollections.observableArrayList();
+        danhSachKhuyenMai = FXCollections.observableArrayList();
+        danhSachKhuyenMaiFiltered = FXCollections.observableArrayList();
     }
 
     private void khoiTaoTableView() {
         // Thiết lập các cột
-        colMaGG.setCellValueFactory(new PropertyValueFactory<>("maGG"));
+        colMaKM.setCellValueFactory(new PropertyValueFactory<>("maKM"));
         colCode.setCellValueFactory(new PropertyValueFactory<>("code"));
         colGiamGia.setCellValueFactory(new PropertyValueFactory<>("giamGia"));
         colKieuGiamGia.setCellValueFactory(new PropertyValueFactory<>("kieuGiamGia"));
@@ -202,10 +204,10 @@ public class QuanLyGiamGiaController implements Initializable {
                     setText(item);
                     getStyleClass().clear();
                     switch (item.toLowerCase()) {
-                        case "hoạt động" -> getStyleClass().add("status-hoat-dong");
-                        case "hết hạn" -> getStyleClass().add("status-het-han");
+                        case "đang sử dụng" -> getStyleClass().add("status-hoat-dong");
+                        case "đã hết hạn" -> getStyleClass().add("status-het-han");
                         case "chưa bắt đầu" -> getStyleClass().add("status-chua-bat-dau");
-                        case "tạm dừng" -> getStyleClass().add("status-tam-dung");
+                        case "vô hiệu hóa" -> getStyleClass().add("status-tam-dung");
                         default -> {
                             // Không thêm style class nào
                         }
@@ -223,13 +225,13 @@ public class QuanLyGiamGiaController implements Initializable {
                 btnDelete.getStyleClass().addAll("btn", "btn-xs", "btn-danger", "btn-table-delete");
 
                 btnEdit.setOnAction(_ -> {
-                    MaGiamGia maGiamGia = getTableView().getItems().get(getIndex());
-                    handleSuaMaGiamGia(maGiamGia);
+                    KhuyenMai khuyenMai = getTableView().getItems().get(getIndex());
+                    handleSuaKhuyenMai(khuyenMai);
                 });
 
                 btnDelete.setOnAction(_ -> {
-                    MaGiamGia maGiamGia = getTableView().getItems().get(getIndex());
-                    handleXoaMaGiamGia(maGiamGia);
+                    KhuyenMai khuyenMai = getTableView().getItems().get(getIndex());
+                    handleXoaKhuyenMai(khuyenMai);
                 });
             }
 
@@ -250,10 +252,10 @@ public class QuanLyGiamGiaController implements Initializable {
         colThaoTac.setCellValueFactory(_ -> new ReadOnlyObjectWrapper<>(null));
 
         // Thiết lập TableView
-        tableViewMaGiamGia.setItems(danhSachMaGiamGiaFiltered);
+        tableViewKhuyenMai.setItems(danhSachKhuyenMaiFiltered);
 
         // Cho phép chọn nhiều dòng
-        tableViewMaGiamGia.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        tableViewKhuyenMai.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
     }
 
     private void khoiTaoComboBox() {
@@ -283,8 +285,8 @@ public class QuanLyGiamGiaController implements Initializable {
             }
         });
 
-        // Khởi tạo ComboBox trạng thái
-        List<String> danhSachTrangThai = List.of("Đang diễn ra", "Hết hạn", "Chưa diễn ra", "Tạm dừng");
+        // Khởi tạo ComboBox trạng thái cho filter (hiển thị tất cả trạng thái có thể)
+        List<String> danhSachTrangThai = List.of("Đang sử dụng", "Đã hết hạn", "Chưa bắt đầu", "Vô hiệu hóa");
         cbTrangThai.setItems(FXCollections.observableArrayList(danhSachTrangThai));
         cbTrangThai.setButtonCell(new ListCell<>() {
             @Override
@@ -313,67 +315,70 @@ public class QuanLyGiamGiaController implements Initializable {
     private void taiDuLieu() {
         try {
             // Lấy danh sách mã giảm giá từ database
-            List<MaGiamGia> dsMaGiamGia = maGiamGiaDAO.layDSMaGiamGia();
+            List<KhuyenMai> dsKhuyenMai = khuyenMaiDAO.layDSKhuyenMai();
 
             LocalDate ngayHienTai = LocalDate.now();
 
-            for (MaGiamGia mg : dsMaGiamGia) {
-                LocalDate batDau = mg.getNgayBatDau();
-                LocalDate ketThuc = mg.getNgayKetThuc();
+            for (KhuyenMai km : dsKhuyenMai) {
+                LocalDate batDau = km.getNgayBatDau();
+                LocalDate ketThuc = km.getNgayKetThuc();
+                String trangThaiDB = km.getTrangThai();
 
-                if (ketThuc.isBefore(ngayHienTai)) {
-                    mg.setTrangThai("Hết hạn");
-                }
-                else if (batDau.isAfter(ngayHienTai)) {
-                    mg.setTrangThai("Chưa diễn ra");
-                }
-                else if ((batDau.isBefore(ngayHienTai) || batDau.isEqual(ngayHienTai)) &&
-                        (ketThuc.isAfter(ngayHienTai) || ketThuc.isEqual(ngayHienTai))) {
-                    mg.setTrangThai("Đang diễn ra");
+                // Tính toán trạng thái hiển thị dựa trên trạng thái DB và thời gian
+                String trangThaiHienThi;
+                if ("Kích hoạt".equals(trangThaiDB)) {
+                    if (ketThuc.isBefore(ngayHienTai)) {
+                        trangThaiHienThi = "Đã hết hạn";
+                    } else if (batDau.isAfter(ngayHienTai)) {
+                        trangThaiHienThi = "Chưa bắt đầu";
+                    } else {
+                        trangThaiHienThi = "Đang sử dụng";
+                    }
+                } else {
+                    trangThaiHienThi = "Vô hiệu hóa";
                 }
 
-                // Cập nhật xuống DB nếu thay đổi
-                maGiamGiaDAO.capNhatMaGiamGia(mg);
+                km.setTrangThai(trangThaiHienThi);
             }
 
-            danhSachMaGiamGia.clear();
-            danhSachMaGiamGia.addAll(dsMaGiamGia);
+            danhSachKhuyenMai.clear();
+            danhSachKhuyenMai.addAll(dsKhuyenMai);
             capNhatThongKe();
 
             // Áp dụng filter hiện tại
             apDungFilter();
         } catch (SQLException e) {
-            ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể tải dữ liệu mã giảm giá: " + e.getMessage());
+            ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể tải dữ liệu khuyến mãi: " + e.getMessage());
         }
     }
 
     private void apDungFilter() {
-        danhSachMaGiamGiaFiltered.clear();
+        danhSachKhuyenMaiFiltered.clear();
 
-        List<MaGiamGia> filtered = danhSachMaGiamGia.stream()
-                .filter(maGiamGia -> {
+        List<KhuyenMai> filtered = danhSachKhuyenMai.stream()
+                .filter(khuyenMai -> {
                     // Filter theo tìm kiếm
                     String timKiem = txtTimKiem.getText().toLowerCase();
                     if (!timKiem.isEmpty()) {
-                        boolean matchMaGG = maGiamGia.getMaGG().toLowerCase().contains(timKiem);
-                        boolean matchCode = maGiamGia.getCode().toLowerCase().contains(timKiem);
-                        boolean matchMoTa = maGiamGia.getMoTa() != null &&
-                                maGiamGia.getMoTa().toLowerCase().contains(timKiem);
-                        if (!matchMaGG && !matchCode && !matchMoTa) {
+                        boolean matchMaKM = khuyenMai.getMaKM().toLowerCase().contains(timKiem);
+                        boolean matchCode = khuyenMai.getCode().toLowerCase().contains(timKiem);
+                        boolean matchMoTa = khuyenMai.getMoTa() != null &&
+                                khuyenMai.getMoTa().toLowerCase().contains(timKiem);
+                        if (!matchMaKM && !matchCode && !matchMoTa) {
                             return false;
                         }
                     }
 
                     // Filter theo kiểu giảm giá
                     KieuGiamGia kieuGiamGiaFilter = cbKieuGiamGia.getValue();
-                    if (kieuGiamGiaFilter != null && !maGiamGia.getKieuGiamGia().equals(kieuGiamGiaFilter)) {
+                    if (kieuGiamGiaFilter != null && !khuyenMai.getKieuGiamGia().equals(kieuGiamGiaFilter)) {
                         return false;
                     }
 
                     // Filter theo trạng thái
                     String trangThaiFilter = cbTrangThai.getValue();
-                    if (trangThaiFilter != null && (maGiamGia.getTrangThai() == null ||
-                            !maGiamGia.getTrangThai().equalsIgnoreCase(trangThaiFilter))) {
+                    if (trangThaiFilter != null && (khuyenMai.getTrangThai() == null ||
+                            !khuyenMai.getTrangThai().equalsIgnoreCase(trangThaiFilter))) {
                         return false;
                     }
 
@@ -381,20 +386,20 @@ public class QuanLyGiamGiaController implements Initializable {
                 })
                 .toList();
 
-        danhSachMaGiamGiaFiltered.addAll(filtered);
+        danhSachKhuyenMaiFiltered.addAll(filtered);
     }
 
     @FXML
-    private void handleThemMaGiamGia() {
+    private void handleThemKhuyenMai() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/ma-giam-gia-form-dialog.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/khuyen-mai-form-dialog.fxml"));
             Stage dialog = new Stage();
-            dialog.setTitle("Thêm Mã Giảm Giá Mới");
+            dialog.setTitle("Thêm Khuyến Mãi Mới");
             dialog.initModality(Modality.APPLICATION_MODAL);
             dialog.setScene(new Scene(loader.load()));
 
             // Thiết lập controller và dữ liệu
-            MaGiamGiaDialogController controller = loader.getController();
+            KhuyenMaiDialogController controller = loader.getController();
             controller.setMode("ADD");
 
             dialog.showAndWait();
@@ -403,49 +408,55 @@ public class QuanLyGiamGiaController implements Initializable {
             taiDuLieu();
 
         } catch (IOException e) {
-            ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể mở form thêm mã giảm giá: " + e.getMessage());
+            ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể mở form thêm khuyến mãi: " + e.getMessage());
         }
     }
 
     @FXML
-    private void handleSuaMaGiamGia(MaGiamGia maGiamGia) {
+    private void handleSuaKhuyenMai(KhuyenMai khuyenMai) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/ma-giam-gia-form-dialog.fxml"));
+            // Load lại dữ liệu đầy đủ từ database
+            KhuyenMai khuyenMaiDayDu = khuyenMaiDAO.layKhuyenMaiTheoMa(khuyenMai.getMaKM());
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/khuyen-mai-form-dialog.fxml"));
             Stage dialog = new Stage();
-            dialog.setTitle("Sửa Thông Tin Mã Giảm Giá");
+            dialog.setTitle("Sửa Thông Tin Khuyến Mãi");
             dialog.initModality(Modality.APPLICATION_MODAL);
             dialog.setScene(new Scene(loader.load()));
 
             // Thiết lập controller và dữ liệu
-            MaGiamGiaDialogController controller = loader.getController();
+            KhuyenMaiDialogController controller = loader.getController();
             controller.setMode("EDIT");
-            controller.setMaGiamGia(maGiamGia);
+
+            // Set dữ liệu sau khi dialog hiển thị
+            javafx.application.Platform.runLater(() -> controller.setKhuyenMai(khuyenMaiDayDu));
             dialog.showAndWait();
 
             // Làm mới dữ liệu sau khi sửa
             taiDuLieu();
 
+        } catch (SQLException e) {
+            ThongBaoUtil.hienThiThongBao("Lỗi", "Lỗi khi load dữ liệu khuyến mãi: " + e.getMessage());
         } catch (IOException e) {
-            ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể mở form sửa mã giảm giá: " + e.getMessage());
+            ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể mở form sửa khuyến mãi: " + e.getMessage());
         }
     }
 
     @FXML
-    private void handleXoaMaGiamGia(MaGiamGia maGiamGia) {
+    private void handleXoaKhuyenMai(KhuyenMai khuyenMai) {
         // Xác nhận xóa
-        String message = "Bạn có chắc chắn muốn xóa mã giảm giá này?\nMã: " + maGiamGia.getMaGG() + " - Code: " + maGiamGia.getCode();
+        String message = "Bạn có chắc chắn muốn xóa khuyến mãi này?\nMã: " + khuyenMai.getMaKM() + " - Code: " + khuyenMai.getCode();
         if (ThongBaoUtil.hienThiXacNhan("Xác nhận xóa", message)) {
             try {
-                // Xóa mã giảm giá
-                if (maGiamGiaDAO.xoaMaGiamGia(maGiamGia.getMaGG())) {
-                    ThongBaoUtil.hienThiThongBao("Thành công", "Đã xóa mã giảm giá thành công!");
+                // Xóa khuyến mãi
+                if (khuyenMaiDAO.xoaKhuyenMai(khuyenMai.getMaKM())) {
+                    ThongBaoUtil.hienThiThongBao("Thành công", "Đã xóa khuyến mãi thành công!");
                     taiDuLieu();
                 } else {
-                    ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể xóa mã giảm giá!");
+                    ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể xóa khuyến mãi!");
                 }
 
             } catch (SQLException e) {
-                ThongBaoUtil.hienThiThongBao("Lỗi", "Lỗi khi xóa mã giảm giá: " + e.getMessage());
+                ThongBaoUtil.hienThiThongBao("Lỗi", "Lỗi khi xóa khuyến mãi: " + e.getMessage());
             }
         }
     }

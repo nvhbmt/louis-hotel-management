@@ -1,10 +1,18 @@
 package com.example.louishotelmanagement.controller;
 
+import java.io.IOException;
+import java.net.URL;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ResourceBundle;
 import com.example.louishotelmanagement.dao.LoaiPhongDAO;
 import com.example.louishotelmanagement.dao.PhongDAO;
 import com.example.louishotelmanagement.model.LoaiPhong;
 import com.example.louishotelmanagement.model.Phong;
 import com.example.louishotelmanagement.model.TrangThaiPhong;
+import com.example.louishotelmanagement.util.BadgeUtil;
+import com.example.louishotelmanagement.util.BadgeVariant;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
@@ -14,19 +22,20 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-
-import java.io.IOException;
-import java.net.URL;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
 
 public class QuanLyPhongController implements Initializable {
     @FXML
@@ -111,25 +120,27 @@ public class QuanLyPhongController implements Initializable {
         colTrangThai.setCellValueFactory(new PropertyValueFactory<>("trangThai"));
         colMoTa.setCellValueFactory(new PropertyValueFactory<>("moTa"));
 
-        colTrangThai.setCellFactory(_ -> new TableCell<>() {
+        colTrangThai.setCellFactory(column -> new TableCell<>() {
             @Override
             protected void updateItem(TrangThaiPhong item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty || item == null) {
                     setText(null);
-                    getStyleClass().clear();
+                    setGraphic(null);
+                    setStyle("-fx-alignment: CENTER;");
                 } else {
-                    setText(item.toString());
-                    getStyleClass().clear();
-                    switch (item) {
-                        case TrangThaiPhong.TRONG -> getStyleClass().add("status-trong");
-                        case TrangThaiPhong.DA_DAT -> getStyleClass().add("status-da-dat");
-                        case TrangThaiPhong.DANG_SU_DUNG -> getStyleClass().add("status-dang-su-dung");
-                        case TrangThaiPhong.BAO_TRI -> getStyleClass().add("status-bao-tri");
-                        default -> {
-                            // Không thêm style class nào
-                        }
-                    }
+                    // Tạo badge label
+                    BadgeVariant variant = switch (item) {
+                        case TRONG -> BadgeVariant.SUCCESS;
+                        case DA_DAT -> BadgeVariant.DANGER;
+                        case DANG_SU_DUNG -> BadgeVariant.WARNING;
+                        case BAO_TRI -> BadgeVariant.INFO;
+                        default -> BadgeVariant.DEFAULT;
+                    };
+                    Label badge = BadgeUtil.createBadge(item.toString(), variant);
+
+                    setGraphic(badge);
+                    setText(null);
                 }
             }
         });

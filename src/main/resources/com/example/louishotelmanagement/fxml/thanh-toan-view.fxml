@@ -138,7 +138,7 @@
                             <TableColumn fx:id="colPhuongThuc" maxWidth="Infinity" prefWidth="100.0" text="Phương Thức" />
                             <TableColumn fx:id="colTrangThai" maxWidth="Infinity" prefWidth="144.0" text="Trạng Thái" />
                             <TableColumn fx:id="colTongTien" maxWidth="Infinity" prefWidth="100" text="Tổng Tiền" />
-                            <TableColumn fx:id="colMaGiamGia" maxWidth="Infinity" prefWidth="130" text="Mã Giảm Giá" />
+                            <TableColumn fx:id="colMaKhuyenMai" maxWidth="Infinity" prefWidth="130" text="Mã Khuyến Mãi" />
                             <TableColumn fx:id="colTenKH" maxWidth="Infinity" minWidth="0.0" prefWidth="336.79998779296875" text="Tên Khách Hàng" />
                      <TableColumn fx:id="colThaoTac" maxWidth="150.0" prefWidth="130.5999755859375" text="Thao tác" />
                         </columns>

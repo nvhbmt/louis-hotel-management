@@ -18,7 +18,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="rootPane" prefHeight="1054.0" prefWidth="1014.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.QuanLyGiamGiaController">
+<BorderPane fx:id="rootPane" prefHeight="1054.0" prefWidth="1014.0" xmlns="http://javafx.com/javafx/24" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.QuanLyKhuyenMaiController">
     <center>
         <VBox alignment="TOP_CENTER" prefHeight="800.0" prefWidth="950.0" spacing="32.0" VBox.vgrow="ALWAYS">
             <GridPane>
@@ -34,12 +34,12 @@
                         <Image url="@../image/coupon.png" />
                     </ImageView>
                     <VBox HBox.hgrow="ALWAYS">
-                        <Label styleClass="main-header" text="Quản Lý Mã Giảm Giá" />
-                        <Label prefHeight="20.0" prefWidth="450.0" styleClass="main-subtitle" text="Quản lý các mã giảm giá và khuyến mãi trong khách sạn" />
+                        <Label styleClass="main-header" text="Quản Lý Khuyến Mãi" />
+                        <Label prefHeight="20.0" prefWidth="450.0" styleClass="main-subtitle" text="Quản lý các khuyến mãi trong khách sạn" />
                     </VBox>
                 </HBox>
                 <HBox alignment="CENTER_RIGHT" spacing="5.0" GridPane.columnIndex="1">
-                    <Button mnemonicParsing="false" onAction="#handleThemMaGiamGia" prefHeight="37.0" prefWidth="144.0" styleClass="btn-them" text="➕ Thêm mã giảm giá">
+                    <Button mnemonicParsing="false" onAction="#handleThemKhuyenMai" prefHeight="37.0" prefWidth="144.0" styleClass="btn-them" text="➕ Thêm khuyến mãi">
                         <font>
                             <Font name="System Bold" size="12.0" />
                         </font>
@@ -47,15 +47,15 @@
                 </HBox>
             </GridPane>
 
-            <GridPane alignment="TOP_CENTER" hgap="20.0" HBox.hgrow="ALWAYS" VBox.vgrow="SOMETIMES">
+            <GridPane alignment="TOP_CENTER" hgap="20.0" vgap="20.0" HBox.hgrow="ALWAYS" VBox.vgrow="SOMETIMES">
                 <columnConstraints>
-                    <ColumnConstraints hgrow="ALWAYS" percentWidth="25" />
-                    <ColumnConstraints hgrow="ALWAYS" percentWidth="25" />
-                    <ColumnConstraints hgrow="ALWAYS" percentWidth="25" />
-                    <ColumnConstraints hgrow="ALWAYS" percentWidth="25" />
+                    <ColumnConstraints hgrow="ALWAYS" percentWidth="33.33" />
+                    <ColumnConstraints hgrow="ALWAYS" percentWidth="33.33" />
+                    <ColumnConstraints hgrow="ALWAYS" percentWidth="33.33" />
                 </columnConstraints>
 
                 <rowConstraints>
+                    <RowConstraints maxHeight="100.0" minHeight="100" prefHeight="100.0" valignment="TOP" vgrow="ALWAYS" />
                     <RowConstraints maxHeight="100.0" minHeight="100" prefHeight="100.0" valignment="TOP" vgrow="ALWAYS" />
                 </rowConstraints>
 
@@ -64,7 +64,7 @@
                     <HBox alignment="CENTER_LEFT" spacing="15">
                         <VBox alignment="CENTER_LEFT" spacing="10" HBox.hgrow="ALWAYS">
                             <Label styleClass="stat-title" text="Tổng số mã" />
-                            <Label fx:id="lblTongSoMaGiamGia" styleClass="stat-number" text="69" />
+                            <Label fx:id="lblTongSoKhuyenMai" styleClass="stat-number" text="69" />
                         </VBox>
                         <ImageView fitHeight="45" fitWidth="45" preserveRatio="true">
                             <Image url="@../image/coupons.png" />
@@ -72,12 +72,12 @@
                     </HBox>
                 </VBox>
 
-                <!-- Ô 2: Đang hoạt động -->
+                <!-- Ô 2: Đang sử dụng -->
                 <VBox styleClass="stat-box" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS">
                     <HBox alignment="CENTER_LEFT" spacing="15">
                         <VBox alignment="CENTER_LEFT" spacing="15" HBox.hgrow="ALWAYS">
-                            <Label styleClass="stat-title" text="Đang diễn ra" />
-                            <Label fx:id="lblSoMaDangHoatDong" styleClass="stat-number" text="15" />
+                            <Label styleClass="stat-title" text="Đang sử dụng" />
+                            <Label fx:id="lblSoMaDangSuDung" styleClass="stat-number" text="15" />
                         </VBox>
                         <ImageView fitHeight="45" fitWidth="45" preserveRatio="true">
                             <Image url="@../image/green-circle.png" />
@@ -99,7 +99,7 @@
                 </VBox>
 
                 <!-- Ô 4: Chưa bắt đầu -->
-                <VBox styleClass="stat-box" GridPane.columnIndex="3" GridPane.hgrow="ALWAYS">
+                <VBox styleClass="stat-box" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.hgrow="ALWAYS">
                     <HBox alignment="CENTER_LEFT" spacing="15">
                         <VBox alignment="CENTER_LEFT" spacing="15" HBox.hgrow="ALWAYS">
                             <Label styleClass="stat-title" text="Chưa bắt đầu" />
@@ -107,6 +107,19 @@
                         </VBox>
                         <ImageView fitHeight="45" fitWidth="45" preserveRatio="true">
                             <Image url="@../image/wait.png" />
+                        </ImageView>
+                    </HBox>
+                </VBox>
+
+                <!-- Ô 5: Vô hiệu hóa -->
+                <VBox styleClass="stat-box" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.hgrow="ALWAYS">
+                    <HBox alignment="CENTER_LEFT" spacing="15">
+                        <VBox alignment="CENTER_LEFT" spacing="15" HBox.hgrow="ALWAYS">
+                            <Label styleClass="stat-title" text="Vô hiệu hóa" />
+                            <Label fx:id="lblSoMaVoHieuHoa" styleClass="stat-number" text="5" />
+                        </VBox>
+                        <ImageView fitHeight="45" fitWidth="45" preserveRatio="true">
+                            <Image url="@../image/disabled.png" />
                         </ImageView>
                     </HBox>
                 </VBox>
@@ -127,13 +140,13 @@
             </HBox>
 
             <VBox styleClass="table-container" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
-                <TableView fx:id="tableViewMaGiamGia" VBox.vgrow="ALWAYS">
+                <TableView fx:id="tableViewKhuyenMai" VBox.vgrow="ALWAYS">
                     <columns>
-                        <TableColumn fx:id="colMaGG" maxWidth="Infinity" minWidth="80.0" prefWidth="98.0" text="Mã Giảm Giá" />
+                        <TableColumn fx:id="colMaKM" maxWidth="Infinity" minWidth="80.0" prefWidth="98.0" text="Mã Khuyến Mãi" />
                         <TableColumn fx:id="colCode" maxWidth="Infinity" minWidth="100.0" prefWidth="117.60003662109375" text="Code" />
                         <TableColumn fx:id="colGiamGia" maxWidth="Infinity" minWidth="100.0" prefWidth="119.199951171875" text="Giá Trị" />
                         <TableColumn fx:id="colKieuGiamGia" maxWidth="Infinity" minWidth="97.0" prefWidth="99.19989013671875" text="Kiểu" />
-                        <TableColumn fx:id="colNgayBatDau" maxWidth="Infinity" prefWidth="118.40008544921875" text="Ngày Bắt Đầu" />
+                        <TableColumn fx:id="colNgayBatDau" maxWidth="Infinity" minWidth="89.0" prefWidth="107.0" text="Ngày Bắt Đầu" />
                         <TableColumn fx:id="colNgayKetThuc" maxWidth="Infinity" minWidth="89.0" prefWidth="107.0" text="Ngày Kết Thúc" />
                         <TableColumn fx:id="colTongTienToiThieu" maxWidth="Infinity" minWidth="129.0" prefWidth="108.0" text="Tổng Tiền Tối Thiểu" />
                         <TableColumn fx:id="colTrangThai" maxWidth="Infinity" minWidth="125.0" prefWidth="103.0" text="Trạng Thái" />
