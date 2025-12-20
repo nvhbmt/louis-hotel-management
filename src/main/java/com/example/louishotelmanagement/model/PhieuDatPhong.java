@@ -82,8 +82,8 @@ public class PhieuDatPhong {
         this.ngayDi = ngayDi;
     }
 
-    public String getTrangThai() {
-        return trangThai.toString();
+    public TrangThaiPhieuDatPhong getTrangThai() {
+        return trangThai;
     }
 
     public void setTrangThai(TrangThaiPhieuDatPhong trangThai) {

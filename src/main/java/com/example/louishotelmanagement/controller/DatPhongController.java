@@ -948,7 +948,7 @@ public class DatPhongController implements Initializable, Refreshable {
 
         // Cập nhật trạng thái phòng dựa trên loại đặt phòng
         if (pdp.getTrangThai() != null &&
-                pdp.getTrangThai().equalsIgnoreCase(TrangThaiPhieuDatPhong.DANG_SU_DUNG.toString())) {
+                pdp.getTrangThai().equals(TrangThaiPhieuDatPhong.DANG_SU_DUNG)) {
             // Đặt trực tiếp -> Cập nhật thành "Đang sử dụng"
             Pdao.capNhatTrangThaiPhong(p.getMaPhong(), TrangThaiPhong.DANG_SU_DUNG.toString());
         } else {

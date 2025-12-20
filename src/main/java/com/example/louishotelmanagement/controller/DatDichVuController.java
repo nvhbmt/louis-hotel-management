@@ -278,7 +278,7 @@ public class DatDichVuController implements Initializable {
         CTHoaDonPhong cthdp = cthddphongDao.getDSCTHoaDonPhongTheoMaPhong(dsPhong.getSelectionModel().getSelectedItem().toString()).getLast();
         PhieuDatPhong phieuDatPhong = phieuDatPhongDAO.layPhieuDatPhongTheoMa(cthdp.getMaPhieu());
 
-        if (phieuDatPhong.getTrangThai().equalsIgnoreCase(TrangThaiPhieuDatPhong.DANG_SU_DUNG.toString())) {
+        if (phieuDatPhong.getTrangThai().equals(TrangThaiPhieuDatPhong.DANG_SU_DUNG)) {
             // Setup Phiếu Dịch Vụ
             AuthService auth = AuthService.getInstance();
             PhieuDichVu pdv = new PhieuDichVu(maPhieuDV, cthdp.getMaHD(), LocalDate.now(), auth.getCurrentUser().getNhanVien().getMaNV(), txtGhiChu.getText(), auth.getCurrentUser().getNhanVien(), hdDao.timHoaDonTheoMa(cthdp.getMaHD()));
@@ -338,7 +338,7 @@ public class DatDichVuController implements Initializable {
         ArrayList<PhieuDatPhong> dsPhieu = phieuDatPhongDAO.layDSPhieuDatPhongTheoKhachHang(dsMaKH.get(dsKhachHang.getSelectionModel().getSelectedIndex()));
         if (dsPhieu.size() > 0) {
             for (PhieuDatPhong p : dsPhieu) {
-                if (p.getTrangThai() != null && p.getTrangThai().equalsIgnoreCase(TrangThaiPhieuDatPhong.DANG_SU_DUNG.toString())) {
+                if (p.getTrangThai() != null && p.getTrangThai().equals(TrangThaiPhieuDatPhong.DANG_SU_DUNG)) {
                     ArrayList<CTHoaDonPhong> dsCTP = cthddphongDao.getCTHoaDonPhongTheoMaPhieu(p.getMaPhieu());
                     for (CTHoaDonPhong ctp : dsCTP) {
                         dsPhong.getItems().add(ctp.getMaPhong());
