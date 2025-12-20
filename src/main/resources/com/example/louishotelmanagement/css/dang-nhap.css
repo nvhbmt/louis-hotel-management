@@ -1,80 +1,183 @@
 /* =============================================
-   CSS cho màn hình đăng nhập
+   MODERN LOGIN PAGE STYLES
    File: dang-nhap.css
+   Updated for modern UI/UX design
    ============================================= */
 
-/* Container chính */
-.main-container {
+/* Root container */
+.root {
     -fx-background-color: #f8f9fa;
-    -fx-padding: 40;
 }
 
-/* Header */
-.header-title {
+/* Brand Section - Header */
+.brand-title {
+    -fx-font-size: 28px;
+    -fx-font-weight: 900;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 0.3), 1, 0, 0, 1);
+}
+
+.brand-subtitle {
+    -fx-font-size: 14px;
+    -fx-font-weight: 300;
+    -fx-text-fill: rgba(255, 255, 255, 0.9);
+    -fx-letter-spacing: 1px;
+}
+
+/* Welcome Section */
+.welcome-title {
     -fx-font-size: 24px;
-    -fx-font-weight: bold;
+    -fx-font-weight: 700;
     -fx-text-fill: #2c3e50;
 }
 
-.header-subtitle {
+.welcome-subtitle {
     -fx-font-size: 14px;
     -fx-text-fill: #7f8c8d;
 }
 
-/* Form container */
-.login-form {
+/* Login Card - Main Form Container */
+.login-card {
     -fx-background-color: white;
-    -fx-background-radius: 10;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0, 0, 2);
-    -fx-padding: 30;
+    -fx-background-radius: 15;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 20, 0.1, 0, 10);
+    -fx-padding: 40;
+    -fx-min-width: 400;
+    -fx-max-width: 400;
 }
 
-/* Labels */
-.form-label {
+/* Input Groups */
+.input-group {
+    -fx-padding: 0;
+}
+
+.input-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #34495e;
+    -fx-padding: 0 0 5 0;
+}
+
+/* Input Containers */
+.input-container {
+    -fx-background-color: #f8f9fa;
+    -fx-background-radius: 8;
+    -fx-border-color: #e9ecef;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 8;
+    -fx-padding: 12 15 12 15;
+    -fx-min-height: 45;
+}
+
+.input-container:focused {
+    -fx-border-color: #667eea;
+    -fx-background-color: white;
+    -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.3), 5, 0, 0, 0);
+}
+
+/* Modern Text Fields */
+.modern-text-field,
+.modern-password-field {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-font-size: 14px;
     -fx-text-fill: #2c3e50;
-    -fx-font-family: "System Bold";
-    -fx-font-size: 12px;
+    -fx-prompt-text-fill: #95a5a6;
+    -fx-padding: 0;
+    -fx-min-height: 20;
 }
 
-/* Text fields */
-.text-field,
-.password-field {
-    -fx-font-size: 14px;
+.modern-text-field:focused,
+.modern-password-field:focused {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
 }
 
-/* Login button */
-.login-button {
-    -fx-background-color: #007bff;
-    -fx-background-radius: 5;
-    -fx-text-fill: WHITE;
+/* Remove default focus styling */
+.modern-text-field:focused,
+.modern-password-field:focused {
+    -fx-faint-focus-color: transparent;
+    -fx-focus-color: transparent;
+}
+
+/* Modern Login Button */
+.modern-login-button {
+    -fx-background-color: linear-gradient(to right, #667eea 0%, #764ba2 100%);
+    -fx-background-radius: 25;
+    -fx-text-fill: white;
     -fx-font-family: "System Bold";
-    -fx-font-size: 14px;
-    -fx-pref-height: 40px;
+    -fx-font-size: 16px;
+    -fx-font-weight: 600;
+    -fx-pref-height: 50px;
     -fx-pref-width: 200px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.3), 8, 0, 0, 0);
+    -fx-transition: all 0.3s ease;
 }
 
-.login-button:hover {
-    -fx-background-color: #0056b3;
+.modern-login-button:hover {
+    -fx-background-color: linear-gradient(to right, #5a6fd8 0%, #6a4190 100%);
+    -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.4), 12, 0, 0, 0);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
 }
 
-.login-button:pressed {
-    -fx-background-color: #004085;
+.modern-login-button:pressed {
+    -fx-background-color: linear-gradient(to right, #4e5fc7 0%, #5e377f 100%);
+    -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.2), 5, 0, 0, 0);
 }
 
-/* Error message */
-.error-label {
-    -fx-text-fill: #dc3545;
+/* Error Message */
+.error-message {
+    -fx-text-fill: #e74c3c;
     -fx-font-size: 12px;
+    -fx-font-weight: 500;
+    -fx-padding: 5 0 0 0;
     -fx-visible: false;
+    -fx-text-alignment: center;
 }
 
 /* Footer */
 .footer-text {
-    -fx-font-size: 12px;
+    -fx-font-size: 13px;
     -fx-text-fill: #95a5a6;
+    -fx-font-weight: 500;
 }
 
 .footer-version {
-    -fx-font-size: 10px;
+    -fx-font-size: 11px;
     -fx-text-fill: #bdc3c7;
+    -fx-font-weight: 400;
+}
+
+.footer-link {
+    -fx-font-size: 12px;
+    -fx-text-fill: #667eea;
+    -fx-font-weight: 500;
+    -fx-cursor: hand;
+    -fx-underline: false;
+}
+
+.footer-link:hover {
+    -fx-text-fill: #764ba2;
+    -fx-underline: true;
+}
+
+
+/* Loading Animation */
+.login-card.loading {
+    -fx-opacity: 0.7;
+}
+
+.login-card.loading .modern-login-button {
+    -fx-background-color: #95a5a6;
+    -fx-text-fill: #bdc3c7;
+}
+
+/* Success Animation */
+.login-success {
+    -fx-background-color: #d4edda;
+    -fx-border-color: #c3e6cb;
+    -fx-border-width: 1;
+    -fx-border-radius: 15;
 }

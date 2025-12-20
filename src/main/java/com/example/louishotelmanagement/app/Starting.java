@@ -22,7 +22,7 @@ public class Starting extends Application {
         }
 
         FXMLLoader fxmlLoader = new FXMLLoader(Starting.class.getResource("/com/example/louishotelmanagement/fxml/dang-nhap-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 400, 500);
+        Scene scene = new Scene(fxmlLoader.load(), 400, 800);
         scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
         stage.setTitle("Đăng nhập - Hệ thống quản lý khách sạn Louis");
         stage.setScene(scene);

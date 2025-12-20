@@ -74,7 +74,7 @@ public class DangNhapController implements Initializable {
                     if (PasswordUtil.verifyPassword(matKhau, taiKhoan.getMatKhauHash())) {
                         // Đăng nhập thành công
                         authService.setCurrentUser(taiKhoan);
-                        ThongBaoUtil.hienThiThongBao("Thành công", "Đăng nhập thành công!");
+                        // ThongBaoUtil.hienThiThongBao("Thành công", "Đăng nhập thành công!");
                         
                         // Chuyển đến màn hình chính
                         chuyenDenManHinhChinh();

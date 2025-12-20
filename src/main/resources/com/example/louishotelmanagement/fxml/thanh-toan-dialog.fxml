@@ -84,7 +84,7 @@
                         <children>
                             <VBox prefWidth="300.0" spacing="15.0" styleClass="chart-container" HBox.hgrow="SOMETIMES">
                                 <Label styleClass="section-title" text="Mã giảm giá" />
-                                <TextField fx:id="txtMaGiamGia" editable="false" prefHeight="34.0" prefWidth="147.0" />
+                                <TextField fx:id="txtMaKhuyenMai" editable="false" prefHeight="34.0" prefWidth="147.0" />
                                 <Button mnemonicParsing="false" onAction="#handleChonGiamGia" prefHeight="26.0" prefWidth="94.0" styleClass="button-chon-ma" text="Chọn mã" />
                             </VBox>
 

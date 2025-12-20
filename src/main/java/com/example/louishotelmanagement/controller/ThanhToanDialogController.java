@@ -23,7 +23,7 @@ import java.util.List;
 public class ThanhToanDialogController {
 
     @FXML private TextField txtMaKhachHang, txtHoTen, txtSoDienThoai, txtEmail;
-    @FXML private TextField txtHangkhach, txtSoPhong, txtNgayNhan, txtNgayTra, txtMaGiamGia;
+    @FXML private TextField txtHangkhach, txtSoPhong, txtNgayNhan, txtNgayTra, txtMaKhuyenMai;
     @FXML private RadioButton rbtnTienMat, rbtnTheNganHang;
     @FXML private Button btnThanhToan, btnHuy, btnLamMoi;
 
@@ -43,7 +43,7 @@ public class ThanhToanDialogController {
     private final CTHoaDonPhongDAO cthddpDao = new CTHoaDonPhongDAO();
     private CTHoaDonDichVuDAO cthddv;
     private final KhachHangDAO khachHangDAO = new KhachHangDAO();
-    private final MaGiamGiaDAO maGiamGiaDAO = new MaGiamGiaDAO();
+    private final KhuyenMaiDAO khuyenMaiDAO = new KhuyenMaiDAO();
     private final HoaDonDAO hoaDonDAO = new HoaDonDAO();
     private final HoaDonDAO2 hoaDonDAO2 = new HoaDonDAO2();
 
@@ -135,12 +135,12 @@ public class ThanhToanDialogController {
 
             // 1. Giảm giá mã Voucher
             if (hoaDon.getMaGG() != null) {
-                MaGiamGia mgg = maGiamGiaDAO.layMaGiamGiaThepMa(hoaDon.getMaGG());
-                if (mgg != null) {
-                    if (mgg.getKieuGiamGia() == KieuGiamGia.PERCENT)
-                        giamGiaMaGGChiTiet = tienPhong.multiply(BigDecimal.valueOf(mgg.getGiamGia() / 100.0));
+                KhuyenMai km = khuyenMaiDAO.layKhuyenMaiTheoMa(hoaDon.getMaGG());
+                if (km != null) {
+                    if (km.getKieuGiamGia() == KieuGiamGia.PERCENT)
+                        giamGiaMaGGChiTiet = tienPhong.multiply(BigDecimal.valueOf(km.getGiamGia() / 100.0));
                     else
-                        giamGiaMaGGChiTiet = BigDecimal.valueOf(mgg.getGiamGia());
+                        giamGiaMaGGChiTiet = BigDecimal.valueOf(km.getGiamGia());
                 }
             }
 
@@ -266,10 +266,10 @@ public class ThanhToanDialogController {
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setScene(new Scene(p));
             stage.showAndWait();
-            MaGiamGia selected = ctrl.getMaGiamGiaDuocChon();
+            KhuyenMai selected = ctrl.getKhuyenMaiDuocChon();
             if (selected != null) {
-                txtMaGiamGia.setText(selected.getMaGG());
-                hoaDon.setMaGG(selected.getMaGG());
+                txtMaKhuyenMai.setText(selected.getMaKM());
+                hoaDon.setMaGG(selected.getMaKM());
                 tinhTongThanhToan();
                 hienThiChiTietHoaDon();
             }
@@ -278,7 +278,7 @@ public class ThanhToanDialogController {
 
     private void dongForm() { ((Stage) btnHuy.getScene().getWindow()).close(); }
     private void lamMoiForm() {
-        txtMaGiamGia.clear();
+        txtMaKhuyenMai.clear();
         rbtnTienMat.setSelected(false);
         rbtnTheNganHang.setSelected(false);
         hoaDon.setMaGG(null);

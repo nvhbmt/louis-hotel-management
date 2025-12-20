@@ -3,7 +3,7 @@ package com.example.louishotelmanagement.controller;
 import com.example.louishotelmanagement.dao.HoaDonDAO;
 import com.example.louishotelmanagement.dao.HoaDonDAO2;
 import com.example.louishotelmanagement.dao.KhachHangDAO;
-import com.example.louishotelmanagement.dao.MaGiamGiaDAO;
+import com.example.louishotelmanagement.dao.KhuyenMaiDAO;
 import com.example.louishotelmanagement.model.*;
 import com.example.louishotelmanagement.util.Refreshable;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
@@ -25,11 +25,9 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.SQLException;
-import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -52,7 +50,7 @@ public class QuanLyThanhToanController implements Refreshable {
     @FXML private TableColumn<HoaDon, String> colPhuongThuc;
     @FXML private TableColumn<HoaDon, String> colTrangThai;
     @FXML private TableColumn<HoaDon, BigDecimal> colTongTien;
-    @FXML private TableColumn<HoaDon, String> colMaGiamGia;
+    @FXML private TableColumn<HoaDon, String> colMaKhuyenMai;
     @FXML private TableColumn<HoaDon, String> colTenKH;
     HoaDonDAO hoadonDAO;
 
@@ -60,7 +58,6 @@ public class QuanLyThanhToanController implements Refreshable {
     private final ObservableList<HoaDon> masterList = FXCollections.observableArrayList();
 
     private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-    private final NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
 
     @FXML
     public void initialize() {
@@ -92,13 +89,13 @@ public class QuanLyThanhToanController implements Refreshable {
         });
         colTongTien.setCellValueFactory(new PropertyValueFactory<>("tongTien"));
 
-        colMaGiamGia.setCellValueFactory(data -> {
-            String maGG = data.getValue().getMaGG();
-            if (maGG == null || maGG.isEmpty()) return new SimpleStringProperty("");
+        colMaKhuyenMai.setCellValueFactory(data -> {
+            String maKM = data.getValue().getMaGG();
+            if (maKM == null || maKM.isEmpty()) return new SimpleStringProperty("");
             try {
-                MaGiamGiaDAO maGiamGiaDAO = new MaGiamGiaDAO();
-                MaGiamGia mgg = maGiamGiaDAO.layMaGiamGiaThepMa(maGG);
-                return new SimpleStringProperty(mgg != null ? mgg.getCode() : "");
+                KhuyenMaiDAO khuyenMaiDAO = new KhuyenMaiDAO();
+                KhuyenMai km = khuyenMaiDAO.layKhuyenMaiTheoMa(maKM);
+                return new SimpleStringProperty(km != null ? km.getCode() : "");
             } catch (SQLException e) {
                 e.printStackTrace();
                 return new SimpleStringProperty("");

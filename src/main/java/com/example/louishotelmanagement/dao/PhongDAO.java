@@ -1,10 +1,5 @@
 package com.example.louishotelmanagement.dao;
 
-import com.example.louishotelmanagement.config.CauHinhDatabase;
-import com.example.louishotelmanagement.model.LoaiPhong;
-import com.example.louishotelmanagement.model.Phong;
-import com.example.louishotelmanagement.model.TrangThaiPhong;
-
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.Date;
@@ -12,6 +7,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import com.example.louishotelmanagement.config.CauHinhDatabase;
+import com.example.louishotelmanagement.model.LoaiPhong;
+import com.example.louishotelmanagement.model.Phong;
+import com.example.louishotelmanagement.model.TrangThaiPhong;
 
 public class PhongDAO {
 

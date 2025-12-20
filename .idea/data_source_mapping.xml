@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourcePerFileMappings">
+    <file url="file://$PROJECT_DIR$/mssql/duLieuMau.sql" value="7764714a-7dde-4a94-870e-3cf896d8993c" />
+    <file url="file://$PROJECT_DIR$/mssql/khoiTaoDataBase.sql" value="7764714a-7dde-4a94-870e-3cf896d8993c" />
+    <file url="file://$PROJECT_DIR$/mssql/storedProceduresCTHoaDonDichVu.sql" value="7764714a-7dde-4a94-870e-3cf896d8993c" />
+    <file url="file://$PROJECT_DIR$/mssql/storedProceduresCTHoaDonPhong.sql" value="7764714a-7dde-4a94-870e-3cf896d8993c" />
+    <file url="file://$PROJECT_DIR$/mssql/storedProceduresDichVu.sql" value="7764714a-7dde-4a94-870e-3cf896d8993c" />
+    <file url="file://$PROJECT_DIR$/mssql/storedProceduresHoaDon.sql" value="7764714a-7dde-4a94-870e-3cf896d8993c" />
+    <file url="file://$PROJECT_DIR$/mssql/storedProceduresKhachHang.sql" value="7764714a-7dde-4a94-870e-3cf896d8993c" />
+  </component>
+</project>
