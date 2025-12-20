@@ -11,10 +11,10 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>25</maven.compiler.source>
-        <maven.compiler.target>25</maven.compiler.target>
+        <maven.compiler.source>22</maven.compiler.source>
+        <maven.compiler.target>22</maven.compiler.target>
         <junit.version>5.10.0</junit.version>
-        <javafx.version>25</javafx.version>
+        <javafx.version>22</javafx.version>
         <javafx.platform>win</javafx.platform> <!-- đổi thành linux / mac nếu cần -->
     </properties>
 
@@ -23,13 +23,13 @@
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
-            <version>25</version>
+            <version>${javafx.version}</version>
             <classifier>${javafx.platform}</classifier>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
-            <version>25</version>
+            <version>${javafx.version}</version>
             <classifier>${javafx.platform}</classifier>
         </dependency>
         <dependency>
@@ -47,19 +47,19 @@
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-media</artifactId>
-            <version>25</version>
+            <version>${javafx.version}</version>
             <classifier>${javafx.platform}</classifier>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-web</artifactId>
-            <version>25</version>
+            <version>${javafx.version}</version>
             <classifier>${javafx.platform}</classifier>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-swing</artifactId>
-            <version>25</version>
+            <version>${javafx.version}</version>
             <classifier>${javafx.platform}</classifier>
         </dependency>
 
@@ -167,6 +167,12 @@
                 <version>0.0.8</version>
                 <configuration>
                     <mainClass>com.example.louishotelmanagement/com.example.louishotelmanagement.app.Starting</mainClass>
+                    <jvmArgs>
+                        <jvmArg>--enable-native-access=javafx.graphics</jvmArg>
+                        <jvmArg>--enable-native-access=javafx.controls</jvmArg>
+                        <jvmArg>--enable-native-access=javafx.media</jvmArg>
+                        <jvmArg>--enable-native-access=javafx.web</jvmArg>
+                    </jvmArgs>
                 </configuration>
             </plugin>
         </plugins>

@@ -11,6 +11,8 @@ import com.example.louishotelmanagement.dao.PhongDAO;
 import com.example.louishotelmanagement.model.LoaiPhong;
 import com.example.louishotelmanagement.model.Phong;
 import com.example.louishotelmanagement.model.TrangThaiPhong;
+import com.example.louishotelmanagement.util.BadgeUtil;
+import com.example.louishotelmanagement.util.BadgeVariant;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
@@ -128,44 +130,14 @@ public class QuanLyPhongController implements Initializable {
                     setStyle("-fx-alignment: CENTER;");
                 } else {
                     // Tạo badge label
-                    Label badge = new Label(item.toString());
-
-
-                    // Style cho badge theo trạng thái
-                    String backgroundColor, textColor;
-                    switch (item) {
-                        case TRONG -> {
-                            backgroundColor =  "#d1fae5"; // Xanh đậm khi selected
-                            textColor = "#065f46";       // Trắng khi selected
-                        }
-                        case DA_DAT -> {
-                            backgroundColor = "#fce7f3"; // Hồng đậm khi selected
-                            textColor = "#9f1239";       // Trắng khi selected
-                        }
-                        case DANG_SU_DUNG -> {
-                            backgroundColor =  "#fef3c7"; // Vàng đậm khi selected
-                            textColor = "#92400e";       // Trắng khi selected
-                        }
-                        case BAO_TRI -> {
-                            backgroundColor =  "#dbeafe"; // Xanh dương đậm khi selected
-                            textColor = "#1e40af";       // Trắng khi selected
-                        }
-                        default -> {
-                            backgroundColor = "#f3f4f6";
-                            textColor = "#ffffff"; // Luôn trắng khi selected cho default
-                        }
-                    }
-
-                    // Áp dụng style cho badge
-                    badge.setStyle(
-                        "-fx-background-color: " + backgroundColor + ";" +
-                        "-fx-text-fill: " + textColor + ";" +
-                        "-fx-padding: 4px 12px;" +
-                        "-fx-background-radius: 12px;" +
-                        "-fx-font-size: 12px;" +
-                        "-fx-font-weight: bold;" +
-                        "-fx-alignment: CENTER;"
-                    );
+                    BadgeVariant variant = switch (item) {
+                        case TRONG -> BadgeVariant.SUCCESS;
+                        case DA_DAT -> BadgeVariant.DANGER;
+                        case DANG_SU_DUNG -> BadgeVariant.WARNING;
+                        case BAO_TRI -> BadgeVariant.INFO;
+                        default -> BadgeVariant.DEFAULT;
+                    };
+                    Label badge = BadgeUtil.createBadge(item.toString(), variant);
 
                     setGraphic(badge);
                     setText(null);

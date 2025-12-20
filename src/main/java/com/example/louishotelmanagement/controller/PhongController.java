@@ -4,6 +4,8 @@ import com.example.louishotelmanagement.dao.PhongDAO;
 import com.example.louishotelmanagement.model.LoaiPhong;
 import com.example.louishotelmanagement.model.Phong;
 import com.example.louishotelmanagement.model.TrangThaiPhong;
+import com.example.louishotelmanagement.util.BadgeUtil;
+import com.example.louishotelmanagement.util.BadgeVariant;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleObjectProperty;
@@ -175,55 +177,21 @@ public class PhongController implements Initializable {
                     // Lấy trạng thái theo khoảng thời gian
                     TrangThaiPhong trangThaiHienThi = layTrangThaiPhongTheoNgay(phong);
 
-                    // Tạo badge label
-                    Label badge = new Label(trangThaiHienThi.toString());
-                    
-                    // Style cho badge theo trạng thái
-                    String backgroundColor, textColor;
-                    switch (trangThaiHienThi) {
-                        case TRONG -> {
-                            backgroundColor = "#d1fae5"; // Xanh lá nhạt
-                            textColor = "#065f46";       // Xanh lá đậm
-                        }
-                        case DANG_SU_DUNG -> {
-                            backgroundColor = "#fef3c7"; // Vàng nhạt
-                            textColor = "#92400e";       // Vàng đậm
-                        }
-                        case DA_DAT -> {
-                            backgroundColor = "#fce7f3"; // Hồng nhạt
-                            textColor = "#9f1239";       // Hồng đậm
-                        }
-                        case BAO_TRI -> {
-                            backgroundColor = "#dbeafe"; // Xanh dương nhạt
-                            textColor = "#1e40af";       // Xanh dương đậm
-                        }
-                        default -> {
-                            backgroundColor = "#f3f4f6";
-                            textColor = "#6b7280";
-                        }
-                    }
-                    
-                    // Nếu có chọn ngày và phòng trống, highlight đậm hơn
-                    if (dpTuNgay.getValue() != null && dpDenNgay.getValue() != null
-                        && trangThaiHienThi == TrangThaiPhong.TRONG) {
-                        badge.setStyle(
-                            "-fx-background-color: " + backgroundColor + ";" +
-                            "-fx-text-fill: " + textColor + ";" +
-                            "-fx-padding: 6px 16px;" +
-                            "-fx-background-radius: 12px;" +
-                            "-fx-font-size: 12px;" +
-                            "-fx-font-weight: bold;"
-                        );
-                    } else {
-                        badge.setStyle(
-                            "-fx-background-color: " + backgroundColor + ";" +
-                            "-fx-text-fill: " + textColor + ";" +
-                            "-fx-padding: 6px 16px;" +
-                            "-fx-background-radius: 12px;" +
-                            "-fx-font-size: 12px;" +
-                            "-fx-font-weight: 600;"
-                        );
-                    }
+                    // Tạo badge label với highlight cho phòng trống khi có chọn ngày
+                    boolean isHighlighted = dpTuNgay.getValue() != null && dpDenNgay.getValue() != null
+                        && trangThaiHienThi == TrangThaiPhong.TRONG;
+
+                    BadgeVariant variant = switch (trangThaiHienThi) {
+                        case TRONG -> BadgeVariant.SUCCESS;
+                        case DANG_SU_DUNG -> BadgeVariant.WARNING;
+                        case DA_DAT -> BadgeVariant.DANGER;
+                        case BAO_TRI -> BadgeVariant.INFO;
+                        default -> BadgeVariant.DEFAULT;
+                    };
+
+                    Label badge = isHighlighted
+                        ? BadgeUtil.createBadge(trangThaiHienThi.toString(), variant, "6px 16px", true)
+                        : BadgeUtil.createBadge(trangThaiHienThi.toString(), variant);
                     
                     setText(null);
                     setGraphic(badge);
