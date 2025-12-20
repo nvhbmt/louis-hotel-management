@@ -4,9 +4,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
-<BorderPane fx:id="rootPane" prefHeight="864.0" prefWidth="1273.0"
-            stylesheets="@../css/main.css, @../css/quan-ly-phong.css" xmlns="http://javafx.com/javafx/24"
-            xmlns:fx="http://javafx.com/fxml/1"
+<BorderPane fx:id="rootPane" prefHeight="1017.0" prefWidth="1194.0" styleClass="main-background"
+            stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/24" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.example.louishotelmanagement.controller.LoaiPhongController">
     <padding>
         <Insets bottom="32.0" left="32.0" right="32.0" top="32.0"/>
@@ -14,114 +13,113 @@
     <center>
         <!-- Main Content Area -->
         <VBox prefHeight="800.0" prefWidth="950.0" spacing="32.0" BorderPane.alignment="CENTER">
-            <GridPane>
+            <HBox styleClass="header-section">
+                <VBox styleClass="header-icon-container">
+                    <ImageView styleClass="header-icon">
+                        <Image url="@../image/interior-design.png"/>
+                    </ImageView>
+                </VBox>
+                <VBox styleClass="header-title-section" HBox.hgrow="ALWAYS">
+                    <Label styleClass="header-title" text="Quản Lý Loại Phòng"/>
+                    <Label styleClass="header-subtitle"
+                           text="Quản lý thông tin và giá cả các loại phòng trong khách sạn"/>
+                </VBox>
+                <VBox styleClass="header-button-section">
+                    <Button fx:id="btnThemLoaiPhong" onAction="#handleThemLoaiPhong" styleClass="btn-primary"
+                            text="➕ Thêm Loại Phòng"/>
+                </VBox>
+            </HBox>
+            <GridPane styleClass="stats-grid">
                 <columnConstraints>
                     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
+                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
                 </columnConstraints>
                 <rowConstraints>
                     <RowConstraints vgrow="SOMETIMES"/>
                 </rowConstraints>
-                <children>
-                    <HBox spacing="16.0">
-                        <children>
-                            <ImageView fitHeight="72.0" fitWidth="72.0" pickOnBounds="true" preserveRatio="true">
-                                <image>
-                                    <Image url="@../image/interior-design.png"/>
-                                </image>
+                <VBox styleClass="stats-card" GridPane.columnIndex="0">
+                    <HBox styleClass="stats-card-content">
+                        <VBox styleClass="stats-card-text" HBox.hgrow="ALWAYS">
+                            <Label styleClass="stats-card-title" text="Tổng số loại phòng"/>
+                            <Label fx:id="lblTongSoLoaiPhong" styleClass="stats-card-number-success" text="0"/>
+                        </VBox>
+                        <VBox styleClass="stats-card-icon-container-success">
+                            <ImageView styleClass="stats-card-icon">
+                                <Image url="@../image/living-room.png"/>
                             </ImageView>
-                            <VBox>
-                                <children>
-                                    <Label styleClass="main-header" text="Quản Lý Loại Phòng"/>
-                                    <Label prefHeight="20.0" prefWidth="450.0" styleClass="main-subtitle"
-                                           text="Quản lý thông tin và giá cả các loại phòng trong khách sạn"/>
-                                </children>
-                            </VBox>
-                        </children>
-                    </HBox>
-                    <HBox alignment="CENTER_RIGHT" prefHeight="72.0" prefWidth="0.0" spacing="16.0"
-                          GridPane.columnIndex="1">
-                        <children>
-                            <Button fx:id="btnThemLoaiPhong" alignment="CENTER_RIGHT" contentDisplay="RIGHT"
-                                    onAction="#handleThemLoaiPhong" prefHeight="40.0" styleClass="btn-them"
-                                    text="➕ Thêm Loại Phòng"/>
-                        </children>
-                    </HBox>
-                </children>
-                <VBox.margin>
-                    <Insets/>
-                </VBox.margin>
-            </GridPane>
-            <GridPane hgap="20.0">
-                <columnConstraints>
-                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-                </columnConstraints>
-                <rowConstraints>
-                    <RowConstraints maxHeight="100.0" vgrow="SOMETIMES"/>
-                </rowConstraints>
-                <VBox styleClass="stat-box" GridPane.columnIndex="0">
-                    <HBox alignment="CENTER_LEFT" spacing="16">
-                        <VBox alignment="CENTER_LEFT" spacing="10" HBox.hgrow="ALWAYS">
-                            <Label styleClass="stat-title" text="Tổng số loại phòng"/>
-                            <Label fx:id="lblTongSoLoaiPhong" styleClass="stat-number" text="0"/>
                         </VBox>
-                        <ImageView fitHeight="45" fitWidth="45" pickOnBounds="true" preserveRatio="true">
-                            <Image url="@../image/living-room.png"/>
-                        </ImageView>
                     </HBox>
                 </VBox>
-                <VBox styleClass="stat-box" GridPane.columnIndex="1">
-                    <HBox alignment="CENTER_LEFT" spacing="16">
-                        <VBox alignment="CENTER_LEFT" spacing="10" HBox.hgrow="ALWAYS">
-                            <Label styleClass="stat-title" text="Giá thấp nhất"/>
-                            <Label fx:id="lblGiaThapNhat" styleClass="stat-number" text="0"/>
+                <VBox styleClass="stats-card" GridPane.columnIndex="1">
+                    <HBox styleClass="stats-card-content">
+                        <VBox styleClass="stats-card-text" HBox.hgrow="ALWAYS">
+                            <Label styleClass="stats-card-title" text="Giá thấp nhất"/>
+                            <Label fx:id="lblGiaThapNhat" styleClass="stats-card-number-danger" text="0"/>
                         </VBox>
-                        <ImageView fitHeight="45" fitWidth="45" pickOnBounds="true" preserveRatio="true">
-                            <Image url="@../image/dining-table.png"/>
-                        </ImageView>
+                        <VBox styleClass="stats-card-icon-container-danger">
+                            <ImageView styleClass="stats-card-icon">
+                                <Image url="@../image/dining-table.png"/>
+                            </ImageView>
+                        </VBox>
                     </HBox>
                 </VBox>
-                <VBox styleClass="stat-box" GridPane.columnIndex="2">
-                    <HBox alignment="CENTER_LEFT" spacing="16">
-                        <VBox alignment="CENTER_LEFT" spacing="10" HBox.hgrow="ALWAYS">
-                            <Label styleClass="stat-title" text="Giá cao nhất"/>
-                            <Label fx:id="lblGiaCaoNhat" styleClass="stat-number" text="0"/>
+                <VBox styleClass="stats-card" GridPane.columnIndex="2">
+                    <HBox styleClass="stats-card-content">
+                        <VBox styleClass="stats-card-text" HBox.hgrow="ALWAYS">
+                            <Label styleClass="stats-card-title" text="Giá cao nhất"/>
+                            <Label fx:id="lblGiaCaoNhat" styleClass="stats-card-number-warning" text="0"/>
                         </VBox>
-                        <ImageView fitHeight="45" fitWidth="45" pickOnBounds="true" preserveRatio="true">
-                            <Image url="@../image/bed.png"/>
-                        </ImageView>
+                        <VBox styleClass="stats-card-icon-container-warning">
+                            <ImageView styleClass="stats-card-icon">
+                                <Image url="@../image/bed.png"/>
+                            </ImageView>
+                        </VBox>
                     </HBox>
                 </VBox>
-                <VBox styleClass="stat-box" GridPane.columnIndex="3">
-                    <HBox alignment="CENTER_LEFT" spacing="16">
-                        <VBox alignment="CENTER_LEFT" spacing="10" HBox.hgrow="ALWAYS">
-                            <Label styleClass="stat-title" text="Giá trung bình"/>
-                            <Label fx:id="lblGiaTrungBinh" styleClass="stat-number" text="0"/>
+                <VBox styleClass="stats-card" GridPane.columnIndex="3">
+                    <HBox styleClass="stats-card-content">
+                        <VBox styleClass="stats-card-text" HBox.hgrow="ALWAYS">
+                            <Label styleClass="stats-card-title" text="Giá trung bình"/>
+                            <Label fx:id="lblGiaTrungBinh" styleClass="stats-card-number-info" text="0"/>
                         </VBox>
-                        <ImageView fitHeight="45" fitWidth="45" pickOnBounds="true" preserveRatio="true">
-                            <Image url="@../image/double-bed_avg.png"/>
-                        </ImageView>
+                        <VBox styleClass="stats-card-icon-container-info">
+                            <ImageView styleClass="stats-card-icon">
+                                <Image url="@../image/double-bed_avg.png"/>
+                            </ImageView>
+                        </VBox>
                     </HBox>
                 </VBox>
             </GridPane>
 
             <!-- Search and Filter Panel -->
-            <HBox alignment="CENTER_LEFT" spacing="15.0">
-                <TextField fx:id="txtTimKiem" onKeyReleased="#handleTimKiem" prefHeight="40.0" prefWidth="239.0"
-                           promptText="Nhập mã loại phòng hoặc tên..." styleClass="form-field" HBox.hgrow="ALWAYS"/>
-                <ComboBox fx:id="cbLocGia" onAction="#handleLocGia" prefHeight="41.0" prefWidth="165.0"
-                          promptText="Tất cả khoảng giá" styleClass="form-field"/>
-                <Button fx:id="btnLamMoi" onAction="#handleLamMoi" prefHeight="37.0" prefWidth="121.0"
-                        styleClass="btn-info" text="🔄 Làm Mới"/>
-            </HBox>
+            <VBox styleClass="spacing-filter">
+                <HBox styleClass="filter-section">
+                    <VBox styleClass="filter-field-container">
+                        <Label styleClass="filter-label" text="Loại phòng"/>
+                        <ComboBox fx:id="cbLocGia" onAction="#handleLocGia" promptText="Tất cả khoảng giá"
+                                  styleClass="filter-combobox"/>
+                    </VBox>
+                    <VBox styleClass="filter-field-container">
+                        <Label styleClass="filter-label" text="Tìm kiếm"/>
+                        <TextField fx:id="txtTimKiem" onKeyReleased="#handleTimKiem"
+                                   promptText="Nhập mã phòng hoặc tầng..." styleClass="filter-input">
+
+                        </TextField>
+                    </VBox>
+                    <VBox styleClass="filter-field-container">
+                        <Label styleClass="opacity-zero" text="."/>
+                        <Button fx:id="btnLamMoi" mnemonicParsing="false" onAction="#handleLamMoi"
+                                styleClass="btn-secondary" text="🔄 Làm mới">
+                        </Button>
+                    </VBox>
+                </HBox>
+            </VBox>
 
             <!-- Table View -->
-            <VBox prefHeight="561.0" prefWidth="890.0" styleClass="table-container" VBox.vgrow="ALWAYS">
-                <TableView fx:id="tableViewLoaiPhong" prefHeight="576.0" prefWidth="850.0" styleClass="table-view"
-                           VBox.vgrow="ALWAYS">
+            <VBox styleClass="table-container" VBox.vgrow="ALWAYS">
+                <TableView fx:id="tableViewLoaiPhong" styleClass="table-view" VBox.vgrow="ALWAYS">
                     <columns>
                         <TableColumn fx:id="colMaLoaiPhong" prefWidth="120.0" text="Mã Loại Phòng"/>
                         <TableColumn fx:id="colTenLoai" prefWidth="150.0" text="Tên Loại Phòng"/>

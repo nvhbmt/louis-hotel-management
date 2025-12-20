@@ -1,9 +1,0 @@
-/* ========================================
-   LOẠI PHÒNG PAGE STYLES
-   ======================================== */
-
-/* Status Bar */
-.status-bar {
-    -fx-font-size: 12px;
-    -fx-text-fill: #7f8c8d;
-}

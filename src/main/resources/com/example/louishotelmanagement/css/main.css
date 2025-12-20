@@ -734,3 +734,294 @@
 .menu-group-header.expanded .menu-arrow {
     -fx-icon-color: #1976d2;
 }
+
+/* ========================================
+   COMMON STYLES - SHARED STYLES FOR ALL MANAGEMENT VIEWS
+   ======================================== */
+
+/* Layout */
+.main-background {
+    -fx-background-color: #f3f4f6;
+}
+
+.main-content-padding {
+    -fx-padding: 32;
+}
+
+/* Header Styles */
+.header-section {
+    -fx-spacing: 16;
+}
+
+.header-icon-container {
+    -fx-alignment: CENTER;
+    -fx-background-color: #d1fae5;
+    -fx-background-radius: 12;
+    -fx-padding: 16;
+}
+
+.header-icon {
+    -fx-fit-height: 56;
+    -fx-fit-width: 56;
+    -fx-pick-on-bounds: true;
+    -fx-preserve-ratio: true;
+}
+
+.header-title-section {
+    -fx-hgrow: ALWAYS;
+    -fx-spacing: 4;
+}
+
+.header-title {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #111827;
+}
+
+.header-subtitle {
+    -fx-font-size: 14px;
+    -fx-text-fill: #6b7280;
+}
+
+.header-button-section {
+    -fx-alignment: CENTER_RIGHT;
+    -fx-spacing: 5;
+}
+
+/* Statistics Grid */
+.stats-grid {
+    -fx-hgap: 20;
+    -fx-alignment: TOP_CENTER;
+    -fx-hgrow: ALWAYS;
+    -fx-vgrow: NEVER;
+    -fx-pref-height: 100;
+}
+
+
+/* Statistics Cards */
+.stats-card {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-padding: 20;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0, 0, 2);
+}
+
+.stats-card-content {
+    -fx-alignment: CENTER_LEFT;
+    -fx-spacing: 16;
+}
+
+.stats-card-text {
+    -fx-alignment: CENTER_LEFT;
+    -fx-spacing: 8;
+    -fx-hgrow: ALWAYS;
+}
+
+.stats-card-title {
+    -fx-text-fill: #6b7280;
+    -fx-font-size: 13px;
+}
+
+.stats-card-number-success,
+.stats-card-number-warning,
+.stats-card-number-info,
+.stats-card-number-danger {
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+}
+
+.stats-card-number-success {
+    -fx-text-fill: #10b981;
+}
+
+.stats-card-number-warning {
+    -fx-text-fill: #f59e0b;
+}
+
+.stats-card-number-info {
+    -fx-text-fill: #3b82f6;
+}
+
+.stats-card-number-danger {
+    -fx-text-fill: #d14955;
+}
+
+.stats-card-icon-container-success,
+.stats-card-icon-container-warning,
+.stats-card-icon-container-info,
+.stats-card-icon-container-danger {
+    -fx-alignment: CENTER;
+    -fx-background-radius: 8;
+    -fx-padding: 12;
+}
+
+.stats-card-icon-container-success {
+    -fx-background-color: #d1fae5;
+}
+
+.stats-card-icon-container-warning {
+    -fx-background-color: #fef3c7;
+}
+
+.stats-card-icon-container-info {
+    -fx-background-color: #dbeafe;
+}
+
+.stats-card-icon-container-danger {
+    -fx-background-color: #fecdd3;
+}
+
+.stats-card-icon {
+    -fx-fit-height: 40;
+    -fx-fit-width: 40;
+    -fx-preserve-ratio: true;
+}
+
+/* Filter Section */
+.filter-section {
+    -fx-alignment: CENTER_LEFT;
+    -fx-spacing: 16;
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-padding: 20;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0, 0, 2);
+}
+
+.filter-field-container {
+    -fx-spacing: 8;
+}
+
+.filter-field-container.filter {
+    -fx-pref-width: 200;
+    -fx-min-width: 200;
+    -fx-max-width: 200;
+}
+
+.filter-field-container.search {
+    -fx-hgrow: ALWAYS;
+}
+
+.filter-field-container.action {
+    -fx-alignment: BOTTOM_RIGHT;
+    -fx-hgrow: ALWAYS;
+}
+
+.filter-label {
+    -fx-font-size: 13px;
+    -fx-text-fill: #374151;
+    -fx-font-weight: bold;
+}
+
+.filter-combobox {
+    -fx-background-color: #f9fafb;
+    -fx-border-color: #e5e7eb;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 8 12;
+    -fx-pref-height: 45;
+    -fx-cursor: hand;
+}
+
+.filter-input {
+    -fx-background-color: #f9fafb;
+    -fx-border-color: #e5e7eb;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 8 12;
+    -fx-pref-height: 45;
+    -fx-hgrow: ALWAYS;
+}
+
+.opacity-zero {
+    -fx-opacity: 0;
+}
+
+/* Table Container */
+.table-container {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-padding: 20;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0, 0, 2);
+    -fx-vgrow: ALWAYS;
+}
+
+.table-view {
+    -fx-fixed-cell-size: 56;
+    -fx-vgrow: ALWAYS;
+}
+
+.table-column-header {
+    /* Table column headers styling */
+}
+
+.table-cell-left {
+    -fx-alignment: CENTER-LEFT;
+}
+
+.table-cell-center {
+    -fx-alignment: CENTER;
+}
+
+.table-cell-bold {
+    -fx-font-weight: bold;
+}
+
+/* Spacing */
+.spacing-normal {
+    -fx-spacing: 24;
+}
+
+/* Button Styles */
+.btn-primary {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+    -fx-background-radius: 8;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-pref-height: 37;
+    -fx-pref-width: 144;
+}
+
+.btn-secondary {
+    -fx-background-color: #f3f4f6;
+    -fx-text-fill: #374151;
+    -fx-background-radius: 8;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-pref-height: 45;
+    -fx-pref-width: 140;
+}
+
+/* Stat Box (from updated files) */
+.stat-box {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-padding: 20;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0, 0, 2);
+}
+
+.stat-title {
+    -fx-text-fill: #6b7280;
+    -fx-font-size: 13px;
+}
+
+.stat-number {
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #10b981;
+    /* Default success color */
+}
+
+/* Main Header (from updated files) */
+.main-header {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+.main-subtitle {
+    -fx-font-size: 14px;
+    -fx-text-fill: #7f8c8d;
+}

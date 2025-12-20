@@ -84,7 +84,6 @@
    </padding>
    <stylesheets>
       <URL value="@../css/main.css" />
-      <URL value="@../css/quan-ly-khach-hang.css" />
    </stylesheets>
    <bottom>
       <HBox alignment="CENTER_RIGHT" fillHeight="false" prefHeight="45.0" prefWidth="950.0">

@@ -1,20 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Font?>
-
-<BorderPane prefHeight="1000.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/24" xmlns:fx="http://javafx.com/fxml/1"
+<BorderPane prefHeight="1000.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/24"
+            xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.example.louishotelmanagement.controller.DangNhapController"
             stylesheets="@../css/dang-nhap.css">
 
     <!-- Header Section -->
     <top>
         <VBox alignment="CENTER" prefHeight="200.0" BorderPane.alignment="CENTER"
-              style="-fx-background-color: linear-gradient(to bottom right, #667eea 0%, #764ba2 100%);">
+              style="-fx-background-color: linear-gradient(to bottom, #3498db 0%, #5dade2 100%);">
             <children>
                 <!-- Logo/Icon -->
                 <VBox alignment="CENTER" spacing="15.0">

@@ -1,47 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.Cursor?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Priority?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
-
-<BorderPane prefHeight="864.0" prefWidth="1014.4" stylesheets="@../css/huy-dat-phong.css" xmlns="http://javafx.com/javafx/24" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.HuyDatPhongController">
+<?import javafx.scene.layout.*?>
+<BorderPane prefHeight="864.0" prefWidth="1014.4" stylesheets="@../css/huy-dat-phong.css"
+            xmlns="http://javafx.com/javafx/24" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.louishotelmanagement.controller.HuyDatPhongController">
     <center>
         <VBox alignment="TOP_CENTER" BorderPane.alignment="CENTER">
             <children>
-            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
-               <children>
-                  <Label prefWidth="120.0" text="Khách hàng">
-                     <HBox.margin>
-                        <Insets right="15.0" />
-                     </HBox.margin>
-                  </Label>
-                  <ComboBox fx:id="dsKhachHang" prefHeight="42.0" prefWidth="607.0" />
-               </children>
-            </HBox>
+                <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                    <children>
+                        <Label prefWidth="120.0" text="Khách hàng">
+                            <HBox.margin>
+                                <Insets right="15.0"/>
+                            </HBox.margin>
+                        </Label>
+                        <ComboBox fx:id="dsKhachHang" prefHeight="42.0" prefWidth="607.0"/>
+                    </children>
+                </HBox>
                 <HBox styleClass="search-container">
                     <children>
-                        <Label prefWidth="120.0" styleClass="label" text="Nhập mã phiếu" />
-                        <TextField fx:id="searchTextField" prefWidth="376.0" styleClass="text-field" />
+                        <Label prefWidth="120.0" styleClass="label" text="Nhập mã phiếu"/>
+                        <TextField fx:id="searchTextField" prefWidth="376.0" styleClass="text-field"/>
                         <Button fx:id="btnTim" onAction="#handleTim" styleClass="button-search" text="Tìm">
                             <HBox.margin>
-                                <Insets left="20.0" />
+                                <Insets left="20.0"/>
                             </HBox.margin>
                         </Button>
                         <Button onAction="#handleLamMoi" styleClass="button-refresh" text="Làm mới">
                             <HBox.margin>
-                                <Insets left="10.0" />
+                                <Insets left="10.0"/>
                             </HBox.margin>
                         </Button>
                     </children>
@@ -49,20 +41,20 @@
 
                 <TableView fx:id="tablePhieu" prefHeight="250.0">
                     <VBox.vgrow>
-                        <Priority fx:constant="ALWAYS" />
+                        <Priority fx:constant="ALWAYS"/>
                     </VBox.vgrow>
                     <columns>
-                        <TableColumn fx:id="colMaPhieu" prefWidth="75.0" text="Mã phiếu" />
-                        <TableColumn fx:id="colNgayDat" prefWidth="75.0" text="Ngày đặt" />
-                        <TableColumn fx:id="colNgayDen" prefWidth="75.0" text="Ngày đến" />
-                        <TableColumn fx:id="colNgayDi" prefWidth="75.0" text="Ngày đi" />
-                        <TableColumn fx:id="colTrangThai" prefWidth="146.4000244140625" text="Trạng thái" />
-                        <TableColumn fx:id="colGhiChu" prefWidth="207.99996948242188" text="Ghi chú" />
-                        <TableColumn fx:id="colTenKhachHang" prefWidth="164.79998779296875" text="Tên khách hàng" />
-                        <TableColumn fx:id="colMaNhanVien" prefWidth="195.20001220703125" text="Mã nhân viên" />
+                        <TableColumn fx:id="colMaPhieu" prefWidth="75.0" text="Mã phiếu"/>
+                        <TableColumn fx:id="colNgayDat" prefWidth="75.0" text="Ngày đặt"/>
+                        <TableColumn fx:id="colNgayDen" prefWidth="75.0" text="Ngày đến"/>
+                        <TableColumn fx:id="colNgayDi" prefWidth="75.0" text="Ngày đi"/>
+                        <TableColumn fx:id="colTrangThai" prefWidth="146.4000244140625" text="Trạng thái"/>
+                        <TableColumn fx:id="colGhiChu" prefWidth="207.99996948242188" text="Ghi chú"/>
+                        <TableColumn fx:id="colTenKhachHang" prefWidth="164.79998779296875" text="Tên khách hàng"/>
+                        <TableColumn fx:id="colMaNhanVien" prefWidth="195.20001220703125" text="Mã nhân viên"/>
                     </columns>
                     <VBox.margin>
-                        <Insets left="20.0" right="20.0" />
+                        <Insets left="20.0" right="20.0"/>
                     </VBox.margin>
                 </TableView>
 
@@ -70,28 +62,29 @@
                     <children>
                         <VBox styleClass="detail-info-box">
                             <children>
-                                <Label alignment="CENTER" styleClass="detail-heading" text="Chi tiết thông tin phòng" />
+                                <Label alignment="CENTER" styleClass="detail-heading" text="Chi tiết thông tin phòng"/>
 
                                 <HBox styleClass="detail-row">
                                     <children>
-                                        <Label styleClass="detail-label" text="Mã phiếu" />
-                                        <TextField fx:id="txtMaPhieu" editable="false" styleClass="detail-text-field" />
+                                        <Label styleClass="detail-label" text="Mã phiếu"/>
+                                        <TextField fx:id="txtMaPhieu" editable="false" styleClass="detail-text-field"/>
                                     </children>
-                           <padding>
-                              <Insets bottom="20.0" />
-                           </padding>
+                                    <padding>
+                                        <Insets bottom="20.0"/>
+                                    </padding>
                                 </HBox>
                                 <HBox styleClass="detail-row">
                                     <children>
-                                        <Label styleClass="detail-label" text="Số phòng" />
-                                        <TextField fx:id="txtSoPhong" editable="false" styleClass="detail-text-field" />
+                                        <Label styleClass="detail-label" text="Số phòng"/>
+                                        <TextField fx:id="txtSoPhong" editable="false" styleClass="detail-text-field"/>
                                     </children>
                                 </HBox>
-                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
-                           <children>
-                              <Button mnemonicParsing="false" onAction="#handleXemChiTiet" prefHeight="38.0" prefWidth="145.0" text="Xem chi tiết" />
-                           </children>
-                        </HBox>
+                                <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                                    <children>
+                                        <Button mnemonicParsing="false" onAction="#handleXemChiTiet" prefHeight="38.0"
+                                                prefWidth="145.0" text="Xem chi tiết"/>
+                                    </children>
+                                </HBox>
                             </children>
                         </VBox>
                     </children>
@@ -104,34 +97,26 @@
             <children>
                 <Button onAction="#handleHuyPhieuDat" styleClass="button-huy" text="Hủy phiếu đặt phòng">
                     <cursor>
-                        <Cursor fx:constant="HAND" />
+                        <Cursor fx:constant="HAND"/>
                     </cursor>
                 </Button>
             </children>
         </HBox>
     </bottom>
-   <top>
-      <HBox spacing="16.0">
-         <children>
-                <ImageView fitHeight="72.0" fitWidth="72.0" pickOnBounds="true" preserveRatio="true">
-                    <image>
-                        <Image url="@../image/booking-cancel-icon.png" />
-                    </image>
+    <top>
+        <HBox styleClass="header-section">
+            <VBox styleClass="header-icon-container">
+                <ImageView styleClass="header-icon">
+                    <Image url="@../image/booking-cancel-icon.png"/>
                 </ImageView>
-            <VBox>
-               <children>
-                    <Label styleClass="header-title" text="Hủy đặt phòng" />
-                  <Label text="Thực hiện chức năng hủy đặt phòng cho khách hàng" textFill="#7f8c8d">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </Label>
-               </children>
             </VBox>
-         </children>
-      </HBox>
-   </top>
-   <padding>
-      <Insets bottom="32.0" left="32.0" right="32.0" top="32.0" />
-   </padding>
+            <VBox styleClass="header-title-section">
+                <Label styleClass="header-title" text="Hủy đặt phòng"/>
+                <Label styleClass="header-subtitle" text="Thực hiện chức năng hủy đặt phòng cho khách hàng"/>
+            </VBox>
+        </HBox>
+    </top>
+    <padding>
+        <Insets bottom="32.0" left="32.0" right="32.0" top="32.0"/>
+    </padding>
 </BorderPane>

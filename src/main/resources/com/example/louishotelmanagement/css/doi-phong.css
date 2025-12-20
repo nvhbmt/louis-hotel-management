@@ -1,10 +1,5 @@
 /* doi-phong.css */
 
-/* --- Nền chung --- */
-.root {
-    -fx-background-color: #F8F8F8;
-    /* Nền xám nhạt */
-}
 
 /* --- Tiêu đề trang (Đổi phòng) --- */
 .header-title {
@@ -56,40 +51,3 @@
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0, 0, 0);
 }
 
-.table-view .column-header-background {
-    -fx-background-color: transparent;
-    /* Bỏ màu nền header */
-    -fx-background-radius: 0;
-}
-
-.table-view .column-header .label {
-    -fx-text-fill: #333333;
-    /* Chữ header màu đậm */
-    -fx-font-weight: bold;
-}
-
-.table-row-cell:odd {
-    -fx-background-color: #F0F0F0;
-}
-
-.table-row-cell:selected {
-    -fx-background-color: #3498db;
-    -fx-text-fill: white;
-}
-
-/* --- Nút Đổi Phòng --- */
-#btnDoiPhong {
-    -fx-background-color: #007bff;
-    -fx-text-fill: white;
-    -fx-font-weight: bold;
-    -fx-font-size: 20px;
-    -fx-padding: 12px 30px;
-    -fx-border-radius: 8px;
-    -fx-background-radius: 8px;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 5, 0, 0, 1);
-    -fx-cursor: hand;
-}
-
-#btnDoiPhong:hover {
-    -fx-background-color: #0069d9;
-}

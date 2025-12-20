@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import java.net.URL?>
+<BorderPane fx:id="rootPane" prefHeight="1018.0" prefWidth="1340.0" xmlns="http://javafx.com/javafx/25"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.louishotelmanagement.controller.QuanLyThanhToanController">
+    <center>
+        <VBox alignment="TOP_CENTER" prefHeight="800.0" prefWidth="1276.0" spacing="32.0" VBox.vgrow="ALWAYS">
+            <HBox styleClass="header-section">
+                <VBox styleClass="header-icon-container">
+                    <ImageView styleClass="header-icon">
+                        <Image url="@../image/pay.png"/>
+                    </ImageView>
+                </VBox>
+                <VBox styleClass="header-title-section" HBox.hgrow="ALWAYS">
+                    <Label styleClass="header-title" text="Quản Lý Hóa Đơn"/>
+                    <Label styleClass="header-subtitle" text="Quản lý các hóa đơn trong khách sạn"/>
+                </VBox>
+
+            </HBox>
+
+
+            <GridPane styleClass="stats-grid">
+                <columnConstraints>
+                    <ColumnConstraints hgrow="ALWAYS" percentWidth="25"/>
+                    <ColumnConstraints hgrow="ALWAYS" percentWidth="25"/>
+                    <ColumnConstraints hgrow="ALWAYS" percentWidth="25"/>
+                    <ColumnConstraints hgrow="ALWAYS" percentWidth="25"/>
+                </columnConstraints>
+
+                <rowConstraints>
+                    <RowConstraints vgrow="SOMETIMES"/>
+                </rowConstraints>
+
+                <!-- Ô 1: Số khách hàng -->
+                <VBox styleClass="stats-card" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS">
+                    <HBox alignment="CENTER_LEFT" spacing="16">
+                        <VBox alignment="CENTER_LEFT" spacing="8" HBox.hgrow="ALWAYS">
+                            <Label styleClass="stats-card-title" text="Chưa thanh toán"/>
+                            <Label fx:id="lblSoKhachHang" styleClass="stats-card-number-danger" text="69"/>
+                        </VBox>
+                        <VBox styleClass="stats-card-icon-container-danger">
+                            <ImageView fitHeight="40" fitWidth="40" preserveRatio="true">
+                                <Image url="@../image/no-money.png"/>
+                            </ImageView>
+                        </VBox>
+                    </HBox>
+                </VBox>
+
+                <!-- Ô 2: Đang lưu trú -->
+                <VBox styleClass="stats-card" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS">
+                    <HBox alignment="CENTER_LEFT" spacing="16">
+                        <VBox alignment="CENTER_LEFT" spacing="8" HBox.hgrow="ALWAYS">
+                            <Label styleClass="stats-card-title" text="Đã thanh toán"/>
+                            <Label fx:id="lblDaThanhToan" styleClass="stats-card-number-success" text="15"/>
+                        </VBox>
+                        <VBox styleClass="stats-card-icon-container-success">
+                            <ImageView fitHeight="40" fitWidth="40" preserveRatio="true">
+                                <Image url="@../image/card.png"/>
+                            </ImageView>
+                        </VBox>
+                    </HBox>
+                </VBox>
+
+                <!-- Ô 3: Đã check-out -->
+                <VBox styleClass="stats-card" GridPane.columnIndex="2" GridPane.hgrow="ALWAYS">
+                    <HBox alignment="CENTER_LEFT" spacing="16">
+                        <VBox alignment="CENTER_LEFT" spacing="8" HBox.hgrow="ALWAYS">
+                            <Label styleClass="stats-card-title" text="Doanh thu trong ngày"/>
+                            <Label fx:id="lblCheckout" styleClass="stats-card-number-warning" text="14"/>
+                        </VBox>
+                        <VBox styleClass="stats-card-icon-container-warning">
+                            <ImageView fitHeight="40" fitWidth="40" preserveRatio="true">
+                                <Image url="@../image/money-bag.png"/>
+                            </ImageView>
+                        </VBox>
+                    </HBox>
+                </VBox>
+
+                <!-- Ô 4: Khách VIP -->
+                <VBox styleClass="stats-card" GridPane.columnIndex="3" GridPane.hgrow="ALWAYS">
+                    <HBox alignment="CENTER_LEFT" spacing="16">
+                        <VBox alignment="CENTER_LEFT" spacing="8" HBox.hgrow="ALWAYS">
+                            <Label styleClass="stats-card-title" text="Số hóa đơn có khuyến mãi"/>
+                            <Label fx:id="lblKhuyenMai" styleClass="stats-card-number-info" text="10"/>
+                        </VBox>
+                        <VBox styleClass="stats-card-icon-container-info">
+                            <ImageView fitHeight="40" fitWidth="40" preserveRatio="true">
+                                <Image url="@../image/coupons.png"/>
+                            </ImageView>
+                        </VBox>
+                    </HBox>
+                </VBox>
+            </GridPane>
+            <VBox styleClass="spacing-filter">
+                <HBox styleClass="filter-section">
+                    <VBox styleClass="filter-field-container">
+                        <Label styleClass="filter-label" text="Tìm kiếm"/>
+                        <TextField fx:id="txtTimKiem" maxWidth="Infinity" prefHeight="41.0" prefWidth="200.0"
+                                   promptText="Nhập thông tin khách hàng, phòng..."
+                                   style="-fx-border-color: #B0C4DE; -fx-border-radius: 15; -fx-background-radius: 15;"
+                                   styleClass="form-field" HBox.hgrow="ALWAYS"/>
+                    </VBox>
+                    <VBox styleClass="filter-field-container">
+
+                        <Label styleClass="filter-label" text="Ngày Lập"/>
+                        <ComboBox fx:id="cmbNgayLap" maxWidth="Infinity" prefHeight="41.0" prefWidth="150.0"
+                                  promptText="Ngày Lập"
+                                  style="-fx-background-radius: 15; -fx-background-color: #F5F9FF; -fx-border-color: #B0C4DE; -fx-border-radius: 15;"
+                                  styleClass="hover-effect" HBox.hgrow="ALWAYS"/>
+                    </VBox>
+                    <VBox styleClass="filter-field-container">
+                        <Label styleClass="opacity-zero" text="."/>
+                        <Button fx:id="btnLamMoi" mnemonicParsing="false" styleClass="btn-secondary" text="🔄 Làm mới">
+
+                        </Button>
+                    </VBox>
+                </HBox>
+            </VBox>
+
+            <VBox prefHeight="561.0" prefWidth="890.0" styleClass="table-container" HBox.hgrow="ALWAYS"
+                  VBox.vgrow="ALWAYS">
+                <TableView fx:id="tableViewKhachHang" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colMaHD" maxWidth="Infinity" prefWidth="80.0" text="Mã Hóa Đơn"/>
+                        <TableColumn fx:id="colNgayLap" maxWidth="Infinity" prefWidth="120.0" text="Ngày Lập"/>
+                        <TableColumn fx:id="colPhuongThuc" maxWidth="Infinity" prefWidth="100.0" text="Phương Thức"/>
+                        <TableColumn fx:id="colTrangThai" maxWidth="Infinity" prefWidth="144.0" text="Trạng Thái"/>
+                        <TableColumn fx:id="colTongTien" maxWidth="Infinity" prefWidth="100" text="Tổng Tiền"/>
+                        <TableColumn fx:id="colMaKhuyenMai" maxWidth="Infinity" prefWidth="130" text="Mã Khuyến Mãi"/>
+                        <TableColumn fx:id="colTenKH" maxWidth="Infinity" minWidth="0.0" prefWidth="336.79998779296875"
+                                     text="Tên Khách Hàng"/>
+                        <TableColumn fx:id="colThaoTac" maxWidth="150.0" prefWidth="130.5999755859375" text="Thao tác"/>
+                    </columns>
+                    <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                    </padding>
+                </TableView>
+            </VBox>
+        </VBox>
+    </center>
+    <padding>
+        <Insets bottom="32.0" left="32.0" right="32.0" top="32.0"/>
+    </padding>
+    <stylesheets>
+        <URL value="@../css/main.css"/>
+    </stylesheets>
+</BorderPane>
