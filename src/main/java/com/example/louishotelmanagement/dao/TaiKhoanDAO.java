@@ -170,4 +170,29 @@ public class TaiKhoanDAO {
         }
         return null;
     }
+    // Tìm tài khoản dựa trên Mã Nhân Viên (Dùng để load dữ liệu lên form gộp)
+    public TaiKhoan timTaiKhoanTheoMaNV(String maNV) throws SQLException {
+        // Lưu ý: Bạn cần tạo Procedure sp_TimTaiKhoanTheoMaNV trong SQL Server trước
+        String sql = "{call sp_TimTaiKhoanTheoMaNV(?)}";
+        try (Connection con = CauHinhDatabase.getConnection();
+             CallableStatement cs = con.prepareCall(sql)) {
+            cs.setString(1, maNV);
+            ResultSet rs = cs.executeQuery();
+            if (rs.next()) {
+                // Chúng ta đã có mã NV, chỉ cần tạo object NhanVien cơ bản
+                // hoặc dùng NhanVienDAO để load full nếu cần.
+                NhanVien nv = new NhanVien(rs.getString("maNV"));
+
+                return new TaiKhoan(
+                        rs.getString("maTK"),
+                        nv,
+                        rs.getString("tenDangNhap"),
+                        rs.getString("matKhauHash"),
+                        rs.getString("quyen"),
+                        rs.getBoolean("trangThai")
+                );
+            }
+        }
+        return null;
+    }
 }

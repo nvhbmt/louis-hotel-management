@@ -106,3 +106,10 @@ BEGIN
     SET @maTKTiepTheo = 'TK' + RIGHT('000' + CAST(@maxSo + 1 AS VARCHAR(3)), 3);
 END
 GO
+
+CREATE PROCEDURE sp_TimTaiKhoanTheoMaNV
+@maNV NVARCHAR(50)
+AS
+BEGIN
+    SELECT * FROM TaiKhoan WHERE maNV = @maNV
+END
