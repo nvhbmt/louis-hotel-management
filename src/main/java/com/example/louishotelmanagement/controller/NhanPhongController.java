@@ -247,27 +247,17 @@ public class NhanPhongController implements Initializable, Refreshable {
     }
 
     public void NhanPhong() throws Exception {
-        // 1. Cập nhật trạng thái phòng và phiếu đặt
-        phongDAO.capNhatTrangThaiPhong(maPhong.getText(), "Đang sử dụng");
-        PhieuDatPhong pdp = phieuDatPhongDAO.layPhieuDatPhongTheoMa(maPhieu.getText());
-        phieuDatPhongDAO.capNhatTrangThaiPhieuDatPhong(pdp.getMaPhieu(), "Đang sử dụng");
+        // Kiểm tra dữ liệu đầu vào cơ bản
+        if (maPhong.getText().isEmpty() || maPhieu.getText().isEmpty()) {
+            ThongBaoUtil.hienThiLoi("Lỗi", "Thông tin phòng hoặc mã phiếu không hợp lệ.");
+            return;
+        }
 
-        // 2. Cập nhật ngày đến thực tế
-        CTHoaDonPhong ctHoaDonPhong = ctHoaDondao.getDSCTHoaDonPhongTheoMaPhong(dsPhong.getSelectionModel().getSelectedItem().toString()).getLast();
-        ctHoaDondao.capNhatNgayDenThucTe(ctHoaDonPhong.getMaHD(), maPhong.getText(), LocalDate.now());
-
-        // 3. THÊM MỚI: Cập nhật trạng thái khách hàng sang ĐANG_LUU_TRU
-        String maKH = dsMaKH.get(dsKhachHang.getSelectionModel().getSelectedIndex());
-        khachHangDAO.capNhatTrangThaiKhachHang(maKH, TrangThaiKhachHang.DANG_LUU_TRU);
-
-        ThongBaoUtil.hienThiThongBao("Thành công", "Bạn đã nhận phòng thành công. Khách hàng hiện đang lưu trú.");
-
-        // 4. Làm mới UI
-        dsPhong.getItems().remove(dsPhong.getSelectionModel().getSelectedIndex());
         // 1. Cập nhật trạng thái phòng -> Đang sử dụng
         phongDAO.capNhatTrangThaiPhong(maPhong.getText(), TrangThaiPhong.DANG_SU_DUNG.toString());
 
         // 2. Cập nhật trạng thái phiếu -> Đang sử dụng
+        // Lỗi cũ: Bạn khai báo 'PhieuDatPhong pdp' 2 lần. Đã sửa lại chỉ khai báo 1 lần.
         PhieuDatPhong pdp = phieuDatPhongDAO.layPhieuDatPhongTheoMa(maPhieu.getText());
         if (pdp != null) {
             phieuDatPhongDAO.capNhatTrangThaiPhieuDatPhong(pdp.getMaPhieu(), TrangThaiPhieuDatPhong.DANG_SU_DUNG.toString());
@@ -275,19 +265,26 @@ public class NhanPhongController implements Initializable, Refreshable {
 
         // 3. Cập nhật ngày đến thực tế trong chi tiết hóa đơn
         String maPhongChon = dsPhong.getSelectionModel().getSelectedItem();
-        ArrayList<CTHoaDonPhong> listCT = ctHoaDondao.getDSCTHoaDonPhongTheoMaPhong(maPhongChon);
-        if (!listCT.isEmpty()) {
-            CTHoaDonPhong ctHoaDonPhong = listCT.get(listCT.size() - 1);
-            ctHoaDondao.capNhatNgayDenThucTe(ctHoaDonPhong.getMaHD(), maPhong.getText(), LocalDate.now());
+        if (maPhongChon != null) {
+            ArrayList<CTHoaDonPhong> listCT = ctHoaDondao.getDSCTHoaDonPhongTheoMaPhong(maPhongChon);
+            if (!listCT.isEmpty()) {
+                // Lấy bản ghi chi tiết cuối cùng
+                CTHoaDonPhong ctHoaDonPhong = listCT.get(listCT.size() - 1);
+                ctHoaDondao.capNhatNgayDenThucTe(ctHoaDonPhong.getMaHD(), maPhong.getText(), LocalDate.now());
+            }
         }
 
         // 4. Cập nhật trạng thái khách hàng -> Đang lưu trú
         int indexKH = dsKhachHang.getSelectionModel().getSelectedIndex();
-        if(indexKH >= 0) {
-            khachHangDAO.capNhatTrangThaiKhachHang(dsMaKH.get(indexKH), TrangThaiKhachHang.DANG_LUU_TRU);
+        if (indexKH >= 0) {
+            String maKH = dsMaKH.get(indexKH);
+            khachHangDAO.capNhatTrangThaiKhachHang(maKH, TrangThaiKhachHang.DANG_LUU_TRU);
         }
 
-        ThongBaoUtil.hienThiThongBao("Thành công", "Nhận phòng thành công!");
+        // 5. Thông báo và làm mới giao diện
+        ThongBaoUtil.hienThiThongBao("Thành công", "Nhận phòng thành công! Khách hàng đã chuyển sang trạng thái lưu trú.");
+
+        // Gọi refreshData để reset các trường nhập liệu và load lại danh sách
         refreshData();
     }
 
