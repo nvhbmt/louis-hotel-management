@@ -247,6 +247,23 @@ public class NhanPhongController implements Initializable, Refreshable {
     }
 
     public void NhanPhong() throws Exception {
+        // 1. Cập nhật trạng thái phòng và phiếu đặt
+        phongDAO.capNhatTrangThaiPhong(maPhong.getText(), "Đang sử dụng");
+        PhieuDatPhong pdp = phieuDatPhongDAO.layPhieuDatPhongTheoMa(maPhieu.getText());
+        phieuDatPhongDAO.capNhatTrangThaiPhieuDatPhong(pdp.getMaPhieu(), "Đang sử dụng");
+
+        // 2. Cập nhật ngày đến thực tế
+        CTHoaDonPhong ctHoaDonPhong = ctHoaDondao.getDSCTHoaDonPhongTheoMaPhong(dsPhong.getSelectionModel().getSelectedItem().toString()).getLast();
+        ctHoaDondao.capNhatNgayDenThucTe(ctHoaDonPhong.getMaHD(), maPhong.getText(), LocalDate.now());
+
+        // 3. THÊM MỚI: Cập nhật trạng thái khách hàng sang ĐANG_LUU_TRU
+        String maKH = dsMaKH.get(dsKhachHang.getSelectionModel().getSelectedIndex());
+        khachHangDAO.capNhatTrangThaiKhachHang(maKH, TrangThaiKhachHang.DANG_LUU_TRU);
+
+        ThongBaoUtil.hienThiThongBao("Thành công", "Bạn đã nhận phòng thành công. Khách hàng hiện đang lưu trú.");
+
+        // 4. Làm mới UI
+        dsPhong.getItems().remove(dsPhong.getSelectionModel().getSelectedIndex());
         // 1. Cập nhật trạng thái phòng -> Đang sử dụng
         phongDAO.capNhatTrangThaiPhong(maPhong.getText(), TrangThaiPhong.DANG_SU_DUNG.toString());
 

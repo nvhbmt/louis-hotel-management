@@ -219,9 +219,26 @@ public class TraPhongController implements Initializable, Refreshable {
 
         CTHoaDonPhong activeCT = listCT.get(0);
         HoaDon hd = hdDao.timHoaDonTheoMa(activeCT.getMaHD());
+        PhieuDatPhong pdp = phieuDatPhongDAO.layPhieuDatPhongTheoMa(maPhieu);
 
         if (hd != null) {
             if (hd.getTrangThai().equals(TrangThaiHoaDon.CHUA_THANH_TOAN)) {
+                moDialogThanhToan(hd);
+            } else {
+                // 1. Cập nhật trạng thái phiếu và phòng
+                phieuDatPhongDAO.capNhatTrangThaiPhieuDatPhong(maPhieu, TrangThaiPhieuDatPhong.HOAN_THANH.toString());
+                for (CTHoaDonPhong ct : listCT) {
+                    phDao.capNhatTrangThaiPhong(ct.getMaPhong(), TrangThaiPhong.TRONG.toString());
+                    cthdpDao.capNhatNgayDiThucTe(ct.getMaHD(), ct.getMaPhong(), LocalDate.now());
+                }
+
+                // 2. THÊM MỚI: Cập nhật trạng thái khách hàng sang CHECK_OUT
+                if (pdp != null) {
+                    khDao.capNhatTrangThaiKhachHang(pdp.getMaKH(), TrangThaiKhachHang.CHECK_OUT);
+                }
+
+                ThongBaoUtil.hienThiThongBao("Thành công", "Đã trả phòng và cập nhật trạng thái khách hàng!");
+                refreshData();
                 boolean daThanhToanXong = moDialogThanhToan(hd);
                 if(daThanhToanXong) {
                     thucHienTraPhong(maPhieu, listCT);

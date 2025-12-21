@@ -54,26 +54,32 @@ PRINT N'-- 3. Đang thêm dữ liệu bảng NhanVien...';
 INSERT INTO NhanVien (maNV, hoTen, soDT, diaChi, chucVu, ngaySinh)
 VALUES ('NV001', N'Phạm Văn Nam', '0901111222', N'Hà Nội', N'Quản lý', '1988-01-10'),
        ('NV002', N'Nguyễn Thị Linh', '0912222333', N'TP.HCM', N'Lễ tân', '1995-07-12'),
-       ('NV003', N'Trần Văn Hùng', '0923333444', N'Đà Nẵng', N'Phục vụ', '1997-03-05'),
+       ('NV003', N'Trần Văn Hùng', '0923333444', N'Đà Nẵng', N'Lễ tân', '1997-03-05'),
        ('NV004', N'Lê Thị Mai', '0934444555', N'Cần Thơ', N'Lễ tân', '1996-09-21'),
-       ('NV005', N'Ngô Văn Long', '0945555666', N'Hải Phòng', N'Bảo vệ', '1990-02-11');
+       ('NV005', N'Ngô Văn Long', '0945555666', N'Hải Phòng', N'Lễ tân', '1990-02-11');
 GO
 
 -------------------------------------------------------------------
 -- 4. TaiKhoan (Tài khoản)
 -------------------------------------------------------------------
 PRINT N'-- 4. Đang thêm dữ liệu bảng TaiKhoan...';
-INSERT INTO TaiKhoan (maTK, maNV, tenDangNhap, matKhauHash, quyen)
-VALUES ('TK001', 'NV001', 'manager', '4XKzp/qajqT93GnwSpzI3k00cLhgU/fEFLw/RW1tsqjv6NREO9+L+8ckMRGLxrxY',
-        'Manager'), -- Mật khẩu giả định: 'manager123'
-       ('TK002', 'NV002', 'staff', 'j+NE/7ITxbv5hcu41ShyHze7rEOu+3rJVS/pCcDVyKs1xKlDgyPNxFmQhcC0iVZ3',
-        'Staff'); -- Mật khẩu giả định: 'staff123';
+PRINT N'-- 5. Đang thêm dữ liệu bảng KhachHang...';
 GO
 
 -------------------------------------------------------------------
 -- 5. KhachHang (Khách hàng)
 -------------------------------------------------------------------
-PRINT N'-- 5. Đang thêm dữ liệu bảng KhachHang...';
+INSERT INTO TaiKhoan (maTK, maNV, tenDangNhap, matKhauHash, quyen)
+VALUES ('TK001', 'NV001', 'manager', '4XKzp/qajqT93GnwSpzI3k00cLhgU/fEFLw/RW1tsqjv6NREO9+L+8ckMRGLxrxY',
+        'Manager'), -- Mật khẩu giả định: 'manager123'
+       ('TK002', 'NV002', 'staff', 'j+NE/7ITxbv5hcu41ShyHze7rEOu+3rJVS/pCcDVyKs1xKlDgyPNxFmQhcC0iVZ3',
+        'Staff'), -- Mật khẩu giả định: 'staff123';
+       -- Nhân viên Trần Văn Hùng
+       ('TK003', 'NV003', 'hungtran', 'j+NE/7ITxbv5hcu41ShyHze7rEOu+3rJVS/pCcDVyKs1xKlDgyPNxFmQhcC0iVZ3', 'Staff'),
+       -- Nhân viên Lê Thị Mai
+       ('TK004', 'NV004', 'maile', 'j+NE/7ITxbv5hcu41ShyHze7rEOu+3rJVS/pCcDVyKs1xKlDgyPNxFmQhcC0iVZ3', 'Staff'),
+       -- Nhân viên Ngô Văn Long
+       ('TK005', 'NV005', 'longngo', 'j+NE/7ITxbv5hcu41ShyHze7rEOu+3rJVS/pCcDVyKs1xKlDgyPNxFmQhcC0iVZ3', 'Staff');
 INSERT INTO KhachHang (maKH, hoTen, soDT, email, diaChi, ngaySinh, ghiChu, CCCD, hangKhach, trangThai)
 VALUES ('KH001', N'Nguyễn Thanh Tùng', '0912345678', 'tung.nguyen@company.com', N'Hà Nội', '1995-02-15',
         N'Khách doanh nghiệp, cần hóa đơn VAT', '012345678901', N'Khách doanh nghiệp', 'DANG_LUU_TRU'),

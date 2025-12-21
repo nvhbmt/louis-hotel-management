@@ -74,14 +74,8 @@ public class MenuData {
         );
 
         TreeItem<MenuItemModel> nhanVienGroup = new TreeItem<>(
-                new MenuItemModel("Nhân viên", "mdi2a-account-group", null)
+                new MenuItemModel("Nhân viên", "mdi2a-account-group", "/com/example/louishotelmanagement/fxml/quan-ly-nhan-vien-view.fxml")
         );
-        nhanVienGroup.getChildren().addAll(List.of(
-                new TreeItem<>(new MenuItemModel("Quản lý nhân viên", "mdi2a-account-group",
-                        "/com/example/louishotelmanagement/fxml/quan-ly-nhan-vien-view.fxml")),
-                new TreeItem<>(new MenuItemModel("Quản lý tài khoản", "mdi2k-key",
-                        "/com/example/louishotelmanagement/fxml/quan-ly-tai-khoan-view.fxml"))
-        ));
 
         TreeItem<MenuItemModel> khachHangGroup = new TreeItem<>(
                 new MenuItemModel("Khách hàng", "mdi2a-account",

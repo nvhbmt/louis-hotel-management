@@ -1,41 +1,41 @@
 package com.example.louishotelmanagement.controller;
 
 import com.example.louishotelmanagement.dao.NhanVienDAO;
+import com.example.louishotelmanagement.dao.TaiKhoanDAO;
 import com.example.louishotelmanagement.model.NhanVien;
-
+import com.example.louishotelmanagement.model.TaiKhoan;
+import com.example.louishotelmanagement.util.PasswordUtil;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.StringTokenizer; // Cần cho định dạng họ tên
+import java.util.StringTokenizer;
 
 public class NhanVienDialogController {
 
-
     @FXML private Label lblTitle;
-    @FXML private TextField tfMaNV;
-    @FXML private TextField tfHoTen;
+    @FXML private TextField tfMaNV, tfHoTen, tfSoDT, tfDiaChi, tfTenDangNhap;
+    @FXML private PasswordField pfMatKhau;
     @FXML private DatePicker dpNgaySinh;
-    @FXML private TextField tfSoDT;
-    @FXML private TextField tfDiaChi;
-    @FXML private ComboBox<String> cbChucVu;
-    @FXML private Button btnLuu;
-    @FXML private Button btnHuy;
-
+    @FXML private ComboBox<String> cbChucVu, cbQuyen;
+    @FXML private CheckBox ckTrangThai;
+    @FXML private Button btnLuu, btnHuy;
 
     private NhanVienDAO nhanVienDAO;
+    private TaiKhoanDAO taiKhoanDAO;
     private NhanVien nhanVienToEdit;
+    private TaiKhoan taiKhoanToEdit;
     private boolean isEditMode = false;
 
     public void initialize() {
         nhanVienDAO = new NhanVienDAO();
-        cbChucVu.setItems(FXCollections.observableArrayList(
-                "Quản lý", "Lễ tân", "Nhân viên"
-        ));
+        taiKhoanDAO = new TaiKhoanDAO();
+
+        cbChucVu.setItems(FXCollections.observableArrayList("Quản lý", "Lễ tân"));
+        cbQuyen.setItems(FXCollections.observableArrayList("Manager", "Staff"));
     }
 
     public void setNhanVien(NhanVien nhanVien) {
@@ -43,169 +43,120 @@ public class NhanVienDialogController {
         isEditMode = (nhanVien != null);
 
         if (isEditMode) {
-
-            lblTitle.setText("Sửa Thông Tin Nhân Viên");
-            tfMaNV.setText(nhanVien.getMaNV());
-            tfMaNV.setEditable(false); // Không cho sửa Mã NV khi sửa
-            tfHoTen.setText(nhanVien.getHoTen());
-            dpNgaySinh.setValue(nhanVien.getNgaySinh());
-            tfSoDT.setText(nhanVien.getSoDT());
-            tfDiaChi.setText(nhanVien.getDiaChi());
-            cbChucVu.setValue(nhanVien.getChucVu());
+            lblTitle.setText("Sửa Thông Tin Nhân Viên & Tài Khoản");
+            loadDataToForm();
         } else {
-
-            lblTitle.setText("Thêm Nhân Viên Mới");
-            tfMaNV.setEditable(false); // Mã NV tự sinh, không cho sửa
-            // Lấy mã NV tiếp theo từ DAO và hiển thị
+            lblTitle.setText("Thêm Nhân Viên & Tài Khoản Mới");
             try {
-                String maNVTiepTheo = nhanVienDAO.layMaNVTiepTheo();
-                tfMaNV.setText(maNVTiepTheo);
+                tfMaNV.setText(nhanVienDAO.layMaNVTiepTheo());
             } catch (SQLException e) {
                 e.printStackTrace();
-                hienThiLoi("Lỗi Lấy Mã NV", "Không thể lấy mã nhân viên tiếp theo: " + e.getMessage());
-                tfMaNV.setText("Lỗi"); // Hiển thị lỗi nếu không lấy được mã
             }
+        }
+    }
+
+    private void loadDataToForm() {
+        // Load thông tin NV
+        tfMaNV.setText(nhanVienToEdit.getMaNV());
+        tfHoTen.setText(nhanVienToEdit.getHoTen());
+        dpNgaySinh.setValue(nhanVienToEdit.getNgaySinh());
+        tfSoDT.setText(nhanVienToEdit.getSoDT());
+        tfDiaChi.setText(nhanVienToEdit.getDiaChi());
+        cbChucVu.setValue(nhanVienToEdit.getChucVu());
+
+        // Load thông tin TK liên quan
+        try {
+            taiKhoanToEdit = taiKhoanDAO.timTaiKhoanTheoMaNV(nhanVienToEdit.getMaNV());
+            if (taiKhoanToEdit != null) {
+                tfTenDangNhap.setText(taiKhoanToEdit.getTenDangNhap());
+                cbQuyen.setValue(taiKhoanToEdit.getQuyen());
+                ckTrangThai.setSelected(taiKhoanToEdit.getTrangThai());
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
     @FXML
-    private void handleLuu(ActionEvent event) {
-        if (validateInput()) {
-            try {
-                String maNV = tfMaNV.getText().trim();
+    private void handleLuu() {
+        if (!validateInput()) return;
 
-                String hoTenRaw = tfHoTen.getText().trim();
-                String hoTenFormatted = formatProperCase(hoTenRaw); // Gọi hàm định dạng
+        try {
+            // 1. Chuẩn bị dữ liệu Nhân Viên
+            String hoTenFormatted = formatProperCase(tfHoTen.getText());
+            NhanVien nv = new NhanVien(tfMaNV.getText(), hoTenFormatted, tfSoDT.getText(),
+                    tfDiaChi.getText(), cbChucVu.getValue(), dpNgaySinh.getValue());
 
-                LocalDate ngaySinh = dpNgaySinh.getValue();
-                String soDT = tfSoDT.getText().trim();
-                String diaChi = tfDiaChi.getText().trim();
-                String chucVu = cbChucVu.getValue();
-
-
-                NhanVien nv = new NhanVien(maNV, hoTenFormatted, soDT, diaChi, chucVu, ngaySinh);
-
-                boolean success;
-                if (isEditMode) {
-                    success = nhanVienDAO.SuaNhanVien(nv);
-                } else {
-                    success = nhanVienDAO.ThemNhanVien(nv);
-                }
-
-                if (success) {
-                    hienThiThongBao("Thành Công", (isEditMode ? "Cập nhật" : "Thêm") + " nhân viên thành công.");
-                    closeDialog();
-                } else {
-                    hienThiLoi("Thất Bại", "Không thể lưu thông tin nhân viên.");
-                }
-
-            } catch (SQLException e) {
-                e.printStackTrace();
-
-                if (!isEditMode && e.getMessage().contains("PRIMARY KEY constraint")) {
-                    hienThiLoi("Lỗi Trùng Mã", "Mã nhân viên '" + tfMaNV.getText() + "' đã tồn tại!");
-                } else {
-                    hienThiLoi("Lỗi CSDL", "Đã xảy ra lỗi khi lưu: " + e.getMessage());
-                }
+            boolean successNV;
+            if (isEditMode) {
+                successNV = nhanVienDAO.SuaNhanVien(nv);
+            } else {
+                successNV = nhanVienDAO.ThemNhanVien(nv);
             }
-        }
-    }
 
-    @FXML
-    private void handleHuy(ActionEvent event) {
-        closeDialog();
-    }
-
-    // --- Hàm định dạng họ tên ---
-
-    private String formatProperCase(String input) {
-        if (input == null || input.isEmpty()) {
-            return "";
-        }
-        //xóa space
-        String cleanedInput = input.trim().replaceAll("\\s+", " ");
-
-        StringBuilder properCase = new StringBuilder();
-        StringTokenizer tokenizer = new StringTokenizer(cleanedInput, " "); // Tách chuỗi theo khoảng trắng
-
-        while (tokenizer.hasMoreTokens()) {
-            String word = tokenizer.nextToken();
-            // Viết hoa
-            properCase.append(Character.toUpperCase(word.charAt(0)))
-                    .append(word.substring(1).toLowerCase());
-            if (tokenizer.hasMoreTokens()) {
-                properCase.append(" "); // Thêm khoảng trắng giữa các từ
+            // 2. Chuẩn bị dữ liệu Tài Khoản (chỉ thực hiện nếu NV lưu thành công)
+            if (successNV) {
+                luuTaiKhoanLogic(nv);
+                hienThiThongBao("Thành Công", "Đã lưu thông tin nhân viên và tài khoản.");
+                closeDialog();
             }
+
+        } catch (SQLException e) {
+            hienThiLoi("Lỗi CSDL", "Chi tiết: " + e.getMessage());
         }
-        return properCase.toString();
     }
 
+    private void luuTaiKhoanLogic(NhanVien nv) throws SQLException {
+        String tenDN = tfTenDangNhap.getText().trim();
+        String mkRaw = pfMatKhau.getText();
+        String quyen = cbQuyen.getValue();
+        boolean trangThai = ckTrangThai.isSelected();
+
+        if (isEditMode && taiKhoanToEdit != null) {
+            // Cập nhật tài khoản hiện có
+            String mkHash = (mkRaw.isEmpty()) ? taiKhoanToEdit.getMatKhauHash() : PasswordUtil.hashPassword(mkRaw);
+            taiKhoanDAO.capNhatTaiKhoan(taiKhoanToEdit.getMaTK(), nv, tenDN, mkHash, quyen, trangThai);
+        } else {
+            // Thêm mới tài khoản (nếu chưa có)
+            String maTK = taiKhoanDAO.layMaTKTiepTheo();
+            String mkHash = PasswordUtil.hashPassword(mkRaw.isEmpty() ? "123456" : mkRaw);
+            taiKhoanDAO.themTaiKhoan(maTK, nv, tenDN, mkHash, quyen, trangThai);
+        }
+    }
 
     private boolean validateInput() {
-        String errorMessage = "";
-        LocalDate today = LocalDate.now();
+        StringBuilder sb = new StringBuilder();
+        if (tfHoTen.getText().isEmpty()) sb.append("- Họ tên không được để trống!\n");
+        if (tfTenDangNhap.getText().isEmpty()) sb.append("- Tên đăng nhập không được để trống!\n");
+        if (!isEditMode && pfMatKhau.getText().isEmpty()) sb.append("- Mật khẩu không được để trống khi tạo mới!\n");
+        if (cbChucVu.getValue() == null) sb.append("- Chưa chọn chức vụ!\n");
+        if (cbQuyen.getValue() == null) sb.append("- Chưa chọn quyền tài khoản!\n");
 
-        //kiểm tra
-        if (tfMaNV.getText() == null || tfMaNV.getText().trim().isEmpty()) {
-            errorMessage += "Mã nhân viên không được để trống!\n";
-        }
-        if (tfHoTen.getText() == null || tfHoTen.getText().trim().isEmpty()) {
-            errorMessage += "Họ tên không được để trống!\n";
-        }
-
-        if (tfDiaChi.getText() == null || tfDiaChi.getText().trim().isEmpty()) {
-            errorMessage += "Địa chỉ không được để trống!\n";
-        }
-        if (cbChucVu.getValue() == null || cbChucVu.getValue().isEmpty()) {
-            errorMessage += "Chức vụ không được để trống!\n";
-        }
-
-
-        String soDT = tfSoDT.getText();
-        if (soDT == null || soDT.trim().isEmpty()) {
-            errorMessage += "Số điện thoại không được để trống!\n";
-        } else if (!soDT.trim().matches("^\\d{11}$")) { // Thay đổi regex: ^ bắt đầu, \d{11} đúng 11 chữ số, $ kết thúc
-            errorMessage += "Số điện thoại phải bao gồm đúng 11 chữ số!\n";
-        }
-
-
-        LocalDate ngaySinh = dpNgaySinh.getValue();
-        if (ngaySinh == null) {
-            errorMessage += "Ngày sinh không được để trống!\n";
-        } else {
-            if (ngaySinh.isAfter(today)) {
-                errorMessage += "Ngày sinh không thể là một ngày trong tương lai!\n";
-            } else {
-                LocalDate ngayDu18Tuoi = ngaySinh.plusYears(18);
-                if (ngayDu18Tuoi.isAfter(today)) {
-                    errorMessage += "Nhân viên phải đủ 18 tuổi trở lên!\n";
-                }
-            }
-        }
-        if (errorMessage.isEmpty()) {
-            return true;
-        } else {
-            hienThiLoi("Dữ liệu không hợp lệ", errorMessage);
+        if (sb.length() > 0) {
+            hienThiLoi("Dữ liệu thiếu", sb.toString());
             return false;
         }
-    }
-    private void closeDialog() {
-        Stage stage = (Stage) btnHuy.getScene().getWindow();
-        stage.close();
-    }
-    private void hienThiThongBao(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
+        return true;
     }
 
-    private void hienThiLoi(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
+    private String formatProperCase(String input) {
+        if (input == null || input.isEmpty()) return "";
+        String cleaned = input.trim().replaceAll("\\s+", " ");
+        StringBuilder result = new StringBuilder();
+        StringTokenizer st = new StringTokenizer(cleaned, " ");
+        while (st.hasMoreTokens()) {
+            String word = st.nextToken();
+            result.append(Character.toUpperCase(word.charAt(0))).append(word.substring(1).toLowerCase()).append(" ");
+        }
+        return result.toString().trim();
+    }
+
+    @FXML private void handleHuy() { closeDialog(); }
+    private void closeDialog() { ((Stage) btnHuy.getScene().getWindow()).close(); }
+    private void hienThiThongBao(String t, String m) {
+        Alert a = new Alert(Alert.AlertType.INFORMATION); a.setTitle(t); a.setContentText(m); a.showAndWait();
+    }
+    private void hienThiLoi(String t, String m) {
+        Alert a = new Alert(Alert.AlertType.ERROR); a.setTitle(t); a.setContentText(m); a.showAndWait();
     }
 }
