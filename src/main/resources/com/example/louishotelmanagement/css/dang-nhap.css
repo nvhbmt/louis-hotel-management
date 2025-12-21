@@ -102,7 +102,7 @@
 
 /* Modern Login Button */
 .modern-login-button {
-    -fx-background-color: linear-gradient(to right, #667eea 0%, #764ba2 100%);
+    -fx-background-color: linear-gradient(to right, #3498db 0%, #5dade2 100%);
     -fx-background-radius: 25;
     -fx-text-fill: white;
     -fx-font-family: "System Bold";
@@ -111,20 +111,20 @@
     -fx-pref-height: 50px;
     -fx-pref-width: 200px;
     -fx-cursor: hand;
-    -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.3), 8, 0, 0, 0);
+    -fx-effect: dropshadow(gaussian, rgba(52, 152, 219, 0.3), 8, 0, 0, 0);
     -fx-transition: all 0.3s ease;
 }
 
 .modern-login-button:hover {
-    -fx-background-color: linear-gradient(to right, #5a6fd8 0%, #6a4190 100%);
-    -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.4), 12, 0, 0, 0);
+    -fx-background-color: linear-gradient(to right, #2980b9 0%, #3498db 100%);
+    -fx-effect: dropshadow(gaussian, rgba(52, 152, 219, 0.4), 12, 0, 0, 0);
     -fx-scale-x: 1.05;
     -fx-scale-y: 1.05;
 }
 
 .modern-login-button:pressed {
-    -fx-background-color: linear-gradient(to right, #4e5fc7 0%, #5e377f 100%);
-    -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.2), 5, 0, 0, 0);
+    -fx-background-color: linear-gradient(to right, #21618c 0%, #2e86c1 100%);
+    -fx-effect: dropshadow(gaussian, rgba(52, 152, 219, 0.2), 5, 0, 0, 0);
 }
 
 /* Error Message */

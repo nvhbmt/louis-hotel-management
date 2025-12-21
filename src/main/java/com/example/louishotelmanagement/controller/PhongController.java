@@ -558,6 +558,6 @@ public class PhongController implements Initializable {
 
     @FXML
     private void moThanhToan(ActionEvent actionEvent) {
-        if (switcher != null) switcher.switchContent("/com/example/louishotelmanagement/fxml/thanh-toan-view.fxml");
+        if (switcher != null) switcher.switchContent("/com/example/louishotelmanagement/fxml/quan-ly-hoa-don-view.fxml");
     }
 }

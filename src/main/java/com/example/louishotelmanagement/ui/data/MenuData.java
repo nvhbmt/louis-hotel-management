@@ -59,12 +59,12 @@ public class MenuData {
         );
 
         TreeItem<MenuItemModel> hoaDonGroup = new TreeItem<>(
-                new MenuItemModel("Hóa đơn", "mdi2c-cash-multiple", "/com/example/louishotelmanagement/fxml/thanh-toan-view.fxml")
+                new MenuItemModel("Hóa đơn", "mdi2c-cash-multiple", "/com/example/louishotelmanagement/fxml/quan-ly-hoa-don-view.fxml")
         );
 
 //        if ("Manager".equals(userRole)) {
 //            hoaDonGroup.getChildren().addAll(List.of(
-//                new TreeItem<>(new MenuItemModel("Quản lí hóa đơn", "mdi2f-file-document",
+//                new TreeItem<>(new MenuItemModel("Quản lý hóa đơn", "mdi2f-file-document",
 //                "/com/example/louishotelmanagement/fxml/hoa-don-view.fxml"))
 //            ));
 //        }

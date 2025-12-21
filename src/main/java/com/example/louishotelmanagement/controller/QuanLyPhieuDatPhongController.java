@@ -2,9 +2,10 @@ package com.example.louishotelmanagement.controller;
 
 import com.example.louishotelmanagement.dao.CTHoaDonPhongDAO;
 import com.example.louishotelmanagement.dao.KhachHangDAO;
-import com.example.louishotelmanagement.dao.KhuyenMaiDAO;
 import com.example.louishotelmanagement.dao.PhieuDatPhongDAO;
 import com.example.louishotelmanagement.model.*;
+import com.example.louishotelmanagement.util.BadgeUtil;
+import com.example.louishotelmanagement.util.BadgeVariant;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
@@ -64,7 +65,7 @@ public class QuanLyPhieuDatPhongController implements Initializable {
     @FXML
     public Label lblSoPhieuDaDat;
     @FXML
-    private TableColumn<PhieuDatPhong, String> colTrangThai;
+    private TableColumn<PhieuDatPhong, TrangThaiPhieuDatPhong> colTrangThai;
     @FXML
     public TableColumn<PhieuDatPhong, Void> colThaoTac;
 
@@ -196,24 +197,21 @@ public class QuanLyPhieuDatPhongController implements Initializable {
             }
         });
 
-        // Format trạng thái với màu sắc
+        // Format trạng thái với màu sắc sử dụng BadgeUtil
         colTrangThai.setCellFactory(_ -> new TableCell<>() {
             @Override
-            protected void updateItem(String item, boolean empty) {
+            protected void updateItem(TrangThaiPhieuDatPhong item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty || item == null) {
                     setText(null);
-                    getStyleClass().clear();
+                    setGraphic(null);
                 } else {
-                    setText(item);
-                    getStyleClass().clear();
-                    switch (item.toLowerCase()) {
-                        case "Đã đặt" -> getStyleClass().add("status-dadat");
-                        case "Hoàn thành" -> getStyleClass().add("status-hoanthanh");
-                        case "Đang sử dụng" -> getStyleClass().add("status-trong");
-                        default -> {
-                            // Không thêm style class nào
-                        }
+                    switch (item) {
+                        case DA_DAT -> setGraphic(BadgeUtil.createBadge(item.toString(), BadgeVariant.INFO));
+                        case HOAN_THANH -> setGraphic(BadgeUtil.createBadge(item.toString(), BadgeVariant.SUCCESS));
+                        case DANG_SU_DUNG -> setGraphic(BadgeUtil.createBadge(item.toString(), BadgeVariant.WARNING));
+                        case DA_HUY -> setGraphic(BadgeUtil.createBadge(item.toString(), BadgeVariant.DANGER));
+                        default -> setGraphic(BadgeUtil.createBadge(item.toString(), BadgeVariant.DEFAULT));
                     }
                 }
             }

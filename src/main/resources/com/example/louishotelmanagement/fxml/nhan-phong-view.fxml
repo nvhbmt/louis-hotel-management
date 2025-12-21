@@ -1,61 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.DatePicker?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
-
-<BorderPane prefHeight="864.0" prefWidth="1014.4" stylesheets="@../css/nhan-phong.css" xmlns="http://javafx.com/javafx/24" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.NhanPhongController">
+<?import javafx.scene.layout.*?>
+<BorderPane prefHeight="864.0" prefWidth="1014.4" stylesheets="@../css/nhan-phong.css"
+            xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.louishotelmanagement.controller.NhanPhongController">
     <center>
         <VBox styleClass="info-section" BorderPane.alignment="CENTER">
             <children>
-                <Label styleClass="section-heading" text="Thông tin nhận phòng" />
+                <Label styleClass="section-heading" text="Thông tin nhận phòng"/>
                 <HBox styleClass="input-row">
                     <children>
-                        <Label styleClass="input-label" text="Khách hàng" />
-                        <ComboBox fx:id="dsKhachHang" prefHeight="27.0" prefWidth="526.0" styleClass="combo-box" />
+                        <Label styleClass="input-label" text="Khách hàng"/>
+                        <ComboBox fx:id="dsKhachHang" prefHeight="27.0" prefWidth="526.0" styleClass="combo-box"/>
                     </children>
                 </HBox>
                 <HBox styleClass="input-row">
                     <children>
-                        <Label styleClass="input-label" text="Số điện thoại" />
-                        <TextField fx:id="soDT" editable="false" styleClass="text-field" />
+                        <Label styleClass="input-label" text="Số điện thoại"/>
+                        <TextField fx:id="soDT" editable="false" styleClass="text-field"/>
                     </children>
                 </HBox>
                 <HBox styleClass="input-row">
                     <children>
-                        <Label styleClass="input-label" text="CCCD" />
-                        <TextField fx:id="CCCD" editable="false" styleClass="text-field" />
+                        <Label styleClass="input-label" text="CCCD"/>
+                        <TextField fx:id="CCCD" editable="false" styleClass="text-field"/>
                     </children>
                 </HBox>
                 <HBox styleClass="input-row">
                     <children>
-                        <Label styleClass="input-label" text="Phòng" />
-                        <ComboBox fx:id="dsPhong" styleClass="combo-box" />
+                        <Label styleClass="input-label" text="Phòng"/>
+                        <ComboBox fx:id="dsPhong" styleClass="combo-box"/>
                     </children>
                 </HBox>
                 <HBox styleClass="input-row">
                     <children>
-                        <Label styleClass="input-label" text="Ngày đặt" />
-                        <DatePicker fx:id="ngayDat" styleClass="date-picker" />
+                        <Label styleClass="input-label" text="Ngày đặt"/>
+                        <DatePicker fx:id="ngayDat" styleClass="date-picker"/>
                     </children>
                 </HBox>
 
                 <HBox alignment="CENTER" prefHeight="49.0" prefWidth="880.0">
                     <children>
-                        <Button fx:id="btnCheck" onAction="#handleCheck" styleClass="button-base" text="Check" />
+                        <Button fx:id="btnCheck" onAction="#handleCheck" styleClass="button-base" text="Check"/>
                     </children>
                 </HBox>
 
-                <Label styleClass="section-heading" text="Thông tin phòng" />
+                <Label styleClass="section-heading" text="Thông tin phòng"/>
 
                 <VBox alignment="CENTER" fillWidth="false" prefHeight="270.0" prefWidth="880.0">
                     <children>
@@ -63,38 +57,38 @@
                             <children>
                                 <HBox>
                                     <children>
-                                        <Label text="Mã phiếu" />
-                                        <TextField fx:id="maPhieu" editable="false" styleClass="text-field" />
+                                        <Label text="Mã phiếu"/>
+                                        <TextField fx:id="maPhieu" editable="false" styleClass="text-field"/>
                                     </children>
                                 </HBox>
                                 <HBox>
                                     <children>
-                                        <Label text="Mã phòng" />
-                                        <TextField fx:id="maPhong" editable="false" styleClass="text-field" />
+                                        <Label text="Mã phòng"/>
+                                        <TextField fx:id="maPhong" editable="false" styleClass="text-field"/>
                                     </children>
                                 </HBox>
                                 <HBox>
                                     <children>
-                                        <Label text="Tầng" />
-                                        <TextField fx:id="tang" editable="false" styleClass="text-field" />
+                                        <Label text="Tầng"/>
+                                        <TextField fx:id="tang" editable="false" styleClass="text-field"/>
                                     </children>
                                 </HBox>
                                 <HBox>
                                     <children>
-                                        <Label text="Họ và tên" />
-                                        <TextField fx:id="hoTen" editable="false" styleClass="text-field" />
+                                        <Label text="Họ và tên"/>
+                                        <TextField fx:id="hoTen" editable="false" styleClass="text-field"/>
                                     </children>
                                 </HBox>
                                 <HBox>
                                     <children>
-                                        <Label text="Ngày đến" />
-                                        <DatePicker fx:id="ngayDen" styleClass="date-picker" />
+                                        <Label text="Ngày đến"/>
+                                        <DatePicker fx:id="ngayDen" styleClass="date-picker"/>
                                     </children>
                                 </HBox>
                                 <HBox>
                                     <children>
-                                        <Label text="Ngày đi" />
-                                        <DatePicker fx:id="ngayDi" styleClass="date-picker" />
+                                        <Label text="Ngày đi"/>
+                                        <DatePicker fx:id="ngayDi" styleClass="date-picker"/>
                                     </children>
                                 </HBox>
                             </children>
@@ -107,32 +101,24 @@
     <bottom>
         <HBox alignment="CENTER" prefHeight="108.0" prefWidth="1014.0" BorderPane.alignment="CENTER">
             <children>
-                <Button fx:id="btnNhanPhong" onAction="#handleNhanPhong" styleClass="button-base" text="Nhận phòng" />
+                <Button fx:id="btnNhanPhong" onAction="#handleNhanPhong" styleClass="button-base" text="Nhận phòng"/>
             </children>
         </HBox>
     </bottom>
     <top>
-      <HBox spacing="16.0">
-         <children>
-                  <ImageView fitHeight="72.0" fitWidth="72.0" pickOnBounds="true" preserveRatio="true">
-                      <image>
-                          <Image url="@../image/suitcases.png" />
-                      </image>
-                  </ImageView>
-            <VBox>
-               <children>
-                      <Label styleClass="header-title" text="Nhận phòng" />
-                      <Label text="Thực hiện chức năng nhận phòng cho khách" textFill="#7f8c8d">
-                          <font>
-                              <Font size="14.0" />
-                          </font>
-                      </Label>
-               </children>
+        <HBox styleClass="header-section">
+            <VBox styleClass="header-icon-container">
+                <ImageView styleClass="header-icon">
+                    <Image url="@../image/suitcases.png"/>
+                </ImageView>
             </VBox>
-         </children>
-      </HBox>
+            <VBox styleClass="header-title-section">
+                <Label styleClass="header-title" text="Nhận phòng"/>
+                <Label styleClass="header-subtitle" text="Thực hiện chức năng nhận phòng cho khách"/>
+            </VBox>
+        </HBox>
     </top>
-   <padding>
-      <Insets bottom="32.0" left="32.0" right="32.0" top="32.0" />
-   </padding>
+    <padding>
+        <Insets bottom="32.0" left="32.0" right="32.0" top="32.0"/>
+    </padding>
 </BorderPane>

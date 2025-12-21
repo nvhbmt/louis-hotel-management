@@ -1,118 +1,120 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
-
-<BorderPane prefHeight="864.0" prefWidth="1014.4" stylesheets="@../css/doi-phong.css, @../css/dat-phong.css" xmlns="http://javafx.com/javafx/24" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.DoiPhongController">
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<BorderPane prefHeight="864.0" prefWidth="1014.4" stylesheets="@../css/doi-phong.css, @../css/dat-phong.css"
+            xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.louishotelmanagement.controller.DoiPhongController">
     <center>
-        <VBox alignment="TOP_CENTER" fillWidth="false" prefHeight="474.0" prefWidth="922.0" BorderPane.alignment="CENTER">
+        <VBox alignment="TOP_CENTER" fillWidth="false" prefHeight="474.0" prefWidth="922.0"
+              BorderPane.alignment="CENTER">
             <children>
 
                 <Label styleClass="section-heading" text="Thông tin đổi phòng">
-               <graphic>
-                  <ImageView fitHeight="53.0" fitWidth="57.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../image/hotel_key.png" />
-                     </image>
-                  </ImageView>
-               </graphic></Label>
+                    <graphic>
+                        <ImageView fitHeight="53.0" fitWidth="57.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../image/hotel_key.png"/>
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Label>
 
                 <HBox styleClass="input-row">
                     <children>
-                        <Label alignment="TOP_LEFT" contentDisplay="CENTER" prefHeight="46.0" prefWidth="75.0" styleClass="input-label" text="Khách hàng" />
-                  <ImageView fitHeight="32.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../image/detective.png" />
-                     </image>
-                     <HBox.margin>
-                        <Insets bottom="20.0" />
-                     </HBox.margin>
-                  </ImageView>
+                        <Label alignment="TOP_LEFT" contentDisplay="CENTER" prefHeight="46.0" prefWidth="75.0"
+                               styleClass="input-label" text="Khách hàng"/>
+                        <ImageView fitHeight="32.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../image/detective.png"/>
+                            </image>
+                            <HBox.margin>
+                                <Insets bottom="20.0"/>
+                            </HBox.margin>
+                        </ImageView>
                         <ComboBox fx:id="dsKhachHang" prefHeight="30.0" prefWidth="600.0" styleClass="combo-box">
-                     <HBox.margin>
-                        <Insets bottom="20.0" />
-                     </HBox.margin></ComboBox>
+                            <HBox.margin>
+                                <Insets bottom="20.0"/>
+                            </HBox.margin>
+                        </ComboBox>
                     </children>
                 </HBox>
 
                 <HBox styleClass="input-row">
                     <children>
-                        <Label styleClass="input-label" text="Phòng hiện tại" />
-                  <ImageView fitHeight="34.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../image/double-bed.png" />
-                     </image>
-                     <HBox.margin>
-                        <Insets bottom="20.0" />
-                     </HBox.margin>
-                  </ImageView>
+                        <Label styleClass="input-label" text="Phòng hiện tại"/>
+                        <ImageView fitHeight="34.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../image/double-bed.png"/>
+                            </image>
+                            <HBox.margin>
+                                <Insets bottom="20.0"/>
+                            </HBox.margin>
+                        </ImageView>
                         <ComboBox fx:id="dsPhongHienTai" prefWidth="600.0" styleClass="combo-box">
-                     <HBox.margin>
-                        <Insets bottom="20.0" />
-                     </HBox.margin></ComboBox>
+                            <HBox.margin>
+                                <Insets bottom="20.0"/>
+                            </HBox.margin>
+                        </ComboBox>
                     </children>
                 </HBox>
 
                 <HBox styleClass="input-row">
                     <children>
-                        <Label prefHeight="28.0" styleClass="input-label" text="Phòng muốn đổi" />
-                  <ImageView fitHeight="34.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../image/double-bed.png" />
-                     </image>
-                     <HBox.margin>
-                        <Insets bottom="20.0" />
-                     </HBox.margin>
-                  </ImageView>
+                        <Label prefHeight="28.0" styleClass="input-label" text="Phòng muốn đổi"/>
+                        <ImageView fitHeight="34.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../image/double-bed.png"/>
+                            </image>
+                            <HBox.margin>
+                                <Insets bottom="20.0"/>
+                            </HBox.margin>
+                        </ImageView>
                         <ComboBox fx:id="dsPhong" prefWidth="600.0" styleClass="combo-box">
-                     <HBox.margin>
-                        <Insets bottom="20.0" />
-                     </HBox.margin></ComboBox>
+                            <HBox.margin>
+                                <Insets bottom="20.0"/>
+                            </HBox.margin>
+                        </ComboBox>
                     </children>
                     <VBox.margin>
-                        <Insets bottom="30.0" />
+                        <Insets bottom="30.0"/>
                     </VBox.margin>
                 </HBox>
                 <HBox alignment="CENTER" prefHeight="100.0" prefWidth="600.0">
                     <children>
-                        <ComboBox fx:id="cbTang" onAction="#handleLocTang" prefHeight="27.0" prefWidth="200.0" promptText="Chọn tầng">
+                        <ComboBox fx:id="cbTang" onAction="#handleLocTang" prefHeight="27.0" prefWidth="200.0"
+                                  promptText="Chọn tầng">
                             <HBox.margin>
-                                <Insets right="20.0" />
+                                <Insets right="20.0"/>
                             </HBox.margin>
                         </ComboBox>
-                        <ComboBox fx:id="cbLocLoaiPhong" onAction="#handleLocLoaiPhong" prefHeight="26.0" prefWidth="250.0" promptText="Chọn loại phòng">
+                        <ComboBox fx:id="cbLocLoaiPhong" onAction="#handleLocLoaiPhong" prefHeight="26.0"
+                                  prefWidth="250.0" promptText="Chọn loại phòng">
                             <HBox.margin>
-                                <Insets right="20.0" />
+                                <Insets right="20.0"/>
                             </HBox.margin>
                         </ComboBox>
 
-                        <Button mnemonicParsing="false" onAction="#handleRefresh" prefHeight="27.0" prefWidth="100.0" style="-fx-background-color: #198754; -fx-text-fill: white;" text="Làm mới" />
+                        <Button mnemonicParsing="false" onAction="#handleRefresh" prefHeight="27.0" prefWidth="100.0"
+                                style="-fx-background-color: #198754; -fx-text-fill: white;" text="Làm mới"/>
 
                     </children>
                 </HBox>
 
-                <Label styleClass="section-heading" text="Danh sách phòng trống" />
+                <Label styleClass="section-heading" text="Danh sách phòng trống"/>
 
                 <TableView fx:id="tablePhong" prefHeight="405.0" prefWidth="1014.0" styleClass="table-view">
                     <columns>
-                        <TableColumn fx:id="maPhong" prefWidth="100.0" text="Mã phòng" />
-                        <TableColumn fx:id="tang" prefWidth="91.0" text="Tầng" />
-                        <TableColumn fx:id="trangThai" prefWidth="187.0" text="Trạng thái" />
-                        <TableColumn fx:id="moTa" prefWidth="300.0" text="Mô tả" />
-                        <TableColumn fx:id="loaiPhong" prefWidth="240.0" text="Loại phòng" />
+                        <TableColumn fx:id="maPhong" prefWidth="100.0" text="Mã phòng"/>
+                        <TableColumn fx:id="tang" prefWidth="91.0" text="Tầng"/>
+                        <TableColumn fx:id="trangThai" prefWidth="187.0" text="Trạng thái"/>
+                        <TableColumn fx:id="moTa" prefWidth="300.0" text="Mô tả"/>
+                        <TableColumn fx:id="loaiPhong" prefWidth="240.0" text="Loại phòng"/>
                     </columns>
                     <VBox.margin>
-                        <Insets left="50.0" right="50.0" />
+                        <Insets left="50.0" right="50.0"/>
                     </VBox.margin>
                 </TableView>
 
@@ -122,32 +124,24 @@
     <bottom>
         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="854.0" BorderPane.alignment="CENTER">
             <children>
-                <Button fx:id="btnDoiPhong" onAction="#handleDoiPhong" styleClass="button-base" text="Đổi phòng" />
+                <Button fx:id="btnDoiPhong" onAction="#handleDoiPhong" styleClass="button-base" text="Đổi phòng"/>
             </children>
         </HBox>
     </bottom>
-   <top>
-      <HBox spacing="16.0">
-         <children>
-                <ImageView fitHeight="72.0" fitWidth="72.0" pickOnBounds="true" preserveRatio="true">
-                    <image>
-                        <Image url="@../image/exchange.png" />
-                    </image>
+    <top>
+        <HBox styleClass="header-section">
+            <VBox styleClass="header-icon-container">
+                <ImageView styleClass="header-icon">
+                    <Image url="@../image/exchange.png"/>
                 </ImageView>
-            <VBox>
-               <children>
-                    <Label styleClass="header-title" text="Đổi phòng" />
-                  <Label text="Thực hiện chức năng đổi phòng cho khách hàng" textFill="#7f8c8d">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </Label>
-               </children>
             </VBox>
-         </children>
-      </HBox>
-   </top>
-   <padding>
-      <Insets bottom="32.0" left="32.0" right="32.0" top="32.0" />
-   </padding>
+            <VBox styleClass="header-title-section">
+                <Label styleClass="header-title" text="Đổi phòng"/>
+                <Label styleClass="header-subtitle" text="Thực hiện chức năng đổi phòng cho khách hàng"/>
+            </VBox>
+        </HBox>
+    </top>
+    <padding>
+        <Insets bottom="32.0" left="32.0" right="32.0" top="32.0"/>
+    </padding>
 </BorderPane>
