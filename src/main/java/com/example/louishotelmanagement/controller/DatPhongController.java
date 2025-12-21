@@ -6,6 +6,7 @@ import com.example.louishotelmanagement.service.AuthService;
 import com.example.louishotelmanagement.util.ContentSwitcher;
 import com.example.louishotelmanagement.util.Refreshable;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -49,43 +50,28 @@ public class DatPhongController implements Initializable, Refreshable {
     public KhachHangDAO Kdao;
     public PhieuDatPhongDAO pdpDao;
     public ArrayList<String> dsMaKH;
-    @FXML
-    public Label SoPhongDaChon;
-    @FXML
-    public Label TongTien;
-    @FXML
-    public Label lbSoDem;
-    @FXML
-    public Label lbLoaiDatPhong;
-    @FXML
-    public Label lbLoadingPhong;
-    @FXML
-    public Label lbSoPhongTrong;
-    @FXML
-    public Label lbTongSoDem;
-    @FXML
-    public VBox vbEmptyState;
+    @FXML public Label SoPhongDaChon;
+    @FXML public Label TongTien;
+    @FXML public Label lbSoDem;
+    @FXML public Label lbLoaiDatPhong;
+    @FXML public Label lbLoadingPhong;
+    @FXML public Label lbSoPhongTrong;
+    @FXML public Label lbTongSoDem;
+    @FXML public VBox vbEmptyState;
     public Button handleThemKhachHang;
     public ComboBox<Integer> cbTang;
     public ComboBox<LoaiPhong> cbLocLoaiPhong;
-    @FXML
-    private TableColumn<Phong, String> colMaPhong;
-    @FXML
-    private TableColumn<Phong, Integer> colTang;
-    @FXML
-    private TableColumn<Phong, TrangThaiPhong> colTrangThai;
-    @FXML
-    private TableColumn<Phong, String> colMoTa;
-    @FXML
-    private TableColumn<Phong, String> colTenLoaiPhong;
-    @FXML
-    private TableColumn<Phong, Double> colDonGia;
-    @FXML
-    public TableColumn<Phong, Void> colThaoTac;
-    @FXML
-    public TableColumn<Phong, Void> colDaChon;
-    @FXML
-    private TableView<Phong> tablePhong;
+
+    @FXML private TableColumn<Phong, String> colMaPhong;
+    @FXML private TableColumn<Phong, Integer> colTang;
+    @FXML private TableColumn<Phong, TrangThaiPhong> colTrangThai;
+    @FXML private TableColumn<Phong, String> colMoTa;
+    @FXML private TableColumn<Phong, String> colTenLoaiPhong;
+    @FXML private TableColumn<Phong, Double> colDonGia;
+    @FXML public TableColumn<Phong, Void> colThaoTac;
+    @FXML public TableColumn<Phong, Void> colDaChon;
+    @FXML private TableView<Phong> tablePhong;
+
     private String maPhieu;
     private CTHoaDonPhongDAO cthdpDao;
     private HoaDonDAO hDao;
@@ -95,6 +81,10 @@ public class DatPhongController implements Initializable, Refreshable {
     private LoaiPhongDAO loaiPhongDAO;
     private ContentSwitcher contentSwitcher;
 
+    public void setContentSwitcher(ContentSwitcher contentSwitcher) {
+        this.contentSwitcher = contentSwitcher;
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Pdao = new PhongDAO();
@@ -103,16 +93,15 @@ public class DatPhongController implements Initializable, Refreshable {
         cthdpDao = new CTHoaDonPhongDAO();
         hDao = new HoaDonDAO();
         loaiPhongDAO = new LoaiPhongDAO();
+
         tablePhong.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         try {
-
             khoiTaoDuLieu();
             khoiTaoTableView();
             khoiTaoComboBox();
             khoiTaoDinhDangNgay();
             khoiTaoDatePickerListeners();
             laydsKhachHang();
-            // Không gọi taiDuLieu() ngay, chờ user chọn ngày
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -129,50 +118,35 @@ public class DatPhongController implements Initializable, Refreshable {
         }
     }
 
-// Trong lớp DatPhongController.java
-
     private void khoiTaoDinhDangNgay() {
-        // Định dạng ngày tháng mong muốn (ví dụ: 25/10/2025)
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
-        // Tạo StringConverter tùy chỉnh cho DatePicker
         StringConverter<LocalDate> converter = new StringConverter<>() {
             @Override
             public String toString(LocalDate date) {
-                // Chuyển LocalDate sang String để hiển thị
                 return (date != null) ? formatter.format(date) : "";
             }
 
             @Override
             public LocalDate fromString(String string) {
-                // Chuyển String nhập vào (hoặc từ FXML) sang LocalDate
                 if (string != null && !string.isEmpty()) {
                     try {
                         return LocalDate.parse(string, formatter);
                     } catch (java.time.format.DateTimeParseException e) {
-                        // Xử lý lỗi nếu người dùng nhập sai định dạng
-                        System.err.println("Lỗi định dạng ngày: " + string);
                         return null;
                     }
                 }
                 return null;
             }
         };
-
-        // Áp dụng converter cho cả hai DatePicker
         ngayDen.setConverter(converter);
         ngayDi.setConverter(converter);
-
-        // *Tùy chọn:* Đảm bảo DatePicker có thể hiển thị ngày hôm nay nếu người dùng chưa chọn
-        // ngayDen.setValue(LocalDate.now());
     }
 
     private void khoiTaoTableView() throws SQLException {
-        // Thiết lập các cột
         colMaPhong.setCellValueFactory(new PropertyValueFactory<>("maPhong"));
         colTang.setCellValueFactory(new PropertyValueFactory<>("tang"));
         colTrangThai.setCellValueFactory(new PropertyValueFactory<>("trangThai"));
-        colTrangThai.setCellFactory(_ -> new TableCell<>() {
+        colTrangThai.setCellFactory(param -> new TableCell<>() {
             @Override
             protected void updateItem(TrangThaiPhong item, boolean empty) {
                 super.updateItem(item, empty);
@@ -190,28 +164,21 @@ public class DatPhongController implements Initializable, Refreshable {
         colMoTa.setCellValueFactory(new PropertyValueFactory<>("moTa"));
         colTenLoaiPhong.setCellValueFactory(cellData -> {
             LoaiPhong loaiPhong = cellData.getValue().getLoaiPhong();
-
-            // 2. Trả về StringBinding chứa Tên Loại.
-            // Nếu LoaiPhong không null, liên kết (bind) với thuộc tính TenLoai.
             return loaiPhong != null ?
-                    javafx.beans.binding.Bindings.createStringBinding(loaiPhong::getTenLoai) :
-                    javafx.beans.binding.Bindings.createStringBinding(() -> ""); // Xử lý trường hợp null
+                    Bindings.createStringBinding(loaiPhong::getTenLoai) :
+                    Bindings.createStringBinding(() -> "");
         });
         colDonGia.setCellValueFactory(cellData -> {
             LoaiPhong loaiPhong = cellData.getValue().getLoaiPhong();
             return loaiPhong != null ?
-                    javafx.beans.binding.Bindings.createObjectBinding(loaiPhong::getDonGia) :
-                    javafx.beans.binding.Bindings.createObjectBinding(() -> -0.0);
+                    Bindings.createObjectBinding(loaiPhong::getDonGia) :
+                    Bindings.createObjectBinding(() -> -0.0);
         });
-        colThaoTac.setCellFactory(_ -> new TableCell<>() {
-
+        colThaoTac.setCellFactory(param -> new TableCell<>() {
             private final Button btnThem = new Button("Thêm");
-
             {
                 btnThem.getStyleClass().addAll("btn", "btn-xs", "btn-info", "btn-table-edit");
-
-
-                btnThem.setOnAction(_ -> {
+                btnThem.setOnAction(event -> {
                     Phong phong = getTableView().getItems().get(getIndex());
                     tablePhong.getSelectionModel().select(phong);
                     boolean isContain = listPhongDuocDat.contains(phong);
@@ -224,11 +191,9 @@ public class DatPhongController implements Initializable, Refreshable {
                     getTableView().refresh();
                 });
             }
-
             @Override
             protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
-
                 if (empty) {
                     setGraphic(null);
                 } else {
@@ -248,13 +213,8 @@ public class DatPhongController implements Initializable, Refreshable {
                 }
             }
         });
-        colDaChon.setCellFactory(_ -> new TableCell<>() {
+        colDaChon.setCellFactory(param -> new TableCell<>() {
             private CheckBox checkBox = new CheckBox();
-
-            {
-
-            }
-
             @Override
             protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
@@ -281,7 +241,6 @@ public class DatPhongController implements Initializable, Refreshable {
 
     private void taiDuLieu() {
         try {
-            // Chỉ gọi khi cả ngayDen và ngayDi đã được chọn
             if (ngayDen.getValue() == null || ngayDi.getValue() == null) {
                 danhSachPhong.clear();
                 danhSachPhongFiltered.clear();
@@ -289,7 +248,6 @@ public class DatPhongController implements Initializable, Refreshable {
                 return;
             }
 
-            // Validate ngày
             if (!validateNgay()) {
                 danhSachPhong.clear();
                 danhSachPhongFiltered.clear();
@@ -297,10 +255,8 @@ public class DatPhongController implements Initializable, Refreshable {
                 return;
             }
 
-            // Hiển thị loading indicator
             hienThiLoading(true);
 
-            // Lấy danh sách phòng trống theo khoảng thời gian
             List<Phong> dsPhong = Pdao.layDSPhongTrongTheoKhoangThoiGian(
                     ngayDen.getValue(),
                     ngayDi.getValue()
@@ -308,11 +264,7 @@ public class DatPhongController implements Initializable, Refreshable {
 
             danhSachPhong.clear();
             danhSachPhong.addAll(dsPhong);
-
-            // Áp dụng filter hiện tại
             apDungFilter();
-
-            // Cập nhật UI
             capNhatUIThongTin();
             hienThiLoading(false);
         } catch (SQLException e) {
@@ -328,11 +280,6 @@ public class DatPhongController implements Initializable, Refreshable {
         }
     }
 
-    /**
-     * Hiển thị hoặc ẩn loading indicator khi đang tải dữ liệu phòng.
-     *
-     * @param isLoading true để hiển thị loading, false để ẩn
-     */
     private void hienThiLoading(boolean isLoading) {
         if (lbLoadingPhong != null) {
             lbLoadingPhong.setVisible(isLoading);
@@ -340,11 +287,6 @@ public class DatPhongController implements Initializable, Refreshable {
         }
     }
 
-    /**
-     * Tính số đêm giữa ngày đến và ngày đi.
-     *
-     * @return Số đêm, hoặc 0 nếu ngày không hợp lệ hoặc null
-     */
     private long tinhSoDem() {
         if (ngayDen.getValue() == null || ngayDi.getValue() == null) {
             return 0;
@@ -352,18 +294,10 @@ public class DatPhongController implements Initializable, Refreshable {
         return ChronoUnit.DAYS.between(ngayDen.getValue(), ngayDi.getValue());
     }
 
-    /**
-     * Tính tổng tiền cho danh sách phòng dựa trên số đêm.
-     *
-     * @param danhSachPhong Danh sách phòng cần tính tiền
-     * @param soDem         Số đêm lưu trú
-     * @return Tổng tiền (VNĐ)
-     */
     private double tinhTongTienTheoSoDem(ArrayList<Phong> danhSachPhong, long soDem) {
         if (danhSachPhong == null || danhSachPhong.isEmpty() || soDem <= 0) {
             return 0;
         }
-
         double tongTien = 0;
         for (Phong phong : danhSachPhong) {
             if (phong != null && phong.getLoaiPhong() != null) {
@@ -373,30 +307,16 @@ public class DatPhongController implements Initializable, Refreshable {
         return tongTien;
     }
 
-    /**
-     * Cập nhật tất cả các thông tin UI dựa trên trạng thái hiện tại.
-     * Bao gồm: số đêm, loại đặt phòng, số phòng trống, empty state, và tổng tiền.
-     */
     private void capNhatUIThongTin() {
-        // Cập nhật số đêm
         long soDem = tinhSoDem();
         if (soDem > 0) {
-            if (lbSoDem != null) {
-                lbSoDem.setText("(" + soDem + " đêm)");
-            }
-            if (lbTongSoDem != null) {
-                lbTongSoDem.setText(String.valueOf(soDem));
-            }
+            if (lbSoDem != null) lbSoDem.setText("(" + soDem + " đêm)");
+            if (lbTongSoDem != null) lbTongSoDem.setText(String.valueOf(soDem));
         } else {
-            if (lbSoDem != null) {
-                lbSoDem.setText("");
-            }
-            if (lbTongSoDem != null) {
-                lbTongSoDem.setText("0");
-            }
+            if (lbSoDem != null) lbSoDem.setText("");
+            if (lbTongSoDem != null) lbTongSoDem.setText("0");
         }
 
-        // Cập nhật loại đặt phòng
         if (ngayDen.getValue() != null && lbLoaiDatPhong != null) {
             if (ngayDen.getValue().equals(LocalDate.now())) {
                 lbLoaiDatPhong.setText("[Đặt trực tiếp]");
@@ -411,7 +331,6 @@ public class DatPhongController implements Initializable, Refreshable {
             }
         }
 
-        // Cập nhật số phòng trống
         if (lbSoPhongTrong != null) {
             int soPhongTrong = danhSachPhongFiltered.size();
             if (soPhongTrong > 0) {
@@ -423,73 +342,43 @@ public class DatPhongController implements Initializable, Refreshable {
             }
         }
 
-        // Hiển thị/ẩn empty state
         if (vbEmptyState != null && tablePhong != null) {
             boolean coPhong = !danhSachPhongFiltered.isEmpty();
             tablePhong.setVisible(coPhong);
             vbEmptyState.setVisible(!coPhong);
         }
 
-        // Cập nhật tổng tiền với số đêm
         capNhatTongTien();
     }
 
-    /**
-     * Cập nhật UI khi không có dữ liệu (ngày chưa chọn hoặc không hợp lệ).
-     * Ẩn các thông tin và hiển thị empty state.
-     */
     private void capNhatUIKhiKhongCoDuLieu() {
-        if (lbSoDem != null) {
-            lbSoDem.setText("");
-        }
-        if (lbLoaiDatPhong != null) {
-            lbLoaiDatPhong.setVisible(false);
-        }
-        if (lbSoPhongTrong != null) {
-            lbSoPhongTrong.setText("");
-        }
-        if (lbTongSoDem != null) {
-            lbTongSoDem.setText("0");
-        }
+        if (lbSoDem != null) lbSoDem.setText("");
+        if (lbLoaiDatPhong != null) lbLoaiDatPhong.setVisible(false);
+        if (lbSoPhongTrong != null) lbSoPhongTrong.setText("");
+        if (lbTongSoDem != null) lbTongSoDem.setText("0");
         if (vbEmptyState != null && tablePhong != null) {
             tablePhong.setVisible(false);
             vbEmptyState.setVisible(true);
         }
     }
 
-    /**
-     * Cập nhật tổng tiền và số phòng đã chọn trên UI.
-     * Tính tổng tiền dựa trên số đêm thực tế nếu có ngày đến/đi,
-     * ngược lại tính theo giá 1 đêm.
-     */
     private void capNhatTongTien() {
         if (listPhongDuocDat.isEmpty()) {
-            if (TongTien != null) {
-                TongTien.setText("0 VNĐ");
-            }
-            if (SoPhongDaChon != null) {
-                SoPhongDaChon.setText("0");
-            }
-            // lbTongSoDem đã được cập nhật trong capNhatUIThongTin(), không cần update lại
+            if (TongTien != null) TongTien.setText("0 VNĐ");
+            if (SoPhongDaChon != null) SoPhongDaChon.setText("0");
             return;
         }
 
-        // Tính tổng tiền dựa trên số đêm
         long soDem = tinhSoDem();
         double tongTien;
         if (soDem > 0) {
             tongTien = tinhTongTienTheoSoDem(listPhongDuocDat, soDem);
         } else {
-            // Fallback: tính theo giá phòng (1 đêm)
             tongTien = TinhTongTien(listPhongDuocDat);
         }
 
-        if (TongTien != null) {
-            TongTien.setText(String.format("%,.0f VNĐ", tongTien));
-        }
-        if (SoPhongDaChon != null) {
-            SoPhongDaChon.setText(String.valueOf(listPhongDuocDat.size()));
-        }
+        if (TongTien != null) TongTien.setText(String.format("%,.0f VNĐ", tongTien));
+        if (SoPhongDaChon != null) SoPhongDaChon.setText(String.valueOf(listPhongDuocDat.size()));
     }
 
     private boolean validateNgay() {
@@ -500,17 +389,13 @@ public class DatPhongController implements Initializable, Refreshable {
             return false;
         }
 
-        // Kiểm tra ngày đến không được trong quá khứ
         if (ngayDenValue.isBefore(LocalDate.now())) {
-            ThongBaoUtil.hienThiLoi("Lỗi",
-                    "Không được chọn ngày đến trước ngày hôm nay");
+            ThongBaoUtil.hienThiLoi("Lỗi", "Không được chọn ngày đến trước ngày hôm nay");
             return false;
         }
 
-        // Kiểm tra ngày đi phải sau ngày đến
         if (ngayDiValue.isBefore(ngayDenValue) || ngayDiValue.isEqual(ngayDenValue)) {
-            ThongBaoUtil.hienThiLoi("Lỗi",
-                    "Ngày đi phải sau ngày đến ít nhất 1 ngày");
+            ThongBaoUtil.hienThiLoi("Lỗi", "Ngày đi phải sau ngày đến ít nhất 1 ngày");
             return false;
         }
 
@@ -518,7 +403,6 @@ public class DatPhongController implements Initializable, Refreshable {
     }
 
     private void khoiTaoDatePickerListeners() {
-        // Disable các ngày trong quá khứ cho ngayDen (chỉ set một lần)
         ngayDen.setDayCellFactory(picker -> new javafx.scene.control.DateCell() {
             @Override
             public void updateItem(LocalDate date, boolean empty) {
@@ -527,12 +411,9 @@ public class DatPhongController implements Initializable, Refreshable {
             }
         });
 
-        // Listener cho ngayDen
         ngayDen.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                // Cập nhật UI thông tin
                 capNhatUIThongTin();
-                // Validate và cập nhật danh sách phòng
                 if (ngayDi.getValue() != null) {
                     taiDuLieu();
                 }
@@ -543,19 +424,13 @@ public class DatPhongController implements Initializable, Refreshable {
             }
         });
 
-        // Listener cho ngayDi
         ngayDi.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null && ngayDen.getValue() != null) {
-                // Validate ngayDi > ngayDen
-                if (newValue.isBefore(ngayDen.getValue()) ||
-                        newValue.isEqual(ngayDen.getValue())) {
-                    ThongBaoUtil.hienThiLoi("Lỗi",
-                            "Ngày đi phải sau ngày đến ít nhất 1 ngày");
+                if (newValue.isBefore(ngayDen.getValue()) || newValue.isEqual(ngayDen.getValue())) {
+                    ThongBaoUtil.hienThiLoi("Lỗi", "Ngày đi phải sau ngày đến ít nhất 1 ngày");
                     ngayDi.setValue(oldValue);
                     return;
                 }
-
-                // Cập nhật UI thông tin
                 capNhatUIThongTin();
                 taiDuLieu();
             } else if (newValue == null) {
@@ -566,70 +441,50 @@ public class DatPhongController implements Initializable, Refreshable {
         });
     }
 
-    /**
-     * Kiểm tra danh sách phòng có còn trống không (tránh N+1 query problem).
-     * Gọi stored procedure MỘT LẦN để check tất cả phòng.
-     *
-     * @param danhSachPhongCanKiemTra Danh sách phòng cần kiểm tra
-     * @return Danh sách phòng còn trống
-     * @throws SQLException Nếu có lỗi khi truy vấn database
-     */
     private ArrayList<Phong> kiemTraDanhSachPhongTrong(ArrayList<Phong> danhSachPhongCanKiemTra) throws SQLException {
         if (danhSachPhongCanKiemTra == null || danhSachPhongCanKiemTra.isEmpty()) {
             return new ArrayList<>();
         }
-
         if (ngayDen.getValue() == null || ngayDi.getValue() == null) {
             return new ArrayList<>();
         }
 
-        // Gọi stored procedure MỘT LẦN để lấy tất cả phòng trống
         List<Phong> phongTrong = Pdao.layDSPhongTrongTheoKhoangThoiGian(
                 ngayDen.getValue(),
                 ngayDi.getValue()
         );
 
-        // Tạo Set để lookup nhanh O(1) thay vì O(n)
         Set<String> maPhongTrong = phongTrong.stream()
                 .filter(p -> p != null && p.getMaPhong() != null)
                 .map(Phong::getMaPhong)
                 .collect(Collectors.toSet());
 
-        // Filter phòng còn trống từ danh sách cần kiểm tra
         ArrayList<Phong> ketQua = new ArrayList<>();
         for (Phong phong : danhSachPhongCanKiemTra) {
-            if (phong != null && phong.getMaPhong() != null &&
-                    maPhongTrong.contains(phong.getMaPhong())) {
+            if (phong != null && phong.getMaPhong() != null && maPhongTrong.contains(phong.getMaPhong())) {
                 ketQua.add(phong);
             }
         }
-
         return ketQua;
     }
 
     private void apDungFilter() {
         danhSachPhongFiltered.clear();
-
         List<Phong> filtered = danhSachPhong.stream()
                 .filter(phong -> {
-                    // Filter theo tầng
                     Integer tangFilter = cbTang.getValue();
                     if (tangFilter != null && (phong.getTang() == null || !phong.getTang().equals(tangFilter))) {
                         return false;
                     }
-
-                    // Filter theo loại phòng
                     LoaiPhong loaiPhongFilter = cbLocLoaiPhong.getValue();
                     return loaiPhongFilter == null || (phong.getLoaiPhong() != null &&
                             phong.getLoaiPhong().getMaLoaiPhong().equals(loaiPhongFilter.getMaLoaiPhong()));
                 })
                 .toList();
-
         danhSachPhongFiltered.addAll(filtered);
     }
 
     private void khoiTaoComboBox() {
-        // Khởi tạo ComboBox tầng
         List<Integer> danhSachTang = new ArrayList<>();
         for (int i = 1; i <= 10; i++) {
             danhSachTang.add(i);
@@ -639,61 +494,41 @@ public class DatPhongController implements Initializable, Refreshable {
             @Override
             protected void updateItem(Integer item, boolean empty) {
                 super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText("Chọn tầng");
-                } else {
-                    setText("Tầng " + item);
-                }
+                if (empty || item == null) setText("Chọn tầng");
+                else setText("Tầng " + item);
             }
         });
-        cbTang.setCellFactory(_ -> new ListCell<>() {
+        cbTang.setCellFactory(param -> new ListCell<>() {
             @Override
             protected void updateItem(Integer item, boolean empty) {
                 super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText("Chọn tầng");
-                } else {
-                    setText("Tầng " + item);
-                }
+                if (empty || item == null) setText("Chọn tầng");
+                else setText("Tầng " + item);
             }
         });
-
-
-        // Khởi tạo ComboBox loại phòng để filter
         khoiTaoComboBoxLoaiPhong();
     }
 
     private void khoiTaoComboBoxLoaiPhong() {
         try {
             List<LoaiPhong> danhSachLoaiPhong = loaiPhongDAO.layDSLoaiPhong();
-
-            // Thiết lập ComboBox để hiển thị tên loại phòng
-            cbLocLoaiPhong.setCellFactory(_ -> new ListCell<>() {
+            cbLocLoaiPhong.setCellFactory(param -> new ListCell<>() {
                 @Override
                 protected void updateItem(LoaiPhong item, boolean empty) {
                     super.updateItem(item, empty);
-                    if (empty || item == null) {
-                        setText("Chọn loại phòng");
-                    } else {
-                        setText(item.getTenLoai());
-                    }
+                    if (empty || item == null) setText("Chọn loại phòng");
+                    else setText(item.getTenLoai());
                 }
             });
-
             cbLocLoaiPhong.setButtonCell(new ListCell<>() {
                 @Override
                 protected void updateItem(LoaiPhong item, boolean empty) {
                     super.updateItem(item, empty);
-                    if (empty || item == null) {
-                        setText("Chọn loại phòng");
-                    } else {
-                        setText(item.getTenLoai());
-                    }
+                    if (empty || item == null) setText("Chọn loại phòng");
+                    else setText(item.getTenLoai());
                 }
             });
-
             cbLocLoaiPhong.setItems(FXCollections.observableArrayList(danhSachLoaiPhong));
-
         } catch (SQLException e) {
             ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể tải danh sách loại phòng: " + e.getMessage());
         }
@@ -708,7 +543,7 @@ public class DatPhongController implements Initializable, Refreshable {
     }
 
     @Override
-    public void refreshData() throws SQLException { // 👈 Đổi tên từ refresh() sang refreshData() 
+    public void refreshData() throws SQLException {
         laydsKhachHang();
         dsKhachHang.getSelectionModel().selectFirst();
         AuthService authService = AuthService.getInstance();
@@ -720,20 +555,14 @@ public class DatPhongController implements Initializable, Refreshable {
         cbTang.setValue(null);
         cbLocLoaiPhong.setValue(null);
         capNhatUIKhiKhongCoDuLieu();
-        // Không gọi taiDuLieu() vì chưa có ngày
     }
 
     public void hienThiPhieuDatPhong(PhieuDatPhong pdp, ArrayList<Phong> dsPhong) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/phieu-dat-phong-pdf-view.fxml"));
             Parent root = loader.load();
-
             PhieuDatPhongPDFController controller = loader.getController();
-
-            // Truyền dữ liệu sang Controller mới
             controller.setPhieuDatPhongData(pdp, dsPhong);
-
-
             Stage stage = new Stage();
             Scene scene = new Scene(root);
             scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
@@ -747,47 +576,34 @@ public class DatPhongController implements Initializable, Refreshable {
         }
     }
 
-    // Tạo 1 private static inner class để dễ sử dụng các thuộc tính mới
     private static class TienCocResult {
         public final BigDecimal tienCoc;
         public final String phuongThucTT;
-
         public TienCocResult(BigDecimal tienCoc, String phuongThucTT) {
             this.tienCoc = tienCoc;
             this.phuongThucTT = phuongThucTT;
         }
     }
 
-    /**
-     * Hiển thị màn hình xác nhận tiền cọc và lấy kết quả.
-     */
-    // Trong com.example.louishotelmanagement.controller.DatPhongController.java
     private TienCocResult hienThiTienCocDialog(double tongTienPhong) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/tien-coc-dialog.fxml"));
         Parent root = loader.load();
-
         TienCocDialogController controller = loader.getController();
         controller.setTongTien(tongTienPhong);
-
         Stage stage = new Stage();
         stage.setTitle("Xác Nhận Tiền Cọc");
-
-        //Thiết lập kích thước tối thiểu/ban đầu cho Scene
         Scene scene = new Scene(root, 450, 650);
-
         stage.setScene(scene);
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.showAndWait();
-
         if (controller.isConfirmed()) {
             return new TienCocResult(controller.getTienCoc(), controller.getPhuongThucTT());
         } else {
-            return null; // Trả về null nếu người dùng Hủy
+            return null;
         }
     }
 
     public void handleDatPhong(ActionEvent actionEvent) throws SQLException {
-        // 0. KIỂM TRA ĐIỀU KIỆN BAN ĐẦU
         if (ngayDen.getValue() == null || ngayDi.getValue() == null) {
             ThongBaoUtil.hienThiLoi("Lỗi", "Vui lòng chọn đầy đủ ngày đến/ngày đi.");
             return;
@@ -800,8 +616,6 @@ public class DatPhongController implements Initializable, Refreshable {
             return;
         }
 
-        // 0.5. DOUBLE-CHECK PHÒNG TRƯỚC KHI ĐẶT (Race condition protection)
-        // Fix N+1 query: Check tất cả phòng một lần thay vì từng phòng
         ArrayList<Phong> phongConTrong;
         try {
             phongConTrong = kiemTraDanhSachPhongTrong(listPhongDuocDat);
@@ -811,26 +625,19 @@ public class DatPhongController implements Initializable, Refreshable {
             return;
         }
 
-        // Nếu số phòng còn trống khác số phòng đã chọn -> có phòng đã bị đặt
         if (phongConTrong.size() != listPhongDuocDat.size()) {
             ArrayList<Phong> phongKhongTrong = new ArrayList<>(listPhongDuocDat);
             phongKhongTrong.removeAll(phongConTrong);
-
             StringBuilder danhSachPhong = new StringBuilder();
             for (int i = 0; i < phongKhongTrong.size(); i++) {
                 if (i > 0) danhSachPhong.append(", ");
                 danhSachPhong.append(phongKhongTrong.get(i).getMaPhong());
             }
-            ThongBaoUtil.hienThiLoi("Lỗi",
-                    "Các phòng sau đã được đặt bởi khách hàng khác: " + danhSachPhong.toString() +
-                            ". Vui lòng chọn phòng khác.");
-            // Refresh danh sách phòng
+            ThongBaoUtil.hienThiLoi("Lỗi", "Các phòng sau đã được đặt bởi khách hàng khác: " + danhSachPhong.toString() + ". Vui lòng chọn phòng khác.");
             taiDuLieu();
             return;
         }
 
-        // 1. GỌI DIALOG TIỀN CỌC
-        // Tính tổng tiền dựa trên số đêm
         long soDem = tinhSoDem();
         double tongTienPhong;
         if (soDem > 0) {
@@ -852,11 +659,9 @@ public class DatPhongController implements Initializable, Refreshable {
             return;
         }
 
-        // 2. PHÂN BIỆT ĐẶT TRỰC TIẾP VÀ ĐẶT TRƯỚC
         boolean datTrucTiep = ngayDen.getValue().equals(LocalDate.now());
         TrangThaiPhieuDatPhong trangThaiPhieu;
         String ghiChu;
-
         if (datTrucTiep) {
             trangThaiPhieu = TrangThaiPhieuDatPhong.DANG_SU_DUNG;
             ghiChu = "Đặt trực tiếp (" + result.phuongThucTT + ")";
@@ -865,7 +670,6 @@ public class DatPhongController implements Initializable, Refreshable {
             ghiChu = "Đặt trước (" + result.phuongThucTT + ")";
         }
 
-        // 3. TẠO VÀ LƯU PHIẾU ĐẶT PHÒNG GỐC (CHỈ 1 LẦN)
         AuthService authService = AuthService.getInstance();
         KhachHang newKh = Kdao.layKhachHangTheoMa(dsMaKH.get(dsKhachHang.getSelectionModel().getSelectedIndex()));
         String maNV = authService.getCurrentUser().getNhanVien().getMaNV();
@@ -882,52 +686,39 @@ public class DatPhongController implements Initializable, Refreshable {
                 maNV,
                 null
         );
-        pdp.setTienCoc(result.tienCoc); // Gán tiền cọc đã nhập từ dialog
+        pdp.setTienCoc(result.tienCoc);
+        pdpDao.themPhieuDatPhong(pdp);
 
-        pdpDao.themPhieuDatPhong(pdp); // 👈 LƯU PHIẾU GỐC
-
-        // 3. TẠO VÀ LƯU HÓA ĐƠN GỐC (CHỈ 1 LẦN)
         HoaDon hd = new HoaDon(hDao.taoMaHoaDonTiepTheo(), LocalDate.now(), null, TrangThaiHoaDon.CHUA_THANH_TOAN, null, newKh.getMaKH(), maNV, null);
-        hDao.themHoaDon(hd); // 👈 LƯU HÓA ĐƠN
+        hDao.themHoaDon(hd);
 
-        // 4. LẶP QUA TỪNG PHÒNG ĐỂ TẠO CHI TIẾT VÀ CẬP NHẬT TRẠNG THÁI
-        // Xử lý lỗi nếu có phòng bị conflict trong lúc insert (race condition)
         ArrayList<String> phongBiConflict = new ArrayList<>();
         for (Phong p : listPhongDuocDat) {
             try {
                 ThemChiTietPhong(pdp, hd, p);
             } catch (SQLException e) {
-                // Nếu lỗi là conflict (phòng đã được đặt), ghi lại để thông báo
                 if (e.getMessage() != null && e.getMessage().contains("đã được đặt")) {
                     phongBiConflict.add(p.getMaPhong());
                 } else {
-                    // Lỗi khác, throw lại
                     throw e;
                 }
             }
         }
 
-        // Nếu có phòng bị conflict, rollback và thông báo
         if (!phongBiConflict.isEmpty()) {
-            // TODO: Implement rollback transaction nếu cần
             StringBuilder danhSachPhong = new StringBuilder();
             for (int i = 0; i < phongBiConflict.size(); i++) {
                 if (i > 0) danhSachPhong.append(", ");
                 danhSachPhong.append(phongBiConflict.get(i));
             }
-            ThongBaoUtil.hienThiLoi("Lỗi",
-                    "Các phòng sau đã được đặt bởi khách hàng khác trong lúc xử lý: " +
-                            danhSachPhong.toString() + ". Vui lòng thử lại.");
-            // Refresh và return
+            ThongBaoUtil.hienThiLoi("Lỗi", "Các phòng sau đã được đặt bởi khách hàng khác trong lúc xử lý: " + danhSachPhong.toString() + ". Vui lòng thử lại.");
             taiDuLieu();
             return;
         }
+
         Kdao.capNhatTrangThaiKhachHang(newKh.getMaKH(), TrangThaiKhachHang.DA_DAT);
-
         ThongBaoUtil.hienThiThongBao("Thông báo", "Đặt phòng thành công. Tiền cọc: " + result.tienCoc + " VND (" + result.phuongThucTT + ")");
-
         this.maPhieu = maPhieuMoi;
-
         PhieuDatPhong phieu = pdpDao.layPhieuDatPhongTheoMa(this.maPhieu);
         if (phieu != null) {
             hienThiPhieuDatPhong(phieu, listPhongDuocDat);
@@ -935,27 +726,21 @@ public class DatPhongController implements Initializable, Refreshable {
         refreshData();
     }
 
-    // Hàm mới để xử lý chi tiết (thay thế logic trong DatPhong cũ)
     public void ThemChiTietPhong(PhieuDatPhong pdp, HoaDon hd, Phong p) throws SQLException {
         CTHoaDonPhong cthdp = new CTHoaDonPhong(
                 hd.getMaHD(),
                 pdp.getMaPhieu(),
                 p.getMaPhong(),
-                pdp.getNgayDen(), // Ngày đến từ phiếu đặt phòng
-                pdp.getNgayDi(),  // Ngày đi từ phiếu đặt phòng
+                pdp.getNgayDen(),
+                pdp.getNgayDi(),
                 BigDecimal.valueOf(p.getLoaiPhong().getDonGia())
         );
 
-        // Cập nhật trạng thái phòng dựa trên loại đặt phòng
-        if (pdp.getTrangThai() != null &&
-                pdp.getTrangThai().equals(TrangThaiPhieuDatPhong.DANG_SU_DUNG)) {
-            // Đặt trực tiếp -> Cập nhật thành "Đang sử dụng"
+        if (pdp.getTrangThai() == TrangThaiPhieuDatPhong.DANG_SU_DUNG) {
             Pdao.capNhatTrangThaiPhong(p.getMaPhong(), TrangThaiPhong.DANG_SU_DUNG.toString());
         } else {
-            // Đặt trước -> Cập nhật thành "Đã đặt"
             Pdao.capNhatTrangThaiPhong(p.getMaPhong(), TrangThaiPhong.DA_DAT.toString());
         }
-
         cthdpDao.themCTHoaDonPhong(cthdp);
     }
 
@@ -965,29 +750,15 @@ public class DatPhongController implements Initializable, Refreshable {
 
     public void handleThemKhachHang(ActionEvent actionEvent) {
         try {
-            // 1. Tải FXML
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/khach-hang-form-dialog.fxml"));
             Parent parent = loader.load();
-
-            // 2. Lấy Controller (nếu cần truyền dữ liệu hoặc gọi phương thức)
-            // ThemKhachHangDialogController controller = loader.getController();
-
-            // 3. Tạo Stage (Cửa sổ mới)
             Stage dialogStage = new Stage();
             dialogStage.setTitle("Thêm Khách Hàng Mới");
-
-            // Cài đặt làm cửa sổ Modal (bắt buộc phải tương tác trước khi quay lại cửa sổ cũ)
-            // Lấy Stage hiện tại từ sự kiện nếu cần
-            // Stage ownerStage = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
-            // dialogStage.initOwner(ownerStage);
             dialogStage.initModality(Modality.APPLICATION_MODAL);
-
-            // 4. Thiết lập Scene và hiển thị
             dialogStage.setScene(new Scene(parent));
-            dialogStage.showAndWait(); // showAndWait() sẽ chặn luồng cho đến khi hộp thoại đóng lại
+            dialogStage.showAndWait();
             refreshData();
         } catch (IOException e) {
-            System.err.println("Lỗi khi tải FXML Thêm Khách Hàng: " + e.getMessage());
             e.printStackTrace();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -1004,55 +775,25 @@ public class DatPhongController implements Initializable, Refreshable {
         apDungFilter();
     }
 
-    /**
-     * Thiết lập ContentSwitcher để điều hướng giữa các màn hình
-     *
-     * @param contentSwitcher ContentSwitcher instance
-     */
-    public void setContentSwitcher(ContentSwitcher contentSwitcher) {
-        this.contentSwitcher = contentSwitcher;
-    }
+    public void nhanDuLieuTuPhongView(ArrayList<Phong> dsPhongNhan, LocalDate ngayDenVal, LocalDate ngayDiVal) {
+        if (ngayDen != null) ngayDen.setValue(ngayDenVal);
+        if (ngayDi != null) ngayDi.setValue(ngayDiVal);
 
-    /**
-     * Nhận dữ liệu phòng đã chọn và khoảng thời gian từ PhongController
-     *
-     * @param phongDaChon Danh sách phòng đã chọn
-     * @param tuNgay      Ngày bắt đầu
-     * @param denNgay     Ngày kết thúc
-     */
-    public void nhanDuLieuTuPhongView(ArrayList<Phong> phongDaChon, LocalDate tuNgay, LocalDate denNgay) {
-        // Set ngày
-        if (tuNgay != null) {
-            ngayDen.setValue(tuNgay);
-        }
-        if (denNgay != null) {
-            ngayDi.setValue(denNgay);
-        }
-
-        // Load dữ liệu phòng trống theo ngày
         taiDuLieu();
 
-        // Tự động thêm các phòng đã chọn vào list
-        if (phongDaChon != null && !phongDaChon.isEmpty()) {
+        if (dsPhongNhan != null && !dsPhongNhan.isEmpty()) {
             listPhongDuocDat.clear();
-            for (Phong phong : phongDaChon) {
-                // Tìm phòng trong danh sách hiện tại
-                Phong phongTrongList = danhSachPhong.stream()
-                        .filter(p -> p.getMaPhong().equals(phong.getMaPhong()))
-                        .findFirst()
-                        .orElse(null);
-
-                if (phongTrongList != null) {
-                    listPhongDuocDat.add(phongTrongList);
+            for (Phong pNhan : dsPhongNhan) {
+                boolean phongCoSan = danhSachPhong.stream()
+                        .anyMatch(p -> p.getMaPhong().equals(pNhan.getMaPhong()));
+                if (phongCoSan) {
+                    listPhongDuocDat.add(pNhan);
                 }
             }
-
-            // Cập nhật UI
-            capNhatTongTien();
+        }
+        capNhatUIThongTin();
+        if (tablePhong != null) {
             tablePhong.refresh();
-
-            ThongBaoUtil.hienThiThongBao("Thành công",
-                    "Đã chọn " + listPhongDuocDat.size() + " phòng. Vui lòng chọn khách hàng!");
         }
     }
 }

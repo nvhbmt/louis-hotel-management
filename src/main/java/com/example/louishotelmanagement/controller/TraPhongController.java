@@ -2,9 +2,10 @@ package com.example.louishotelmanagement.controller;
 
 import com.example.louishotelmanagement.dao.*;
 import com.example.louishotelmanagement.model.*;
+import com.example.louishotelmanagement.util.ContentSwitcher;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
 import com.example.louishotelmanagement.util.Refreshable;
-import com.example.louishotelmanagement.util.ContentSwitcher;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -22,7 +23,6 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 
 public class TraPhongController implements Initializable, Refreshable {
@@ -39,10 +39,10 @@ public class TraPhongController implements Initializable, Refreshable {
     @FXML public TextField soLuongPhong;
     @FXML public Button btnXemChiTiet;
 
-    public KhachHangDAO khDao;
-    public PhongDAO phDao;
-    public CTHoaDonPhongDAO cthdpDao;
-    public PhieuDatPhongDAO phieuDatPhongDAO;
+    private KhachHangDAO khDao;
+    private PhongDAO phDao;
+    private CTHoaDonPhongDAO cthdpDao;
+    private PhieuDatPhongDAO phieuDatPhongDAO;
     private HoaDonDAO hdDao;
 
     private ArrayList<String> listMaKH = new ArrayList<>();
@@ -67,7 +67,6 @@ public class TraPhongController implements Initializable, Refreshable {
         try {
             laydsKhachHang();
 
-            // Listener cho khách hàng -> load phiếu
             dsKhachHang.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
                 if (newVal != null) {
                     try {
@@ -76,7 +75,6 @@ public class TraPhongController implements Initializable, Refreshable {
                 }
             });
 
-            // Listener cho phiếu -> load các phòng trong phiếu đó
             dsPhieu.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
                 if (newVal != null) {
                     try {
@@ -92,41 +90,37 @@ public class TraPhongController implements Initializable, Refreshable {
         }
     }
 
-    /**
-     * PHƯƠNG THỨC QUAN TRỌNG: Nhận mã phòng từ màn hình Quản lý phòng
-     * Tự động chọn Khách hàng -> Chọn Phiếu -> Load thông tin
-     */
     public void truyenDuLieuTuPhong(String maPhongTruyenVao) {
         try {
-            // 1. Tìm CTHDP đang sử dụng của phòng này
             ArrayList<CTHoaDonPhong> listCT = cthdpDao.getDSCTHoaDonPhongTheoMaPhong(maPhongTruyenVao);
-            CTHoaDonPhong activeCT = null;
+
+            String maPhieuTimThay = null;
 
             for (CTHoaDonPhong ct : listCT) {
                 PhieuDatPhong pdp = phieuDatPhongDAO.layPhieuDatPhongTheoMa(ct.getMaPhieu());
                 if (pdp != null && pdp.getTrangThai().equals(TrangThaiPhieuDatPhong.DANG_SU_DUNG)) {
-                    activeCT = ct;
+                    maPhieuTimThay = pdp.getMaPhieu();
                     break;
                 }
             }
 
-            if (activeCT != null) {
-                PhieuDatPhong pdp = phieuDatPhongDAO.layPhieuDatPhongTheoMa(activeCT.getMaPhieu());
+            if (maPhieuTimThay != null) {
+                PhieuDatPhong pdp = phieuDatPhongDAO.layPhieuDatPhongTheoMa(maPhieuTimThay);
                 KhachHang kh = khDao.layKhachHangTheoMa(pdp.getMaKH());
 
-                // 2. Set ComboBox Khách hàng
-                dsKhachHang.getSelectionModel().select(kh.getHoTen());
+                if (kh != null) {
+                    dsKhachHang.getSelectionModel().select(kh.getHoTen());
 
-                // 3. Set ComboBox Phiếu
-                laydsPhieuTheoKhachHang(); // Load lại list phiếu của KH này
-                dsPhieu.getSelectionModel().select(pdp.getMaPhieu());
+                    laydsPhieuTheoKhachHang();
+                    dsPhieu.getSelectionModel().select(maPhieuTimThay);
 
-                // 4. Set ComboBox Phòng
-                laydsPhongTheoPhieu(); // Load lại list phòng của phiếu này
-                dsPhong.getSelectionModel().select(maPhongTruyenVao);
+                    laydsPhongTheoPhieu();
+                    dsPhong.getSelectionModel().select(maPhongTruyenVao);
 
-                // 5. Tự động nhấn nút Kiểm tra để hiện thông tin xuống dưới
-                handleCheck(null);
+                    handleCheck(null);
+                }
+            } else {
+                ThongBaoUtil.hienThiLoi("Lỗi", "Phòng " + maPhongTruyenVao + " hiện không có phiếu thuê đang hoạt động.");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -160,7 +154,6 @@ public class TraPhongController implements Initializable, Refreshable {
             dsKhachHang.getItems().add(kh.getHoTen());
             listMaKH.add(kh.getMaKH());
         }
-        if (!dsKhachHang.getItems().isEmpty()) dsKhachHang.getSelectionModel().selectFirst();
     }
 
     public void laydsPhieuTheoKhachHang() throws SQLException {
@@ -196,7 +189,8 @@ public class TraPhongController implements Initializable, Refreshable {
             PhieuDatPhong pdp = phieuDatPhongDAO.layPhieuDatPhongTheoMa(selectedPhieuId);
             if (pdp != null) {
                 KhachHang kh = khDao.layKhachHangTheoMa(pdp.getMaKH());
-                hoTen.setText(kh.getHoTen());
+                if (kh != null) hoTen.setText(kh.getHoTen());
+
                 maPhieuThue.setText(pdp.getMaPhieu());
 
                 ArrayList<CTHoaDonPhong> listCT = cthdpDao.getCTHoaDonPhongTheoMaPhieu(pdp.getMaPhieu());
@@ -207,7 +201,7 @@ public class TraPhongController implements Initializable, Refreshable {
                 btnXemChiTiet.setDisable(false);
             }
         } else {
-            ThongBaoUtil.hienThiLoi("Lỗi", "Vui lòng chọn phiếu để kiểm tra");
+            if(actionEvent != null) ThongBaoUtil.hienThiLoi("Lỗi", "Vui lòng chọn phiếu để kiểm tra");
             btnXemChiTiet.setDisable(true);
         }
     }
@@ -216,7 +210,7 @@ public class TraPhongController implements Initializable, Refreshable {
     public void handleTraPhong(ActionEvent actionEvent) throws Exception {
         String maPhieu = maPhieuThue.getText();
         if (maPhieu == null || maPhieu.isEmpty()) {
-            ThongBaoUtil.hienThiLoi("Lỗi", "Vui lòng Kiểm tra phiếu trước.");
+            ThongBaoUtil.hienThiLoi("Lỗi", "Vui lòng kiểm tra phiếu trước khi trả.");
             return;
         }
 
@@ -245,11 +239,35 @@ public class TraPhongController implements Initializable, Refreshable {
 
                 ThongBaoUtil.hienThiThongBao("Thành công", "Đã trả phòng và cập nhật trạng thái khách hàng!");
                 refreshData();
+                boolean daThanhToanXong = moDialogThanhToan(hd);
+                if(daThanhToanXong) {
+                    thucHienTraPhong(maPhieu, listCT);
+                } else {
+                    ThongBaoUtil.hienThiLoi("Lỗi", "Thanh toán chưa hoàn tất, không thể trả phòng.");
+                }
+            } else {
+                thucHienTraPhong(maPhieu, listCT);
             }
         }
     }
 
-    private void moDialogThanhToan(HoaDon hoaDon) {
+    private void thucHienTraPhong(String maPhieu, ArrayList<CTHoaDonPhong> listCT) throws SQLException {
+        phieuDatPhongDAO.capNhatTrangThaiPhieuDatPhong(maPhieu, TrangThaiPhieuDatPhong.HOAN_THANH.toString());
+
+        for (CTHoaDonPhong ct : listCT) {
+            phDao.capNhatTrangThaiPhong(ct.getMaPhong(), TrangThaiPhong.TRONG.toString());
+            cthdpDao.capNhatNgayDiThucTe(ct.getMaHD(), ct.getMaPhong(), LocalDate.now());
+        }
+
+        ThongBaoUtil.hienThiThongBao("Thành công", "Đã trả phòng thành công!");
+        try {
+            refreshData();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private boolean moDialogThanhToan(HoaDon hoaDon) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/thanh-toan-dialog.fxml"));
             Parent root = loader.load();
@@ -262,9 +280,13 @@ public class TraPhongController implements Initializable, Refreshable {
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.showAndWait();
 
-            // Sau khi đóng dialog thanh toán, refresh lại để xem trạng thái mới
-            handleCheck(null);
-        } catch (Exception e) { e.printStackTrace(); }
+            HoaDon hdKiemTra = hdDao.timHoaDonTheoMa(hoaDon.getMaHD());
+            return hdKiemTra != null && hdKiemTra.getTrangThai() == TrangThaiHoaDon.DA_THANH_TOAN;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @FXML
@@ -285,9 +307,14 @@ public class TraPhongController implements Initializable, Refreshable {
             stage.showAndWait();
         } catch (IOException e) { e.printStackTrace(); }
     }
+
     @Override
     public void refreshData() throws Exception {
         laydsKhachHang();
+        dsKhachHang.getSelectionModel().clearSelection();
+        dsPhieu.getItems().clear();
+        dsPhong.getItems().clear();
+
         hoTen.clear();
         maPhieuThue.clear();
         ngayDen.setValue(null);
