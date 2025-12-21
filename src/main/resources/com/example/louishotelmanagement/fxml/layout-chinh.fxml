@@ -14,9 +14,7 @@
                 <!-- Logo Section -->
                 <VBox alignment="CENTER" spacing="12.0" BorderPane.alignment="CENTER">
                     <ImageView fitHeight="72.0" fitWidth="94.0" pickOnBounds="true" preserveRatio="true">
-                        <image>
-                            <Image url="@../image/unnamed.jpg"/>
-                        </image>
+                        <Image url="@../image/unnamed.jpg"/>
                     </ImageView>
                     <Label styleClass="logo-text" text="LOIUS HOTEL"/>
                 </VBox>

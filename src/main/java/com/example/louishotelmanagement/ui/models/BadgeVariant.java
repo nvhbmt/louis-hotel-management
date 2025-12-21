@@ -1,4 +1,4 @@
-package com.example.louishotelmanagement.util;
+package com.example.louishotelmanagement.ui.models;
 
 public enum BadgeVariant {
     SUCCESS("#d1fae5", "#065f46"),

@@ -1,0 +1,8 @@
+/* Phieu Dat Phong Form Dialog Styles */
+
+/* Dialog title */
+.dialog-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}

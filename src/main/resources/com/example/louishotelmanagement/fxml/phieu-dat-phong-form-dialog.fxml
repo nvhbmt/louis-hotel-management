@@ -12,17 +12,15 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.PhieuDatPhongFormDialogController">
-
+<BorderPane xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.PhieuDatPhongFormDialogController"
+    stylesheets="@../css/phieu-dat-phong-form-dialog.css"
+>
     <center>
         <VBox spacing="8">
             <padding>
                 <Insets bottom="10" left="10" right="10" top="10" />
             </padding>
-            <Label text="CHỈNH SỬA PHIẾU ĐẶT PHÒNG"
-                   style="-fx-font-size: 20px;
-              -fx-font-weight: bold;
-              -fx-text-fill: #2c3e50;"/>
+            <Label styleClass="dialog-title" text="CHỈNH SỬA PHIẾU ĐẶT PHÒNG"/>
 
 
             <Label text="Mã phiếu đặt phòng" />

@@ -1,0 +1,36 @@
+/* Hoa Don View Styles */
+
+/* Search container border */
+.search-container {
+    -fx-border-color: black;
+    -fx-border-radius: 10;
+    -fx-padding: 10 15 10 15;
+}
+
+/* Label padding */
+.label-padding {
+    -fx-padding: 0 5 10 5;
+}
+
+/* Date label padding */
+.date-label-padding {
+    -fx-padding: 0 5 10 5;
+}
+
+/* Text field border radius */
+.text-field-rounded {
+    -fx-border-radius: 10;
+}
+
+/* Combo box styling */
+.combo-box-styled {
+    -fx-background-color: white;
+    -fx-border-color: black;
+    -fx-border-radius: 10;
+}
+
+/* Table border */
+.table-border {
+    -fx-border-color: Black;
+    -fx-border-radius: 10;
+}

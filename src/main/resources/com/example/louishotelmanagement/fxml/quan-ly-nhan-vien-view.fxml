@@ -118,13 +118,13 @@
             <VBox styleClass="table-container" VBox.vgrow="ALWAYS">
                 <TableView fx:id="nhanVienTable" styleClass="table-view" VBox.vgrow="ALWAYS">
                     <columns>
-                        <TableColumn fx:id="colMaNV" prefWidth="80.0" text="Mã nhân viên"/>
-                        <TableColumn fx:id="colHoTen" prefWidth="120.0" text="Họ tên"/>
-                        <TableColumn fx:id="colNgaySinh" prefWidth="143.199951171875" text="Ngày sinh"/>
-                        <TableColumn fx:id="colDiaChi" prefWidth="87.20001220703125" text="Địa chỉ"/>
-                        <TableColumn fx:id="colSDT" minWidth="0.0" prefWidth="140.0" text="Số điện thoại"/>
-                        <TableColumn fx:id="colChucVu" prefWidth="120.0" text="chức vụ"/>
-                        <TableColumn fx:id="colThaoTac" prefWidth="120.0" text="Thao tác"/>
+                        <TableColumn fx:id="colMaNV" text="Mã nhân viên"/>
+                        <TableColumn fx:id="colHoTen" text="Họ tên"/>
+                        <TableColumn fx:id="colNgaySinh" text="Ngày sinh"/>
+                        <TableColumn fx:id="colDiaChi" text="Địa chỉ"/>
+                        <TableColumn fx:id="colSDT" text="Số điện thoại"/>
+                        <TableColumn fx:id="colChucVu" text="chức vụ"/>
+                        <TableColumn fx:id="colThaoTac" text="Thao tác"/>
                     </columns>
                     <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>

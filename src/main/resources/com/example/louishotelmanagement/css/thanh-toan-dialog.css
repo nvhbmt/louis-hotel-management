@@ -1,0 +1,41 @@
+/* Thanh Toán Dialog Styles */
+
+/* Summary value colors */
+.tong-tien-phong {
+    -fx-text-fill: #1e88e5;
+}
+
+.tong-tien-dich-vu {
+    -fx-text-fill: #ff9800;
+}
+
+.tien-coc {
+    -fx-text-fill: #FF00FF;
+}
+
+.tam-tinh {
+    -fx-text-fill: #26a69a;
+}
+
+.vat {
+    -fx-text-fill: #9c27b0;
+}
+
+.tong-cuoi {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #43a047;
+}
+
+.giam-gia {
+    -fx-text-fill: #e53935;
+}
+
+.phat {
+    -fx-text-fill: #999999;
+}
+
+.tong-tien-phat {
+    -fx-text-fill: #FF5722;
+}
+

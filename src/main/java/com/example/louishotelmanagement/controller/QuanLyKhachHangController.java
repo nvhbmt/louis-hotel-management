@@ -3,6 +3,8 @@ package com.example.louishotelmanagement.controller;
 import com.example.louishotelmanagement.dao.KhachHangDAO;
 import com.example.louishotelmanagement.model.KhachHang;
 import com.example.louishotelmanagement.model.TrangThaiKhachHang;
+import com.example.louishotelmanagement.ui.components.CustomButton;
+import com.example.louishotelmanagement.ui.models.ButtonVariant;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleStringProperty;
@@ -130,13 +132,10 @@ public class QuanLyKhachHangController implements Initializable {
         );
 
         colThaoTac.setCellFactory(_ -> new TableCell<>() {
-            private final Button btnEdit = new Button("Sửa");
-            private final Button btnDelete = new Button("Xóa");
+            private final Button btnEdit = CustomButton.createButton("Sửa", ButtonVariant.INFO);
+            private final Button btnDelete = CustomButton.createButton("Xóa", ButtonVariant.DANGER);
 
             {
-                btnEdit.getStyleClass().addAll("btn", "btn-xs", "btn-info", "btn-table-edit");
-                btnDelete.getStyleClass().addAll("btn", "btn-xs", "btn-danger", "btn-table-delete");
-
                 btnEdit.setOnAction(_ -> {
                     KhachHang khachHang = getTableView().getItems().get(getIndex());
                     handleSuaKhachHang(khachHang);

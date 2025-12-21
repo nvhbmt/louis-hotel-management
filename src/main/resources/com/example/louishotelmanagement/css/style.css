@@ -16,3 +16,17 @@
     -fx-scale-x: 1.0 !important;
     -fx-scale-y: 1.0 !important;
 }
+
+/* QR code container */
+.qr-container {
+    -fx-border-color: #007bff;
+    -fx-border-width: 1;
+    -fx-padding: 10;
+    -fx-border-radius: 5;
+}
+
+/* QR label */
+.qr-label {
+    -fx-font-weight: bold;
+    -fx-text-fill: #007bff;
+}

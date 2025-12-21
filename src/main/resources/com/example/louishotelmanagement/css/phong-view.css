@@ -1,0 +1,65 @@
+/* Phong View Styles */
+
+/* Action panel container */
+.action-panel {
+    -fx-background-color: white;
+    -fx-padding: 24;
+    -fx-background-radius: 12;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);
+}
+
+/* Action title */
+.action-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1f2937;
+}
+
+/* Direct booking button */
+.btn-direct-booking {
+    -fx-background-color: #10b981;
+    -fx-text-fill: white;
+    -fx-background-radius: 8;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+/* Advance booking button */
+.btn-advance-booking {
+    -fx-background-color: #3b82f6;
+    -fx-text-fill: white;
+    -fx-background-radius: 8;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+/* Secondary buttons (check-in, change room, return room, services) */
+.btn-secondary-action {
+    -fx-background-color: white;
+    -fx-text-fill: #374151;
+    -fx-border-color: #e5e7eb;
+    -fx-border-width: 1.5;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+/* Cancel booking button */
+.btn-cancel-booking {
+    -fx-background-color: #ef4444;
+    -fx-text-fill: white;
+    -fx-background-radius: 8;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+/* Payment button */
+.btn-payment {
+    -fx-background-color: #14b8a6;
+    -fx-text-fill: white;
+    -fx-background-radius: 8;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+

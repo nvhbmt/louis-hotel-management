@@ -2,6 +2,10 @@ package com.example.louishotelmanagement.controller;
 
 import com.example.louishotelmanagement.dao.DichVuDAO;
 import com.example.louishotelmanagement.model.DichVu;
+import com.example.louishotelmanagement.ui.components.Badge;
+import com.example.louishotelmanagement.ui.components.CustomButton;
+import com.example.louishotelmanagement.ui.models.BadgeVariant;
+import com.example.louishotelmanagement.ui.models.ButtonVariant;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
@@ -20,7 +24,6 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -144,29 +147,24 @@ public class QuanLyDichVuController implements Initializable {
             @Override
             protected void updateItem(Boolean item, boolean empty) {
                 super.updateItem(item, empty);
-                getStyleClass().clear();
+                setGraphic(null);
                 if (empty || item == null) {
                     setText(null);
                 } else {
                     if (item) {
-                        setText("Đang kinh doanh");
-                        getStyleClass().add("status-active");
+                        setGraphic(Badge.createBadge("Đang kinh doanh", BadgeVariant.SUCCESS));
                     } else {
-                        setText("Ngừng kinh doanh");
-                        getStyleClass().add("status-inactive");
+                        setGraphic(Badge.createBadge("Ngừng kinh doanh", BadgeVariant.DANGER));
                     }
                 }
             }
         });
 
         colThaoTac.setCellFactory(_ -> new TableCell<>() {
-            private final Button btnEdit = new Button("Sửa");
-            private final Button btnDelete = new Button("Xóa");
+            private final Button btnEdit = CustomButton.createButton("Sửa", ButtonVariant.INFO);
+            private final Button btnDelete = CustomButton.createButton("Xóa", ButtonVariant.DANGER);
 
             {
-                btnEdit.getStyleClass().addAll("btn", "btn-xs", "btn-info", "btn-table-edit");
-                btnDelete.getStyleClass().addAll("btn", "btn-xs", "btn-danger", "btn-table-delete");
-
                 btnEdit.setOnAction(_ -> {
                     DichVu dichVu = getTableView().getItems().get(getIndex());
                     handleSuaDichVu(dichVu);
@@ -350,7 +348,6 @@ public class QuanLyDichVuController implements Initializable {
         txtTimKiem.clear();
         cbTrangThaiKinhDoanh.setValue(null);
     }
-
 
 
 //    private void capNhatTrangThai(String message) {
