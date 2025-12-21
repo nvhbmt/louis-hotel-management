@@ -13,13 +13,20 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="864.0" prefWidth="1014.4" style="-fx-background-color: #F0F0F0;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.TraPhongController">
+<BorderPane prefHeight="864.0" 
+prefWidth="1014.4" 
+styleClass="main-background" 
+xmlns="http://javafx.com/javafx/22" 
+xmlns:fx="http://javafx.com/fxml/1" 
+fx:controller="com.example.louishotelmanagement.controller.TraPhongController"
+stylesheets="@../css/tra-phong-view.css"
+>
 
     <center>
         <VBox prefHeight="650.0" prefWidth="100.0" spacing="10.0" BorderPane.alignment="CENTER">
             <children>
-                <VBox alignment="CENTER" prefHeight="230.0" prefWidth="100.0" spacing="10.0" style="-fx-background-color: white; -fx-padding: 15;">
-                    <Label style="-fx-font-weight: 700;-fx-font-size: 24px" text="Thông tin trả phòng">
+                <VBox alignment="CENTER" prefHeight="230.0" prefWidth="100.0" spacing="10.0" styleClass="info-panel">
+                    <Label styleClass="info-title" text="Thông tin trả phòng">
                         <VBox.margin>
                             <Insets bottom="10.0" />
                         </VBox.margin>
@@ -110,15 +117,15 @@
                     </HBox>
                     <HBox alignment="CENTER" prefHeight="49.0" prefWidth="880.0">
                         <children>
-                            <Button fx:id="btnCheck" mnemonicParsing="false" onAction="#handleCheck" prefHeight="42.0" prefWidth="120.0" style="-fx-background-color: #2DC33F;-fx-text-fill: white;-fx-font-size: 20px" text="Kiểm tra" />
+                            <Button fx:id="btnCheck" mnemonicParsing="false" onAction="#handleCheck" prefHeight="42.0" prefWidth="120.0" styleClass="check-button" text="Kiểm tra" />
                         </children>
                     </HBox>
                 </VBox>
 
-                <HBox alignment="CENTER" prefHeight="420.0" prefWidth="880.0" spacing="20.0" style="-fx-background-color: white;">
+                <HBox alignment="CENTER" prefHeight="420.0" prefWidth="880.0" spacing="20.0" styleClass="detail-panel-bg">
                     <children>
-                        <VBox alignment="TOP_CENTER" prefHeight="379.0" prefWidth="649.0" spacing="10.0" style="-fx-background-color: white; -fx-padding: 15; -fx-border-radius: 10; -fx-background-radius: 10;">
-                            <Label style="-fx-font-size: 24px;-fx-font-weight: 700" text="Thông tin Phiếu thuê">
+                        <VBox alignment="TOP_CENTER" prefHeight="379.0" prefWidth="649.0" spacing="10.0" styleClass="detail-container">
+                            <Label styleClass="detail-title" text="Thông tin Phiếu thuê">
                                 <VBox.margin>
                                     <Insets bottom="5.0" />
                                 </VBox.margin>
@@ -126,33 +133,33 @@
 
                             <HBox alignment="CENTER" prefHeight="35.0" prefWidth="440.0">
                                 <children>
-                                    <Label prefWidth="120.0" style="-fx-font-size: 16px" text="Họ và tên KH:" />
+                                    <Label prefWidth="120.0" styleClass="detail-label" text="Họ và tên KH:" />
                                     <TextField fx:id="hoTen" editable="false" prefHeight="30.0" prefWidth="446.0" />
                                 </children>
                             </HBox>
 
                             <HBox alignment="CENTER" prefHeight="35.0" prefWidth="440.0">
                                 <children>
-                                    <Label prefWidth="120.0" style="-fx-font-size: 16px" text="Mã phiếu thuê:" />
+                                    <Label prefWidth="120.0" styleClass="detail-label" text="Mã phiếu thuê:" />
                                     <TextField fx:id="maPhieuThue" editable="false" prefHeight="30.0" prefWidth="446.0" />
                                 </children>
                             </HBox>
 
                             <HBox alignment="CENTER" prefHeight="35.0" prefWidth="440.0">
                                 <children>
-                                    <Label prefWidth="120.0" style="-fx-font-size: 16px" text="Ngày Check-in:" />
+                                    <Label prefWidth="120.0" styleClass="detail-label" text="Ngày Check-in:" />
                            <DatePicker fx:id="ngayDen" editable="true" prefHeight="30.0" prefWidth="446.0" />
                                 </children>
                             </HBox>
 
                             <HBox alignment="CENTER" prefHeight="35.0" prefWidth="440.0">
                                 <children>
-                                    <Label prefWidth="120.0" style="-fx-font-size: 16px" text="Số lượng phòng:" />
+                                    <Label prefWidth="120.0" styleClass="detail-label" text="Số lượng phòng:" />
                                     <TextField fx:id="soLuongPhong" editable="false" prefHeight="30.0" prefWidth="446.0" />
                                 </children>
                             </HBox>
 
-                            <Button fx:id="btnXemChiTiet" mnemonicParsing="false" onAction="#handleXemChiTiet" prefHeight="30.0" prefWidth="250.0" style="-fx-background-color: #F0A000;-fx-text-fill: white;-fx-font-size: 16px" text="Xem chi tiết từng phòng" />
+                            <Button fx:id="btnXemChiTiet" mnemonicParsing="false" onAction="#handleXemChiTiet" prefHeight="30.0" prefWidth="250.0" styleClass="view-detail-button" text="Xem chi tiết từng phòng" />
                         </VBox>
                     </children>
                     <VBox.margin>
@@ -169,7 +176,7 @@
     <bottom>
         <HBox alignment="CENTER" prefHeight="80.0" prefWidth="880.0" spacing="50.0" BorderPane.alignment="CENTER">
             <children>
-                <Button fx:id="btnTraPhong" mnemonicParsing="false" onAction="#handleTraPhong" prefHeight="50.0" prefWidth="261.0" style="-fx-background-color: #1574DF;-fx-text-fill: white;-fx-font-size: 20px" text="Trả phòng/Thanh toán" />
+                <Button fx:id="btnTraPhong" mnemonicParsing="false" onAction="#handleTraPhong" prefHeight="50.0" prefWidth="261.0" styleClass="return-room-button" text="Trả phòng/Thanh toán" />
             </children>
             <BorderPane.margin>
                 <Insets bottom="30.0" top="10.0" />
@@ -189,8 +196,8 @@
                 </ImageView>
             <VBox prefHeight="62.0" prefWidth="875.0" HBox.hgrow="ALWAYS">
                <children>
-                    <Label alignment="TOP_LEFT" style="-fx-font-weight: 900;-fx-font-size: 25px" text="Trả phòng" />
-                  <Label text="Thực hiện chức năng trả phòng cho khách hàng" textFill="#7f8c8d">
+                    <Label alignment="TOP_LEFT" styleClass="header-title" text="Trả phòng" />
+                  <Label styleClass="header-subtitle" text="Thực hiện chức năng trả phòng cho khách hàng">
                      <font>
                         <Font size="14.0" />
                      </font>

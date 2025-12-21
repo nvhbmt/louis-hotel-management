@@ -1,0 +1,17 @@
+/* Khuyến Mãi Screen Styles */
+
+/* Search text field */
+.search-field {
+    -fx-border-color: #B0C4DE;
+    -fx-border-radius: 15;
+    -fx-background-radius: 15;
+}
+
+/* Filter combo boxes */
+.filter-combo {
+    -fx-background-radius: 15;
+    -fx-background-color: #F5F9FF;
+    -fx-border-color: #B0C4DE;
+    -fx-border-radius: 15;
+}
+

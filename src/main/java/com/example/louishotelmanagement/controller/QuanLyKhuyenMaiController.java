@@ -1,8 +1,12 @@
 package com.example.louishotelmanagement.controller;
 
 import com.example.louishotelmanagement.dao.KhuyenMaiDAO;
-import com.example.louishotelmanagement.model.KieuGiamGia;
 import com.example.louishotelmanagement.model.KhuyenMai;
+import com.example.louishotelmanagement.model.KieuGiamGia;
+import com.example.louishotelmanagement.ui.components.Badge;
+import com.example.louishotelmanagement.ui.components.CustomButton;
+import com.example.louishotelmanagement.ui.models.BadgeVariant;
+import com.example.louishotelmanagement.ui.models.ButtonVariant;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
@@ -197,33 +201,26 @@ public class QuanLyKhuyenMaiController implements Initializable {
             @Override
             protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
+                setGraphic(null);
                 if (empty || item == null) {
                     setText(null);
-                    getStyleClass().clear();
                 } else {
-                    setText(item);
-                    getStyleClass().clear();
                     switch (item.toLowerCase()) {
-                        case "đang sử dụng" -> getStyleClass().add("status-hoat-dong");
-                        case "đã hết hạn" -> getStyleClass().add("status-het-han");
-                        case "chưa bắt đầu" -> getStyleClass().add("status-chua-bat-dau");
-                        case "vô hiệu hóa" -> getStyleClass().add("status-tam-dung");
-                        default -> {
-                            // Không thêm style class nào
-                        }
+                        case "đang sử dụng" -> setGraphic(Badge.createBadge(item, BadgeVariant.SUCCESS));
+                        case "đã hết hạn" -> setGraphic(Badge.createBadge(item, BadgeVariant.DANGER));
+                        case "chưa bắt đầu" -> setGraphic(Badge.createBadge(item, BadgeVariant.WARNING));
+                        case "vô hiệu hóa" -> setGraphic(Badge.createBadge(item, BadgeVariant.DEFAULT));
+                        default -> setText(item);
                     }
                 }
             }
         });
 
         colThaoTac.setCellFactory(_ -> new TableCell<>() {
-            private final Button btnEdit = new Button("Sửa");
-            private final Button btnDelete = new Button("Xóa");
+            private final Button btnEdit = CustomButton.createButton("Sửa", ButtonVariant.INFO);
+            private final Button btnDelete = CustomButton.createButton("Xóa", ButtonVariant.DANGER);
 
             {
-                btnEdit.getStyleClass().addAll("btn", "btn-xs", "btn-info", "btn-table-edit");
-                btnDelete.getStyleClass().addAll("btn", "btn-xs", "btn-danger", "btn-table-delete");
-
                 btnEdit.setOnAction(_ -> {
                     KhuyenMai khuyenMai = getTableView().getItems().get(getIndex());
                     handleSuaKhuyenMai(khuyenMai);

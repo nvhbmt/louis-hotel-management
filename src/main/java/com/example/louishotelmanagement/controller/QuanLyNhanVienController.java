@@ -2,6 +2,8 @@ package com.example.louishotelmanagement.controller;
 
 import com.example.louishotelmanagement.dao.NhanVienDAO;
 import com.example.louishotelmanagement.model.NhanVien;
+import com.example.louishotelmanagement.ui.components.CustomButton;
+import com.example.louishotelmanagement.ui.models.ButtonVariant;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -118,14 +120,11 @@ public class QuanLyNhanVienController implements Initializable {
 
         // Cấu hình cột Thao tác (Nút Sửa / Xóa)
         colThaoTac.setCellFactory(param -> new TableCell<>() {
-            private final Button btnEdit = new Button("Sửa");
-            private final Button btnDelete = new Button("Xóa");
+            private final Button btnEdit = CustomButton.createButton("Sửa", ButtonVariant.INFO);
+            private final Button btnDelete = CustomButton.createButton("Xóa", ButtonVariant.DANGER);
             private final HBox pane = new HBox(5, btnEdit, btnDelete);
 
             {
-                btnEdit.getStyleClass().addAll("btn", "btn-xs", "btn-info"); // Thêm style class
-                btnDelete.getStyleClass().addAll("btn", "btn-xs", "btn-danger");
-
                 pane.setAlignment(Pos.CENTER);
 
                 btnEdit.setOnAction(event -> {

@@ -6,7 +6,7 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<BorderPane prefHeight="737.0" prefWidth="1153.0" styleClass="main-background" stylesheets="@../css/main.css"
+<BorderPane prefHeight="737.0" prefWidth="1153.0" styleClass="main-background" stylesheets="@../css/main.css, @../css/quan-ly-phong-view.css"
             xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.example.louishotelmanagement.controller.QuanLyPhongController">
     <padding>
@@ -25,22 +25,22 @@
                 </rowConstraints>
                 <HBox spacing="16.0">
                     <VBox alignment="CENTER"
-                          style="-fx-background-color: #d1fae5; -fx-background-radius: 12; -fx-padding: 16;">
+                          styleClass="header-icon-container">
                         <ImageView fitHeight="56.0" fitWidth="56.0" pickOnBounds="true" preserveRatio="true">
                             <Image url="@../image/interior-design.png"/>
                         </ImageView>
                     </VBox>
                     <VBox HBox.hgrow="ALWAYS" spacing="4">
-                        <Label style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #111827;"
+                        <Label styleClass="header-title"
                                text="Quản Lý Phòng"/>
-                        <Label style="-fx-font-size: 14px; -fx-text-fill: #6b7280;"
+                        <Label styleClass="header-subtitle"
                                text="Quản lý thông tin và trạng thái các phòng trong khách sạn"/>
                     </VBox>
                 </HBox>
                 <HBox alignment="CENTER_RIGHT" spacing="5.0" GridPane.columnIndex="1">
-                    <Button fx:id="btnThemPhong" mnemonicParsing="false" onAction="#handleThemPhong" prefHeight="37.0"
+                        <Button fx:id="btnThemPhong" mnemonicParsing="false" onAction="#handleThemPhong" prefHeight="37.0"
                             prefWidth="144.0"
-                            style="-fx-background-color: #10b981; -fx-text-fill: white; -fx-background-radius: 8; -fx-font-size: 14px; -fx-font-weight: bold;"
+                            styleClass="add-room-button"
                             text="➕ Thêm phòng">
                         <cursor>
                             <Cursor fx:constant="HAND"/>
@@ -165,15 +165,15 @@
             <VBox styleClass="table-container" VBox.vgrow="ALWAYS">
                 <TableView fx:id="tableViewPhong" styleClass="table-view" VBox.vgrow="ALWAYS">
                     <columns>
-                        <TableColumn fx:id="colMaPhong" styleClass="table-column-header" prefWidth="140.0"
+                        <TableColumn fx:id="colMaPhong" styleClass="table-column-header" 
                                      text="Mã Phòng"/>
-                        <TableColumn fx:id="colTenLoaiPhong" styleClass="table-cell-left" minWidth="0.0"
-                                     prefWidth="200.0" text="Loại phòng"/>
-                        <TableColumn fx:id="colTang" styleClass="table-cell-left" prefWidth="80.0" text="Tầng"/>
-                        <TableColumn fx:id="colTrangThai" styleClass="table-cell-center" prefWidth="200.0"
+                        <TableColumn fx:id="colTenLoaiPhong" styleClass="table-cell-left" 
+                                    text="Loại phòng"/>
+                        <TableColumn fx:id="colTang" styleClass="table-cell-left" text="Tầng"/>
+                        <TableColumn fx:id="colTrangThai" styleClass="table-cell-center" 
                                      text="Trạng thái"/>
-                        <TableColumn fx:id="colMoTa" styleClass="table-cell-left" prefWidth="200.0" text="Mô tả"/>
-                        <TableColumn fx:id="colThaoTac" styleClass="table-cell-center" prefWidth="120.0"
+                        <TableColumn fx:id="colMoTa" styleClass="table-cell-left"  text="Mô tả"/>
+                        <TableColumn fx:id="colThaoTac" styleClass="table-cell-center" 
                                      text="Thao tác"/>
                     </columns>
                     <columnResizePolicy>

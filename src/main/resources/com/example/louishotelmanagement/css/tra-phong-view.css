@@ -1,0 +1,85 @@
+/* Tra Phong View Styles */
+
+/* Main background */
+.main-background {
+    -fx-background-color: #F0F0F0;
+}
+
+/* Info panel */
+.info-panel {
+    -fx-background-color: white;
+    -fx-padding: 15;
+}
+
+/* Info title */
+.info-title {
+    -fx-font-weight: 700;
+    -fx-font-size: 24px;
+}
+
+/* Check button */
+.check-button {
+    -fx-background-color: #2DC33F;
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+}
+
+/* Detail panel */
+.detail-panel {
+    -fx-background-color: white;
+}
+
+/* Detail container */
+.detail-container {
+    -fx-background-color: white;
+    -fx-padding: 15;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+}
+
+/* Detail title */
+.detail-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: 700;
+}
+
+/* View detail button */
+.view-detail-button {
+    -fx-background-color: #F0A000;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+}
+
+/* Return room button */
+.return-room-button {
+    -fx-background-color: #1574DF;
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+}
+
+/* Header title */
+.header-title {
+    -fx-font-weight: 900;
+    -fx-font-size: 25px;
+}
+
+/* Header subtitle */
+.header-subtitle {
+    -fx-text-fill: #7f8c8d;
+}
+
+/* Detail label font size */
+.detail-label {
+    -fx-font-size: 16px;
+}
+
+/* Detail panel background */
+.detail-panel-bg {
+    -fx-background-color: white;
+}
+
+/* Field label font size */
+.field-label-size {
+    -fx-font-size: 16px;
+}
+

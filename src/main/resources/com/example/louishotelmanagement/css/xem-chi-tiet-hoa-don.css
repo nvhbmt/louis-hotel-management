@@ -1,0 +1,53 @@
+/* Xem Chi Tiet Hoa Don Styles */
+
+/* Main title */
+.main-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+}
+
+/* Bold labels */
+.bold-label {
+    -fx-font-weight: bold;
+}
+
+/* Green text */
+.green-text {
+    -fx-text-fill: #27ae60;
+}
+
+/* Blue text */
+.blue-text {
+    -fx-text-fill: blue;
+}
+
+/* Red text */
+.red-text {
+    -fx-text-fill: #c0392b;
+}
+
+/* Total label */
+.total-label {
+    -fx-font-weight: bold;
+    -fx-font-size: 15px;
+}
+
+/* Total value */
+.total-value {
+    -fx-font-weight: bold;
+    -fx-font-size: 18px;
+    -fx-text-fill: #2980b9;
+}
+
+/* Filter label */
+.filter-label {
+    -fx-font-weight: bold;
+}
+
+/* Close button */
+.close-button {
+    -fx-background-color: #7f8c8d;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
