@@ -2,6 +2,7 @@ package com.example.louishotelmanagement.dao;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -209,72 +210,79 @@ public class PhongDAO {
         return false;
     }
 
-    /**
-     * Kiểm tra xem một phòng có trống trong khoảng thời gian hay không.
-     * 
-     * @param maPhong Mã phòng cần kiểm tra
-     * @param ngayDen Ngày đến (check-in)
-     * @param ngayDi Ngày đi (check-out)
-     * @return true nếu phòng trống trong khoảng thời gian, false nếu không
-     * @throws SQLException Nếu có lỗi khi truy vấn database
-     */
+    // =================================================================================
+    // 🔥 2 HÀM MỚI BỔ SUNG (DÙNG RAW SQL TRỰC TIẾP, KHÔNG CẦN TẠO PROCEDURE) 🔥
+    // =================================================================================
+
     public boolean kiemTraPhongTrongTheoKhoangThoiGian(String maPhong, LocalDate ngayDen, LocalDate ngayDi) throws SQLException {
-        if (ngayDen == null || ngayDi == null || maPhong == null) {
-            return false;
-        }
-        
-        String sql = "{call sp_KiemTraPhongTrongTheoKhoangThoiGian(?,?,?)}";
+        if (ngayDen == null || ngayDi == null || maPhong == null) return false;
+
+        String sql = """
+            SELECT COUNT(*) as SoLuong
+            FROM CTHoaDonPhong ct
+            JOIN PhieuDatPhong pdp ON ct.MaPhieu = pdp.MaPhieu
+            WHERE ct.MaPhong = ?
+            AND (pdp.TrangThai = 'DA_DAT' OR pdp.TrangThai = 'DANG_SU_DUNG')
+            AND (
+                (? <= ct.NgayDi) AND (? >= ct.NgayDen)
+            )
+        """;
+
         try (Connection con = CauHinhDatabase.getConnection();
-             CallableStatement cs = con.prepareCall(sql)) {
-            
-            cs.setString(1, maPhong);
-            cs.setDate(2, Date.valueOf(ngayDen));
-            cs.setDate(3, Date.valueOf(ngayDi));
-            
-            ResultSet rs = cs.executeQuery();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, maPhong);
+            ps.setDate(2, Date.valueOf(ngayDen));
+            ps.setDate(3, Date.valueOf(ngayDi));
+
+            ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                return rs.getBoolean("isTrong");
+                return rs.getInt("SoLuong") == 0;
             }
         }
-        return false;
+        return true;
     }
-    
-    /**
-     * Lấy danh sách phòng trống trong khoảng thời gian đã chỉ định.
-     * 
-     * @param ngayDen Ngày đến (check-in), không được null
-     * @param ngayDi Ngày đi (check-out), không được null và phải sau ngayDen
-     * @return Danh sách phòng trống trong khoảng thời gian
-     * @throws SQLException Nếu có lỗi khi truy vấn database
-     * @throws IllegalArgumentException Nếu ngayDen hoặc ngayDi là null
-     */
-    public ArrayList<Phong> layDSPhongTrongTheoKhoangThoiGian(LocalDate ngayDen, LocalDate ngayDi) throws SQLException {
-        // Validate input
-        if (ngayDen == null || ngayDi == null) {
-            throw new IllegalArgumentException("Ngày đến và ngày đi không được null");
-        }
-        
-        if (ngayDi.isBefore(ngayDen) || ngayDi.isEqual(ngayDen)) {
-            throw new IllegalArgumentException("Ngày đi phải sau ngày đến");
-        }
-        
-        LoaiPhongDAO loaiPhongDAO = new LoaiPhongDAO();
-        ArrayList<Phong> ds = new ArrayList<>();
-        String sql = "{call sp_LayDSPhongTrongTheoKhoangThoiGian(?,?)}";
-        try (Connection con = CauHinhDatabase.getConnection();
-             CallableStatement cs = con.prepareCall(sql)) {
 
-            cs.setDate(1, Date.valueOf(ngayDen));
-            cs.setDate(2, Date.valueOf(ngayDi));
-            ResultSet rs = cs.executeQuery();
+    public ArrayList<Phong> layDSPhongTrongTheoKhoangThoiGian(LocalDate ngayDen, LocalDate ngayDi) throws SQLException {
+        if (ngayDen == null || ngayDi == null) return new ArrayList<>();
+
+        ArrayList<Phong> ds = new ArrayList<>();
+
+        String sql = """
+            SELECT p.*, lp.TenLoai, lp.DonGia
+            FROM Phong p
+            JOIN LoaiPhong lp ON p.MaLoaiPhong = lp.MaLoaiPhong
+            WHERE p.TrangThai != 'BAO_TRI'
+            AND p.MaPhong NOT IN (
+                SELECT ct.MaPhong 
+                FROM CTHoaDonPhong ct
+                JOIN PhieuDatPhong pdp ON ct.MaPhieu = pdp.MaPhieu
+                WHERE (pdp.TrangThai = 'DA_DAT' OR pdp.TrangThai = 'DANG_SU_DUNG')
+                AND (
+                    (? <= ct.NgayDi) AND (? >= ct.NgayDen)
+                )
+            )
+        """;
+
+        try (Connection con = CauHinhDatabase.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setDate(1, Date.valueOf(ngayDen));
+            ps.setDate(2, Date.valueOf(ngayDi));
+
+            ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
-                LoaiPhong loaiPhong = loaiPhongDAO.layLoaiPhongTheoMa(rs.getString("maLoaiPhong"));
+                LoaiPhong loaiPhong = new LoaiPhong();
+                loaiPhong.setMaLoaiPhong(rs.getString("MaLoaiPhong"));
+                loaiPhong.setTenLoai(rs.getString("TenLoai"));
+                loaiPhong.setDonGia(rs.getDouble("DonGia"));
+
                 Phong phong = new Phong(
-                        rs.getString("maPhong"),
-                        rs.getObject("tang", Integer.class),
-                        TrangThaiPhong.fromString(rs.getString("trangThai")),
-                        rs.getString("moTa"),
+                        rs.getString("MaPhong"),
+                        rs.getInt("Tang"),
+                        TrangThaiPhong.TRONG,
+                        rs.getString("MoTa"),
                         loaiPhong
                 );
                 ds.add(phong);
