@@ -154,6 +154,8 @@ public class TraPhongController implements Initializable, Refreshable {
             dsKhachHang.getItems().add(kh.getHoTen());
             listMaKH.add(kh.getMaKH());
         }
+
+        com.example.louishotelmanagement.util.SearchBoxUtil.makeSearchable(dsKhachHang);
     }
 
     public void laydsPhieuTheoKhachHang() throws SQLException {

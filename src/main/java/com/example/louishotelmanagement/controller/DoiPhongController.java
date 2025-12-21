@@ -242,6 +242,8 @@ public class DoiPhongController implements Initializable, Refreshable {
             dsKhachHang.getItems().add(khachHang.getHoTen());
             dsMaKH.add(khachHang.getMaKH());
         }
+
+        com.example.louishotelmanagement.util.SearchBoxUtil.makeSearchable(dsKhachHang);
     }
 
     public void layDsPhongTrong() throws SQLException {
@@ -255,7 +257,6 @@ public class DoiPhongController implements Initializable, Refreshable {
         apDungFilter();
     }
 
-    @Override
     public void refreshData() throws SQLException {
         laydsKhachHang();
         layDsPhongTrong();
