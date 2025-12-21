@@ -245,8 +245,6 @@ public class TraPhongController implements Initializable, Refreshable {
                 } else {
                     ThongBaoUtil.hienThiLoi("Lỗi", "Thanh toán chưa hoàn tất, không thể trả phòng.");
                 }
-            } else {
-                thucHienTraPhong(maPhieu, listCT);
             }
         }
     }
