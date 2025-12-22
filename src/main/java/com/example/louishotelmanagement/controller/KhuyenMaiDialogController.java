@@ -18,6 +18,7 @@ import com.example.louishotelmanagement.dao.KhuyenMaiDAO;
 import com.example.louishotelmanagement.model.KhuyenMai;
 import com.example.louishotelmanagement.model.KieuGiamGia;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
+import com.example.louishotelmanagement.view.KhuyenMaiFormDialogView;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -25,7 +26,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class KhuyenMaiDialogController implements Initializable {
+public class KhuyenMaiDialogController {
 
     @FXML
     private Label lblTieuDe;
@@ -33,6 +34,8 @@ public class KhuyenMaiDialogController implements Initializable {
     private VBox formContainer;
     @FXML
     private Button btnLuu;
+    @FXML
+    private Button btnHuy;
 
     private KhuyenMaiDAO khuyenMaiDAO;
     private String mode = "ADD";
@@ -49,8 +52,18 @@ public class KhuyenMaiDialogController implements Initializable {
     private SingleSelectionField<String> trangThaiField;
     private Form form;
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    public KhuyenMaiDialogController(KhuyenMaiFormDialogView view) {
+        this.lblTieuDe = view.getLblTieuDe();
+        this.formContainer = view.getFormContainer();
+        this.btnLuu = view.getBtnLuu();
+        this.btnLuu.setOnAction(event -> handleLuu());
+        this.btnHuy = view.getBtnHuy();
+        this.btnHuy.setOnAction(event -> handleHuy());
+        initialize();
+    }
+
+
+    public void initialize() {
         try {
             khuyenMaiDAO = new KhuyenMaiDAO();
             String maKMTiepTheo = khuyenMaiDAO.layMaKMTiepTheo();

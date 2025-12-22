@@ -7,6 +7,7 @@ import com.dlsc.formsfx.view.renderer.FormRenderer;
 import com.example.louishotelmanagement.dao.DichVuDAO;
 import com.example.louishotelmanagement.model.DichVu;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
+import com.example.louishotelmanagement.view.DichVuFormDialogView;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -17,7 +18,7 @@ import javafx.stage.Stage;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class DichVuDialogController implements Initializable {
+public class DichVuDialogController{
 
     @FXML
     private Label lblTieuDe;
@@ -25,6 +26,8 @@ public class DichVuDialogController implements Initializable {
     private VBox formContainer;
     @FXML
     private Button btnLuu;
+    @FXML
+    private Button btnHuy;
 
     private DichVuDAO dichVuDAO;
     private String mode = "ADD";
@@ -38,8 +41,17 @@ public class DichVuDialogController implements Initializable {
     private BooleanField conKinhDoanhField;
     private Form form;
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    public DichVuDialogController(DichVuFormDialogView view) {
+        this.lblTieuDe = view.getLblTieuDe();
+        this.formContainer = view.getFormContainer();
+        this.btnLuu = view.getBtnLuu();
+        this.btnHuy = view.getBtnHuy();
+        this.btnHuy.setOnAction(event -> handleHuy());
+        this.btnLuu.setOnAction(event -> handleLuu());
+        initialize();
+    }
+
+    public void initialize() {
         try {
             khoiTaoDAO();
             String maDichVuTiepTheo = layMaDichVuTiepTheoNeuThemMoi();

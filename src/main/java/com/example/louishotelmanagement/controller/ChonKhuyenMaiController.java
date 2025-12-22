@@ -11,6 +11,8 @@ import com.example.louishotelmanagement.model.KhuyenMai;
 import com.example.louishotelmanagement.model.KieuGiamGia;
 import com.example.louishotelmanagement.util.Refreshable;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
+import com.example.louishotelmanagement.view.ChonKhuyenMaiDiaLogView;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -27,7 +29,14 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
-public class ChonKhuyenMaiController implements Initializable, Refreshable {
+import java.net.URL;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.ResourceBundle;
+
+public class ChonKhuyenMaiController implements Refreshable {
 
     @FXML
     public BorderPane rootPane;
@@ -62,6 +71,11 @@ public class ChonKhuyenMaiController implements Initializable, Refreshable {
     private TableColumn<KhuyenMai, String> colMoTa;
     @FXML
     public TableColumn<KhuyenMai, Void> colThaoTac;
+    @FXML
+    private Button btnHuy;
+    @FXML
+    private Button btnChon;
+
 
     private KhuyenMaiDAO khuyenMaiDAO;
     private ObservableList<KhuyenMai> danhSachKhuyenMai;
@@ -69,11 +83,34 @@ public class ChonKhuyenMaiController implements Initializable, Refreshable {
     private KhuyenMai khuyenMaiDuocChon;
     @Override
     public void refreshData() throws SQLException, Exception {
-
+        khoiTaoDuLieu();
+        khoiTaoTableView();
+        khoiTaoComboBox();
     }
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    public ChonKhuyenMaiController(ChonKhuyenMaiDiaLogView view) {
+        this.rootPane = view.getRootPane();
+        this.txtTimKiem = view.getTxtTimKiem();
+        this.cbKieuGiamGia = view.getCbKieuGiamGia();
+        this.cbTrangThai = view.getCbTrangThai();
+        this.btnLamMoi = view.getBtnLamMoi();
+        this.tableViewKhuyenMai = view.getTableViewKhuyenMai();
+        this.colMaKM = view.getColMaKM();
+        this.colCode = view.getColCode();
+        this.colGiamGia = view.getColGiamGia();
+        this.colKieuGiamGia = view.getColKieuGiamGia();
+        this.colNgayBatDau = view.getColNgayBatDau();
+        this.colNgayKetThuc = view.getColNgayKetThuc();
+        this.colTongTienToiThieu = view.getColTongTienToiThieu();
+        this.colTrangThai = view.getColTrangThai();
+        this.colMoTa = view.getColMoTa();
+        this.btnLamMoi.setOnAction(event -> handleLamMoi());
+        this.btnHuy = view.getBtnHuy();
+        this.btnChon = view.getBtnChon();
+        this.btnHuy.setOnAction(event -> handleHuy());
+        this.btnChon.setOnAction(event -> handleChon());
+        initialize();
+    }
+    public void initialize() {
         try {
              khuyenMaiDAO = new KhuyenMaiDAO();
 

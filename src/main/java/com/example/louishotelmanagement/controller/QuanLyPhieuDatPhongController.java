@@ -12,6 +12,8 @@ import com.example.louishotelmanagement.ui.components.CustomButton;
 import com.example.louishotelmanagement.ui.models.BadgeVariant;
 import com.example.louishotelmanagement.ui.models.ButtonVariant;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
+import com.example.louishotelmanagement.view.ChiTietPhongTrongPhieuView;
+import com.example.louishotelmanagement.view.PhieuDatPhongFormDialogView;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -350,14 +352,14 @@ public class QuanLyPhieuDatPhongController implements Initializable {
     private void handleSuaPhieuDatPhong(PhieuDatPhong phieuDatPhong) {
         try {
             if (phieuDatPhong.getTrangThai().equals(TrangThaiPhieuDatPhong.DA_DAT)) {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/phieu-dat-phong-form-dialog.fxml"));
+                PhieuDatPhongFormDialogView view = new PhieuDatPhongFormDialogView();
+                PhieuDatPhongFormDialogController controller = new PhieuDatPhongFormDialogController(view);
+                Parent root = view.getRoot();
                 Stage dialog = new Stage();
                 dialog.setTitle("Sửa Thông Tin Phiếu Đặt Phòng"); // Sửa tiêu đề
                 dialog.initModality(Modality.APPLICATION_MODAL);
-                dialog.setScene(new Scene(loader.load()));
-
+                dialog.setScene(new Scene(root));
                 // Thiết lập controller và dữ liệu
-                PhieuDatPhongFormDialogController controller = loader.getController(); // Lấy đúng controller
                 controller.setPhieuDatPhong(phieuDatPhong); // Truyền đối tượng Phiếu Đặt Phòng
                 dialog.showAndWait();
 
@@ -367,8 +369,6 @@ public class QuanLyPhieuDatPhongController implements Initializable {
                 ThongBaoUtil.hienThiLoi("Lỗi", "Chỉ được cập nhật phiếu đã đặt");
             }
 
-        } catch (IOException e) {
-            ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể mở form sửa phiếu đặt phòng: " + e.getMessage());
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -391,15 +391,13 @@ public class QuanLyPhieuDatPhongController implements Initializable {
 
             // 3. Load FXML của màn hình chi tiết
             // Đảm bảo đường dẫn FXML là chính xác theo cấu trúc dự án của bạn!
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/chi-tiet-phong-trong-phieu-view.fxml"));
-            Parent root = loader.load();
-
-            // 4. Truy cập Controller của màn hình mới
-            ChiTietPhongTrongPhieuController chiTietController = loader.getController();
+            ChiTietPhongTrongPhieuView view = new ChiTietPhongTrongPhieuView();
+            ChiTietPhongTrongPhieuController controller = new ChiTietPhongTrongPhieuController(view);
+            Parent root = view.getRoot();
 
             // 5. Truyền dữ liệu sang Controller mới
             // Hàm setChiTietData sẽ lấy MaPhieu và danh sách CTHoaDonPhong để hiển thị
-            chiTietController.setChiTietData(phieuDatPhong.getMaPhieu(), dsCTP);
+            controller.setChiTietData(phieuDatPhong.getMaPhieu(), dsCTP);
 
             // 6. Tạo Stage và hiển thị
             Stage stage = new Stage();
@@ -408,11 +406,6 @@ public class QuanLyPhieuDatPhongController implements Initializable {
             stage.initModality(Modality.APPLICATION_MODAL); // Chặn tương tác với cửa sổ cha
             stage.showAndWait(); // Hiển thị và chờ người dùng đóng cửa sổ
 
-        } catch (IOException e) {
-            // Lỗi khi không tìm thấy hoặc không load được file FXML
-            ThongBaoUtil.hienThiLoi("Lỗi mở màn hình", "Không tìm thấy file FXML Chi Tiết Phòng hoặc lỗi tải: " + e.getMessage());
-            System.err.println("Lỗi FXML: ");
-            e.printStackTrace();
         } catch (SQLException e) {
             // Lỗi xảy ra khi truy vấn DB trong quá trình lấy chi tiết phòng
             ThongBaoUtil.hienThiLoi("Lỗi dữ liệu", "Lỗi khi truy xuất chi tiết phòng: " + e.getMessage());

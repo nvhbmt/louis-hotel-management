@@ -10,6 +10,7 @@ import com.example.louishotelmanagement.ui.components.CustomButton;
 import com.example.louishotelmanagement.ui.models.BadgeVariant;
 import com.example.louishotelmanagement.ui.models.ButtonVariant;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
+import com.example.louishotelmanagement.view.PhongFormDialogView;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,6 +18,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -342,49 +344,41 @@ public class QuanLyPhongController implements Initializable {
 
     @FXML
     private void handleThemPhong() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/phong-form-dialog.fxml"));
-            Stage dialog = new Stage();
-            dialog.setTitle("Thêm Phòng Mới");
-            dialog.initModality(Modality.APPLICATION_MODAL);
-            dialog.setScene(new Scene(loader.load()));
+        PhongFormDialogView view = new PhongFormDialogView();
+        PhongDialogController controller = new PhongDialogController(view);
+        Parent root = view.getRoot();
+        Stage dialog = new Stage();
+        dialog.setTitle("Thêm Phòng Mới");
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.setScene(new Scene(root));
+        // Thiết lập controller và dữ liệu
+        controller.setMode("ADD");
 
-            // Thiết lập controller và dữ liệu
-            PhongDialogController controller = loader.getController();
-            controller.setMode("ADD");
+        dialog.showAndWait();
 
-            dialog.showAndWait();
+        // Làm mới dữ liệu sau khi thêm
+        taiDuLieu();
 
-            // Làm mới dữ liệu sau khi thêm
-            taiDuLieu();
-
-        } catch (IOException e) {
-            ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể mở form thêm phòng: " + e.getMessage());
-        }
     }
 
     @FXML
     private void handleSuaPhong(Phong phong) {
 
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/phong-form-dialog.fxml"));
-            Stage dialog = new Stage();
-            dialog.setTitle("Sửa Thông Tin Phòng");
-            dialog.initModality(Modality.APPLICATION_MODAL);
-            dialog.setScene(new Scene(loader.load()));
+        PhongFormDialogView view = new PhongFormDialogView();
+        PhongDialogController controller = new PhongDialogController(view);
+        Parent root = view.getRoot();
+        Stage dialog = new Stage();
+        dialog.setTitle("Sửa Thông Tin Phòng");
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.setScene(new Scene(root));
+        // Thiết lập controller và dữ liệu
+        controller.setMode("EDIT");
+        controller.setPhong(phong);
+        dialog.showAndWait();
 
-            // Thiết lập controller và dữ liệu
-            PhongDialogController controller = loader.getController();
-            controller.setMode("EDIT");
-            controller.setPhong(phong);
-            dialog.showAndWait();
+        // Làm mới dữ liệu sau khi sửa
+        taiDuLieu();
 
-            // Làm mới dữ liệu sau khi sửa
-            taiDuLieu();
-
-        } catch (IOException e) {
-            ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể mở form sửa phòng: " + e.getMessage());
-        }
     }
 
     @FXML

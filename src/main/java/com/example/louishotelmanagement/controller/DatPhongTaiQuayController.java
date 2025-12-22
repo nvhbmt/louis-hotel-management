@@ -7,6 +7,7 @@ import com.example.louishotelmanagement.ui.components.CustomButton;
 import com.example.louishotelmanagement.ui.models.ButtonVariant;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
 import com.example.louishotelmanagement.util.Refreshable;
+import com.example.louishotelmanagement.view.KhachHangFormDialogView;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -15,6 +16,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -424,11 +426,13 @@ public class DatPhongTaiQuayController implements Initializable, Refreshable {
 
     public void handleThemKhachHang(ActionEvent actionEvent) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/khach-hang-form-dialog.fxml"));
+            KhachHangFormDialogView view = new KhachHangFormDialogView();
+            KhachHangDialogController controller = new KhachHangDialogController(view);
+            Parent root = view.getRoot();
             Stage dialog = new Stage();
             dialog.setTitle("Thêm Khách Hàng Mới");
             dialog.initModality(Modality.APPLICATION_MODAL);
-            dialog.setScene(new Scene(loader.load()));
+            dialog.setScene(new Scene(root));
             dialog.showAndWait();
             refreshData();
         } catch (Exception e) {

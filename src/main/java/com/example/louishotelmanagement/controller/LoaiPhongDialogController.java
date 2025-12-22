@@ -7,6 +7,7 @@ import com.dlsc.formsfx.view.renderer.FormRenderer;
 import com.example.louishotelmanagement.dao.LoaiPhongDAO;
 import com.example.louishotelmanagement.model.LoaiPhong;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
+import com.example.louishotelmanagement.view.LoaiPhongFormDialogView;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -18,8 +19,10 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
-public class LoaiPhongDialogController implements Initializable {
+public class LoaiPhongDialogController{
 
+    @FXML
+    private final Button btnHuy;
     @FXML
     private Label lblTieuDe;
     @FXML
@@ -37,15 +40,28 @@ public class LoaiPhongDialogController implements Initializable {
     private StringField moTaField;
     private Form form;
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    public LoaiPhongDialogController(LoaiPhongFormDialogView view) {
+        this.lblTieuDe = view.getLblTieuDe();
+        this.formContainer = view.getFormContainer();
+        this.btnHuy = view.getBtnHuy();
+        this.btnLuu = view.getBtnLuu();
+        this.btnHuy.setOnAction(event -> handleHuy());
+        this.btnLuu.setOnAction(event -> handleLuu());
+        initialize();
+    }
+    
+    public void initialize() {
         try {
             khoiTaoDAO();
             String maLoaiPhongTiepTheo = layMaLoaiPhongTiepTheoNeuThemMoi();
 
             taoForm(maLoaiPhongTiepTheo, "", 0.0, "");
             hienThiForm();
+            // THÊM DÒNG NÀY ĐỂ KẾT NỐI NÚT HỦY
+            btnHuy.setOnAction(e -> handleHuy());
 
+            // CŨNG NÊN GÁN LUÔN CHO NÚT LƯU ĐỂ ĐẢM BẢO
+            btnLuu.setOnAction(e -> handleLuu());
         } catch (SQLException e) {
             ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể khởi tạo form: " + e.getMessage());
         }

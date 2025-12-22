@@ -5,6 +5,7 @@ import com.example.louishotelmanagement.model.LoaiPhong;
 import com.example.louishotelmanagement.ui.components.CustomButton;
 import com.example.louishotelmanagement.ui.models.ButtonVariant;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
+import com.example.louishotelmanagement.view.LoaiPhongFormDialogView;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -12,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -274,48 +276,40 @@ public class LoaiPhongController implements Initializable {
 
     @FXML
     private void handleThemLoaiPhong() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/loai-phong-form-dialog.fxml"));
-            Stage dialog = new Stage();
-            dialog.setTitle("Thêm Loại Phòng Mới");
-            dialog.initModality(Modality.APPLICATION_MODAL);
-            dialog.setScene(new Scene(loader.load()));
+        LoaiPhongFormDialogView view = new LoaiPhongFormDialogView();
+        LoaiPhongDialogController controller = new LoaiPhongDialogController(view);
+        Parent root = view.getRoot();
+        Stage dialog = new Stage();
+        dialog.setTitle("Thêm Loại Phòng Mới");
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.setScene(new Scene(root));
+        // Thiết lập controller và dữ liệu
+        controller.setMode("ADD");
 
-            // Thiết lập controller và dữ liệu
-            LoaiPhongDialogController controller = loader.getController();
-            controller.setMode("ADD");
+        dialog.showAndWait();
 
-            dialog.showAndWait();
+        // Làm mới dữ liệu sau khi thêm
+        taiDuLieu();
 
-            // Làm mới dữ liệu sau khi thêm
-            taiDuLieu();
-
-        } catch (IOException e) {
-            ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể mở form thêm loại phòng: " + e.getMessage());
-        }
     }
 
     @FXML
     private void handleSuaLoaiPhong(LoaiPhong loaiPhong) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/loai-phong-form-dialog.fxml"));
-            Stage dialog = new Stage();
-            dialog.setTitle("Sửa Thông Tin Loại Phòng");
-            dialog.initModality(Modality.APPLICATION_MODAL);
-            dialog.setScene(new Scene(loader.load()));
+        LoaiPhongFormDialogView view = new LoaiPhongFormDialogView();
+        LoaiPhongDialogController controller = new LoaiPhongDialogController(view);
+        Parent root = view.getRoot();
+        Stage dialog = new Stage();
+        dialog.setTitle("Sửa Thông Tin Loại Phòng");
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.setScene(new Scene(root));
+        // Thiết lập controller và dữ liệu
+        controller.setMode("EDIT");
+        controller.setLoaiPhong(loaiPhong);
+        dialog.showAndWait();
 
-            // Thiết lập controller và dữ liệu
-            LoaiPhongDialogController controller = loader.getController();
-            controller.setMode("EDIT");
-            controller.setLoaiPhong(loaiPhong);
-            dialog.showAndWait();
+        // Làm mới dữ liệu sau khi sửa
+        taiDuLieu();
 
-            // Làm mới dữ liệu sau khi sửa
-            taiDuLieu();
-
-        } catch (IOException e) {
-            ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể mở form sửa loại phòng: " + e.getMessage());
-        }
     }
 
     @FXML

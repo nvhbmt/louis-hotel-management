@@ -1,9 +1,16 @@
 package com.example.louishotelmanagement.controller;
 
+import com.example.louishotelmanagement.view.MaQRView;
+import com.itextpdf.text.pdf.qrcode.QRCode;
+import com.itextpdf.text.pdf.qrcode.QRCodeWriter;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
+
+import java.net.URL;
+import java.util.ResourceBundle;
 
 public class QRController {
 
@@ -18,7 +25,13 @@ public class QRController {
     public boolean isTransactionConfirmed() {
         return transactionConfirmed;
     }
-
+    public QRController(MaQRView view) {
+        this.btnXacNhan = view.getBtnXacNhan();
+        this.btnHuy = view.getBtnHuy();
+        // THÊM 2 DÒNG NÀY ĐỂ KẾT NỐI SỰ KIỆN
+        this.btnXacNhan.setOnAction(e -> handleXacNhan());
+        this.btnHuy.setOnAction(e -> handleHuy());
+    }
     @FXML
     private void handleXacNhan() {
         transactionConfirmed = true; // Đánh dấu đã xác nhận
@@ -50,4 +63,5 @@ public class QRController {
         Stage stage = (Stage) btnHuy.getScene().getWindow();
         stage.close();
     }
+
 }

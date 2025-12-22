@@ -7,6 +7,7 @@ import com.example.louishotelmanagement.ui.components.CustomButton;
 import com.example.louishotelmanagement.ui.models.BadgeVariant;
 import com.example.louishotelmanagement.ui.models.ButtonVariant;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
+import com.example.louishotelmanagement.view.DichVuFormDialogView;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -14,6 +15,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -273,48 +275,40 @@ public class QuanLyDichVuController implements Initializable {
 
     @FXML
     private void handleThemDichVu() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/dich-vu-form-dialog.fxml"));
-            Stage dialog = new Stage();
-            dialog.setTitle("Thêm Dịch Vụ Mới");
-            dialog.initModality(Modality.APPLICATION_MODAL);
-            dialog.setScene(new Scene(loader.load()));
+        DichVuFormDialogView view = new DichVuFormDialogView();
+        DichVuDialogController controller = new DichVuDialogController(view);
+        Parent root = view.getRoot();
+        Stage dialog = new Stage();
+        dialog.setTitle("Thêm Dịch Vụ Mới");
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.setScene(new Scene(root));
+        controller.setMode("ADD");
 
-            // Thiết lập controller và dữ liệu
-            DichVuDialogController controller = loader.getController();
-            controller.setMode("ADD");
+        dialog.showAndWait();
 
-            dialog.showAndWait();
+        // Làm mới dữ liệu sau khi thêm
+        taiDuLieu();
 
-            // Làm mới dữ liệu sau khi thêm
-            taiDuLieu();
-
-        } catch (IOException e) {
-            ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể mở form thêm dịch vụ: " + e.getMessage());
-        }
     }
 
     @FXML
     private void handleSuaDichVu(DichVu dichVu) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/dich-vu-form-dialog.fxml"));
-            Stage dialog = new Stage();
-            dialog.setTitle("Sửa Thông Tin Dịch Vụ");
-            dialog.initModality(Modality.APPLICATION_MODAL);
-            dialog.setScene(new Scene(loader.load()));
+        DichVuFormDialogView view = new DichVuFormDialogView();
+        DichVuDialogController controller = new DichVuDialogController(view);
+        Parent root = view.getRoot();
+        Stage dialog = new Stage();
+        dialog.setTitle("Sửa Thông Tin Dịch Vụ");
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.setScene(new Scene(root));
 
-            // Thiết lập controller và dữ liệu
-            DichVuDialogController controller = loader.getController();
-            controller.setMode("EDIT");
-            controller.setDichVu(dichVu);
-            dialog.showAndWait();
+        // Thiết lập controller và dữ liệu
+        controller.setMode("EDIT");
+        controller.setDichVu(dichVu);
+        dialog.showAndWait();
 
-            // Làm mới dữ liệu sau khi sửa
-            taiDuLieu();
+        // Làm mới dữ liệu sau khi sửa
+        taiDuLieu();
 
-        } catch (IOException e) {
-            ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể mở form sửa dịch vụ: " + e.getMessage());
-        }
     }
 
     @FXML
