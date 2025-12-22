@@ -5,6 +5,7 @@ import com.example.louishotelmanagement.util.ContentManager;
 import com.example.louishotelmanagement.util.ContentSwitcher;
 import com.example.louishotelmanagement.util.MenuBuilder;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
+import com.example.louishotelmanagement.view.TrangChuView;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -58,7 +59,8 @@ public class LayoutController implements Initializable, ContentSwitcher {
         authService = AuthService.getInstance();
         setupUserInfo();
         setupMenuVBox();
-        loadFXML("/com/example/louishotelmanagement/fxml/trang-chu-view.fxml");
+        // Load TrangChuView programmatically instead of FXML
+        loadParent(new TrangChuView().getRoot());
         // Note: TrangChuController sẽ tự setup ContentSwitcher trong initialize() method của nó
     }
 
@@ -255,21 +257,53 @@ public class LayoutController implements Initializable, ContentSwitcher {
 
     /**
      * Setup mapping from fxmlPath to Button for string-based navigation
+     * This mapping is used when ContentSwitcher.switchContent(String fxmlPath) is called
      */
     private void setupFxmlPathToButtonMapping() {
-        // Create mapping based on known fxmlPath patterns
-        fxmlPathToButton.put("/com/example/louishotelmanagement/fxml/trang-chu-view.fxml", findButtonByTitle("Trang chủ"));
-        fxmlPathToButton.put("/com/example/louishotelmanagement/fxml/phong-view.fxml", findButtonByTitle("Đặt phòng"));
-        fxmlPathToButton.put("/com/example/louishotelmanagement/fxml/quan-ly-phong-view.fxml", findButtonByTitle("Quản lý phòng"));
-        fxmlPathToButton.put("/com/example/louishotelmanagement/fxml/quan-ly-loai-phong-view.fxml", findButtonByTitle("Loại phòng"));
-        fxmlPathToButton.put("/com/example/louishotelmanagement/fxml/quan-ly-phieu-dat-phong.fxml", findButtonByTitle("Phiếu đặt phòng"));
-        fxmlPathToButton.put("/com/example/louishotelmanagement/fxml/dat-dich-vu-view.fxml", findButtonByTitle("Cung cấp dịch vụ"));
-        fxmlPathToButton.put("/com/example/louishotelmanagement/fxml/quan-ly-dich-vu-view.fxml", findButtonByTitle("Quản lý dịch vụ"));
-        fxmlPathToButton.put("/com/example/louishotelmanagement/fxml/quan-ly-khuyen-mai-view.fxml", findButtonByTitle("Khuyến mãi"));
-        fxmlPathToButton.put("/com/example/louishotelmanagement/fxml/quan-ly-hoa-don-view.fxml", findButtonByTitle("Hóa đơn"));
-        fxmlPathToButton.put("/com/example/louishotelmanagement/fxml/thong-ke-view.fxml", findButtonByTitle("Thống kê"));
-        fxmlPathToButton.put("/com/example/louishotelmanagement/fxml/quan-ly-nhan-vien-view.fxml", findButtonByTitle("Nhân viên"));
-        fxmlPathToButton.put("/com/example/louishotelmanagement/fxml/quan-ly-khach-hang-view.fxml", findButtonByTitle("Khách hàng"));
+        // Clear any existing mappings
+        fxmlPathToButton.clear();
+
+ 
+        fxmlPathToButton.put("/com/example/louishotelmanagement/fxml/quan-ly-phong-view.fxml",
+                           findButtonByTitle("Quản lý phòng"));
+        fxmlPathToButton.put("/com/example/louishotelmanagement/fxml/quan-ly-loai-phong-view.fxml",
+                           findButtonByTitle("Loại phòng"));
+
+        // ============================================
+        // BOOKING MANAGEMENT
+        // ============================================
+        fxmlPathToButton.put("/com/example/louishotelmanagement/fxml/quan-ly-phieu-dat-phong.fxml",
+                           findButtonByTitle("Phiếu đặt phòng"));
+
+        // ============================================
+        // SERVICE MANAGEMENT
+        // ============================================
+        fxmlPathToButton.put("/com/example/louishotelmanagement/fxml/dat-dich-vu-view.fxml",
+                           findButtonByTitle("Cung cấp dịch vụ"));
+        fxmlPathToButton.put("/com/example/louishotelmanagement/fxml/quan-ly-dich-vu-view.fxml",
+                           findButtonByTitle("Quản lý dịch vụ"));
+
+        // ============================================
+        // PROMOTION & BILLING
+        // ============================================
+        fxmlPathToButton.put("/com/example/louishotelmanagement/fxml/quan-ly-khuyen-mai-view.fxml",
+                           findButtonByTitle("Khuyến mãi"));
+        fxmlPathToButton.put("/com/example/louishotelmanagement/fxml/quan-ly-hoa-don-view.fxml",
+                           findButtonByTitle("Hóa đơn"));
+
+        // ============================================
+        // REPORTING & ANALYTICS
+        // ============================================
+        fxmlPathToButton.put("/com/example/louishotelmanagement/fxml/thong-ke-view.fxml",
+                           findButtonByTitle("Thống kê"));
+
+        // ============================================
+        // USER MANAGEMENT
+        // ============================================
+        fxmlPathToButton.put("/com/example/louishotelmanagement/fxml/quan-ly-nhan-vien-view.fxml",
+                           findButtonByTitle("Nhân viên"));
+        fxmlPathToButton.put("/com/example/louishotelmanagement/fxml/quan-ly-khach-hang-view.fxml",
+                           findButtonByTitle("Khách hàng"));
     }
 
     /**

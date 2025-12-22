@@ -1,7 +1,10 @@
 package com.example.louishotelmanagement.ui.data;
 
+import com.example.louishotelmanagement.controller.PhongController;
 import com.example.louishotelmanagement.service.AuthService;
 import com.example.louishotelmanagement.ui.models.MenuItemModel;
+import com.example.louishotelmanagement.view.PhongView;
+import com.example.louishotelmanagement.view.TrangChuView;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.TreeItem;
@@ -30,15 +33,20 @@ public class MenuData {
         String userRole = authService.getCurrentUserRole();
 
         TreeItem<MenuItemModel> trangChu = new TreeItem<>(
-                new MenuItemModel("Trang chủ", "mdi2h-home",
-                        loadFxml("/com/example/louishotelmanagement/fxml/trang-chu-view.fxml"))
+                new MenuItemModel("Trang chủ", "mdi2h-home",new TrangChuView().getRoot())
         );
 
         TreeItem<MenuItemModel> phongGroup = new TreeItem<>(
                 new MenuItemModel("Phòng", "mdi2b-bed", null, null)
         );
+        // Create PhongView and PhongController
+        PhongView phongView = new PhongView();
+        PhongController phongController = new PhongController();
+        phongView.setupController(phongController);
+        phongController.setupController();
+
         phongGroup.getChildren().addAll(List.of(
-                new TreeItem<>(new MenuItemModel("Đặt phòng", "mdi2b-bed", loadFxml("/com/example/louishotelmanagement/fxml/phong-view.fxml")))
+                new TreeItem<>(new MenuItemModel("Đặt phòng", "mdi2b-bed", phongView.getRoot()))
         ));
 
         if ("Manager".equals(userRole)) {
