@@ -7,6 +7,7 @@ import com.example.louishotelmanagement.util.ContentSwitcher;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
 import com.example.louishotelmanagement.util.Refreshable;
 
+import com.example.louishotelmanagement.view.DoiPhongView;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -27,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class DoiPhongController implements Initializable, Refreshable,ContentSwitchable {
+public class DoiPhongController implements Refreshable,ContentSwitchable {
 
     @FXML public ComboBox<String> dsKhachHang;
     @FXML public ComboBox<String> dsPhongHienTai;
@@ -42,6 +43,7 @@ public class DoiPhongController implements Initializable, Refreshable,ContentSwi
     @FXML private TableColumn<Phong, TrangThaiPhong> trangThai;
     @FXML private TableColumn<Phong, String> moTa;
     @FXML private TableColumn<Phong, String> loaiPhong;
+    @FXML private Button btnLamMoi;
 
     private PhongDAO Pdao;
     private KhachHangDAO Kdao;
@@ -58,9 +60,39 @@ public class DoiPhongController implements Initializable, Refreshable,ContentSwi
     public void setContentSwitcher(ContentSwitcher switcher) {
         this.switcher = switcher;
     }
-
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
+    public DoiPhongController(DoiPhongView view) {
+        this.dsKhachHang = view.getDsKhachHang();
+        this.dsPhongHienTai = view.getDsPhongHienTai();
+        this.dsPhong = view.getDsPhong();
+        this.cbTang = view.getCbTang();
+        this.cbLocLoaiPhong = view.getCbLocLoaiPhong();
+        this.tablePhong = view.getTablePhong();
+        this.maPhong = view.getMaPhong();
+        this.tang = view.getTang();
+        this.trangThai = view.getTrangThai();
+        this.moTa = view.getMoTa();
+        this.loaiPhong = view.getLoaiPhong();
+        this.btnDoiPhong = view.getBtnDoiPhong();
+        this.btnLamMoi = view.getBtnLamMoi();
+        this.btnDoiPhong.setOnAction(e-> {
+            try {
+                handleDoiPhong(e);
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+        this.btnLamMoi.setOnAction(event -> {
+            try {
+                handleRefresh(event);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        this.cbTang.setOnAction(event -> handleLocTang());
+        this.cbLocLoaiPhong.setOnAction(event -> handleLocLoaiPhong());
+        initialize();
+    }
+    public void initialize() {
         Pdao = new PhongDAO();
         Kdao = new KhachHangDAO();
         pdpDao = new PhieuDatPhongDAO();
@@ -259,8 +291,9 @@ public class DoiPhongController implements Initializable, Refreshable,ContentSwi
     public void refreshData() throws SQLException {
         laydsKhachHang();
         layDsPhongTrong();
-        dsKhachHang.getSelectionModel().clearSelection();
+        dsKhachHang.getSelectionModel().selectFirst();
         dsPhongHienTai.getItems().clear();
+        laydsPhongHienTaiCuaKhach();
         cbTang.setValue(null);
         cbLocLoaiPhong.setValue(null);
     }

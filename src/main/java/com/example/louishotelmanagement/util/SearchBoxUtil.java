@@ -11,15 +11,26 @@ import java.util.regex.Pattern;
 public class SearchBoxUtil {
 
     public static void makeSearchable(ComboBox<String> comboBox) {
+        // 1. Kiểm tra xem ComboBox này đã được xử lý SearchBoxUtil chưa
+        if (comboBox.getProperties().containsKey("isSearchable")) {
+            return; // Đã xử lý rồi thì thoát ra, không làm gì thêm
+        }
+
+        // 2. Đánh dấu đã xử lý
+        comboBox.getProperties().put("isSearchable", true);
+
         comboBox.setEditable(true);
         comboBox.getStyleClass().add("search-style");
 
-        // Thiết lập Prompt Text cho Editor để trông chuyên nghiệp hơn
-        comboBox.getEditor().setPromptText("Nhập tên để tìm kiếm...");
+        // 3. Sử dụng try-catch để an toàn tuyệt đối với promptText
+        try {
+            comboBox.getEditor().setPromptText("Nhập tên để tìm kiếm...");
+        } catch (RuntimeException e) {
+            // Nếu đã bị bind từ trước thì bỏ qua, không gây sập ứng dụng
+        }
 
-        // ✅ LƯU DANH SÁCH GỐC – CỰC KỲ QUAN TRỌNG
-        ObservableList<String> masterItems =
-                FXCollections.observableArrayList(comboBox.getItems());
+        // Giữ nguyên logic xử lý danh sách masterItems và sự kiện phím bên dưới...
+        ObservableList<String> masterItems = FXCollections.observableArrayList(comboBox.getItems());
 
         comboBox.getEditor().setOnKeyReleased(event -> {
 

@@ -9,6 +9,7 @@ import com.example.louishotelmanagement.util.Refreshable;
 
 import com.example.louishotelmanagement.view.ChiTietPhongTrongPhieuView;
 import com.example.louishotelmanagement.view.ThanhToanDialogView;
+import com.example.louishotelmanagement.view.TraPhongView;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -27,7 +28,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-public class TraPhongController implements Initializable, Refreshable,ContentSwitchable {
+public class TraPhongController implements Refreshable,ContentSwitchable {
 
     @FXML public Button btnCheck;
     @FXML public ComboBox<String> dsPhong;
@@ -54,8 +55,37 @@ public class TraPhongController implements Initializable, Refreshable,ContentSwi
         this.switcher = switcher;
     }
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
+    public TraPhongController(TraPhongView view) {
+        // 1. Gán các thành phần từ View sang Controller
+        this.btnCheck = view.getBtnCheck();
+        this.dsPhong = view.getDsPhong();
+        this.dsKhachHang = view.getDsKhachHang();
+        this.dsPhieu = view.getDsPhieu();
+        this.btnTraPhong = view.getBtnTraPhong();
+        this.ngayTraPhong = view.getNgayTraPhong();
+        this.hoTen = view.getHoTen();
+        this.maPhieuThue = view.getMaPhieuThue();
+        this.ngayDen = view.getNgayDen();
+        this.soLuongPhong = view.getSoLuongPhong();
+        this.btnXemChiTiet = view.getBtnXemChiTiet();
+
+        // 2. Gán sự kiện cho các nút
+        this.btnCheck.setOnAction(e -> {
+            try { handleCheck(e); } catch (Exception ex) { ex.printStackTrace(); }
+        });
+
+        this.btnTraPhong.setOnAction(e -> {
+            try { handleTraPhong(e); } catch (Exception ex) { ex.printStackTrace(); }
+        });
+
+        this.btnXemChiTiet.setOnAction(e -> {
+            try { handleXemChiTiet(e); } catch (SQLException ex) { ex.printStackTrace(); }
+        });
+
+        // 3. Khởi tạo dữ liệu (tương đương initialize của FXML)
+        initialize();
+    }
+    public void initialize() {
         khDao = new KhachHangDAO();
         phDao = new PhongDAO();
         cthdpDao = new CTHoaDonPhongDAO();
