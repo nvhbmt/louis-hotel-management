@@ -29,11 +29,11 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-public class HuyDatPhongController implements Initializable,Refreshable {
+public class HuyDatPhongController implements Refreshable {
 
     public TextField searchTextField;
-    @FXML
-    public TableView tablePhieu;
+    // Sửa dòng này
+    public TableView<PhieuDatPhong> tablePhieu;
     @FXML
     public TableColumn<PhieuDatPhong, String> colMaPhieu;
     @FXML
@@ -58,9 +58,63 @@ public class HuyDatPhongController implements Initializable,Refreshable {
     public TextField txtMaPhieu;
     public TextField txtSoPhong;
     public ArrayList<String> dsMaKH = new ArrayList<>();
+    private Button btnTim, btnLamMoi, btnXemChiTiet, btnHuyPhieuDat;
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
+    // Constructor để link View vào Controller
+    public HuyDatPhongController(HuyDatPhongView view) {
+        // 1. Gán các Control
+        this.dsKhachHang = view.getDsKhachHang();
+        this.searchTextField = view.getSearchTextField();
+        this.tablePhieu = view.getTablePhieu();
+        this.txtMaPhieu = view.getTxtMaPhieu();
+        this.txtSoPhong = view.getTxtSoPhong();
+        this.btnTim = view.getBtnTim();
+        this.btnLamMoi = view.getBtnLamMoi();
+        this.btnXemChiTiet = view.getBtnXemChiTiet();
+        this.btnHuyPhieuDat = view.getBtnHuyPhieuDat();
+
+        // 2. QUAN TRỌNG: Gán các cột từ View vào Controller
+        this.colMaPhieu = view.getColMaPhieu();
+        this.colNgayDat = view.getColNgayDat();
+        this.colNgayDen = view.getColNgayDen();
+        this.colNgayDi = view.getColNgayDi();
+        this.colTrangThai = view.getColTrangThai();
+        this.colGhiChu = view.getColGhiChu();
+        this.colTenKhachHang = view.getColTenKhachHang();
+        this.colMaNhanVien = view.getColMaNhanVien();
+
+        // 3. Gán sự kiện và khởi tạo
+        ganSuKien();
+        initialize();
+    }
+
+    private void ganSuKien() {
+        btnTim.setOnAction(e -> {
+            try {
+                handleTim(e);
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                ThongBaoUtil.hienThiLoi("Lỗi Database", "Không thể tìm kiếm do lỗi kết nối.");
+            }
+        });
+        btnLamMoi.setOnAction(e -> {
+            try {
+                handleLamMoi(e);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+        btnXemChiTiet.setOnAction(this::handleXemChiTiet);
+        btnHuyPhieuDat.setOnAction(e -> {
+            try {
+                handleHuyPhieuDat(e);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+    }
+
+    public void initialize() {
         kDao = new KhachHangDAO();
         pDao = new PhieuDatPhongDAO();
         cthdpDao = new CTHoaDonPhongDAO();

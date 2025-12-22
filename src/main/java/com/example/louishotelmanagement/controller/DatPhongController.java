@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import com.example.louishotelmanagement.view.DatPhongView;
 import org.kordamp.bootstrapfx.BootstrapFX;
 import com.example.louishotelmanagement.dao.CTHoaDonPhongDAO;
 import com.example.louishotelmanagement.dao.HoaDonDAO;
@@ -63,7 +65,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 
-public class DatPhongController implements Initializable, Refreshable {
+public class DatPhongController implements Refreshable {
 
     public ComboBox dsPhong;
     public ComboBox dsKhachHang;
@@ -103,8 +105,51 @@ public class DatPhongController implements Initializable, Refreshable {
     private ObservableList<Phong> danhSachPhongFiltered;
     private LoaiPhongDAO loaiPhongDAO;
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
+    public DatPhongController(DatPhongView view) {
+        // 1. Ánh xạ dữ liệu UI
+        this.dsKhachHang = view.getDsKhachHang();
+        this.maNhanVien = view.getMaNhanVien();
+        this.ngayDen = view.getNgayDen();
+        this.ngayDi = view.getNgayDi();
+        this.btnDatPhong = view.getBtnDatPhong();
+        this.SoPhongDaChon = view.getSoPhongDaChon();
+        this.TongTien = view.getTongTien();
+        this.lbSoDem = view.getLbSoDem();
+        this.lbLoaiDatPhong = view.getLbLoaiDatPhong();
+        this.lbLoadingPhong = view.getLbLoadingPhong();
+        this.lbSoPhongTrong = view.getLbSoPhongTrong();
+        this.lbTongSoDem = view.getLbTongSoDem();
+        this.cbTang = view.getCbTang();
+        this.cbLocLoaiPhong = view.getCbLocLoaiPhong();
+        this.tablePhong = view.getTablePhong();
+
+        // Ánh xạ cột
+        this.colMaPhong = view.getColMaPhong();
+        this.colTenLoaiPhong = view.getColTenLoaiPhong();
+        this.colTang = view.getColTang();
+        this.colDonGia = view.getColDonGia();
+        this.colTrangThai = view.getColTrangThai();
+        this.colMoTa = view.getColMoTa();
+        this.colThaoTac = view.getColThaoTac();
+
+        // 2. Gán sự kiện cho Button không qua FXML
+        view.getBtnThemKhachHang().setOnAction(this::handleThemKhachHang);
+        view.getBtnLamMoi().setOnAction(e -> {
+            try { handleRefresh(e); } catch (SQLException ex) { ex.printStackTrace(); }
+        });
+        this.btnDatPhong.setOnAction(e -> {
+            try { handleDatPhong(e); } catch (SQLException ex) { ex.printStackTrace(); }
+        });
+
+        // Gán sự kiện lọc
+        this.cbTang.setOnAction(e -> handleLocTang());
+        this.cbLocLoaiPhong.setOnAction(e -> handleLocLoaiPhong());
+
+        // 3. Khởi tạo logic nghiệp vụ
+        initialize();
+    }
+
+    public void initialize() {
         Pdao = new PhongDAO();
         Kdao = new KhachHangDAO();
         pdpDao = new PhieuDatPhongDAO();

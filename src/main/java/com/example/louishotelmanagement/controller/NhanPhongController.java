@@ -7,6 +7,7 @@ import com.example.louishotelmanagement.util.ContentSwitcher;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
 import com.example.louishotelmanagement.util.Refreshable;
 
+import com.example.louishotelmanagement.view.NhanPhongView;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -20,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-public class NhanPhongController implements Initializable, Refreshable,ContentSwitchable {
+public class NhanPhongController implements Refreshable,ContentSwitchable {
 
     public ComboBox<String> dsKhachHang;
     public ComboBox<String> dsPhong;
@@ -53,8 +54,43 @@ public class NhanPhongController implements Initializable, Refreshable,ContentSw
         this.switcher = switcher;
     }
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
+    // Thêm vào NhanPhongController.java
+    public NhanPhongController(NhanPhongView view) {
+        this.dsKhachHang = view.getDsKhachHang();
+        this.dsPhong = view.getDsPhong();
+        this.soDT = view.getSoDT();
+        this.CCCD = view.getCCCD();
+        this.btnCheck = view.getBtnCheck();
+        this.maPhieu = view.getMaPhieu();
+        this.maPhong = view.getMaPhong();
+        this.tang = view.getTang();
+        this.hoTen = view.getHoTen();
+        this.ngayDen = view.getNgayDen();
+        this.ngayDi = view.getNgayDi();
+        this.btnNhanPhong = view.getBtnNhanPhong();
+        this.ngayDat = view.getNgayDat();
+
+        // Gán sự kiện cho các nút (do không dùng FXML onAction)
+        this.btnCheck.setOnAction(e -> {
+            try {
+                handleCheck(e);
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        });
+
+        this.btnNhanPhong.setOnAction(e -> {
+            try {
+                handleNhanPhong(e);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+
+        // Khởi tạo logic
+        initialize();
+    }
+    public void initialize() {
         phieuDatPhongDAO = new PhieuDatPhongDAO();
         ctHoaDondao = new CTHoaDonPhongDAO();
         khachHangDAO = new KhachHangDAO();
@@ -63,6 +99,11 @@ public class NhanPhongController implements Initializable, Refreshable,ContentSw
         try {
             khoiTaoDinhDangNgay();
             laydsKh();
+
+            // SỬA TẠI ĐÂY: Chỉ gọi makeSearchable nếu ComboBox chưa có Editor (chưa được biến thành searchable)
+            if (!dsKhachHang.isEditable()) {
+                com.example.louishotelmanagement.util.SearchBoxUtil.makeSearchable(dsKhachHang);
+            }
 
             // Listener khi chọn khách hàng -> load lại dữ liệu và ds phòng
             dsKhachHang.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -146,7 +187,7 @@ public class NhanPhongController implements Initializable, Refreshable,ContentSw
             dsMaKH.add(khachHang.getMaKH());
         }
 
-        com.example.louishotelmanagement.util.SearchBoxUtil.makeSearchable(dsKhachHang);
+
     }
 
     public void loadData() throws SQLException {
@@ -307,7 +348,7 @@ public class NhanPhongController implements Initializable, Refreshable,ContentSw
     @Override
     public void refreshData() throws SQLException, Exception {
         laydsKh();
-
+        dsKhachHang.getSelectionModel().selectFirst();
         maPhieu.clear();
         maPhong.clear();
         tang.clear();

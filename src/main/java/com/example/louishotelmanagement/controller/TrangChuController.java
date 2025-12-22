@@ -2,6 +2,8 @@ package com.example.louishotelmanagement.controller;
 
 import com.example.louishotelmanagement.util.ContentSwitchable;
 import com.example.louishotelmanagement.util.ContentSwitcher;
+import com.example.louishotelmanagement.view.NhanPhongView;
+import com.example.louishotelmanagement.view.TraPhongView;
 import javafx.fxml.FXML;
 
 public class TrangChuController implements ContentSwitchable {
@@ -42,14 +44,27 @@ public class TrangChuController implements ContentSwitchable {
         switcher.switchContent("/com/example/louishotelmanagement/fxml/dat-phong-truc-tiep-view.fxml");
     }
 
-    @FXML
     public void moNhanPhong() {
-        switcher.switchContent("/com/example/louishotelmanagement/fxml/nhan-phong-view.fxml");
+        NhanPhongView view = new NhanPhongView();
+        NhanPhongController controller = new NhanPhongController(view);
+        switcher.switchContent(view.getRoot());
     }
 
     @FXML
     public void moTraPhong() {
-        switcher.switchContent("/com/example/louishotelmanagement/fxml/tra-phong-view.fxml");
+        if (switcher != null) {
+            // 1. Khởi tạo View (Giao diện)
+            TraPhongView view = new TraPhongView();
+
+            // 2. Khởi tạo Controller (Logic) và truyền View vào để link các control
+            TraPhongController controller = new TraPhongController(view);
+
+            // 3. Truyền bộ chuyển đổi nội dung cho controller (để có thể mở dialog thanh toán)
+            controller.setContentSwitcher(this.switcher);
+
+            // 4. Lấy root từ View đã được Controller cấu hình và hiển thị
+            switcher.switchContent(view.getRoot());
+        }
     }
 
     public void setContentSwitcher(ContentSwitcher switcher) {
