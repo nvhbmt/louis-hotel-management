@@ -8,6 +8,7 @@ import com.example.louishotelmanagement.util.ThongBaoUtil;
 import com.example.louishotelmanagement.util.Refreshable;
 
 import com.example.louishotelmanagement.view.ChiTietPhongTrongPhieuView;
+import com.example.louishotelmanagement.view.ThanhToanDialogView;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -277,9 +278,9 @@ public class TraPhongController implements Initializable, Refreshable,ContentSwi
 
     private boolean moDialogThanhToan(HoaDon hoaDon) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/thanh-toan-dialog.fxml"));
-            Parent root = loader.load();
-            ThanhToanDialogController controller = loader.getController();
+            ThanhToanDialogView view = new ThanhToanDialogView();
+            ThanhToanDialogController controller = new ThanhToanDialogController(view);
+            Parent root = view.getRoot();
             controller.setHoaDon(hoaDon);
 
             Stage stage = new Stage();
