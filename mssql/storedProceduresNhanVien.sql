@@ -10,7 +10,8 @@ CREATE PROCEDURE sp_LayDSNhanVien
 AS
 BEGIN
     SELECT maNV, hoTen, soDT, diaChi, chucVu, ngaySinh
-    FROM NhanVien;
+    FROM NhanVien
+    WHERE daXoaLuc IS NULL;
 END
 GO
 
@@ -43,17 +44,17 @@ BEGIN
         diaChi  = @diaChi,
         chucVu  = @chucVu,
         ngaySinh= @ngaySinh
-    WHERE maNV = @maNV;
+    WHERE maNV = @maNV AND daXoaLuc IS NULL;
 END
 GO
 
--- 4. Xóa nhân viên
+-- 4. Xóa nhân viên (soft delete)
 CREATE PROCEDURE sp_XoaNhanVien @maNV NVARCHAR(10) -- Mã nhân viên cần xóa
 AS
 BEGIN
-    DELETE
-    FROM NhanVien
-    WHERE maNV = @maNV;
+    UPDATE NhanVien
+    SET daXoaLuc = GETDATE()
+    WHERE maNV = @maNV AND daXoaLuc IS NULL;
 END
 GO
 
@@ -63,6 +64,6 @@ AS
 BEGIN
     SELECT *
     FROM NhanVien
-    WHERE maNV = @maNV;
+    WHERE maNV = @maNV AND daXoaLuc IS NULL;
 END
 GO

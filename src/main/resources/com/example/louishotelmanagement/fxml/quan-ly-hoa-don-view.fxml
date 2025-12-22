@@ -22,9 +22,7 @@
                     <Label styleClass="header-title" text="Quản Lý Hóa Đơn"/>
                     <Label styleClass="header-subtitle" text="Quản lý các hóa đơn trong khách sạn"/>
                 </VBox>
-
             </HBox>
-
 
             <GridPane styleClass="stats-grid">
                 <columnConstraints>

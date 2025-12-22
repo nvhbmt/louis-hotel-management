@@ -319,7 +319,7 @@ public class QuanLyDichVuController implements Initializable {
             try {
                 // Ngừng kinh doanh dịch vụ
                 if (dichVuDAO.xoaDichVu(dichVu.getMaDV())) {
-                    ThongBaoUtil.hienThiThongBao("Thành công", "Đã ngừng kinh doanh dịch vụ thành công!");
+                    ThongBaoUtil.hienThiThongBao("Thành công", "Đã xóa dịch vụ thành công!");
                     taiDuLieu();
                 } else {
                     ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể ngừng kinh doanh dịch vụ!");

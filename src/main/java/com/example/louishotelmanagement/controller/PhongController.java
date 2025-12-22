@@ -1,15 +1,24 @@
 package com.example.louishotelmanagement.controller;
 
+import java.io.IOException;
+import java.net.URL;
+import java.sql.SQLException;
+import java.text.NumberFormat;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import com.example.louishotelmanagement.dao.PhongDAO;
 import com.example.louishotelmanagement.model.LoaiPhong;
 import com.example.louishotelmanagement.model.Phong;
 import com.example.louishotelmanagement.model.TrangThaiPhong;
+import com.example.louishotelmanagement.util.ContentManager;
+import com.example.louishotelmanagement.util.ContentSwitchable;
 import com.example.louishotelmanagement.ui.components.Badge;
 import com.example.louishotelmanagement.ui.models.BadgeVariant;
 import com.example.louishotelmanagement.util.ContentSwitcher;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -19,20 +28,16 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
 import javafx.scene.Parent;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.HBox;
-
-import java.io.IOException;
-import java.net.URL;
-import java.sql.SQLException;
-import java.text.NumberFormat;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Locale;
-import java.util.ResourceBundle;
 
 public class PhongController implements Initializable {
 
@@ -63,10 +68,6 @@ public class PhongController implements Initializable {
 
     private ContentSwitcher switcher;
 
-    public void setContentSwitcher(ContentSwitcher switcher) {
-        this.switcher = switcher;
-    }
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         phongDAO = new PhongDAO();
@@ -76,6 +77,11 @@ public class PhongController implements Initializable {
         cauHinhDatePicker();
         cauHinhLoc();
         taiBang();
+        
+        ContentSwitcher switcher = LayoutController.getInstance();
+        if (switcher != null) {
+            this.switcher = switcher;
+        }
     }
 
     private void cauHinhBang() {
@@ -174,84 +180,6 @@ public class PhongController implements Initializable {
                 }
             }
         });
-
-        // 4. Cột Thao tác (Menu Button)
-        TableColumn<Phong, Void> colThaoTac = new TableColumn<>("Thao tác");
-        colThaoTac.setPrefWidth(120);
-        colThaoTac.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(null));
-
-        colThaoTac.setCellFactory(param -> new TableCell<>() {
-            private final MenuButton btnMenu = new MenuButton("Tùy chọn");
-
-            {
-                btnMenu.getStyleClass().addAll("btn", "btn-xs", "btn-outline-primary");
-                btnMenu.setStyle("-fx-font-size: 11px; -fx-font-weight: bold;");
-
-                btnMenu.setOnShowing(event -> {
-                    Phong phong = getTableView().getItems().get(getIndex());
-                    TrangThaiPhong tt = layTrangThaiPhongTheoNgay(phong);
-                    btnMenu.getItems().clear();
-
-                    switch (tt) {
-                        case TRONG:
-                            MenuItem miDatTT = new MenuItem("Đặt trực tiếp");
-                            miDatTT.setOnAction(e -> xuLyDatPhong(phong, true));
-
-                            MenuItem miDatTruoc = new MenuItem("Đặt trước");
-                            miDatTruoc.setOnAction(e -> xuLyDatPhong(phong, false));
-
-                            btnMenu.getItems().addAll(miDatTT, miDatTruoc);
-                            break;
-
-                        case DA_DAT:
-                            MenuItem miNhan = new MenuItem("Nhận phòng");
-                            miNhan.setOnAction(e -> chuyenSangManHinhNhanPhong(phong));
-
-                            MenuItem miDoi = new MenuItem("Đổi phòng");
-                            miDoi.setOnAction(e -> chuyenSangManHinhDoiPhong(phong));
-
-                            MenuItem miHuy = new MenuItem("Hủy đặt");
-                            miHuy.setOnAction(e -> chuyenSangManHinhHuyDat(phong));
-
-                            btnMenu.getItems().addAll(miNhan, miDoi, new SeparatorMenuItem(), miHuy);
-                            break;
-
-                        case DANG_SU_DUNG:
-                            MenuItem miTra = new MenuItem("Trả phòng");
-                            miTra.setOnAction(e -> chuyenSangManHinhTraPhong(phong));
-
-                            MenuItem miDV = new MenuItem("Dịch vụ");
-                            miDV.setOnAction(e -> chuyenSangManHinhDichVu(phong));
-
-                            MenuItem miDoi2 = new MenuItem("Đổi phòng");
-                            miDoi2.setOnAction(e -> chuyenSangManHinhDoiPhong(phong));
-
-                            btnMenu.getItems().addAll(miTra, miDV, miDoi2);
-                            break;
-
-                        case BAO_TRI:
-                            MenuItem miHoanTat = new MenuItem("Hoàn tất");
-                            miHoanTat.setOnAction(e -> xuLyHoanTatBaoTri(phong));
-                            btnMenu.getItems().add(miHoanTat);
-                            break;
-                    }
-                });
-            }
-
-            @Override
-            protected void updateItem(Void item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty) {
-                    setGraphic(null);
-                } else {
-                    HBox box = new HBox(btnMenu);
-                    box.setAlignment(Pos.CENTER);
-                    setGraphic(box);
-                }
-            }
-        });
-
-        tableViewPhong.getColumns().add(colThaoTac);
     }
 
     public void taiBang() {
@@ -273,72 +201,6 @@ public class PhongController implements Initializable {
         }
     }
 
-    // --- CÁC HÀM XỬ LÝ CHUYỂN MÀN HÌNH (CÓ TRUYỀN DỮ LIỆU) ---
-
-    private void xuLyDatPhong(Phong phong, boolean isTrucTiep) {
-        if (switcher == null) return;
-        try {
-            String fxml = isTrucTiep ?
-                    "/com/example/louishotelmanagement/fxml/dat-phong-truc-tiep-view.fxml" :
-                    "/com/example/louishotelmanagement/fxml/dat-phong-view.fxml";
-
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
-            Parent root = loader.load();
-
-            if (isTrucTiep) {
-                DatPhongTaiQuayController ctrl = loader.getController();
-                ArrayList<Phong> list = new ArrayList<>();
-                list.add(phong);
-                ctrl.nhanDanhSachPhongDaChon(list);
-            } else {
-                DatPhongController ctrl = loader.getController();
-                ctrl.setContentSwitcher(this.switcher);
-                ArrayList<Phong> list = new ArrayList<>();
-                list.add(phong);
-                ctrl.nhanDuLieuTuPhongView(list, LocalDate.now(), LocalDate.now().plusDays(1));
-            }
-            switcher.switchContent(root);
-        } catch (IOException e) {
-            e.printStackTrace();
-            ThongBaoUtil.hienThiLoi("Lỗi", "Không mở được màn hình đặt phòng");
-        }
-    }
-
-    private void chuyenSangManHinhNhanPhong(Phong phong) {
-        if (switcher != null) {
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/nhan-phong-view.fxml"));
-                Parent root = loader.load();
-
-                NhanPhongController controller = loader.getController();
-                controller.setContentSwitcher(this.switcher);
-                controller.nhanDuLieuTuPhong(phong.getMaPhong());
-
-                switcher.switchContent(root);
-            } catch (IOException e) {
-                e.printStackTrace();
-                ThongBaoUtil.hienThiLoi("Lỗi", "Không thể mở màn hình nhận phòng: " + e.getMessage());
-            }
-        }
-    }
-
-    private void chuyenSangManHinhDoiPhong(Phong phong) {
-        if (switcher != null) {
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/doi-phong-view.fxml"));
-                Parent root = loader.load();
-
-                DoiPhongController controller = loader.getController();
-                controller.setContentSwitcher(this.switcher);
-                controller.nhanDuLieuTuPhong(phong.getMaPhong());
-
-                switcher.switchContent(root);
-            } catch (IOException e) {
-                e.printStackTrace();
-                ThongBaoUtil.hienThiLoi("Lỗi", "Không thể mở màn hình đổi phòng: " + e.getMessage());
-            }
-        }
-    }
 
     private void chuyenSangManHinhTraPhong(Phong phong) {
         if (switcher != null) {
@@ -357,28 +219,6 @@ public class PhongController implements Initializable {
             }
         }
     }
-
-    private void chuyenSangManHinhDichVu(Phong phong) {
-        if (switcher != null) switcher.switchContent("/com/example/louishotelmanagement/fxml/dat-dich-vu-view.fxml");
-    }
-
-    private void chuyenSangManHinhHuyDat(Phong phong) {
-        if (switcher != null) switcher.switchContent("/com/example/louishotelmanagement/fxml/huy-dat-phong-view.fxml");
-    }
-
-    private void xuLyHoanTatBaoTri(Phong phong) {
-        if (ThongBaoUtil.hienThiXacNhan("Xác nhận", "Hoàn tất bảo trì cho phòng " + phong.getMaPhong() + "?")) {
-            try {
-                phongDAO.capNhatTrangThaiPhong(phong.getMaPhong(), TrangThaiPhong.TRONG.toString());
-                taiBang();
-                ThongBaoUtil.hienThiThongBao("Thành công", "Cập nhật xong!");
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    // --- CÁC HÀM CẤU HÌNH UI KHÁC ---
 
     private void cauHinhCBX() {
         ObservableList<String> danhSachTang = FXCollections.observableArrayList();
@@ -512,7 +352,6 @@ public class PhongController implements Initializable {
                     controller.setContentSwitcher(this.switcher);
                     controller.nhanDuLieuTuPhong(maPhongCanNhan);
                 }
-
                 switcher.switchContent(root);
             } catch (Exception e) { e.printStackTrace(); }
         }
@@ -571,14 +410,17 @@ public class PhongController implements Initializable {
 
         LocalDate ngayDenVal = dpTuNgay.getValue() != null ? dpTuNgay.getValue() : LocalDate.now();
         LocalDate ngayDiVal = dpDenNgay.getValue() != null ? dpDenNgay.getValue() : LocalDate.now().plusDays(1);
-
+        System.out.println("Mo dat phong - switcher: " + switcher);
         if (switcher != null) {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/dat-phong-view.fxml"));
                 Parent root = loader.load();
+
                 DatPhongController ctrl = loader.getController();
-                ctrl.setContentSwitcher(switcher);
                 ctrl.nhanDuLieuTuPhongView(dsTarget, ngayDenVal, ngayDiVal);
+
+                
+                System.out.println("Mo dat phong switcher");
                 switcher.switchContent(root);
             } catch (IOException e) {
                 e.printStackTrace();

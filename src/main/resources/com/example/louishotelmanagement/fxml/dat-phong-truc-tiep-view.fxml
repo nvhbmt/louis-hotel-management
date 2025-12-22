@@ -111,7 +111,7 @@
                 </HBox>
             </VBox>
 
-            <TableView fx:id="tablePhong" prefHeight="431.0" prefWidth="1014.0" VBox.vgrow="ALWAYS">
+            <TableView fx:id="tablePhong" prefHeight="431.0" prefWidth="1014.0" VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS">
                 <columns>
                     <TableColumn fx:id="colMaPhong" prefWidth="75.0" text="Mã phòng"/>
                     <TableColumn fx:id="colTenLoaiPhong" prefWidth="120.0" text="Loại phòng"/>

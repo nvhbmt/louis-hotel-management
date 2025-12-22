@@ -34,7 +34,7 @@ BEGIN
         END
 
     -- 2. Kiểm tra Phiếu DV đã tồn tại chưa
-    IF EXISTS (SELECT 1 FROM PhieuDichVu WHERE maPhieuDV = @maPhieuDV)
+    IF EXISTS (SELECT 1 FROM PhieuDichVu WHERE maPhieuDV = @maPhieuDV AND daXoaLuc IS NULL)
         BEGIN
             RAISERROR(N'Mã Phiếu Dịch Vụ đã tồn tại. Vui lòng chọn mã khác.', 16, 1)
             RETURN
@@ -66,7 +66,7 @@ CREATE PROCEDURE sp_CapNhatPhieuDV
 AS
 BEGIN
     -- 1. Kiểm tra Phiếu DV có tồn tại không
-    IF NOT EXISTS (SELECT 1 FROM PhieuDichVu WHERE maPhieuDV = @maPhieuDV)
+    IF NOT EXISTS (SELECT 1 FROM PhieuDichVu WHERE maPhieuDV = @maPhieuDV AND daXoaLuc IS NULL)
         BEGIN
             RAISERROR(N'Không tìm thấy Mã Phiếu Dịch Vụ để cập nhật.', 16, 1)
             RETURN
@@ -86,7 +86,7 @@ CREATE PROCEDURE sp_XoaPhieuDV
 AS
 BEGIN
     -- Kiểm tra Phiếu DV có tồn tại không
-    IF NOT EXISTS (SELECT 1 FROM PhieuDichVu WHERE maPhieuDV = @maPhieuDV)
+    IF NOT EXISTS (SELECT 1 FROM PhieuDichVu WHERE maPhieuDV = @maPhieuDV AND daXoaLuc IS NULL)
         BEGIN
             RAISERROR(N'Không tìm thấy Mã Phiếu Dịch Vụ để xóa.', 16, 1)
             RETURN
@@ -97,8 +97,9 @@ BEGIN
     -- Bật khối DELETE này lên nếu bạn muốn xóa chi tiết liên quan:
     -- DELETE FROM CTPhieuDichVu WHERE maPhieuDV = @maPhieuDV;
 
-    DELETE FROM PhieuDichVu
-    WHERE maPhieuDV = @maPhieuDV
+    UPDATE PhieuDichVu
+    SET daXoaLuc = GETDATE()
+    WHERE maPhieuDV = @maPhieuDV AND daXoaLuc IS NULL
 END
 GO
 --Lấy DS

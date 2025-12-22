@@ -6,12 +6,12 @@ import com.example.louishotelmanagement.view.TienCocDialogView;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox; // 💡 THÊM IMPORT
+import javafx.scene.control.ComboBox; 
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image; // 💡 THÊM IMPORT
-import javafx.scene.image.ImageView; // 💡 THÊM IMPORT
-import javafx.scene.layout.VBox; // 💡 THÊM IMPORT
+import javafx.scene.image.Image; 
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.math.BigDecimal;
@@ -19,7 +19,7 @@ import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ResourceBundle;
 
-public class TienCocDialogController { // 💡 TRIỂN KHAI INITIALIZABLE
+public class TienCocDialogController { 
 
     @FXML
     private Label lblTongTienPhong;
@@ -28,11 +28,11 @@ public class TienCocDialogController { // 💡 TRIỂN KHAI INITIALIZABLE
     @FXML
     private TextField txtTienCocThucTe;
     @FXML
-    private ComboBox<String> cboPhuongThucTT; // 💡 KHAI BÁO MỚI
+    private ComboBox<String> cboPhuongThucTT; 
     @FXML
-    private VBox vbQrCodeContainer; // 💡 KHAI BÁO MỚI (Container chứa QR)
+    private VBox vbQrCodeContainer; 
     @FXML
-    private ImageView imgQrCode; // 💡 KHAI BÁO MỚI
+    private ImageView imgQrCode; 
     @FXML
     private Button btnXacNhan;
     @FXML
@@ -41,7 +41,7 @@ public class TienCocDialogController { // 💡 TRIỂN KHAI INITIALIZABLE
     private BigDecimal tongTienPhong;
     private BigDecimal tienCocDeXuat;
     private BigDecimal tienCocThucTe;
-    private String phuongThucTT; // 💡 KHAI BÁO MỚI để lưu PTTT
+    private String phuongThucTT; 
     private boolean confirmed = false;
 
     private static final DecimalFormat currencyFormat = new DecimalFormat("#,##0 VND");

@@ -5,7 +5,6 @@ import com.example.louishotelmanagement.model.*;
 import com.example.louishotelmanagement.service.AuthService;
 import com.example.louishotelmanagement.ui.components.CustomButton;
 import com.example.louishotelmanagement.ui.models.ButtonVariant;
-import com.example.louishotelmanagement.util.ContentSwitcher;
 import com.example.louishotelmanagement.util.Refreshable;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
 import com.example.louishotelmanagement.view.KhachHangFormDialogView;
@@ -62,7 +61,6 @@ public class DatPhongController implements Initializable, Refreshable {
     @FXML public Label lbLoadingPhong;
     @FXML public Label lbSoPhongTrong;
     @FXML public Label lbTongSoDem;
-    @FXML public VBox vbEmptyState;
     public Button handleThemKhachHang;
     public ComboBox<Integer> cbTang;
     public ComboBox<LoaiPhong> cbLocLoaiPhong;
@@ -84,11 +82,6 @@ public class DatPhongController implements Initializable, Refreshable {
     private ObservableList<Phong> danhSachPhong;
     private ObservableList<Phong> danhSachPhongFiltered;
     private LoaiPhongDAO loaiPhongDAO;
-    private ContentSwitcher contentSwitcher;
-
-    public void setContentSwitcher(ContentSwitcher contentSwitcher) {
-        this.contentSwitcher = contentSwitcher;
-    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -99,7 +92,6 @@ public class DatPhongController implements Initializable, Refreshable {
         hDao = new HoaDonDAO();
         loaiPhongDAO = new LoaiPhongDAO();
 
-        tablePhong.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         try {
             khoiTaoDuLieu();
             khoiTaoTableView();
@@ -228,7 +220,7 @@ public class DatPhongController implements Initializable, Refreshable {
                     setGraphic(null);
                 } else {
                     Phong phong = getTableView().getItems().get(getIndex());
-                    boolean isChecked = listPhongDuocDat.contains(phong);
+                    boolean isChecked = listPhongDuocDat.stream().map(Phong::getMaPhong).anyMatch(maPhong -> maPhong.equals(phong.getMaPhong()));
                     checkBox.setSelected(isChecked);
                     HBox box = new HBox(8, checkBox);
                     box.setAlignment(Pos.CENTER);
@@ -250,14 +242,12 @@ public class DatPhongController implements Initializable, Refreshable {
             if (ngayDen.getValue() == null || ngayDi.getValue() == null) {
                 danhSachPhong.clear();
                 danhSachPhongFiltered.clear();
-                capNhatUIKhiKhongCoDuLieu();
                 return;
             }
 
             if (!validateNgay()) {
                 danhSachPhong.clear();
                 danhSachPhongFiltered.clear();
-                capNhatUIKhiKhongCoDuLieu();
                 return;
             }
 
@@ -277,12 +267,10 @@ public class DatPhongController implements Initializable, Refreshable {
             hienThiLoading(false);
             ThongBaoUtil.hienThiLoi("Lỗi", "Không thể tải dữ liệu phòng. Vui lòng thử lại sau.");
             e.printStackTrace();
-            capNhatUIKhiKhongCoDuLieu();
         } catch (Exception e) {
             hienThiLoading(false);
             ThongBaoUtil.hienThiLoi("Lỗi", "Đã xảy ra lỗi không mong muốn. Vui lòng thử lại.");
             e.printStackTrace();
-            capNhatUIKhiKhongCoDuLieu();
         }
     }
 
@@ -348,25 +336,9 @@ public class DatPhongController implements Initializable, Refreshable {
             }
         }
 
-        if (vbEmptyState != null && tablePhong != null) {
-            boolean coPhong = !danhSachPhongFiltered.isEmpty();
-            tablePhong.setVisible(coPhong);
-            vbEmptyState.setVisible(!coPhong);
-        }
-
         capNhatTongTien();
     }
 
-    private void capNhatUIKhiKhongCoDuLieu() {
-        if (lbSoDem != null) lbSoDem.setText("");
-        if (lbLoaiDatPhong != null) lbLoaiDatPhong.setVisible(false);
-        if (lbSoPhongTrong != null) lbSoPhongTrong.setText("");
-        if (lbTongSoDem != null) lbTongSoDem.setText("0");
-        if (vbEmptyState != null && tablePhong != null) {
-            tablePhong.setVisible(false);
-            vbEmptyState.setVisible(true);
-        }
-    }
 
     private void capNhatTongTien() {
         if (listPhongDuocDat.isEmpty()) {
@@ -426,7 +398,6 @@ public class DatPhongController implements Initializable, Refreshable {
             } else {
                 danhSachPhong.clear();
                 danhSachPhongFiltered.clear();
-                capNhatUIKhiKhongCoDuLieu();
             }
         });
 
@@ -442,7 +413,6 @@ public class DatPhongController implements Initializable, Refreshable {
             } else if (newValue == null) {
                 danhSachPhong.clear();
                 danhSachPhongFiltered.clear();
-                capNhatUIKhiKhongCoDuLieu();
             }
         });
     }
@@ -560,7 +530,6 @@ public class DatPhongController implements Initializable, Refreshable {
         listPhongDuocDat.clear();
         cbTang.setValue(null);
         cbLocLoaiPhong.setValue(null);
-        capNhatUIKhiKhongCoDuLieu();
     }
 
     public void hienThiPhieuDatPhong(PhieuDatPhong pdp, ArrayList<Phong> dsPhong) {
@@ -791,9 +760,12 @@ public class DatPhongController implements Initializable, Refreshable {
                 }
             }
         }
-        capNhatUIThongTin();
+        System.out.println("listPhongDuocDat size: " + listPhongDuocDat.toString());
+        // Refresh table để update checkbox state
         if (tablePhong != null) {
             tablePhong.refresh();
         }
+
+        capNhatUIThongTin();
     }
 }

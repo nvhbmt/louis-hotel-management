@@ -51,7 +51,7 @@ GO
 CREATE PROCEDURE sp_XoaTaiKhoan @maTK NVARCHAR(10)
 AS
 BEGIN
-    DELETE FROM TaiKhoan WHERE maTK = @maTK;
+    UPDATE TaiKhoan SET daXoaLuc = GETDATE() WHERE maTK = @maTK AND daXoaLuc IS NULL;
 END
 GO
 

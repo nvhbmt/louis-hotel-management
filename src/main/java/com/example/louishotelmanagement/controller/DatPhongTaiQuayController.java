@@ -79,7 +79,6 @@ public class DatPhongTaiQuayController implements Initializable, Refreshable {
         listPhongDuocDat = new ArrayList<>();
         loaiPhongDAO = new LoaiPhongDAO();
 
-        tablePhong.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         try {
             khoiTaoDuLieu();
             khoiTaoTableView();

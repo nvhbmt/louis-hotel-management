@@ -28,7 +28,7 @@ GO
 CREATE PROCEDURE sp_LayDSKhachHang
 AS
 BEGIN
-    SELECT * FROM KhachHang;
+    SELECT * FROM KhachHang WHERE daXoaLuc IS NULL;
 END;
 GO
 
@@ -36,7 +36,7 @@ GO
 CREATE PROCEDURE sp_LayKhachHangTheoMa @maKH NVARCHAR(20)
 AS
 BEGIN
-    SELECT * FROM KhachHang WHERE maKH = @maKH;
+    SELECT * FROM KhachHang WHERE maKH = @maKH AND daXoaLuc IS NULL;
 END;
 GO
 
@@ -46,7 +46,7 @@ AS
 BEGIN
     SELECT *
     FROM KhachHang
-    WHERE hoTen LIKE '%' + @ten + '%';
+    WHERE hoTen LIKE '%' + @ten + '%' AND daXoaLuc IS NULL;
 END;
 GO
 
@@ -56,7 +56,7 @@ AS
 BEGIN
     SELECT *
     FROM KhachHang
-    WHERE soDT LIKE '%' + @soDT + '%';
+    WHERE soDT LIKE '%' + @soDT + '%' AND daXoaLuc IS NULL;
 END;
 GO
 
@@ -66,7 +66,7 @@ AS
 BEGIN
     SELECT *
     FROM KhachHang
-    WHERE CCCD = @CCCD;
+    WHERE CCCD = @CCCD AND daXoaLuc IS NULL;
 END;
 GO
 
@@ -93,15 +93,15 @@ BEGIN
         CCCD      = @CCCD,
         hangKhach = @hangKhach,
         trangThai = @trangThai
-    WHERE maKH = @maKH;
+    WHERE maKH = @maKH AND daXoaLuc IS NULL;
 END;
 GO
 
--- 8. Xóa khách hàng
+-- 8. Xóa khách hàng (soft delete)
 CREATE PROCEDURE sp_XoaKhachHang @maKH NVARCHAR(20)
 AS
 BEGIN
-    DELETE FROM KhachHang WHERE maKH = @maKH;
+    UPDATE KhachHang SET daXoaLuc = GETDATE() WHERE maKH = @maKH AND daXoaLuc IS NULL;
 END;
 GO
 
@@ -112,12 +112,12 @@ CREATE PROCEDURE sp_CapNhatTrangThaiKhachHang
 AS
 BEGIN
     -- Kiểm tra xem khách hàng có tồn tại không
-    IF EXISTS (SELECT 1 FROM KhachHang WHERE MaKH = @MaKH)
+    IF EXISTS (SELECT 1 FROM KhachHang WHERE MaKH = @MaKH AND daXoaLuc IS NULL)
         BEGIN
             -- Cập nhật trạng thái
             UPDATE KhachHang
             SET TrangThai = @TrangThaiMoi
-            WHERE MaKH = @MaKH;
+            WHERE MaKH = @MaKH AND daXoaLuc IS NULL;
 
             -- Trả về số dòng bị ảnh hưởng (1 nếu thành công, 0 nếu không có gì thay đổi)
             SELECT @@ROWCOUNT;

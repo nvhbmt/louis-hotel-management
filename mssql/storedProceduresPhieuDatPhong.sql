@@ -204,7 +204,7 @@ BEGIN
         maKH      = @maKH,
         maNV      = @maNV,
         tienCoc   = @tienCoc -- CẬP NHẬT TIỀN CỌC
-    WHERE maPhieu = @maPhieu;
+    WHERE maPhieu = @maPhieu AND daXoaLuc IS NULL;
 END;
 GO
 
@@ -218,19 +218,6 @@ BEGIN
     SET NOCOUNT ON;
     UPDATE PhieuDatPhong
     SET trangThai = @trangThai
-    WHERE maPhieu = @maPhieu;
-END;
-GO
-
--- =============================================
--- 10. Xóa phiếu đặt phòng (Giữ nguyên)
--- =============================================
-CREATE PROCEDURE sp_XoaPhieuDatPhong @maPhieu NVARCHAR(10)
-AS
-BEGIN
-    SET NOCOUNT ON;
-    DELETE
-    FROM PhieuDatPhong
     WHERE maPhieu = @maPhieu;
 END;
 GO

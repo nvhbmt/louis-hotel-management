@@ -71,17 +71,17 @@ BEGIN
         ngayKetThuc = @ngayKetThuc,
         moTa        = @moTa,
         trangThai   = @trangThai
-    WHERE maKM = @maKM;
+    WHERE maKM = @maKM AND daXoaLuc IS NULL;
 END
 GO
 
--- 5. Xóa mã giảm giá
+-- 5. Xóa mã giảm giá (soft delete)
 CREATE PROCEDURE sp_XoaKhuyenMai @maKM NVARCHAR(10) -- Mã khuyến mãi cần xóa
 AS
 BEGIN
-    DELETE
-    FROM KhuyenMai
-    WHERE maKM = @maKM;
+    UPDATE KhuyenMai
+    SET daXoaLuc = GETDATE()
+    WHERE maKM = @maKM AND daXoaLuc IS NULL;
 END
 GO
 

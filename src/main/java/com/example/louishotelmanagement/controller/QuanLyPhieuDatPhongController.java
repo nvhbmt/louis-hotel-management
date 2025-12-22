@@ -226,7 +226,6 @@ public class QuanLyPhieuDatPhongController implements Initializable {
 
         colThaoTac.setCellFactory(_ -> new TableCell<>() {
             private final Button btnEdit = CustomButton.createButton("Sửa", ButtonVariant.INFO);
-            private final Button btnDelete = CustomButton.createButton("Xóa", ButtonVariant.DANGER);
             private final Button btnView = CustomButton.createButton("Xem chi tiết", ButtonVariant.SECONDARY);
 
             {
@@ -238,11 +237,6 @@ public class QuanLyPhieuDatPhongController implements Initializable {
                     PhieuDatPhong phieuDatPhong = getTableView().getItems().get(getIndex());
                     handleSuaPhieuDatPhong(phieuDatPhong);
                 });
-
-                btnDelete.setOnAction(_ -> {
-                    PhieuDatPhong phieuDatPhong = getTableView().getItems().get(getIndex());
-                    handleXoaPhieuDatPhong(phieuDatPhong);
-                });
             }
 
             @Override
@@ -252,7 +246,7 @@ public class QuanLyPhieuDatPhongController implements Initializable {
                 if (empty) {
                     setGraphic(null);
                 } else {
-                    HBox box = new HBox(8, btnView, btnEdit, btnDelete);
+                    HBox box = new HBox(8, btnView, btnEdit);
 
                     box.setAlignment(Pos.CENTER);
                     setGraphic(box);
@@ -377,26 +371,6 @@ public class QuanLyPhieuDatPhongController implements Initializable {
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        }
-    }
-
-    @FXML
-    private void handleXoaPhieuDatPhong(PhieuDatPhong phieuDatPhong) {
-        // Xác nhận xóa
-        String message = "Bạn có chắc chắn muốn xóa mã giảm giá này?\nMã: " + phieuDatPhong.getMaPhieu();
-        if (ThongBaoUtil.hienThiXacNhan("Xác nhận xóa", message)) {
-            try {
-                // Xóa mã giảm giá
-                if (phieuDatPhongDAO.xoaPhieuDatPhong(phieuDatPhong.getMaPhieu())) {
-                    ThongBaoUtil.hienThiThongBao("Thành công", "Đã xóa mã giảm giá thành công!");
-                    taiDuLieu();
-                } else {
-                    ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể xóa mã giảm giá!");
-                }
-
-            } catch (SQLException e) {
-                ThongBaoUtil.hienThiThongBao("Lỗi", "Lỗi khi xóa mã giảm giá: " + e.getMessage());
-            }
         }
     }
 

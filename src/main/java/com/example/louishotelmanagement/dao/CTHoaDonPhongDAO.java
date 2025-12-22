@@ -191,9 +191,6 @@ public class CTHoaDonPhongDAO {
     }
 
 
-    // ==================================================
-    // 🔥 Hàm mapping tập trung – tránh lỗi & trùng code
-    // ==================================================
     private CTHoaDonPhong mapCTHoaDonPhong(ResultSet rs) throws SQLException {
         CTHoaDonPhong ct = new CTHoaDonPhong(
                 rs.getString("maHD"),

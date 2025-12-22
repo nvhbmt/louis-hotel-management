@@ -1,11 +1,10 @@
 package com.example.louishotelmanagement.controller;
 
-import com.example.louishotelmanagement.controller.LayoutController;
+import com.example.louishotelmanagement.util.ContentSwitchable;
 import com.example.louishotelmanagement.util.ContentSwitcher;
-import com.example.louishotelmanagement.util.ContentManager;
 import javafx.fxml.FXML;
 
-public class TrangChuController {
+public class TrangChuController implements ContentSwitchable {
 
     @FXML
     public void initialize() {

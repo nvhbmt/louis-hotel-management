@@ -10,7 +10,6 @@ import java.util.List;
 
 public class CTHoaDonDichVuDAO {
 
-    // 🟢 Thêm chi tiết dịch vụ
     public boolean themCTHoaDonDichVu(CTHoaDonDichVu ct) throws SQLException {
         String sql = "{CALL sp_ThemCTHoaDonDichVu(?, ?, ?, ?, ?)}";
         try (Connection conn = CauHinhDatabase.getConnection();
@@ -26,7 +25,6 @@ public class CTHoaDonDichVuDAO {
         }
     }
 
-    // 🟡 Cập nhật số lượng và đơn giá
     public boolean capNhatCTHoaDonDichVu(String maHD, String maDV, int soLuong, BigDecimal donGia) throws SQLException {
         String sql = "{CALL sp_CapNhatCTHoaDonDichVu(?, ?, ?, ?)}";
         try (Connection conn = CauHinhDatabase.getConnection();
@@ -41,7 +39,6 @@ public class CTHoaDonDichVuDAO {
         }
     }
 
-    // 🔴 Xóa chi tiết dịch vụ
     public boolean xoaCTHoaDonDichVu(String maHD, String maDV) throws SQLException {
         String sql = "{CALL sp_XoaCTHoaDonDichVu(?, ?)}";
         try (Connection conn = CauHinhDatabase.getConnection();
@@ -121,7 +118,6 @@ public class CTHoaDonDichVuDAO {
         }
     }
 
-    // 🔵 Lấy danh sách chi tiết dịch vụ theo mã hóa đơn
     public List<CTHoaDonDichVu> layCTHoaDonDichVuTheoMaHD(String maHD) throws SQLException {
         List<CTHoaDonDichVu> list = new ArrayList<>();
         String sql = "{CALL sp_LayCTHoaDonDichVuTheoMaHD(?)}";
@@ -146,7 +142,6 @@ public class CTHoaDonDichVuDAO {
         return list;
     }
 
-    // ⚙️ Tính tổng tiền dịch vụ của 1 hóa đơn
     public BigDecimal tinhTongTienDichVu(String maHD) throws SQLException {
         String sql = "{CALL sp_TinhTongTienDichVu(?)}";
         try (Connection conn = CauHinhDatabase.getConnection();
