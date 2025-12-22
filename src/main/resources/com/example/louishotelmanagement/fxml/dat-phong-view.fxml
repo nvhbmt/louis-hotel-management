@@ -175,7 +175,7 @@
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
                     </columnResizePolicy>
                 </TableView>
-             
+
             </VBox>
         </VBox>
     </center>

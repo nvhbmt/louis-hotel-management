@@ -21,9 +21,10 @@ public class HoaDonDAO {
              ResultSet rs = cs.executeQuery()) {
 
             while (rs.next()) {
-                // Sử dụng hàm map chung để tránh sai sót
+                // mapResultSetToHoaDonFull đã bao gồm mapResultSetToHoaDonSimple
                 HoaDon hd = mapResultSetToHoaDonFull(rs);
 
+                // Các cột này lấy từ phép JOIN trong sp_LayDanhSachHoaDon
                 KhachHang kh = new KhachHang();
                 kh.setHoTen(rs.getString("hoTen"));
                 kh.setSoDT(rs.getString("soDT"));
@@ -37,7 +38,7 @@ public class HoaDonDAO {
         return ds;
     }
 
-    // Helper method chuẩn hóa - FIX LỖI SAI TÊN CỘT TẠI ĐÂY
+    // 2. HELPER MAPPING - FIX CHÍNH XÁC TÊN CỘT TỪ SQL
     private HoaDon mapResultSetToHoaDonSimple(ResultSet rs) throws SQLException {
         HoaDon hd = new HoaDon();
         hd.setMaHD(rs.getString("maHD"));
@@ -49,21 +50,20 @@ public class HoaDonDAO {
         hd.setTongTien(rs.getBigDecimal("tongTien"));
         hd.setMaKH(rs.getString("maKH"));
         hd.setMaNV(rs.getString("maNV"));
-        hd.setMaKM(rs.getString("maKM")); // Cột này nằm trong SELECT *
+        hd.setMaKM(rs.getString("maKM"));
         hd.setTrangThai(TrangThaiHoaDon.fromString(rs.getString("trangThai")));
 
-        // Sửa ngayCheckOut thành NgayCheckOut cho khớp chính xác với SQL
-        Date checkOut = rs.getDate("NgayCheckOut");
+        // CHỈNH SỬA TẠI ĐÂY: Sử dụng "ngayDi" để khớp với Procedure sp_LayDanhSachHoaDon (hd.*)
+        Date checkOut = rs.getDate("ngayDi");
         if (checkOut != null) hd.setngayDi(checkOut.toLocalDate());
 
         return hd;
     }
 
-    // Helper method đầy đủ - Đảm bảo gán đúng các trường phạt/giảm giá
     private HoaDon mapResultSetToHoaDonFull(ResultSet rs) throws SQLException {
         HoaDon hd = mapResultSetToHoaDonSimple(rs);
 
-        // Đọc các cột phạt (Khớp chính xác từng chữ cái với SQL Table)
+        // Đọc các cột phạt (Khớp với các tham số trong Stored Procedures)
         BigDecimal p1 = rs.getBigDecimal("PhatNhanPhongTre");
         BigDecimal p2 = rs.getBigDecimal("PhatTraPhongSom");
         BigDecimal p3 = rs.getBigDecimal("PhatTraPhongTre");
@@ -87,6 +87,7 @@ public class HoaDonDAO {
         return hd;
     }
 
+    // 3. TÌM HÓA ĐƠN THEO MÃ
     public HoaDon timHoaDonTheoMa(String maHD) throws SQLException {
         String sql = "{CALL sp_TimHoaDonTheoMa(?)}";
         try (Connection conn = CauHinhDatabase.getConnection();
@@ -95,13 +96,24 @@ public class HoaDonDAO {
             cs.setString(1, maHD);
             try (ResultSet rs = cs.executeQuery()) {
                 if (rs.next()) {
-                    return mapResultSetToHoaDonFull(rs);
+                    HoaDon hd = mapResultSetToHoaDonFull(rs);
+
+                    // Bổ sung Mapping khách hàng cho sp_TimHoaDonTheoMa
+                    KhachHang kh = new KhachHang();
+                    kh.setHoTen(rs.getString("hoTen"));
+                    kh.setSoDT(rs.getString("soDT"));
+                    kh.setDiaChi(rs.getString("diaChi"));
+                    hd.setKhachHang(kh);
+
+                    hd.setSoPhong(rs.getString("soPhong"));
+                    return hd;
                 }
             }
         }
         return null;
     }
 
+    // 4. TẠO MÃ TỰ ĐỘNG
     public String taoMaHoaDonTiepTheo() {
         String sql = "{CALL sp_TaoMaHoaDonTiepTheo}";
         try (Connection conn = CauHinhDatabase.getConnection();
@@ -114,6 +126,7 @@ public class HoaDonDAO {
         return null;
     }
 
+    // 5. THÊM HÓA ĐƠN
     public boolean themHoaDon(HoaDon hd) throws SQLException {
         String sql = "{CALL sp_ThemHoaDon(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}";
         try (Connection conn = CauHinhDatabase.getConnection();
@@ -123,6 +136,7 @@ public class HoaDonDAO {
         }
     }
 
+    // 6. CẬP NHẬT HÓA ĐƠN
     public boolean capNhatHoaDon(HoaDon hd) throws SQLException {
         String sql = "{CALL sp_SuaHoaDon(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}";
         try (Connection conn = CauHinhDatabase.getConnection();
@@ -132,7 +146,7 @@ public class HoaDonDAO {
         }
     }
 
-    // Gom nhóm set tham số để tránh nhầm lẫn thứ tự
+    // Helper set tham số để đồng bộ giữa Add và Update
     private void setParamsForHoaDon(CallableStatement cs, HoaDon hd) throws SQLException {
         cs.setString(1, hd.getMaHD());
         cs.setDate(2, hd.getNgayLap() != null ? Date.valueOf(hd.getNgayLap()) : Date.valueOf(LocalDate.now()));
@@ -151,6 +165,7 @@ public class HoaDonDAO {
         cs.setBigDecimal(15, hd.getTongVAT() != null ? hd.getTongVAT() : BigDecimal.ZERO);
     }
 
+    // 7. LẤY CHI TIẾT HÓA ĐƠN (TABLE)
     public List<HoaDonChiTietItem> layChiTietHoaDon(String maHD) throws SQLException {
         List<HoaDonChiTietItem> dsChiTiet = new ArrayList<>();
         String sql = "{CALL sp_LayChiTietHoaDonTheoMaHD(?)}";

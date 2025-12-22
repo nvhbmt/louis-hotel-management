@@ -72,6 +72,7 @@ public class TraPhongController implements Initializable, Refreshable,ContentSwi
                 if (newVal != null) {
                     try {
                         laydsPhieuTheoKhachHang();
+                        laydsPhongTheoPhieu();
                     } catch (SQLException e) { e.printStackTrace(); }
                 }
             });
@@ -155,8 +156,6 @@ public class TraPhongController implements Initializable, Refreshable,ContentSwi
             dsKhachHang.getItems().add(kh.getHoTen());
             listMaKH.add(kh.getMaKH());
         }
-
-        com.example.louishotelmanagement.util.SearchBoxUtil.makeSearchable(dsKhachHang);
     }
 
     public void laydsPhieuTheoKhachHang() throws SQLException {

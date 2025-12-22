@@ -134,3 +134,14 @@ BEGIN
     SET @ketQua = @@ROWCOUNT;
 END
 GO
+CREATE PROCEDURE sp_layCTHoaDonPhongByMaPhieu
+@maPhieu NVARCHAR(10)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SELECT *
+    FROM CTHoaDonPhong
+    WHERE maPhieu = @maPhieu
+      AND daHuy = 0;
+END
+GO

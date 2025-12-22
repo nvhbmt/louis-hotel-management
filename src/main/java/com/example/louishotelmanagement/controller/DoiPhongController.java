@@ -243,8 +243,6 @@ public class DoiPhongController implements Initializable, Refreshable,ContentSwi
             dsKhachHang.getItems().add(khachHang.getHoTen());
             dsMaKH.add(khachHang.getMaKH());
         }
-
-        com.example.louishotelmanagement.util.SearchBoxUtil.makeSearchable(dsKhachHang);
     }
 
     public void layDsPhongTrong() throws SQLException {
