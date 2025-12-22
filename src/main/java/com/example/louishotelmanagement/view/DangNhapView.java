@@ -127,14 +127,7 @@ public class DangNhapView {
 
         HBox footerLinksHBox = new HBox(20.0);
         footerLinksHBox.setAlignment(Pos.CENTER);
-        Label securityLinkLabel = new Label("Bảo mật");
-        securityLinkLabel.getStyleClass().addAll("footer-link");
-        Label termsLinkLabel = new Label("Điều khoản");
-        termsLinkLabel.getStyleClass().addAll("footer-link");
-        Label supportLinkLabel = new Label("Hỗ trợ");
-        supportLinkLabel.getStyleClass().addAll("footer-link");
-        footerLinksHBox.getChildren().addAll(securityLinkLabel, termsLinkLabel, supportLinkLabel);
-        footerVBox.getChildren().addAll(copyrightLabel, versionLabel, footerLinksHBox);
+        footerVBox.getChildren().addAll(copyrightLabel, versionLabel);
         mainBorderPane.setBottom(footerVBox);
         BorderPane.setAlignment(footerVBox, Pos.CENTER);
         this.root = mainBorderPane;

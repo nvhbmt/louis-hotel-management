@@ -3,18 +3,7 @@ package com.example.louishotelmanagement.ui.data;
 import com.example.louishotelmanagement.controller.PhongController;
 import com.example.louishotelmanagement.service.AuthService;
 import com.example.louishotelmanagement.ui.models.MenuItemModel;
-import com.example.louishotelmanagement.view.PhongView;
-import com.example.louishotelmanagement.view.QuanLyDichVuView;
-import com.example.louishotelmanagement.view.QuanLyHoaDonView;
-import com.example.louishotelmanagement.view.QuanLyKhachHangView;
-import com.example.louishotelmanagement.view.QuanLyKhuyenMaiView;
-import com.example.louishotelmanagement.view.QuanLyPhieuDatPhongView;
-import com.example.louishotelmanagement.view.QuanLyNhanVienView;
-import com.example.louishotelmanagement.view.ThongKeView;
-import com.example.louishotelmanagement.view.DatDichVuView;
-import com.example.louishotelmanagement.view.QuanLyLoaiPhongView;
-import com.example.louishotelmanagement.view.QuanLyPhongView;
-import com.example.louishotelmanagement.view.TrangChuView;
+import com.example.louishotelmanagement.view.*;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.TreeItem;
@@ -43,7 +32,7 @@ public class MenuData {
         String userRole = authService.getCurrentUserRole();
 
         TreeItem<MenuItemModel> trangChu = new TreeItem<>(
-                new MenuItemModel("Trang chủ", "mdi2h-home",new TrangChuView().getRoot())
+                new MenuItemModel("Trang chủ", "mdi2h-home", new TrangChuView().getRoot())
         );
 
         TreeItem<MenuItemModel> phongGroup = new TreeItem<>(
@@ -60,13 +49,13 @@ public class MenuData {
         ));
 
         if ("Manager".equals(userRole)) {
-                phongGroup.getChildren().addAll(List.of(
-                        new TreeItem<>(new MenuItemModel("Quản lý phòng", "mdi2b-bed",
-                                new QuanLyPhongView().getRoot())),
-                        new TreeItem<>(new MenuItemModel("Loại phòng", "mdi2t-tag",
-                                QuanLyLoaiPhongView.getInstance().getRoot()))
-                ));
-            }
+            phongGroup.getChildren().addAll(List.of(
+                    new TreeItem<>(new MenuItemModel("Quản lý phòng", "mdi2b-bed",
+                            new QuanLyPhongView().getRoot())),
+                    new TreeItem<>(new MenuItemModel("Loại phòng", "mdi2t-tag",
+                            QuanLyLoaiPhongView.getInstance().getRoot()))
+            ));
+        }
         TreeItem<MenuItemModel> PhieuDatPhongGroup = new TreeItem<>(
                 new MenuItemModel("Phiếu đặt phòng", "mdi2t-ticket-account", QuanLyPhieuDatPhongView.getInstance().getRoot())
         );
@@ -81,10 +70,10 @@ public class MenuData {
         if ("Manager".equals(userRole)) {
             // Get QuanLyDichVuView instance
             QuanLyDichVuView quanLyDichVuView = QuanLyDichVuView.getInstance();
-                
+
             dichVuGroup.getChildren().addAll(List.of(
-                new TreeItem<>(new MenuItemModel("Quản lý dịch vụ", "mdi2c-coffee",
-                        quanLyDichVuView.getRoot()))
+                    new TreeItem<>(new MenuItemModel("Quản lý dịch vụ", "mdi2c-coffee",
+                            quanLyDichVuView.getRoot()))
             ));
         }
 
@@ -96,12 +85,6 @@ public class MenuData {
                 new MenuItemModel("Hóa đơn", "mdi2c-cash-multiple", QuanLyHoaDonView.getInstance().getRoot())
         );
 
-//        if ("Manager".equals(userRole)) {
-//            hoaDonGroup.getChildren().addAll(List.of(
-//                new TreeItem<>(new MenuItemModel("Quản lý hóa đơn", "mdi2f-file-document",
-//                "/com/example/louishotelmanagement/fxml/hoa-don-view.fxml"))
-//            ));
-//        }
 
         TreeItem<MenuItemModel> thongKe = new TreeItem<>(
                 new MenuItemModel("Thống kê", "mdi2c-chart-bar", ThongKeView.getInstance().getRoot())
@@ -122,11 +105,12 @@ public class MenuData {
         menuItems.add(phongGroup);
         menuItems.add(PhieuDatPhongGroup);
         menuItems.add(dichVuGroup);
-        menuItems.add(khuyenMai);
         menuItems.add(hoaDonGroup);
 
         // Chỉ Manager mới có quyền xem thống kê và quản lý nhân viên
-        if ("Manager".equals(userRole)) {
+        if ("Manager".equals(userRole))
+            menuItems.add(khuyenMai);
+        {
             menuItems.add(thongKe);
             menuItems.add(nhanVienGroup);
         }

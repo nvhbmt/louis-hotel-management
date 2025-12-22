@@ -5,6 +5,7 @@ import com.example.louishotelmanagement.util.ContentSwitcher;
 import com.example.louishotelmanagement.view.QuanLyDichVuView;
 import com.example.louishotelmanagement.view.QuanLyKhachHangView;
 import com.example.louishotelmanagement.view.QuanLyPhongView;
+import com.example.louishotelmanagement.view.DatPhongView;
 import com.example.louishotelmanagement.view.NhanPhongView;
 import com.example.louishotelmanagement.view.ThongKeView;
 import com.example.louishotelmanagement.view.TraPhongView;
@@ -47,7 +48,7 @@ public class TrangChuController implements ContentSwitchable {
 
     @FXML
     public void moDatPhong() {
-        switcher.switchContent("/com/example/louishotelmanagement/fxml/dat-phong-truc-tiep-view.fxml");
+        switcher.switchContent(new DatPhongView().getRoot());
     }
 
     public void moNhanPhong() {

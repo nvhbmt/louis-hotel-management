@@ -396,7 +396,7 @@ public class PhongController {
         }
     }
 
-   private void moThanhToan(ActionEvent actionEvent) { if (switcher != null) switcher.switchContent("/com/example/louishotelmanagement/fxml/quan-ly-hoa-don-view.fxml"); }
+   private void moThanhToan(ActionEvent actionEvent) { if (switcher != null) switcher.switchContent(new QuanLyHoaDonView().getRoot()); }
 
     public void moHuy(ActionEvent actionEvent) { // Nút Trả phòng
         ArrayList<Phong> dsTarget = layDanhSachPhongTarget();

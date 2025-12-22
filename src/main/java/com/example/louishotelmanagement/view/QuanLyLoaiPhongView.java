@@ -156,21 +156,23 @@ public class QuanLyLoaiPhongView {
     HBox filterControlsHBox = new HBox();
     filterControlsHBox.getStyleClass().addAll("filter-section");
 
+     // Search Filter
+     VBox searchFilterVBox = new VBox();
+     searchFilterVBox.getStyleClass().addAll("filter-field-container");
+     Label searchLabel = new Label("Tìm kiếm");
+     searchLabel.getStyleClass().addAll("filter-label");
+     txtTimKiem = new TextField();
+     txtTimKiem.getStyleClass().addAll("filter-input");
+     txtTimKiem.setPromptText("Nhập mã phòng hoặc tầng...");
+     txtTimKiem.setOnKeyReleased(e -> this.handleTimKiem());
+     txtTimKiem.setCursor(Cursor.HAND);
+     searchFilterVBox.getChildren().addAll(searchLabel, txtTimKiem);
+     HBox.setHgrow(searchFilterVBox, Priority.ALWAYS);
+
     // Price Range Filter
     VBox priceRangeFilterVBox = createFilterField("Loại phòng", cbLocGia = new ComboBox(), "filter-combobox");
 
-    // Search Filter
-    VBox searchFilterVBox = new VBox();
-    searchFilterVBox.getStyleClass().addAll("filter-field-container");
-    Label searchLabel = new Label("Tìm kiếm");
-    searchLabel.getStyleClass().addAll("filter-label");
-    txtTimKiem = new TextField();
-    txtTimKiem.getStyleClass().addAll("filter-input");
-    txtTimKiem.setPromptText("Nhập mã phòng hoặc tầng...");
-    txtTimKiem.setOnKeyReleased(e -> this.handleTimKiem());
-    txtTimKiem.setCursor(Cursor.HAND);
-    searchFilterVBox.getChildren().addAll(searchLabel, txtTimKiem);
-
+   
     // Refresh Button
     VBox refreshButtonVBox = new VBox();
     refreshButtonVBox.getStyleClass().addAll("filter-field-container");
@@ -183,7 +185,7 @@ public class QuanLyLoaiPhongView {
     btnLamMoi.setCursor(Cursor.HAND);
     refreshButtonVBox.getChildren().addAll(invisibleLabel, btnLamMoi);
 
-    filterControlsHBox.getChildren().addAll(priceRangeFilterVBox, searchFilterVBox, refreshButtonVBox);
+    filterControlsHBox.getChildren().addAll(searchFilterVBox, priceRangeFilterVBox, refreshButtonVBox);
     filterSectionVBox.getChildren().addAll(filterControlsHBox);
 
     // ============================================

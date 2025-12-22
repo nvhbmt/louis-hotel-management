@@ -48,11 +48,7 @@ public class DangNhapController{
 
     public void initialize() {
         taiKhoanDAO = new TaiKhoanDAO();
-        authService = AuthService.getInstance();
-
-        tenDangNhapField.setText("manager");
-        matKhauField.setText("manager123");
-        
+        authService = AuthService.getInstance();        
         setupEventHandlers();
     }
     

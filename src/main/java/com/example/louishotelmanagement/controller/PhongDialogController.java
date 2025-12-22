@@ -12,16 +12,13 @@ import com.example.louishotelmanagement.model.TrangThaiPhong;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
 import com.example.louishotelmanagement.view.PhongFormDialogView;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import java.net.URL;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.ResourceBundle;
 
 public class PhongDialogController {
 
@@ -107,8 +104,6 @@ public class PhongDialogController {
 
     private SingleSelectionField<TrangThaiPhong> taoFieldTrangThai(TrangThaiPhong trangThai) {
         return Field.ofSingleSelectionType(List.of(
-                        TrangThaiPhong.TRONG,
-                        TrangThaiPhong.DA_DAT,
                         TrangThaiPhong.DANG_SU_DUNG,
                         TrangThaiPhong.BAO_TRI))
                 .label("Trạng thái")

@@ -14,6 +14,7 @@ import com.example.louishotelmanagement.view.QuanLyNhanVienView;
 import com.example.louishotelmanagement.view.QuanLyPhieuDatPhongView;
 import com.example.louishotelmanagement.view.ThongKeView;
 import com.example.louishotelmanagement.view.QuanLyPhongView;
+import com.example.louishotelmanagement.view.DangNhapView;
 import com.example.louishotelmanagement.view.DatDichVuView;
 import com.example.louishotelmanagement.view.QuanLyLoaiPhongView;
 import com.example.louishotelmanagement.view.TrangChuView;
@@ -106,26 +107,22 @@ public class LayoutController implements ContentSwitcher, Initializable {
     }
 
     private void showLoginScreen() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/dang-nhap-view.fxml"));
-            Scene scene = new Scene(loader.load(), 400, 500);
+        Scene scene = new Scene(new DangNhapView().getRoot(), 400, 500);
 
-            Stage stage = (Stage) logoutBtn.getScene().getWindow();
-            stage.setScene(scene);
-            stage.setTitle("Đăng nhập - Hệ thống quản lý khách sạn Louis");
+        Stage stage = (Stage) logoutBtn.getScene().getWindow();
+        stage.setScene(scene);
+        stage.setTitle("Đăng nhập - Hệ thống quản lý khách sạn Louis");
 
-            // Reset kích thước và thuộc tính Stage
-            stage.setResizable(false);
-            stage.setMinWidth(400);
-            stage.setMinHeight(500);
-            stage.setMaxWidth(400);
-            stage.setMaxHeight(500);
-            stage.setWidth(400);
-            stage.setHeight(500);
-            stage.centerOnScreen();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        // Reset kích thước và thuộc tính Stage
+        stage.setResizable(false);
+        stage.setMinWidth(400);
+        stage.setMinHeight(500);
+        stage.setMaxWidth(400);
+        stage.setMaxHeight(500);
+        stage.setWidth(400);
+        stage.setHeight(500);
+        stage.centerOnScreen();
+        stage.show();
     }
 
     @Override

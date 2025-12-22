@@ -2,10 +2,8 @@ package com.example.louishotelmanagement.view;
 // Generated Java code from FXML
 
 import com.example.louishotelmanagement.controller.LayoutController;
+import com.example.louishotelmanagement.service.AuthService;
 import com.example.louishotelmanagement.util.ContentSwitcher;
-import com.example.louishotelmanagement.view.QuanLyDichVuView;
-import com.example.louishotelmanagement.view.QuanLyKhachHangView;
-import com.example.louishotelmanagement.view.ThongKeView;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -15,15 +13,18 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 public class TrangChuView {
 
     private Parent root;
     private ContentSwitcher switcher;
+    private AuthService authService;
+    private String userRole;
 
     public TrangChuView() {
+        authService = AuthService.getInstance();
+        userRole = authService.getCurrentUserRole();
         BorderPane mainBorderPane = new BorderPane();
         mainBorderPane.setPrefHeight(864.0);
         mainBorderPane.setPrefWidth(1014.4);
@@ -46,7 +47,7 @@ public class TrangChuView {
         Label welcomeDescriptionLabel = new Label(
                 "Tối ưu hóa quy trình vận hành, nâng cao trải nghiệm khách hàng và theo dõi hiệu suất theo thời gian thực.");
         welcomeDescriptionLabel.getStyleClass().addAll("welcome-description");
-        welcomeDescriptionLabel.setMaxWidth(600);
+        welcomeDescriptionLabel.setMaxWidth(800);
         welcomeSectionVBox.getChildren().addAll(welcomeMainTitleLabel, welcomeSubtitleLabel, welcomeDescriptionLabel);
 
         GridPane featuresGridPane = new GridPane();
@@ -55,6 +56,13 @@ public class TrangChuView {
         featuresGridPane.setAlignment(Pos.CENTER);
         featuresGridPane.getStyleClass().addAll("feature-grid-padding");
 
+        // Set up grid constraints for 2 columns (reduced from 3 for cleaner layout)
+        featuresGridPane.getColumnConstraints().addAll(
+                new javafx.scene.layout.ColumnConstraints(),
+                new javafx.scene.layout.ColumnConstraints()
+        );
+
+        // Main features - only 3-4 core functions
         VBox roomManagementCardVBox = new VBox();
         roomManagementCardVBox.getStyleClass().addAll("feature-card");
 
@@ -102,7 +110,7 @@ public class TrangChuView {
         customerManagementTextVBox.setAlignment(Pos.CENTER);
         Label customerManagementTitleLabel = new Label("Khách Hàng");
         customerManagementTitleLabel.getStyleClass().addAll("card-title");
-        Label customerManagementDescriptionLabel = new Label("Quản lý thông tin khách hàng, lịch sử đặt phòng");
+        Label customerManagementDescriptionLabel = new Label("Quản lý thông tin khách hàng");
         customerManagementDescriptionLabel.getStyleClass().addAll("card-description");
         customerManagementTextVBox.getChildren().addAll(customerManagementTitleLabel, customerManagementDescriptionLabel);
         Button customerManagementButton = new Button("Truy cập");
@@ -113,85 +121,92 @@ public class TrangChuView {
         GridPane.setColumnIndex(customerManagementCardVBox, 1);
         GridPane.setRowIndex(customerManagementCardVBox, 0);
 
-        VBox serviceManagementCardVBox = new VBox();
-        serviceManagementCardVBox.getStyleClass().addAll("feature-card");
+        if ("Manager".equals(userRole)) {
+            // Third card - Services (always available)
+            VBox serviceManagementCardVBox = new VBox();
+            serviceManagementCardVBox.getStyleClass().addAll("feature-card");
 
-        VBox serviceManagementContentVBox = new VBox(15.0);
-        serviceManagementContentVBox.setAlignment(Pos.CENTER);
-        serviceManagementContentVBox.getStyleClass().addAll("card-content");
-        ImageView serviceManagementImageView = new ImageView();
-        serviceManagementImageView.setFitHeight(60.0);
-        serviceManagementImageView.setFitWidth(60.0);
-        serviceManagementImageView.setPreserveRatio(true);
-        serviceManagementImageView.setImage(new Image(
-                getClass().getResource("/com/example/louishotelmanagement/image/dining-table.png")
-                        .toExternalForm()));
+            VBox serviceManagementContentVBox = new VBox(15.0);
+            serviceManagementContentVBox.setAlignment(Pos.CENTER);
+            serviceManagementContentVBox.getStyleClass().addAll("card-content");
+            ImageView serviceManagementImageView = new ImageView();
+            serviceManagementImageView.setFitHeight(60.0);
+            serviceManagementImageView.setFitWidth(60.0);
+            serviceManagementImageView.setPreserveRatio(true);
+            serviceManagementImageView.setImage(new Image(
+                    getClass().getResource("/com/example/louishotelmanagement/image/dining-table.png")
+                            .toExternalForm()));
 
-        VBox serviceManagementTextVBox = new VBox(8.0);
-        serviceManagementTextVBox.setAlignment(Pos.CENTER);
-        Label serviceManagementTitleLabel = new Label("Dịch Vụ");
-        serviceManagementTitleLabel.getStyleClass().addAll("card-title");
-        Label serviceManagementDescriptionLabel = new Label("Quản lý dịch vụ, đặt dịch vụ cho khách hàng");
-        serviceManagementDescriptionLabel.getStyleClass().addAll("card-description");
-        serviceManagementTextVBox.getChildren().addAll(serviceManagementTitleLabel, serviceManagementDescriptionLabel);
-        Button serviceManagementButton = new Button("Truy cập");
-        serviceManagementButton.getStyleClass().addAll("card-button");
-        serviceManagementButton.setOnAction(e -> this.moQuanLyDichVu(e));
-        serviceManagementContentVBox.getChildren().addAll(serviceManagementImageView, serviceManagementTextVBox, serviceManagementButton);
-        serviceManagementCardVBox.getChildren().addAll(serviceManagementContentVBox);
-        GridPane.setColumnIndex(serviceManagementCardVBox, 0);
-        GridPane.setRowIndex(serviceManagementCardVBox, 1);
+            VBox serviceManagementTextVBox = new VBox(8.0);
+            serviceManagementTextVBox.setAlignment(Pos.CENTER);
+            Label serviceManagementTitleLabel = new Label("Dịch Vụ");
+            serviceManagementTitleLabel.getStyleClass().addAll("card-title");
+            Label serviceManagementDescriptionLabel = new Label("Quản lý dịch vụ");
+            serviceManagementDescriptionLabel.getStyleClass().addAll("card-description");
+            serviceManagementTextVBox.getChildren().addAll(serviceManagementTitleLabel, serviceManagementDescriptionLabel);
+            Button serviceManagementButton = new Button("Truy cập");
+            serviceManagementButton.getStyleClass().addAll("card-button");
+            serviceManagementButton.setOnAction(e -> this.moQuanLyDichVu(e));
+            serviceManagementContentVBox.getChildren().addAll(serviceManagementImageView, serviceManagementTextVBox, serviceManagementButton);
+            serviceManagementCardVBox.getChildren().addAll(serviceManagementContentVBox);
+            GridPane.setColumnIndex(serviceManagementCardVBox, 0);
+            GridPane.setRowIndex(serviceManagementCardVBox, 1);
 
-        VBox statisticsCardVBox = new VBox();
-        statisticsCardVBox.getStyleClass().addAll("feature-card");
+            // Fourth card - Statistics (Manager only, hidden for others)
+            VBox statisticsCardVBox = new VBox();
+            statisticsCardVBox.getStyleClass().addAll("feature-card");
 
-        VBox statisticsContentVBox = new VBox(15.0);
-        statisticsContentVBox.setAlignment(Pos.CENTER);
-        statisticsContentVBox.getStyleClass().addAll("card-content");
-        ImageView statisticsImageView = new ImageView();
-        statisticsImageView.setFitHeight(60.0);
-        statisticsImageView.setFitWidth(60.0);
-        statisticsImageView.setPreserveRatio(true);
-        statisticsImageView.setImage(new Image(
-                getClass().getResource("/com/example/louishotelmanagement/image/bar-chart.png")
-                        .toExternalForm()));
+            VBox statisticsContentVBox = new VBox(15.0);
+            statisticsContentVBox.setAlignment(Pos.CENTER);
+            statisticsContentVBox.getStyleClass().addAll("card-content");
+            ImageView statisticsImageView = new ImageView();
+            statisticsImageView.setFitHeight(60.0);
+            statisticsImageView.setFitWidth(60.0);
+            statisticsImageView.setPreserveRatio(true);
+            statisticsImageView.setImage(new Image(
+                    getClass().getResource("/com/example/louishotelmanagement/image/bar-chart.png")
+                            .toExternalForm()));
 
-        VBox statisticsTextVBox = new VBox(8.0);
-        statisticsTextVBox.setAlignment(Pos.CENTER);
-        Label statisticsTitleLabel = new Label("Thống Kê");
-        statisticsTitleLabel.getStyleClass().addAll("card-title");
-        Label statisticsDescriptionLabel = new Label("Báo cáo doanh thu, hiệu suất và xu hướng");
-        statisticsDescriptionLabel.getStyleClass().addAll("card-description");
-        statisticsTextVBox.getChildren().addAll(statisticsTitleLabel, statisticsDescriptionLabel);
-        Button statisticsButton = new Button("Truy cập");
-        statisticsButton.getStyleClass().addAll("card-button");
-        statisticsButton.setOnAction(e -> this.moThongKe(e));
-        statisticsContentVBox.getChildren().addAll(statisticsImageView, statisticsTextVBox, statisticsButton);
-        statisticsCardVBox.getChildren().addAll(statisticsContentVBox);
-        GridPane.setColumnIndex(statisticsCardVBox, 1);
-        GridPane.setRowIndex(statisticsCardVBox, 1);
-        featuresGridPane.getChildren().addAll(roomManagementCardVBox, customerManagementCardVBox, serviceManagementCardVBox, statisticsCardVBox);
+            VBox statisticsTextVBox = new VBox(8.0);
+            statisticsTextVBox.setAlignment(Pos.CENTER);
+            Label statisticsTitleLabel = new Label("Thống Kê");
+            statisticsTitleLabel.getStyleClass().addAll("card-title");
+            Label statisticsDescriptionLabel = new Label("Báo cáo doanh thu, hiệu suất và xu hướng");
+            statisticsDescriptionLabel.getStyleClass().addAll("card-description");
+            statisticsTextVBox.getChildren().addAll(statisticsTitleLabel, statisticsDescriptionLabel);
+            Button statisticsButton = new Button("Truy cập");
+            statisticsButton.getStyleClass().addAll("card-button");
+            statisticsButton.setOnAction(e -> this.moThongKe(e));
+            statisticsContentVBox.getChildren().addAll(statisticsImageView, statisticsTextVBox, statisticsButton);
+            statisticsCardVBox.getChildren().addAll(statisticsContentVBox);
+            GridPane.setColumnIndex(statisticsCardVBox, 1);
+            GridPane.setRowIndex(statisticsCardVBox, 1);
 
-        VBox quickActionsVBox = new VBox(15.0);
-        quickActionsVBox.setAlignment(Pos.CENTER);
-        quickActionsVBox.getStyleClass().addAll("quick-actions-padding");
-        Label quickActionsTitleLabel = new Label("Hành động nhanh");
-        quickActionsTitleLabel.getStyleClass().addAll("quick-actions-title");
+            featuresGridPane.getChildren().addAll(statisticsCardVBox);
+            // Add core features - only 4 main functions
+            featuresGridPane.getChildren().addAll(roomManagementCardVBox, customerManagementCardVBox, serviceManagementCardVBox);
+        }
 
-        HBox quickActionsHBox = new HBox(20.0);
-        quickActionsHBox.setAlignment(Pos.CENTER);
-        Button bookRoomButton = new Button("Đặt phòng mới");
-        bookRoomButton.getStyleClass().addAll("quick-action-button");
-        bookRoomButton.setOnAction(e -> this.moDatPhong(e));
-        Button checkInButton = new Button("Check-in");
-        checkInButton.getStyleClass().addAll("quick-action-button");
-        checkInButton.setOnAction(e -> this.moNhanPhong(e));
-        Button checkOutButton = new Button("Check-out");
-        checkOutButton.getStyleClass().addAll("quick-action-button");
-        checkOutButton.setOnAction(e -> this.moTraPhong(e));
-        quickActionsHBox.getChildren().addAll(bookRoomButton, checkInButton, checkOutButton);
-        quickActionsVBox.getChildren().addAll(quickActionsTitleLabel, quickActionsHBox);
-        mainContentVBox.getChildren().addAll(welcomeSectionVBox, featuresGridPane, quickActionsVBox);
+        // VBox quickActionsVBox = new VBox(15.0);
+        // quickActionsVBox.setAlignment(Pos.CENTER);
+        // quickActionsVBox.getStyleClass().addAll("quick-actions-padding");
+        // Label quickActionsTitleLabel = new Label("Hành động nhanh");
+        // quickActionsTitleLabel.getStyleClass().addAll("quick-actions-title");
+
+        // HBox quickActionsHBox = new HBox(20.0);
+        // quickActionsHBox.setAlignment(Pos.CENTER);
+        // Button bookRoomButton = new Button("Đặt phòng mới");
+        // bookRoomButton.getStyleClass().addAll("quick-action-button");
+        // bookRoomButton.setOnAction(e -> this.moDatPhong(e));
+        // Button checkInButton = new Button("Check-in");
+        // checkInButton.getStyleClass().addAll("quick-action-button");
+        // checkInButton.setOnAction(e -> this.moNhanPhong(e));
+        // Button checkOutButton = new Button("Check-out");
+        // checkOutButton.getStyleClass().addAll("quick-action-button");
+        // checkOutButton.setOnAction(e -> this.moTraPhong(e));
+        // quickActionsHBox.getChildren().addAll(bookRoomButton, checkInButton, checkOutButton);
+        // quickActionsVBox.getChildren().addAll(quickActionsTitleLabel, quickActionsHBox);
+        mainContentVBox.getChildren().addAll(welcomeSectionVBox, featuresGridPane);
         mainBorderPane.setCenter(mainContentVBox);
         BorderPane.setAlignment(mainContentVBox, Pos.CENTER);
 
@@ -229,7 +244,7 @@ public class TrangChuView {
             setContentSwitcher(switcher);
         }
     }
-    
+
     public void setContentSwitcher(ContentSwitcher switcher) {
         this.switcher = switcher;
     }
@@ -257,14 +272,14 @@ public class TrangChuView {
     }
 
     private void moDatPhong(ActionEvent e) {
-        switcher.switchContent("/com/example/louishotelmanagement/fxml/dat-phong-truc-tiep-view.fxml");
+        switcher.switchContent(new DatPhongView().getRoot());
     }
 
     private void moNhanPhong(ActionEvent e) {
-        switcher.switchContent("/com/example/louishotelmanagement/fxml/nhan-phong-view.fxml");
+        switcher.switchContent(new NhanPhongView().getRoot());
     }
 
     private void moTraPhong(ActionEvent e) {
-        switcher.switchContent("/com/example/louishotelmanagement/fxml/tra-phong-view.fxml");
+        switcher.switchContent(new TraPhongView().getRoot());
     }
 }

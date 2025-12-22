@@ -147,6 +147,7 @@ public class QuanLyHoaDonView {
         VBox searchFilterVBox = createFilterField("Tìm kiếm", txtTimKiem = new TextField(), "filter-input");
         txtTimKiem.setPromptText("Nhập thông tin khách hàng, phòng...");
         txtTimKiem.setOnKeyReleased(e -> this.handleTimKiem());
+        HBox.setHgrow(searchFilterVBox, Priority.ALWAYS);
 
         // Date Filter
         VBox dateFilterVBox = createFilterField("Ngày Lập", cmbNgayLap = new ComboBox(), "filter-combobox");

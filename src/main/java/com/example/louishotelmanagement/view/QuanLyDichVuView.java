@@ -169,6 +169,7 @@ public class QuanLyDichVuView {
     txtTimKiem.setOnKeyReleased(e -> this.handleTimKiem());
     txtTimKiem.setCursor(Cursor.HAND);
     searchFilterVBox.getChildren().addAll(searchLabel, txtTimKiem);
+    HBox.setHgrow(searchFilterVBox, Priority.ALWAYS);
 
     // Status Filter
     VBox statusFilterVBox = createFilterField("Trạng thái", cbTrangThaiKinhDoanh = new ComboBox(), "filter-combobox");

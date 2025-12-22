@@ -90,7 +90,7 @@ public class QuanLyPhongView {
     VBox headerButtonContainer = new VBox();
     headerButtonContainer.getStyleClass().addAll("header-button-section");
     btnThemPhong = new Button("➕ Thêm phòng");
-    btnThemPhong.getStyleClass().addAll("add-room-button");
+    btnThemPhong.getStyleClass().addAll("btn-primary");
     btnThemPhong.setOnAction(e -> this.handleThemPhong());
     headerButtonContainer.getChildren().addAll(btnThemPhong);
     headerSection.getChildren().addAll(headerIconContainer, headerTitleContainer, headerButtonContainer);
@@ -157,17 +157,6 @@ public class QuanLyPhongView {
     HBox filterControlsHBox = new HBox();
     filterControlsHBox.getStyleClass().addAll("filter-section");
 
-    // Status Filter
-    VBox statusFilterVBox = createFilterField("Trạng thái", cbTrangThai = new ComboBox(), "filter-combobox");
-
-    // Floor Filter
-    VBox floorFilterVBox = createFilterField("Tầng", cbTang = new ComboBox(), "filter-combobox");
-    cbTang.setOnAction(e -> this.handleLocTang());
-
-    // Room Type Filter
-    VBox roomTypeFilterVBox = createFilterField("Loại phòng", cbLocLoaiPhong = new ComboBox(), "filter-combobox");
-    cbLocLoaiPhong.setOnAction(e -> this.handleLocLoaiPhong());
-
     // Search Filter
     VBox searchFilterVBox = new VBox();
     searchFilterVBox.getStyleClass().addAll("filter-field-container");
@@ -179,6 +168,19 @@ public class QuanLyPhongView {
     txtTimKiem.setOnKeyReleased(e -> this.handleTimKiem());
     txtTimKiem.setCursor(Cursor.HAND);
     searchFilterVBox.getChildren().addAll(searchLabel, txtTimKiem);
+    HBox.setHgrow(searchFilterVBox, Priority.ALWAYS);
+
+    // Status Filter
+    VBox statusFilterVBox = createFilterField("Trạng thái", cbTrangThai = new ComboBox(), "filter-combobox");
+
+    // Floor Filter
+    VBox floorFilterVBox = createFilterField("Tầng", cbTang = new ComboBox(), "filter-combobox");
+    cbTang.setOnAction(e -> this.handleLocTang());
+
+    // Room Type Filter
+    VBox roomTypeFilterVBox = createFilterField("Loại phòng", cbLocLoaiPhong = new ComboBox(), "filter-combobox");
+    cbLocLoaiPhong.setOnAction(e -> this.handleLocLoaiPhong());
+
 
     // Refresh Button
     VBox refreshButtonVBox = new VBox();
@@ -192,7 +194,7 @@ public class QuanLyPhongView {
     btnLamMoi.setCursor(Cursor.HAND);
     refreshButtonVBox.getChildren().addAll(invisibleLabel, btnLamMoi);
 
-    filterControlsHBox.getChildren().addAll(statusFilterVBox, floorFilterVBox, roomTypeFilterVBox, searchFilterVBox, refreshButtonVBox);
+    filterControlsHBox.getChildren().addAll(searchFilterVBox, statusFilterVBox, floorFilterVBox, roomTypeFilterVBox, refreshButtonVBox);
     filterSectionVBox.getChildren().addAll(filterControlsHBox);
 
     // ============================================

@@ -170,18 +170,18 @@ public class QuanLyKhachHangView {
     btnLamMoi.setCursor(Cursor.HAND);
 
     // Search Filter
-    VBox searchFilterVBox = createFilterField("", txtTimKiem = new TextField(), "filter-input");
+    VBox searchFilterVBox = createFilterField("Tìm kiếm", txtTimKiem = new TextField(), "filter-input");
     txtTimKiem.setPromptText("Tìm tên, số điện thoại, email...");
     txtTimKiem.setOnKeyReleased(e -> this.handleTimKiem());
     HBox.setHgrow(searchFilterVBox, Priority.ALWAYS);
 
     // Rank Filter
-    VBox rankFilterVBox = createFilterField("", cmbHang = new ComboBox(), "filter-combobox");
+    VBox rankFilterVBox = createFilterField("Hạng khách", cmbHang = new ComboBox(), "filter-combobox");
     cmbHang.setPromptText("Hạng khách");
     cmbHang.setOnAction(e -> this.handleTimKiem());
 
     // Status Filter
-    VBox statusFilterVBox = createFilterField("", cmbTrangThai = new ComboBox(), "filter-combobox");
+    VBox statusFilterVBox = createFilterField("Trạng thái", cmbTrangThai = new ComboBox(), "filter-combobox");
     cmbTrangThai.setPromptText("Tất cả trạng thái");
     cmbTrangThai.setOnAction(e -> this.handleTimKiem());
 
