@@ -6,6 +6,7 @@ import com.example.louishotelmanagement.model.TrangThaiKhachHang;
 import com.example.louishotelmanagement.ui.components.CustomButton;
 import com.example.louishotelmanagement.ui.models.ButtonVariant;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
+import com.example.louishotelmanagement.view.KhachHangFormDialogView;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -14,6 +15,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -209,13 +211,13 @@ public class QuanLyKhachHangController implements Initializable {
     @FXML
     private void handleThemKhachHang() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/khach-hang-form-dialog.fxml"));
+            KhachHangFormDialogView view = new KhachHangFormDialogView();
+            KhachHangDialogController controller = new KhachHangDialogController(view);
+            Parent root = view.getRoot();
             Stage dialog = new Stage();
             dialog.setTitle("Thêm Khách Hàng Mới");
             dialog.initModality(Modality.APPLICATION_MODAL);
-            dialog.setScene(new Scene(loader.load()));
-
-            KhachHangDialogController controller = loader.getController();
+            dialog.setScene(new Scene(root));
             controller.setMode("ADD");
 
             dialog.showAndWait();
@@ -265,23 +267,19 @@ public class QuanLyKhachHangController implements Initializable {
 
     @FXML
     private void handleSuaKhachHang(KhachHang khachHang) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/khach-hang-form-dialog.fxml"));
-            Stage dialog = new Stage();
-            dialog.setTitle("Sửa Thông Tin Khách Hàng");
-            dialog.initModality(Modality.APPLICATION_MODAL);
-            dialog.setScene(new Scene(loader.load()));
+        KhachHangFormDialogView view = new KhachHangFormDialogView();
+        KhachHangDialogController controller = new KhachHangDialogController(view);
+        Parent root = view.getRoot();
+        Stage dialog = new Stage();
+        dialog.setTitle("Sửa Thông Tin Khách Hàng");
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.setScene(new Scene(root));
+        controller.setMode("EDIT");
+        controller.setKhachHang(khachHang);
 
-            KhachHangDialogController controller = loader.getController();
-            controller.setMode("EDIT");
-            controller.setKhachHang(khachHang);
+        dialog.showAndWait();
+        loadData();
 
-            dialog.showAndWait();
-            loadData();
-
-        } catch (IOException e) {
-            ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể mở form sửa khách hàng: " + e.getMessage());
-        }
     }
 
     @FXML

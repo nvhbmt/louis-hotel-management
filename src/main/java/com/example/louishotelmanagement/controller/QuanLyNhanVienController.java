@@ -4,6 +4,7 @@ import com.example.louishotelmanagement.dao.NhanVienDAO;
 import com.example.louishotelmanagement.model.NhanVien;
 import com.example.louishotelmanagement.ui.components.CustomButton;
 import com.example.louishotelmanagement.ui.models.ButtonVariant;
+import com.example.louishotelmanagement.view.NhanVienDialogView;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -266,29 +267,23 @@ public class QuanLyNhanVienController implements Initializable {
      * @param nhanVienToEdit Nhân viên cần sửa (null nếu là thêm mới).
      */
     private void moDialogNhanVien(NhanVien nhanVienToEdit) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/nhan-vien-dialog.fxml")); // Đảm bảo đường dẫn đúng
-            Parent root = loader.load();
+        NhanVienDialogView view = new NhanVienDialogView();
+        NhanVienDialogController controller = new NhanVienDialogController(view);
+        Parent root = view.getRoot();
+        controller.setNhanVien(nhanVienToEdit); // Truyền dữ liệu vào dialog
 
-            NhanVienDialogController dialogController = loader.getController();
-            dialogController.setNhanVien(nhanVienToEdit); // Truyền dữ liệu vào dialog
+        Stage dialogStage = new Stage();
+        dialogStage.setTitle(nhanVienToEdit == null ? "Thêm Nhân Viên Mới" : "Sửa Thông Tin Nhân Viên");
+        dialogStage.initModality(Modality.APPLICATION_MODAL);
+        // dialogStage.initOwner(btnThemNV.getScene().getWindow()); // Đặt cửa sổ cha (tùy chọn)
+        dialogStage.setScene(new Scene(root));
 
-            Stage dialogStage = new Stage();
-            dialogStage.setTitle(nhanVienToEdit == null ? "Thêm Nhân Viên Mới" : "Sửa Thông Tin Nhân Viên");
-            dialogStage.initModality(Modality.APPLICATION_MODAL);
-            // dialogStage.initOwner(btnThemNV.getScene().getWindow()); // Đặt cửa sổ cha (tùy chọn)
-            dialogStage.setScene(new Scene(root));
+        dialogStage.showAndWait(); // Hiển thị dialog và đợi đóng
 
-            dialogStage.showAndWait(); // Hiển thị dialog và đợi đóng
+        // Sau khi dialog đóng, tải lại dữ liệu nếu có thay đổi
+        // (Bạn có thể làm logic này phức tạp hơn để chỉ tải lại nếu có thay đổi thực sự)
+        taiDuLieuNhanVien();
 
-            // Sau khi dialog đóng, tải lại dữ liệu nếu có thay đổi
-            // (Bạn có thể làm logic này phức tạp hơn để chỉ tải lại nếu có thay đổi thực sự)
-            taiDuLieuNhanVien();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            hienThiLoi("Lỗi Giao Diện", "Không thể mở form nhân viên: " + e.getMessage());
-        }
     }
 
     // --- Utility Methods ---

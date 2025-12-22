@@ -5,6 +5,8 @@ package com.example.louishotelmanagement.controller;
 import com.example.louishotelmanagement.model.PhieuDatPhong;
 import com.example.louishotelmanagement.model.Phong;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
+import com.example.louishotelmanagement.view.PhieuDatPhongFormDialogView;
+import com.example.louishotelmanagement.view.PhieuDatPhongPDFView;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -34,9 +36,25 @@ public class PhieuDatPhongPDFController {
     @FXML private VBox containerChiTietPhong; // VBox để thêm các Label/HBox chi tiết phòng
     @FXML private Label lblTongTien;
     @FXML private Button btnIn;
+    @FXML private Button btnDong;
 
     private PhieuDatPhong pdp;
     private ArrayList<Phong> danhSachPhong;
+
+    public PhieuDatPhongPDFController(PhieuDatPhongPDFView view) {
+        this.rootContainer = view.getRootContainer();
+        this.lblMaPhieu = view.getLblMaPhieu();
+        this.lblNgayLap = view.getLblNgayLap();
+        this.lblKhachHang = view.getLblKhachHang();
+        this.lblNgayDen = view.getLblNgayDen();
+        this.lblNgayDi = view.getLblNgayDi();
+        this.containerChiTietPhong = view.getContainerChiTietPhong();
+        this.lblTongTien = view.getLblTongTien();
+        this.btnIn = view.getBtnIn();
+        this.btnDong = view.getBtnDong();
+        this.btnIn.setOnAction(actionEvent -> handleIn());
+        this.btnDong.setOnAction(this::handleDong);
+    }
 
     public void setPhieuDatPhongData(PhieuDatPhong pdp, ArrayList<Phong> dsPhong) {
         this.pdp = pdp;

@@ -9,6 +9,7 @@ import com.example.louishotelmanagement.model.HangKhach;
 import com.example.louishotelmanagement.model.KhachHang;
 import com.example.louishotelmanagement.model.TrangThaiKhachHang;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
+import com.example.louishotelmanagement.view.KhachHangFormDialogView;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -23,7 +24,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
 
-public class KhachHangDialogController implements Initializable {
+public class KhachHangDialogController {
 
     @FXML
     private Label lblTieuDe;
@@ -31,6 +32,8 @@ public class KhachHangDialogController implements Initializable {
     private VBox formContainer;
     @FXML
     private Button btnLuu;
+    @FXML
+    private Button btnHuy;
 
     private KhachHangDAO khachHangDAO;
     private String mode = "ADD";
@@ -49,8 +52,17 @@ public class KhachHangDialogController implements Initializable {
 
     private Form form;
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    public KhachHangDialogController(KhachHangFormDialogView view) {
+        this.lblTieuDe = view.getLblTieuDe();
+        this.formContainer = view.getFormContainer();
+        this.btnLuu = view.getBtnLuu();
+        this.btnHuy = view.getBtnHuy();
+        this.btnHuy.setOnAction(event -> handleHuy());
+        this.btnLuu.setOnAction(event -> handleLuu());
+        initialize();
+    }
+
+    public void initialize() {
             khachHangDAO = new KhachHangDAO();
             String maKHTiepTheo = layMaKhachHangNeuThemMoi();
 

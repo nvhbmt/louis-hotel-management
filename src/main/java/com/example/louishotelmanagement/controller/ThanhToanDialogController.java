@@ -3,6 +3,8 @@ package com.example.louishotelmanagement.controller;
 import com.example.louishotelmanagement.dao.*;
 import com.example.louishotelmanagement.model.*;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
+import com.example.louishotelmanagement.view.ChonKhuyenMaiDiaLogView;
+import com.example.louishotelmanagement.view.MaQRView;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -205,7 +207,7 @@ public class ThanhToanDialogController {
             // 1. Gán thông tin trạng thái và hình thức
             hoaDon.setPhuongThuc(phuongThuc);
             hoaDon.setTrangThai(TrangThaiHoaDon.DA_THANH_TOAN);
-            hoaDon.setNgayCheckOut(LocalDate.now());
+            hoaDon.setngayDi(LocalDate.now());
 
             // 2. Lấy tổng tiền cuối cùng (loại bỏ ký tự tiền tệ)
             String cleanedTongTien = lblTongThanhToan.getText().replaceAll("[^0-9]", "");
@@ -244,35 +246,31 @@ public class ThanhToanDialogController {
     }
 
     private void moManHinhQRCode() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/ma-qr-view.fxml"));
-            Parent p = loader.load();
-            QRController qr = loader.getController();
-            Stage stage = new Stage();
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setScene(new Scene(p));
-            stage.showAndWait();
-            if (qr.isTransactionConfirmed()) xuLyThanhToan(PhuongThucThanhToan.CHUYEN_KHOAN);
-        } catch (IOException e) { e.printStackTrace(); }
+        MaQRView view = new MaQRView();
+        QRController controller = new QRController(view);
+        Parent root = view.getRoot();
+        Stage stage = new Stage();
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.setScene(new Scene(root));
+        stage.showAndWait();
+        if (controller.isTransactionConfirmed()) xuLyThanhToan(PhuongThucThanhToan.CHUYEN_KHOAN);
     }
 
     @FXML private void handleChonGiamGia() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/khuyen-mai-screen.fxml"));
-            Parent p = loader.load();
-            ChonKhuyenMaiController ctrl = loader.getController();
-            Stage stage = new Stage();
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setScene(new Scene(p));
-            stage.showAndWait();
-            KhuyenMai selected = ctrl.getKhuyenMaiDuocChon();
-            if (selected != null) {
-                txtMaKhuyenMai.setText(selected.getMaKM());
-                hoaDon.setMaKM(selected.getMaKM());
-                tinhTongThanhToan();
-                hienThiChiTietHoaDon();
-            }
-        } catch (IOException e) { e.printStackTrace(); }
+        ChonKhuyenMaiDiaLogView view = new ChonKhuyenMaiDiaLogView();
+        ChonKhuyenMaiController controller = new ChonKhuyenMaiController(view);
+        Parent root = view.getRoot();
+        Stage stage = new Stage();
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.setScene(new Scene(root));
+        stage.showAndWait();
+        KhuyenMai selected = controller.getKhuyenMaiDuocChon();
+        if (selected != null) {
+            txtMaKhuyenMai.setText(selected.getMaKM());
+            hoaDon.setMaKM(selected.getMaKM());
+            tinhTongThanhToan();
+            hienThiChiTietHoaDon();
+        }
     }
 
     private void dongForm() { ((Stage) btnHuy.getScene().getWindow()).close(); }

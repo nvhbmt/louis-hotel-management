@@ -126,21 +126,18 @@ CREATE TABLE HoaDon
     ngayLap          DATE,
     phuongThuc       NVARCHAR(50),
     trangThai        NVARCHAR(50)  CHECK (trangThai IN (N'Chưa thanh toán', N'Đã thanh toán')),
-    -- ========= TIỀN PHÒNG + TỔNG =========
-    tongTien         DECIMAL(18, 2),                -- Tổng tiền cuối cùng phải thanh toán
-    -- ========= PHÍ / PHẠT =========
-    PhatNhanPhongTre DECIMAL(18, 2) NULL DEFAULT 0, -- Nhận phòng trễ
-    PhatTraPhongSom  DECIMAL(18, 2) NULL DEFAULT 0, -- Trả phòng sớm
-    PhatTraPhongTre  DECIMAL(18, 2) NULL DEFAULT 0, -- Trả phòng trễ
-    -- ========= GIẢM GIÁ =========
-    GiamGiaMaGG      DECIMAL(18, 2) NULL DEFAULT 0, -- Giảm theo mã GG
-    GiamGiaHangKH    DECIMAL(18, 2) NULL DEFAULT 0, -- Giảm theo hạng KH
+    tongTien         DECIMAL(18, 2),
+    -- Phí phạt
+    PhatNhanPhongTre DECIMAL(18, 2) NULL DEFAULT 0,
+    PhatTraPhongSom  DECIMAL(18, 2) NULL DEFAULT 0,
+    PhatTraPhongTre  DECIMAL(18, 2) NULL DEFAULT 0,
+    -- Giảm giá
+    GiamGiaMaGG      DECIMAL(18, 2) NULL DEFAULT 0,
+    GiamGiaHangKH    DECIMAL(18, 2) NULL DEFAULT 0,
+    -- Thuế và ngày thực tế
+    TongVAT          DECIMAL(18, 2) NULL DEFAULT 0,
+    ngayDi           DATE           NULL, -- Đã đổi từ NgayCheckOut/NgayDi cũ sang ngayDi thống nhất
 
-    -- ========= THUẾ / NGÀY THỰC TẾ =========
-    TongVAT          DECIMAL(18, 2) NULL,           -- Tổng VAT
-    NgayCheckOut     DATE           NULL,           -- Ngày trả phòng thực tế
-
-    -- ========= KHÓA NGOẠI =========
     maKH             NVARCHAR(10),
     maNV             NVARCHAR(10),
     maKM             NVARCHAR(10)   NULL,
@@ -149,7 +146,6 @@ CREATE TABLE HoaDon
     FOREIGN KEY (maNV) REFERENCES NhanVien (maNV),
     FOREIGN KEY (maKM) REFERENCES KhuyenMai (maKM)
 );
-GO
 
 -- Chi tiết hóa đơn
 CREATE TABLE CTHoaDonPhong

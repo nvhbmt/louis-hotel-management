@@ -10,6 +10,7 @@ import com.example.louishotelmanagement.model.LoaiPhong;
 import com.example.louishotelmanagement.model.Phong;
 import com.example.louishotelmanagement.model.TrangThaiPhong;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
+import com.example.louishotelmanagement.view.PhongFormDialogView;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -22,7 +23,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class PhongDialogController implements Initializable {
+public class PhongDialogController {
 
     @FXML
     private Label lblTieuDe;
@@ -30,6 +31,8 @@ public class PhongDialogController implements Initializable {
     private VBox formContainer;
     @FXML
     private Button btnLuu;
+    @FXML
+    private Button btnDong;
 
     private PhongDAO phongDAO;
     private LoaiPhongDAO loaiPhongDAO;
@@ -43,8 +46,17 @@ public class PhongDialogController implements Initializable {
     private StringField moTaField;
     private Form form;
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    public PhongDialogController(PhongFormDialogView view) {
+        this.lblTieuDe = view.getLblTieuDe();
+        this.formContainer = view.getFormContainer();
+        this.btnLuu = view.getBtnLuu();
+        this.btnLuu.setOnAction(event -> handleLuu());
+        this.btnDong = view.getBtnDong();
+        this.btnDong.setOnAction(event -> handleHuy());
+        initialize();
+    }
+
+    public void initialize() {
         try {
             khoiTaoDAO();
             List<LoaiPhong> dsLoaiPhong = loaiPhongDAO.layDSLoaiPhong();
