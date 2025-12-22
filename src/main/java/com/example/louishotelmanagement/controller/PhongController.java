@@ -1,13 +1,5 @@
 package com.example.louishotelmanagement.controller;
 
-import java.io.IOException;
-import java.net.URL;
-import java.sql.SQLException;
-import java.text.NumberFormat;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Locale;
-import java.util.ResourceBundle;
 import com.example.louishotelmanagement.dao.PhongDAO;
 import com.example.louishotelmanagement.model.LoaiPhong;
 import com.example.louishotelmanagement.model.Phong;
@@ -25,35 +17,35 @@ import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+
+import java.io.IOException;
+import java.sql.SQLException;
+import java.text.NumberFormat;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Locale;
 
 public class PhongController {
 
     // --- FXML Components ---
-   private ComboBox<String> cbxTang;
-   private ComboBox<String> cbxTrangThai;
-   private DatePicker dpTuNgay;
-   private DatePicker dpDenNgay;
+    private ComboBox<String> cbxTang;
+    private ComboBox<String> cbxTrangThai;
+    private DatePicker dpTuNgay;
+    private DatePicker dpDenNgay;
 
-   private TableView<Phong> tableViewPhong;
-   private TableColumn<Phong, Boolean> chonPhong;
-   private TableColumn<Phong, String> maPhong;
-   private TableColumn<Phong, String> loaiPhong;
-   private TableColumn<Phong, Double> donGia;
-   private TableColumn<Phong, TrangThaiPhong> trangThai;
+    private TableView<Phong> tableViewPhong;
+    private TableColumn<Phong, Boolean> chonPhong;
+    private TableColumn<Phong, String> maPhong;
+    private TableColumn<Phong, String> loaiPhong;
+    private TableColumn<Phong, Double> donGia;
+    private TableColumn<Phong, TrangThaiPhong> trangThai;
 
-   private Label lblTongPhong;
-   private Label lblPhongTrong;
-   private Label lblPhongSuDung;
-   private Label lblPhongBaoTri;
+    private Label lblTongPhong;
+    private Label lblPhongTrong;
+    private Label lblPhongSuDung;
+    private Label lblPhongBaoTri;
 
     private Button btnLamMoi;
 
@@ -365,7 +357,7 @@ public class PhongController {
         String maPhongCanDoi = dsTarget.get(0).getMaPhong();
         try {
             TrangThaiPhong tt = phongDAO.layPhongTheoMa(maPhongCanDoi).getTrangThai();
-                
+
             // 2. SỬA TẠI ĐÂY: Nếu trạng thái KHÁC "DANG_SU_DUNG" thì mới báo lỗi
             if (!tt.equals(TrangThaiPhong.DANG_SU_DUNG)) {
                 ThongBaoUtil.hienThiCanhBao("Lỗi", "Vui lòng chọn phòng đang sử dụng để đổi phòng");
@@ -395,9 +387,18 @@ public class PhongController {
 
     }
 
-    public void moDichVu(ActionEvent actionEvent) { if (switcher != null) switcher.switchContent("/com/example/louishotelmanagement/fxml/dat-dich-vu-view.fxml"); }
-    public void moHuyDat(ActionEvent actionEvent) { if (switcher != null) switcher.switchContent("/com/example/louishotelmanagement/fxml/huy-dat-phong-view.fxml"); }
-    public void moThanhToan(ActionEvent actionEvent) { if (switcher != null) switcher.switchContent("/com/example/louishotelmanagement/fxml/quan-ly-hoa-don-view.fxml"); }
+    public void moDichVu(ActionEvent actionEvent) {
+        if (switcher != null) switcher.switchContent("/com/example/louishotelmanagement/fxml/dat-dich-vu-view.fxml");
+    }
+
+    public void moHuyDat(ActionEvent actionEvent) {
+        if (switcher != null) switcher.switchContent("/com/example/louishotelmanagement/fxml/huy-dat-phong-view.fxml");
+    }
+
+    public void moThanhToan(ActionEvent actionEvent) {
+        if (switcher != null)
+            switcher.switchContent("/com/example/louishotelmanagement/fxml/quan-ly-hoa-don-view.fxml");
+    }
 
     public void moHuy(ActionEvent actionEvent) { // Nút Trả phòng
         ArrayList<Phong> dsTarget = layDanhSachPhongTarget();
@@ -433,29 +434,13 @@ public class PhongController {
                 DatPhongController ctrl = loader.getController();
                 ctrl.nhanDuLieuTuPhongView(dsTarget, ngayDenVal, ngayDiVal);
 
-                
+
                 switcher.switchContent(root);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
-
-    public void moDatTT(ActionEvent actionEvent) {
-        ArrayList<Phong> dsTarget = layDanhSachPhongTarget();
-        if (switcher != null) {
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/dat-phong-truc-tiep-view.fxml"));
-                Parent root = loader.load();
-                DatPhongTaiQuayController ctrl = loader.getController();
-                if (!dsTarget.isEmpty()) ctrl.nhanDanhSachPhongDaChon(dsTarget);
-                switcher.switchContent(root);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     // ============================================
     // UI COMPONENT SETTERS
     // ============================================
