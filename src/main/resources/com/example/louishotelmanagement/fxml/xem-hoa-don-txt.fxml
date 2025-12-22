@@ -7,7 +7,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="650.0" spacing="10.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.XemHoaDonTxtController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="650.0" spacing="10.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.XemHoaDonTxtController"
+stylesheets="@../css/xem-hoa-don-txt.css"
+>
     <children>
         <TextArea fx:id="txtHoaDon" editable="false" prefHeight="550.0" prefWidth="630.0" VBox.vgrow="ALWAYS">
             <font>
@@ -17,7 +19,7 @@
 
         <HBox alignment="CENTER_RIGHT" spacing="10.0">
             <children>
-                <Button fx:id="btnInHoaDon" mnemonicParsing="false" onAction="#handleIn" style="-fx-background-color: #0078D4; -fx-text-fill: white;" text="🖨️ In Hóa Đơn" />
+                <Button fx:id="btnInHoaDon" mnemonicParsing="false" onAction="#handleIn" styleClass="print-button" text="🖨️ In Hóa Đơn" />
                 <Button fx:id="btnDong" mnemonicParsing="false" onAction="#handleDong" text="Đóng" />
             </children>
         </HBox>

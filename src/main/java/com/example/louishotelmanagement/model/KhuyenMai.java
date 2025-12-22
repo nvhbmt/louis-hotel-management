@@ -36,8 +36,8 @@ public class KhuyenMai {
         return maKM;
     }
 
-    public void setMaKM(String maGG) {
-        this.maKM = maGG;
+    public void setMaKM(String maKM) {
+        this.maKM = maKM;
     }
 
     public String getCode() {
@@ -115,7 +115,7 @@ public class KhuyenMai {
     @Override
     public String toString() {
         return "KhuyenMai{" +
-                "maGG='" + maKM + '\'' +
+                "maKM='" + maKM + '\'' +
                 ", code='" + code + '\'' +
                 ", giamGia=" + giamGia +
                 ", kieuGiamGia='" + kieuGiamGia + '\'' +

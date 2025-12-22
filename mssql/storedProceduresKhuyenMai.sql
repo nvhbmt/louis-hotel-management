@@ -9,7 +9,7 @@ GO
 CREATE PROCEDURE sp_LayDSKhuyenMai
 AS
 BEGIN
-    SELECT maGG,
+    SELECT maKM,
            code,
            giamGia,
            kieuGiamGia,
@@ -35,7 +35,7 @@ END
 GO
 
 -- 3. Thêm mã giảm giá mới
-CREATE PROCEDURE sp_ThemKhuyenMai @maGG NVARCHAR(10), -- Mã giảm giá
+CREATE PROCEDURE sp_ThemKhuyenMai @maKM NVARCHAR(10), -- Mã khuyến mãi
                                   @code NVARCHAR(50), -- Code giảm giá
                                   @giamGia DECIMAL(18, 2), -- Giá trị giảm
                                   @kieuGiamGia NVARCHAR(10), -- Kiểu giảm (PERCENT / AMOUNT)
@@ -47,15 +47,15 @@ CREATE PROCEDURE sp_ThemKhuyenMai @maGG NVARCHAR(10), -- Mã giảm giá
                                   @maNV NVARCHAR(10) -- Nhân viên tạo mã
 AS
 BEGIN
-    INSERT INTO KhuyenMai(maGG, code, giamGia, kieuGiamGia, ngayBatDau, ngayKetThuc,
+    INSERT INTO KhuyenMai(maKM, code, giamGia, kieuGiamGia, ngayBatDau, ngayKetThuc,
                           tongTienToiThieu, moTa, trangThai, maNV)
-    VALUES (@maGG, @code, @giamGia, @kieuGiamGia, @ngayBatDau, @ngayKetThuc,
+    VALUES (@maKM, @code, @giamGia, @kieuGiamGia, @ngayBatDau, @ngayKetThuc,
             @tongTienToiThieu, @moTa, @trangThai, @maNV);
 END
 GO
 
 -- 4. Cập nhật mã giảm giá
-CREATE PROCEDURE sp_CapNhatKhuyenMai @maGG NVARCHAR(10), -- Mã giảm giá
+CREATE PROCEDURE sp_CapNhatKhuyenMai @maKM NVARCHAR(10), -- Mã khuyến mãi
                                      @code NVARCHAR(50), -- Code giảm giá
                                      @giamGia DECIMAL(18, 2), -- Giá trị giảm
                                      @kieuGiamGia NVARCHAR(10), -- Kiểu giảm
@@ -71,30 +71,30 @@ BEGIN
         ngayKetThuc = @ngayKetThuc,
         moTa        = @moTa,
         trangThai   = @trangThai
-    WHERE maGG = @maGG;
+    WHERE maKM = @maKM;
 END
 GO
 
 -- 5. Xóa mã giảm giá
-CREATE PROCEDURE sp_XoaKhuyenMai @maGG NVARCHAR(10) -- Mã giảm giá cần xóa
+CREATE PROCEDURE sp_XoaKhuyenMai @maKM NVARCHAR(10) -- Mã khuyến mãi cần xóa
 AS
 BEGIN
     DELETE
     FROM KhuyenMai
-    WHERE maGG = @maGG;
+    WHERE maKM = @maKM;
 END
 GO
 
 -- Store Procedure: sp_LayKhuyenMaiTheoMa
--- Mục đích: Lấy thông tin chi tiết của một mã giảm giá dựa trên Mã GG (maGG)
+-- Mục đích: Lấy thông tin chi tiết của một mã khuyến mãi dựa trên Mã KM (maKM)
 CREATE PROCEDURE sp_LayKhuyenMaiTheoMa
-@maGG NVARCHAR(10)
+@maKM NVARCHAR(10)
 AS
 BEGIN
     SET NOCOUNT ON;
 
     SELECT
-        maGG,
+        maKM,
         code,
         giamGia,
         kieuGiamGia,
@@ -107,7 +107,7 @@ BEGIN
     FROM
         KhuyenMai
     WHERE
-        maGG = @maGG;
+        maKM = @maKM;
 END;
 GO
 
@@ -119,35 +119,24 @@ BEGIN
     SET NOCOUNT ON;
 
     -- Lấy mã lớn nhất hiện tại và tăng lên 1
-    DECLARE @maxMaGG NVARCHAR(10);
+    DECLARE @maxMaKM NVARCHAR(10);
     DECLARE @nextNumber INT;
 
-    SELECT @maxMaGG = MAX(maGG)
+    SELECT @maxMaKM = MAX(maKM)
     FROM KhuyenMai
-    WHERE maGG LIKE 'GG%';
+    WHERE maKM LIKE 'KM%';
 
-    IF @maxMaGG IS NULL
+    IF @maxMaKM IS NULL
     BEGIN
         SET @nextNumber = 1;
     END
     ELSE
     BEGIN
-        -- Lấy số từ mã (bỏ 'GG' prefix)
-        SET @nextNumber = CAST(SUBSTRING(@maxMaGG, 3, LEN(@maxMaGG) - 2) AS INT) + 1;
+        -- Lấy số từ mã (bỏ 'KM' prefix)
+        SET @nextNumber = CAST(SUBSTRING(@maxMaKM, 3, LEN(@maxMaKM) - 2) AS INT) + 1;
     END
 
     -- Trả về mã mới
-    SELECT 'GG' + RIGHT('00000' + CAST(@nextNumber AS NVARCHAR(5)), 5) AS maGG;
-END;
-GO
-
-CREATE PROCEDURE sp_layMaKMTiepTheo
-AS
-BEGIN
-    SELECT TOP 1 maGG
-    FROM KhuyenMai
-    ORDER BY maGG DESC;
-    SELECT 'GG' + RIGHT('000' + CAST(RIGHT(MAX(maGG), 3) + 1 AS VARCHAR(3)), 3) AS maGG
-    FROM KhuyenMai;
+    SELECT 'KM' + RIGHT('00000' + CAST(@nextNumber AS NVARCHAR(5)), 5) AS maKM;
 END;
 GO

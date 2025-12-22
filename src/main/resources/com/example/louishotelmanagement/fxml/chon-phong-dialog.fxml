@@ -8,11 +8,15 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 
-<BorderPane prefHeight="494.0" prefWidth="760.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.DialogChonPhongController">
+<BorderPane prefHeight="494.0" prefWidth="760.0"
+    xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" 
+    fx:controller="com.example.louishotelmanagement.controller.DialogChonPhongController"
+    stylesheets="@../css/chon-phong-dialog.css"
+    >
 
     <!-- ===== TITLE ===== -->
     <top>
-        <Label style="-fx-font-size: 18px; -fx-font-weight: bold;" text="CHỌN PHÒNG" BorderPane.alignment="TOP_LEFT">
+        <Label styleClass="dialog-title" text="CHỌN PHÒNG" BorderPane.alignment="TOP_LEFT">
             <BorderPane.margin>
                 <Insets bottom="10" left="10" right="10" top="10" />
             </BorderPane.margin>

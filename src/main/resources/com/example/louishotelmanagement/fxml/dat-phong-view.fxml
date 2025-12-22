@@ -1,324 +1,295 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.DatePicker?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
-
-<BorderPane prefHeight="864.0" prefWidth="1014.4" stylesheets="@../css/dat-phong.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.DatPhongController">
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<BorderPane prefHeight="864.0" prefWidth="1014.4" stylesheets="@../css/dat-phong.css"
+            xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.louishotelmanagement.controller.DatPhongController">
     <center>
         <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
-            <children>
-                <VBox alignment="TOP_LEFT" prefHeight="50.0" prefWidth="1014.0" style="-fx-border-color: #ecf0f1; -fx-border-width: 0 0 1 0;">
-                    <children>
-                        <Label prefHeight="30.0" prefWidth="244.0" style="-fx-font-size: 20px;-fx-font-weight: 700; -fx-text-fill: #34495e;" text="Thông tin đặt phòng">
-                            <VBox.margin>
-                                <Insets left="30.0" top="10.0" />
-                            </VBox.margin>
-                        </Label>
-                    </children>
+            <VBox prefHeight="50.0" prefWidth="1014.0"
+                  styleClass="section-border">
+                <VBox.margin>
+                    <Insets bottom="10.0"/>
+                </VBox.margin>
+                <Label prefHeight="30.0" prefWidth="244.0"
+                       styleClass="section-title-custom"
+                       text="Thông tin đặt phòng">
                     <VBox.margin>
-                        <Insets bottom="10.0" />
+                        <Insets left="30.0" top="10.0"/>
                     </VBox.margin>
+                </Label>
+            </VBox>
+
+            <VBox alignment="CENTER" prefHeight="210.0" prefWidth="1014.0" spacing="15.0">
+                <VBox.margin>
+                    <Insets bottom="20.0"/>
+                </VBox.margin>
+                <HBox alignment="CENTER_LEFT" prefHeight="35.0" prefWidth="900.0">
+                    <Label prefWidth="120.0" text="Khách hàng">
+                        <font>
+                            <Font size="15.0"/>
+                        </font>
+                        <HBox.margin>
+                            <Insets left="70.0"/>
+                        </HBox.margin>
+                    </Label>
+                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                        <HBox.margin>
+                            <Insets left="10.0" right="10.0"/>
+                        </HBox.margin>
+                        <Image url="@../image/detective.png"/>
+                    </ImageView>
+                    <ComboBox fx:id="dsKhachHang" prefHeight="30.0" prefWidth="480.0"
+                              promptText="Chọn hoặc tìm khách hàng"/>
+                    <Button mnemonicParsing="false" onAction="#handleThemKhachHang" prefHeight="30.0"
+                            styleClass="add-customer-button" text="Thêm khách hàng">
+                        <HBox.margin>
+                            <Insets left="20.0"/>
+                        </HBox.margin>
+                    </Button>
+                </HBox>
+
+                <HBox alignment="CENTER_LEFT" prefHeight="35.0" prefWidth="900.0">
+                    <Label prefWidth="120.0" text="Nhân viên">
+                        <font>
+                            <Font size="15.0"/>
+                        </font>
+                        <HBox.margin>
+                            <Insets left="70.0"/>
+                        </HBox.margin>
+                    </Label>
+                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                        <HBox.margin>
+                            <Insets left="10.0" right="10.0"/>
+                        </HBox.margin>
+                        <Image url="@../image/steward.png"/>
+                    </ImageView>
+                    <TextField fx:id="maNhanVien" editable="false" prefHeight="30.0" prefWidth="609.0"
+                               promptText="Tên nhân viên đang đăng nhập"
+                               styleClass="employee-field"/>
+                </HBox>
+
+                <HBox alignment="CENTER_LEFT" prefHeight="35.0" prefWidth="900.0">
+                    <Label prefWidth="120.0" text="Ngày đến">
+                        <font>
+                            <Font size="15.0"/>
+                        </font>
+                        <HBox.margin>
+                            <Insets left="70.0"/>
+                        </HBox.margin>
+                    </Label>
+                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                        <HBox.margin>
+                            <Insets left="10.0" right="10.0"/>
+                        </HBox.margin>
+                        <Image url="@../image/calendar.png"/>
+                    </ImageView>
+                    <DatePicker fx:id="ngayDen" prefHeight="30.0" prefWidth="250.0"
+                                promptText="Chọn ngày nhận phòng"/>
+                    <Label fx:id="lbLoaiDatPhong" prefWidth="200.0"
+                           styleClass="info-text" text=""
+                           visible="false">
+                        <HBox.margin>
+                            <Insets left="20.0"/>
+                        </HBox.margin>
+                    </Label>
+                </HBox>
+
+                <HBox alignment="CENTER_LEFT" prefHeight="35.0" prefWidth="900.0">
+                    <Label prefWidth="120.0" text="Ngày đi dự kiến">
+                        <font>
+                            <Font size="15.0"/>
+                        </font>
+                        <HBox.margin>
+                            <Insets left="70.0"/>
+                        </HBox.margin>
+                    </Label>
+                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                        <HBox.margin>
+                            <Insets left="10.0" right="10.0"/>
+                        </HBox.margin>
+                        <Image url="@../image/calendar.png"/>
+                    </ImageView>
+                    <DatePicker fx:id="ngayDi" prefHeight="30.0" prefWidth="250.0"
+                                promptText="Chọn ngày trả phòng"/>
+                    <Label fx:id="lbSoDem" prefWidth="200.0"
+                           styleClass="secondary-text" text="">
+                        <HBox.margin>
+                            <Insets left="20.0"/>
+                        </HBox.margin>
+                    </Label>
+                </HBox>
+
+                <HBox alignment="CENTER" prefHeight="40.0" prefWidth="900.0">
+                    <Label fx:id="lbLoadingPhong" prefWidth="300.0"
+                           styleClass="info-text" text="" visible="false">
+                        <font>
+                            <Font size="14.0"/>
+                        </font>
+                    </Label>
+                    <Label fx:id="lbSoPhongTrong" prefWidth="300.0"
+                           styleClass="success-text" text="">
+                        <font>
+                            <Font size="14.0"/>
+                        </font>
+                    </Label>
+                </HBox>
+                <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                    <opaqueInsets>
+                        <Insets/>
+                    </opaqueInsets>
+                    <ComboBox fx:id="cbTang" onAction="#handleLocTang" prefWidth="150.0" promptText="Chọn tầng">
+                        <HBox.margin>
+                            <Insets right="20.0"/>
+                        </HBox.margin>
+                    </ComboBox>
+                    <ComboBox fx:id="cbLocLoaiPhong" onAction="#handleLocLoaiPhong" prefHeight="26.0"
+                              prefWidth="173.0" promptText="Chọn loại phòng">
+                        <HBox.margin>
+                            <Insets right="20.0"/>
+                        </HBox.margin>
+                    </ComboBox>
+                    <Button mnemonicParsing="false" onAction="#handleRefresh" prefHeight="35.0"
+                            prefWidth="150.0" styleClass="refresh-button"
+                            text="Làm mới"/>
+                </HBox>
+            </VBox>
+
+            <VBox prefHeight="431.0" prefWidth="1014.0" VBox.vgrow="ALWAYS">
+                <TableView fx:id="tablePhong" prefHeight="431.0" prefWidth="1014.0" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colMaPhong" prefWidth="75.0" text="Mã phòng"/>
+                        <TableColumn fx:id="colTenLoaiPhong" prefWidth="120.0" text="Loại phòng"/>
+                        <TableColumn fx:id="colTang" prefWidth="50.0" text="Tầng"/>
+                        <TableColumn fx:id="colDonGia" prefWidth="100.0" text="Đơn giá/đêm"/>
+                        <TableColumn fx:id="colTrangThai" prefWidth="100.0" text="Trạng thái"/>
+                        <TableColumn fx:id="colMoTa" minWidth="0.0" prefWidth="280.0" text="Mô tả"/>
+                        <TableColumn fx:id="colThaoTac" prefWidth="90.0" text="Thao tác"/>
+                        <TableColumn fx:id="colDaChon" prefWidth="90.0" text="Đã chọn"/>
+                    </columns>
+                    <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                    </columnResizePolicy>
+                </TableView>
+                <VBox fx:id="vbEmptyState" alignment="CENTER" prefHeight="200.0" prefWidth="1014.0"
+                      styleClass="empty-state" visible="false">
+                    <padding>
+                        <Insets bottom="20.0" top="20.0"/>
+                    </padding>
+                    <ImageView fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true">
+                        <VBox.margin>
+                            <Insets bottom="10.0"/>
+                        </VBox.margin>
+                        <Image url="@../image/calendar.png"/>
+                    </ImageView>
+                    <Label styleClass="empty-title"
+                           text="Chưa có phòng trống">
+                        <VBox.margin>
+                            <Insets bottom="5.0"/>
+                        </VBox.margin>
+                    </Label>
+                    <Label styleClass="empty-subtitle"
+                           text="Vui lòng chọn khoảng thời gian khác hoặc thử lại sau"/>
                 </VBox>
-
-                <VBox alignment="CENTER" prefHeight="210.0" prefWidth="1014.0" spacing="15.0">
-                    <children>
-                        <HBox alignment="CENTER_LEFT" prefHeight="35.0" prefWidth="900.0">
-                            <children>
-                                <Label prefWidth="120.0" text="Khách hàng">
-                                    <font>
-                                        <Font size="15.0" />
-                                    </font>
-                                    <HBox.margin>
-                                        <Insets left="70.0" />
-                                    </HBox.margin>
-                                </Label>
-                                <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
-                                    <image>
-                                        <Image url="@../image/detective.png" />
-                                    </image>
-                                    <HBox.margin>
-                                        <Insets left="10.0" right="10.0" />
-                                    </HBox.margin>
-                                </ImageView>
-                                <ComboBox fx:id="dsKhachHang" prefHeight="30.0" prefWidth="480.0" promptText="Chọn hoặc tìm khách hàng" />
-                                <Button mnemonicParsing="false" onAction="#handleThemKhachHang" prefHeight="30.0" style="-fx-background-color: #1abc9c; -fx-text-fill: white;" text="Thêm khách hàng">
-                                    <HBox.margin>
-                                        <Insets left="20.0" />
-                                    </HBox.margin>
-                                </Button>
-                            </children>
-                        </HBox>
-
-                        <HBox alignment="CENTER_LEFT" prefHeight="35.0" prefWidth="900.0">
-                            <children>
-                                <Label prefWidth="120.0" text="Nhân viên">
-                                    <font>
-                                        <Font size="15.0" />
-                                    </font>
-                                    <HBox.margin>
-                                        <Insets left="70.0" />
-                                    </HBox.margin>
-                                </Label>
-                                <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
-                                    <image>
-                                        <Image url="@../image/steward.png" />
-                                    </image>
-                                    <HBox.margin>
-                                        <Insets left="10.0" right="10.0" />
-                                    </HBox.margin>
-                                </ImageView>
-                                <TextField fx:id="maNhanVien" editable="false" prefHeight="30.0" prefWidth="609.0" promptText="Tên nhân viên đang đăng nhập" style="-fx-control-inner-background: #f0f0f0;" />
-                            </children>
-                        </HBox>
-
-                        <HBox alignment="CENTER_LEFT" prefHeight="35.0" prefWidth="900.0">
-                            <children>
-                                <Label prefWidth="120.0" text="Ngày đến">
-                                    <font>
-                                        <Font size="15.0" />
-                                    </font>
-                                    <HBox.margin>
-                                        <Insets left="70.0" />
-                                    </HBox.margin>
-                                </Label>
-                                <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
-                                    <image>
-                                        <Image url="@../image/calendar.png" />
-                                    </image>
-                                    <HBox.margin>
-                                        <Insets left="10.0" right="10.0" />
-                                    </HBox.margin>
-                                </ImageView>
-                                <DatePicker fx:id="ngayDen" prefHeight="30.0" prefWidth="250.0" promptText="Chọn ngày nhận phòng" />
-                                <Label fx:id="lbLoaiDatPhong" prefWidth="200.0" style="-fx-font-weight: bold; -fx-text-fill: #007bff; -fx-font-size: 14px;" text="" visible="false">
-                                    <HBox.margin>
-                                        <Insets left="20.0" />
-                                    </HBox.margin>
-                                </Label>
-                            </children>
-                        </HBox>
-
-                        <HBox alignment="CENTER_LEFT" prefHeight="35.0" prefWidth="900.0">
-                            <children>
-                                <Label prefWidth="120.0" text="Ngày đi dự kiến">
-                                    <font>
-                                        <Font size="15.0" />
-                                    </font>
-                                    <HBox.margin>
-                                        <Insets left="70.0" />
-                                    </HBox.margin>
-                                </Label>
-                                <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
-                                    <image>
-                                        <Image url="@../image/calendar.png" />
-                                    </image>
-                                    <HBox.margin>
-                                        <Insets left="10.0" right="10.0" />
-                                    </HBox.margin>
-                                </ImageView>
-                                <DatePicker fx:id="ngayDi" prefHeight="30.0" prefWidth="250.0" promptText="Chọn ngày trả phòng" />
-                                <Label fx:id="lbSoDem" prefWidth="200.0" style="-fx-text-fill: #6c757d; -fx-font-size: 14px;" text="">
-                                    <HBox.margin>
-                                        <Insets left="20.0" />
-                                    </HBox.margin>
-                                </Label>
-                            </children>
-                        </HBox>
-                        
-                        <HBox alignment="CENTER" prefHeight="40.0" prefWidth="900.0">
-                            <children>
-                                <Label fx:id="lbLoadingPhong" prefWidth="300.0" style="-fx-text-fill: #007bff; -fx-font-size: 14px;" text="" visible="false">
-                                    <font>
-                                        <Font size="14.0" />
-                                    </font>
-                                </Label>
-                                <Label fx:id="lbSoPhongTrong" prefWidth="300.0" style="-fx-text-fill: #28a745; -fx-font-weight: bold; -fx-font-size: 14px;" text="">
-                                    <font>
-                                        <Font size="14.0" />
-                                    </font>
-                                </Label>
-                            </children>
-                        </HBox>
-                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
-                     <children>
-                        <ComboBox fx:id="cbTang" onAction="#handleLocTang" prefWidth="150.0" promptText="Chọn tầng">
-                           <HBox.margin>
-                              <Insets right="20.0" />
-                           </HBox.margin>
-                        </ComboBox>
-                        <ComboBox fx:id="cbLocLoaiPhong" onAction="#handleLocLoaiPhong" prefHeight="26.0" prefWidth="173.0" promptText="Chọn loại phòng">
-                           <HBox.margin>
-                              <Insets right="20.0" />
-                           </HBox.margin>
-                        </ComboBox>
-                              <Button mnemonicParsing="false" onAction="#handleRefresh" prefHeight="35.0" prefWidth="150.0" style="-fx-background-color: #198754; -fx-text-fill: white;" text="Làm mới" />
-                     </children>
-                     <opaqueInsets>
-                        <Insets />
-                     </opaqueInsets>
-                  </HBox>
-                    </children>
-                    <VBox.margin>
-                        <Insets bottom="20.0" />
-                    </VBox.margin>
-                </VBox>
-
-                <VBox prefHeight="431.0" prefWidth="1014.0" VBox.vgrow="ALWAYS">
-                    <children>
-                        <TableView fx:id="tablePhong" prefHeight="431.0" prefWidth="1014.0" VBox.vgrow="ALWAYS">
-                            <columns>
-                                <TableColumn fx:id="colMaPhong" prefWidth="75.0" text="Mã phòng" />
-                                <TableColumn fx:id="colTenLoaiPhong" prefWidth="120.0" text="Loại phòng" />
-                                <TableColumn fx:id="colTang" prefWidth="50.0" text="Tầng" />
-                                <TableColumn fx:id="colDonGia" prefWidth="100.0" text="Đơn giá/đêm" />
-                                <TableColumn fx:id="colTrangThai" prefWidth="100.0" text="Trạng thái" />
-                                <TableColumn fx:id="colMoTa" minWidth="0.0" prefWidth="280.0" text="Mô tả" />
-                                <TableColumn fx:id="colThaoTac" prefWidth="90.0" text="Thao tác" />
-                                <TableColumn fx:id="colDaChon" prefWidth="90.0" text="Đã chọn" />
-                            </columns>
-                            <columnResizePolicy>
-                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                            </columnResizePolicy>
-                        </TableView>
-                        <VBox fx:id="vbEmptyState" alignment="CENTER" prefHeight="200.0" prefWidth="1014.0" style="-fx-background-color: #f8f9fa;" visible="false">
-                            <children>
-                                <ImageView fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true">
-                                    <image>
-                                        <Image url="@../image/calendar.png" />
-                                    </image>
-                                    <VBox.margin>
-                                        <Insets bottom="10.0" />
-                                    </VBox.margin>
-                                </ImageView>
-                                <Label style="-fx-font-size: 16px; -fx-text-fill: #6c757d; -fx-font-weight: bold;" text="Chưa có phòng trống">
-                                    <VBox.margin>
-                                        <Insets bottom="5.0" />
-                                    </VBox.margin>
-                                </Label>
-                                <Label style="-fx-font-size: 14px; -fx-text-fill: #6c757d;" text="Vui lòng chọn khoảng thời gian khác hoặc thử lại sau" />
-                            </children>
-                            <padding>
-                                <Insets bottom="20.0" top="20.0" />
-                            </padding>
-                        </VBox>
-                    </children>
-                </VBox>
-            </children>
+            </VBox>
         </VBox>
     </center>
     <bottom>
         <VBox prefHeight="150.0" prefWidth="1014.0" BorderPane.alignment="CENTER">
-            <children>
-                <VBox prefHeight="90.0" prefWidth="1014.0" style="-fx-border-color: #ced4da; -fx-border-width: 1 0 0 0;">
-                    <children>
-                        <HBox alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="1014.0" spacing="20.0">
-                            <children>
-                                <Label text="Số phòng đã chọn:">
-                                    <font>
-                                        <Font size="14.0" />
-                                    </font>
-                           <HBox.margin>
-                              <Insets left="20.0" />
-                           </HBox.margin>
-                                </Label>
-                                <Label fx:id="SoPhongDaChon" prefWidth="50.0" style="-fx-font-weight: bold; -fx-text-fill: #007bff; -fx-font-size: 16px;" text="0">
-                                    <font>
-                                        <Font size="16.0" />
-                                    </font>
-                                    <HBox.margin>
-                                        <Insets right="40.0" />
-                                    </HBox.margin>
-                                </Label>
-                                <Label text="Số đêm:">
-                                    <font>
-                                        <Font size="14.0" />
-                                    </font>
-                                </Label>
-                                <Label fx:id="lbTongSoDem" prefWidth="50.0" style="-fx-font-weight: bold; -fx-text-fill: #6c757d; -fx-font-size: 14px;" text="0">
-                                    <font>
-                                        <Font size="14.0" />
-                                    </font>
-                                    <HBox.margin>
-                                        <Insets right="40.0" />
-                                    </HBox.margin>
-                                </Label>
-                            </children>
-                            <VBox.margin>
-                                <Insets top="10.0" />
-                            </VBox.margin>
-                        </HBox>
-
-                        <HBox alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="1014.0" spacing="20.0">
-                            <children>
-                                <Label text="TỔNG TIỀN DỰ KIẾN (chưa bao gồm dịch vụ): ">
-                                    <font>
-                                        <Font size="16.0" />
-                                    </font>
-                           <HBox.margin>
-                              <Insets left="20.0" />
-                           </HBox.margin>
-                                </Label>
-                                <Label fx:id="TongTien" prefWidth="200.0" style="-fx-font-weight: bold; -fx-text-fill: #dc3545; -fx-font-size: 18px;" text="0 VNĐ">
-                                    <font>
-                                        <Font size="18.0" />
-                                    </font>
-                                    <HBox.margin>
-                                        <Insets right="30.0" />
-                                    </HBox.margin>
-                                </Label>
-                            </children>
-                        </HBox>
-                    </children>
-                    <padding>
-                        <Insets bottom="10.0" />
-                    </padding>
-                </VBox>
-
-                <HBox alignment="CENTER" prefHeight="50.0" prefWidth="1014.0" spacing="20.0">
-                    <children>
-                        <Button fx:id="btnDatPhong" mnemonicParsing="false" onAction="#handleDatPhong" prefHeight="35.0" prefWidth="150.0" style="-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-weight: bold;" text="Xác nhận đặt" textAlignment="CENTER" />
-                    </children>
+            <VBox prefHeight="90.0" prefWidth="1014.0" styleClass="summary-border">
+                <padding>
+                    <Insets bottom="10.0"/>
+                </padding>
+                <HBox alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="1014.0" spacing="20.0">
                     <VBox.margin>
-                        <Insets bottom="10.0" />
+                        <Insets top="10.0"/>
                     </VBox.margin>
+                    <Label text="Số phòng đã chọn:">
+                        <font>
+                            <Font size="14.0"/>
+                        </font>
+                        <HBox.margin>
+                            <Insets left="20.0"/>
+                        </HBox.margin>
+                    </Label>
+                    <Label fx:id="SoPhongDaChon" prefWidth="50.0"
+                           styleClass="room-count" text="0">
+                        <font>
+                            <Font size="16.0"/>
+                        </font>
+                        <HBox.margin>
+                            <Insets right="40.0"/>
+                        </HBox.margin>
+                    </Label>
+                    <Label text="Số đêm:">
+                        <font>
+                            <Font size="14.0"/>
+                        </font>
+                    </Label>
+                    <Label fx:id="lbTongSoDem" prefWidth="50.0"
+                           styleClass="night-count" text="0">
+                        <font>
+                            <Font size="14.0"/>
+                        </font>
+                        <HBox.margin>
+                            <Insets right="40.0"/>
+                        </HBox.margin>
+                    </Label>
                 </HBox>
-            </children>
+
+                <HBox alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="1014.0" spacing="20.0">
+                    <Label text="TỔNG TIỀN DỰ KIẾN (chưa bao gồm dịch vụ): ">
+                        <font>
+                            <Font size="16.0"/>
+                        </font>
+                        <HBox.margin>
+                            <Insets left="20.0"/>
+                        </HBox.margin>
+                    </Label>
+                    <Label fx:id="TongTien" prefWidth="200.0"
+                           styleClass="total-amount"
+                           text="0 VNĐ">
+                        <font>
+                            <Font size="18.0"/>
+                        </font>
+                        <HBox.margin>
+                            <Insets right="30.0"/>
+                        </HBox.margin>
+                    </Label>
+                </HBox>
+            </VBox>
+
+            <HBox alignment="CENTER" prefHeight="50.0" prefWidth="1014.0" spacing="20.0">
+                <VBox.margin>
+                    <Insets bottom="10.0"/>
+                </VBox.margin>
+                <Button fx:id="btnDatPhong" mnemonicParsing="false" onAction="#handleDatPhong" prefHeight="35.0"
+                        prefWidth="150.0"
+                        styleClass="confirm-button"
+                        text="Xác nhận đặt" textAlignment="CENTER"/>
+            </HBox>
         </VBox>
     </bottom>
-   <top>
-      <HBox spacing="16.0">
-         <children>
-                <ImageView fitHeight="72.0" fitWidth="72.0" pickOnBounds="true" preserveRatio="true">
-                    <image>
-                        <Image url="@../image/key-chain.png" />
-                    </image>
-                </ImageView>
+    <top>
+        <HBox spacing="16.0">
+            <ImageView fitHeight="72.0" fitWidth="72.0" pickOnBounds="true" preserveRatio="true">
+                <Image url="@../image/key-chain.png"/>
+            </ImageView>
             <VBox>
-               <children>
-                    <Label style="-fx-font-size: 25px;-fx-font-weight: 900; -fx-text-fill: #2c3e50;" text="Đặt phòng" />
-                  <Label text="Thực hiện yêu cầu đặt phòng trước cho khách hàng " textFill="#7f8c8d">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </Label>
-               </children>
+                <Label styleClass="header-title" text="Đặt phòng"/>
+                <Label styleClass="header-subtitle" text="Thực hiện yêu cầu đặt phòng trước cho khách hàng">
+                    <font>
+                        <Font size="14.0"/>
+                    </font>
+                </Label>
             </VBox>
-         </children>
-      </HBox>
-   </top>
-   <padding>
-      <Insets bottom="32.0" left="32.0" right="32.0" top="32.0" />
-   </padding>
+        </HBox>
+    </top>
+    <padding>
+        <Insets bottom="32.0" left="32.0" right="32.0" top="32.0"/>
+    </padding>
 </BorderPane>

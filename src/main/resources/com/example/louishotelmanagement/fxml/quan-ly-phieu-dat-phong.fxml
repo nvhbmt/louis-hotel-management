@@ -6,8 +6,10 @@
 <?import javafx.scene.layout.*?>
 <?import java.net.URL?>
 <BorderPane fx:id="rootPane" prefHeight="1054.0" prefWidth="1014.0" styleClass="main-background main-content-padding"
-            stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.example.louishotelmanagement.controller.QuanLyPhieuDatPhongController">
+        xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.louishotelmanagement.controller.QuanLyPhieuDatPhongController"
+            stylesheets="@../css/main.css"
+            >
     <center>
         <VBox spacing="32.0" styleClass="spacing-normal" BorderPane.alignment="CENTER">
             <HBox styleClass="header-section">
@@ -106,28 +108,20 @@
             <VBox styleClass="table-container" VBox.vgrow="ALWAYS">
                 <TableView fx:id="tableViewPhieuDatPhong" styleClass="table-view" VBox.vgrow="ALWAYS">
                     <columns>
-                        <TableColumn fx:id="colMaPDP" maxWidth="Infinity" minWidth="80.0" prefWidth="-1.0"
-                                     text="Mã phiếu"/>
-                        <TableColumn fx:id="colKH" maxWidth="Infinity" minWidth="150.0" prefWidth="300.0"
-                                     text="Tên khách hàng"/>
-                        <TableColumn fx:id="colNgayDat" maxWidth="Infinity" minWidth="100.0" prefWidth="-1.0"
-                                     text="Ngày đặt"/>
-                        <TableColumn fx:id="colNgayDen" maxWidth="Infinity" minWidth="100.0" prefWidth="-1.0"
-                                     text="Ngày đến"/>
-                        <TableColumn fx:id="colNgayDi" maxWidth="Infinity" minWidth="97.0" prefWidth="-1.0"
-                                     text="Ngày đi"/>
-                        <TableColumn fx:id="colTrangThai" maxWidth="Infinity" minWidth="89.0" prefWidth="200.0"
-                                     text="Trạng thái"/>
-                        <TableColumn fx:id="colTienCoc" maxWidth="Infinity" minWidth="108.80010986328125"
-                                     prefWidth="150.0" text="Tiền cọc"/>
-                        <TableColumn fx:id="colThaoTac" maxWidth="Infinity" minWidth="150.0" prefWidth="-1.0"
-                                     text="Thao Tác"/>
+                        <TableColumn fx:id="colMaPDP" text="Mã phiếu"/>
+                        <TableColumn fx:id="colKH" text="Tên khách hàng"/>
+                        <TableColumn fx:id="colNgayDat" text="Ngày đặt"/>
+                        <TableColumn fx:id="colNgayDen" text="Ngày đến"/>
+                        <TableColumn fx:id="colNgayDi" text="Ngày đi"/>
+                        <TableColumn fx:id="colTrangThai" text="Trạng thái" styleClass="table-cell-center"/>
+                        <TableColumn fx:id="colTienCoc" text="Tiền cọc"/>
+                        <TableColumn fx:id="colThaoTac" text="Thao Tác"/>
                     </columns>
                     <padding>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
                     </padding>
                     <columnResizePolicy>
-                        <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY"/>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
                     </columnResizePolicy>
                 </TableView>
             </VBox>
@@ -136,7 +130,4 @@
     <padding>
         <Insets bottom="32.0" left="32.0" right="32.0" top="32.0"/>
     </padding>
-    <stylesheets>
-        <URL value="@../css/main.css"/>
-    </stylesheets>
 </BorderPane>

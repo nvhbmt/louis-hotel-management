@@ -21,7 +21,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Rectangle?>
 
-<BorderPane prefHeight="1092.0" prefWidth="1179.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.ThongKeController">
+<BorderPane prefHeight="1092.0" prefWidth="1179.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.ThongKeController"
+stylesheets="@../css/main.css, @../css/thong-ke.css"
+>
     <center>
         <ScrollPane>
             <content>
@@ -258,8 +260,4 @@
             <vbarPolicy>AS_NEEDED</vbarPolicy>
         </ScrollPane>
     </center>
-    <stylesheets>
-        <URL value="@../css/main.css" />
-        <URL value="@../css/thong-ke.css" />
-    </stylesheets>
 </BorderPane>

@@ -3,9 +3,14 @@ package com.example.louishotelmanagement.controller;
 import com.example.louishotelmanagement.dao.CTHoaDonPhongDAO;
 import com.example.louishotelmanagement.dao.KhachHangDAO;
 import com.example.louishotelmanagement.dao.PhieuDatPhongDAO;
-import com.example.louishotelmanagement.model.*;
-import com.example.louishotelmanagement.util.BadgeUtil;
-import com.example.louishotelmanagement.util.BadgeVariant;
+import com.example.louishotelmanagement.model.CTHoaDonPhong;
+import com.example.louishotelmanagement.model.KhachHang;
+import com.example.louishotelmanagement.model.PhieuDatPhong;
+import com.example.louishotelmanagement.model.TrangThaiPhieuDatPhong;
+import com.example.louishotelmanagement.ui.components.Badge;
+import com.example.louishotelmanagement.ui.components.CustomButton;
+import com.example.louishotelmanagement.ui.models.BadgeVariant;
+import com.example.louishotelmanagement.ui.models.ButtonVariant;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
@@ -100,13 +105,13 @@ public class QuanLyPhieuDatPhongController implements Initializable {
 
         int tongPhieuDatPhong = dsPhieuDatPhong.size();
         long tongPhieuDatPhongDaDat = dsPhieuDatPhong.stream()
-                .filter(PDP->PDP.getTrangThai().equals(TrangThaiPhieuDatPhong.DA_DAT))
+                .filter(PDP -> PDP.getTrangThai().equals(TrangThaiPhieuDatPhong.DA_DAT))
                 .count();
         long tongPhieuDatPhongDangSuDung = dsPhieuDatPhong.stream()
-                .filter(PDP->PDP.getTrangThai().equals(TrangThaiPhieuDatPhong.DANG_SU_DUNG))
+                .filter(PDP -> PDP.getTrangThai().equals(TrangThaiPhieuDatPhong.DANG_SU_DUNG))
                 .count();
         long tongPhieuDatPhongDaHoanThanh = dsPhieuDatPhong.stream()
-                .filter(PDP->PDP.getTrangThai().equals(TrangThaiPhieuDatPhong.HOAN_THANH))
+                .filter(PDP -> PDP.getTrangThai().equals(TrangThaiPhieuDatPhong.HOAN_THANH))
                 .count();
         lblTongSoPhieu.setText(Long.toString(tongPhieuDatPhong));
         lblSoPhieuDaDat.setText(String.valueOf(tongPhieuDatPhongDaDat));
@@ -207,26 +212,23 @@ public class QuanLyPhieuDatPhongController implements Initializable {
                     setGraphic(null);
                 } else {
                     switch (item) {
-                        case DA_DAT -> setGraphic(BadgeUtil.createBadge(item.toString(), BadgeVariant.INFO));
-                        case HOAN_THANH -> setGraphic(BadgeUtil.createBadge(item.toString(), BadgeVariant.SUCCESS));
-                        case DANG_SU_DUNG -> setGraphic(BadgeUtil.createBadge(item.toString(), BadgeVariant.WARNING));
-                        case DA_HUY -> setGraphic(BadgeUtil.createBadge(item.toString(), BadgeVariant.DANGER));
-                        default -> setGraphic(BadgeUtil.createBadge(item.toString(), BadgeVariant.DEFAULT));
+                        case DA_DAT -> setGraphic(Badge.createBadge(item.toString(), BadgeVariant.INFO));
+                        case HOAN_THANH -> setGraphic(Badge.createBadge(item.toString(), BadgeVariant.SUCCESS));
+                        case DANG_SU_DUNG -> setGraphic(Badge.createBadge(item.toString(), BadgeVariant.WARNING));
+                        case DA_HUY -> setGraphic(Badge.createBadge(item.toString(), BadgeVariant.DANGER));
+                        default -> setGraphic(Badge.createBadge(item.toString(), BadgeVariant.DEFAULT));
                     }
                 }
             }
         });
 
         colThaoTac.setCellFactory(_ -> new TableCell<>() {
-            private final Button btnEdit = new Button("Sửa");
-            private final Button btnDelete = new Button("Xóa");
-            private final Button btnView = new Button("Xem chi tiết");
+            private final Button btnEdit = CustomButton.createButton("Sửa", ButtonVariant.INFO);
+            private final Button btnDelete = CustomButton.createButton("Xóa", ButtonVariant.DANGER);
+            private final Button btnView = CustomButton.createButton("Xem chi tiết", ButtonVariant.SECONDARY);
 
             {
-                btnEdit.getStyleClass().addAll("btn", "btn-xs", "btn-info", "btn-table-edit");
-                btnDelete.getStyleClass().addAll("btn", "btn-xs", "btn-danger", "btn-table-delete");
-                btnView.setStyle("-fx-background-color: #f0f0f0;-fx-border-radius: 10");
-                btnView.setOnAction(_->{
+                btnView.setOnAction(_ -> {
                     PhieuDatPhong phieuDatPhong = getTableView().getItems().get(getIndex());
                     handleXemChiTiet(phieuDatPhong);
                 });
@@ -318,16 +320,16 @@ public class QuanLyPhieuDatPhongController implements Initializable {
                     if (!timKiem.isEmpty()) {
                         boolean matchPhieu = phieuDatPhong.getMaPhieu().toLowerCase().contains(timKiem);
                         String tenKH = "";
-                        try{
+                        try {
                             KhachHang kh = khachHangDAO.layKhachHangTheoMa(phieuDatPhong.getMaKH());
-                            if(kh != null){
+                            if (kh != null) {
                                 tenKH = kh.getHoTen();
                             }
-                        }catch (Exception e){
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                         boolean matchTenKH = tenKH.toLowerCase().contains(timKiem);
-                        if (!matchPhieu&&!matchTenKH) {
+                        if (!matchPhieu && !matchTenKH) {
                             return false;
                         }
                     }
@@ -353,7 +355,7 @@ public class QuanLyPhieuDatPhongController implements Initializable {
     @FXML
     private void handleSuaPhieuDatPhong(PhieuDatPhong phieuDatPhong) {
         try {
-            if(phieuDatPhong.getTrangThai().equals(TrangThaiPhieuDatPhong.DA_DAT)){
+            if (phieuDatPhong.getTrangThai().equals(TrangThaiPhieuDatPhong.DA_DAT)) {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/phieu-dat-phong-form-dialog.fxml"));
                 Stage dialog = new Stage();
                 dialog.setTitle("Sửa Thông Tin Phiếu Đặt Phòng"); // Sửa tiêu đề
@@ -367,9 +369,8 @@ public class QuanLyPhieuDatPhongController implements Initializable {
 
                 // Làm mới dữ liệu sau khi sửa
                 taiDuLieu();
-            }
-            else{
-                ThongBaoUtil.hienThiLoi("Lỗi","Chỉ được cập nhật phiếu đã đặt");
+            } else {
+                ThongBaoUtil.hienThiLoi("Lỗi", "Chỉ được cập nhật phiếu đã đặt");
             }
 
         } catch (IOException e) {

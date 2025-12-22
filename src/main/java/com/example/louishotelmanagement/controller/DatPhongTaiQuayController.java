@@ -3,6 +3,8 @@ package com.example.louishotelmanagement.controller;
 import com.example.louishotelmanagement.dao.*;
 import com.example.louishotelmanagement.model.*;
 import com.example.louishotelmanagement.service.AuthService;
+import com.example.louishotelmanagement.ui.components.CustomButton;
+import com.example.louishotelmanagement.ui.models.ButtonVariant;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
 import com.example.louishotelmanagement.util.Refreshable;
 import javafx.beans.binding.Bindings;
@@ -150,9 +152,10 @@ public class DatPhongTaiQuayController implements Initializable, Refreshable {
                     Bindings.createObjectBinding(() -> -0.0);
         });
         colThaoTac.setCellFactory(param -> new TableCell<>() {
-            private final Button btnThem = new Button("Thêm");
+            private Button btnThem;
+
             {
-                btnThem.getStyleClass().addAll("btn", "btn-xs", "btn-info", "btn-table-edit");
+                btnThem = CustomButton.createButton("Thêm", ButtonVariant.INFO);
                 btnThem.setOnAction(event -> {
                     Phong phong = getTableView().getItems().get(getIndex());
                     tablePhong.getSelectionModel().select(phong);
@@ -182,13 +185,12 @@ public class DatPhongTaiQuayController implements Initializable, Refreshable {
                     boolean isAdded = listPhongDuocDat.stream()
                             .anyMatch(p -> p.getMaPhong().equals(phong.getMaPhong()));
 
-                    btnThem.getStyleClass().removeAll("btn", "btn-xs", "btn-info", "btn-table-add", "btn-danger","btn-table-remove");
                     if(isAdded) {
                         btnThem.setText("Bỏ chọn");
-                        btnThem.getStyleClass().addAll("btn", "btn-xs", "btn-danger","btn-table-remove");
+                        btnThem.setStyle(CustomButton.createButton("", ButtonVariant.DANGER).getStyle());
                     } else {
                         btnThem.setText("Thêm");
-                        btnThem.getStyleClass().addAll("btn", "btn-xs", "btn-info", "btn-table-add");
+                        btnThem.setStyle(CustomButton.createButton("", ButtonVariant.INFO).getStyle());
                     }
                     HBox box = new HBox(10, btnThem);
                     box.setAlignment(Pos.CENTER);

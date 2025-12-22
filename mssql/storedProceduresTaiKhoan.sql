@@ -47,17 +47,6 @@ BEGIN
 END
 GO
 
--- 4. Đổi mật khẩu
-CREATE PROCEDURE sp_DoiMatKhau @maTK NVARCHAR(10),
-                               @matKhauHash NVARCHAR(255)
-AS
-BEGIN
-    UPDATE TaiKhoan
-    SET matKhauHash = @matKhauHash
-    WHERE maTK = @maTK;
-END
-GO
-
 -- 5. Xóa tài khoản
 CREATE PROCEDURE sp_XoaTaiKhoan @maTK NVARCHAR(10)
 AS

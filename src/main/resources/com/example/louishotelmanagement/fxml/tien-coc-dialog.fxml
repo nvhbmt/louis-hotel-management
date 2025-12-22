@@ -42,8 +42,8 @@
         <ComboBox fx:id="cboPhuongThucTT" prefWidth="200.0" promptText="Chọn phương thức..." />
     </VBox>
 
-    <VBox fx:id="vbQrCodeContainer" alignment="CENTER" managed="false" spacing="10.0" style="-fx-border-color: #007bff; -fx-border-width: 1; -fx-padding: 10; -fx-border-radius: 5;" visible="false">
-        <Label style="-fx-font-weight: bold; -fx-text-fill: #007bff;" text="Quét mã QR để chuyển khoản" />
+    <VBox fx:id="vbQrCodeContainer" alignment="CENTER" managed="false" spacing="10.0" styleClass="qr-container" visible="false">
+        <Label styleClass="qr-label" text="Quét mã QR để chuyển khoản" />
         <ImageView fx:id="imgQrCode" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../image/QR.jpg" />

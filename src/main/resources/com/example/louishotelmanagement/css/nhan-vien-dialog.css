@@ -1,0 +1,39 @@
+/* Nhân Viên Dialog Styles */
+
+/* Main container */
+.dialog-container {
+    -fx-padding: 20;
+    -fx-background-color: #f8f9fa;
+}
+
+/* Title label */
+.dialog-title {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+/* Tab pane */
+.tab-pane {
+    -fx-background-color: white;
+    -fx-border-color: #dee2e6;
+}
+
+/* Tab content */
+.tab-content {
+    -fx-padding: 15;
+}
+
+/* Note label */
+.note-label {
+    -fx-text-fill: #7f8c8d;
+    -fx-font-style: italic;
+}
+
+/* Save button */
+.save-button {
+    -fx-background-color: #27ae60;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+

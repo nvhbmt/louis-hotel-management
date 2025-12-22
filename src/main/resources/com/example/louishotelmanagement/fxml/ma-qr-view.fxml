@@ -5,16 +5,15 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-
-<AnchorPane prefHeight="399.0" prefWidth="420.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.louishotelmanagement.controller.QRController">
-   <children>
-      <ImageView fitHeight="286.0" fitWidth="298.0" layoutX="72.0" layoutY="36.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../image/QR.jpg" />
-         </image>
-      </ImageView>
-      <Label layoutX="21.0" layoutY="5.0" text="Mã QR Thanh Toán" />
-      <Button fx:id="btnXacNhan" layoutX="65.0" layoutY="343.0" mnemonicParsing="false" onAction="#handleXacNhan" prefHeight="38.0" prefWidth="76.0" text="Xác nhận" />
-      <Button fx:id="btnHuy" layoutX="296.0" layoutY="343.0" mnemonicParsing="false" onAction="#handleHuy" prefHeight="38.0" prefWidth="65.0" text="Hủy" />
-   </children>
+<AnchorPane prefHeight="399.0" prefWidth="420.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.louishotelmanagement.controller.QRController">
+    <ImageView fitHeight="286.0" fitWidth="298.0" layoutX="72.0" layoutY="36.0" pickOnBounds="true"
+               preserveRatio="true">
+        <Image url="@../image/QR.jpg"/>
+    </ImageView>
+    <Label layoutX="21.0" layoutY="5.0" text="Mã QR Thanh Toán"/>
+    <Button fx:id="btnXacNhan" layoutX="65.0" layoutY="343.0" mnemonicParsing="false" onAction="#handleXacNhan"
+            prefHeight="38.0" prefWidth="76.0" text="Xác nhận"/>
+    <Button fx:id="btnHuy" layoutX="296.0" layoutY="343.0" mnemonicParsing="false" onAction="#handleHuy"
+            prefHeight="38.0" prefWidth="65.0" text="Hủy"/>
 </AnchorPane>

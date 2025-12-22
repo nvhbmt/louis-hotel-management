@@ -1,10 +1,13 @@
 package com.example.louishotelmanagement.controller;
 
-import com.example.louishotelmanagement.dao.HoaDonDAO2;
+import com.example.louishotelmanagement.dao.HoaDonDAO;
 import com.example.louishotelmanagement.model.HoaDon;
 import com.example.louishotelmanagement.model.KhachHang;
+import com.example.louishotelmanagement.ui.components.Badge;
+import com.example.louishotelmanagement.ui.components.CustomButton;
+import com.example.louishotelmanagement.ui.models.BadgeVariant;
+import com.example.louishotelmanagement.ui.models.ButtonVariant;
 import com.example.louishotelmanagement.util.HoaDonTxtGenerator;
-
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -35,23 +38,33 @@ import java.util.ResourceBundle;
 public class QuanLyHoaDonController implements Initializable {
 
     // --- FXML Components ---
-    @FXML private TextField txtTimKiem;
-    @FXML private ComboBox<String> cbNgayTao;
-    @FXML private TableView<HoaDon> hoaDonTable;
-    @FXML private TableColumn<HoaDon, String> colMaHD;
-    @FXML private TableColumn<HoaDon, String> colHoTen;
-    @FXML private TableColumn<HoaDon, String> colSoPhong;
-    @FXML private TableColumn<HoaDon, String> colCheckOut;
-    @FXML private TableColumn<HoaDon, Void> colThaoTac;
+    @FXML
+    private TextField txtTimKiem;
+    @FXML
+    private ComboBox<String> cbNgayTao;
+    @FXML
+    private TableView<HoaDon> hoaDonTable;
+    @FXML
+    private TableColumn<HoaDon, String> colMaHD;
+    @FXML
+    private TableColumn<HoaDon, String> colHoTen;
+    @FXML
+    private TableColumn<HoaDon, String> colSoPhong;
+    @FXML
+    private TableColumn<HoaDon, String> colCheckOut;
+    @FXML
+    private TableColumn<HoaDon, Void> colThaoTac;
+    @FXML
+    private TableColumn<HoaDon, String> colTrangThai;
 
     // --- Data and DAO ---
-    private HoaDonDAO2 hoaDonDAO2;
+    private HoaDonDAO hoaDonDAO;
     private ObservableList<HoaDon> danhSachHoaDon;
     private FilteredList<HoaDon> filteredHoaDonList;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        hoaDonDAO2 = new HoaDonDAO2();
+        hoaDonDAO = new HoaDonDAO();
         khoiTaoComboBox();
         cauHinhBang();
         thietLapBoLoc();
@@ -79,6 +92,24 @@ public class QuanLyHoaDonController implements Initializable {
 
         colSoPhong.setCellValueFactory(new PropertyValueFactory<>("soPhong"));
 
+        colTrangThai.setCellValueFactory(new PropertyValueFactory<>("trangThai"));
+        colTrangThai.setCellFactory(_ -> new TableCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                setGraphic(null);
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    switch (item.toLowerCase()) {
+                        case "Đã thanh toán" -> setGraphic(Badge.createBadge(item, BadgeVariant.SUCCESS));
+                        case "Chưa thanh toán" -> setGraphic(Badge.createBadge(item, BadgeVariant.DANGER));
+                        default -> setText(item);
+                    }
+                }
+            }
+        });
+
         colCheckOut.setCellValueFactory(cellData -> {
             LocalDate ngayDi = cellData.getValue().getNgayCheckOut();
             if (ngayDi == null) return Bindings.createStringBinding(() -> "N/A");
@@ -88,19 +119,19 @@ public class QuanLyHoaDonController implements Initializable {
         });
 
         colThaoTac.setCellFactory(param -> new TableCell<>() {
-            private final Button btnPrint = new Button("In");
-            private final Button btnView = new Button("Xem");
-            private final HBox pane = new HBox(10, btnPrint, btnView);
+            private final Button btnPrint;
+            private final Button btnView;
+            private final HBox pane;
+
             {
+                btnPrint = CustomButton.createButton("In", ButtonVariant.OUTLINE, 70);
+                btnView = CustomButton.createButton("Xem", ButtonVariant.SUCCESS, 70);
+                pane = new HBox(10, btnPrint, btnView);
                 pane.setAlignment(Pos.CENTER);
-                double buttonWidth = 70;
-                btnPrint.setPrefWidth(buttonWidth);
-                btnView.setPrefWidth(buttonWidth);
-                btnPrint.setStyle("-fx-background-color: #ffffff; -fx-text-fill: #000000; -fx-border-color: #c0c0c0;-fx-border-radius: 10;");
-                btnView.setStyle("-fx-background-color: #28a745; -fx-text-fill: white; -fx-border-radius: 10;");
                 btnPrint.setOnAction(event -> handleInHoaDon(getTableView().getItems().get(getIndex())));
                 btnView.setOnAction(event -> handleXemChiTiet(getTableView().getItems().get(getIndex())));
             }
+
             @Override
             protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
@@ -127,9 +158,15 @@ public class QuanLyHoaDonController implements Initializable {
                 } else {
                     LocalDate now = LocalDate.now();
                     switch (locNgay) {
-                        case "Hôm nay": locNgayMatch = ngayHoaDon.isEqual(now); break;
-                        case "7 ngày qua": locNgayMatch = !ngayHoaDon.isBefore(now.minusDays(7)) && !ngayHoaDon.isAfter(now); break;
-                        case "Tháng này": locNgayMatch = ngayHoaDon.getMonth() == now.getMonth() && ngayHoaDon.getYear() == now.getYear(); break;
+                        case "Hôm nay":
+                            locNgayMatch = ngayHoaDon.isEqual(now);
+                            break;
+                        case "7 ngày qua":
+                            locNgayMatch = !ngayHoaDon.isBefore(now.minusDays(7)) && !ngayHoaDon.isAfter(now);
+                            break;
+                        case "Tháng này":
+                            locNgayMatch = ngayHoaDon.getMonth() == now.getMonth() && ngayHoaDon.getYear() == now.getYear();
+                            break;
                     }
                 }
                 return timKiemMatch && locNgayMatch;
@@ -139,9 +176,8 @@ public class QuanLyHoaDonController implements Initializable {
 
     private void taiDuLieuHoaDon() {
         try {
-            List<HoaDon> ds = hoaDonDAO2.layDanhSachHoaDon();
+            List<HoaDon> ds = hoaDonDAO.layDanhSachHoaDon();
             danhSachHoaDon.setAll(ds);
-
 
 
         } catch (Exception e) {
@@ -188,8 +224,8 @@ public class QuanLyHoaDonController implements Initializable {
 
             // 1. Tải lại hóa đơn HOÀN CHỈNH từ database (sử dụng maHD)
             // Gọi phương thức DAO đã được chứng minh là tải đầy đủ dữ liệu (TongGiamGia, TongVAT)
-            // GIẢ ĐỊNH: Lớp Controller có thể truy cập 'this.hoaDonDAO2'
-            HoaDon hoaDonHoanChinh = this.hoaDonDAO2.timHoaDonTheoMa(maHD);
+            // GIẢ ĐỊNH: Lớp Controller có thể truy cập 'this.hoaDonDAO'
+            HoaDon hoaDonHoanChinh = this.hoaDonDAO.timHoaDonTheoMa(maHD);
 
             if (hoaDonHoanChinh == null) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);

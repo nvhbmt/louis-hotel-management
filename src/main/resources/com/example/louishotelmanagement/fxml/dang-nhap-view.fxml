@@ -11,33 +11,25 @@
     <!-- Header Section -->
     <top>
         <VBox alignment="CENTER" prefHeight="200.0" BorderPane.alignment="CENTER"
-              style="-fx-background-color: linear-gradient(to bottom, #3498db 0%, #5dade2 100%);">
-            <children>
-                <!-- Logo/Icon -->
-                <VBox alignment="CENTER" spacing="15.0">
-                    <children>
-                        <ImageView fitHeight="80.0" fitWidth="80.0" preserveRatio="true">
-                            <image>
-                                <Image url="@../image/hotel.png"/>
-                            </image>
-                        </ImageView>
+              styleClass="header-background">
+            <!-- Logo/Icon -->
+            <VBox alignment="CENTER" spacing="15.0">
+                <ImageView fitHeight="80.0" fitWidth="80.0" preserveRatio="true">
+                    <Image url="@../image/hotel.png"/>
+                </ImageView>
 
-                        <VBox alignment="CENTER" spacing="5.0">
-                            <children>
-                                <Label styleClass="brand-title" text="LOUIS HOTEL"/>
-                                <Label styleClass="brand-subtitle" text="MANAGEMENT SYSTEM"/>
-                            </children>
-                        </VBox>
-                    </children>
+                <VBox alignment="CENTER" spacing="5.0">
+                    <Label styleClass="brand-title" text="LOUIS HOTEL"/>
+                    <Label styleClass="brand-subtitle" text="MANAGEMENT SYSTEM"/>
                 </VBox>
-            </children>
+            </VBox>
         </VBox>
     </top>
 
     <!-- Center Content -->
     <center>
         <VBox alignment="CENTER" spacing="30.0" BorderPane.alignment="CENTER"
-              style="-fx-background-color: #f8f9fa;">
+              styleClass="center-background">
             <children>
                 <!-- Welcome Text -->
                 <VBox alignment="CENTER" spacing="8.0">
@@ -102,7 +94,7 @@
     <!-- Footer -->
     <bottom>
         <VBox alignment="CENTER" spacing="8.0" BorderPane.alignment="CENTER"
-              style="-fx-background-color: #ffffff; -fx-padding: 20 0 20 0;">
+              styleClass="footer-background">
             <children>
                 <Label styleClass="footer-text" text="© 2025 Louis Hotel Management System"/>
                 <Label styleClass="footer-version" text="Phiên bản 2.0"/>

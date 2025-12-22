@@ -181,3 +181,19 @@
     -fx-border-width: 1;
     -fx-border-radius: 15;
 }
+
+/* Header background */
+.header-background {
+    -fx-background-color: linear-gradient(to bottom, #3498db 0%, #5dade2 100%);
+}
+
+/* Center content background */
+.center-background {
+    -fx-background-color: #f8f9fa;
+}
+
+/* Footer background */
+.footer-background {
+    -fx-background-color: #ffffff;
+    -fx-padding: 20 0 20 0;
+}

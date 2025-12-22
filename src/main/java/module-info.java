@@ -29,4 +29,5 @@ module com.example.louishotelmanagement {
     exports com.example.louishotelmanagement.config;
     opens com.example.louishotelmanagement.config to javafx.fxml;
     exports com.example.louishotelmanagement.ui.models;
+    exports com.example.louishotelmanagement.ui.components;
 }

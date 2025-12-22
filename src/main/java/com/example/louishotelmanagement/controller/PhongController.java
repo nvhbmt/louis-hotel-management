@@ -4,11 +4,10 @@ import com.example.louishotelmanagement.dao.PhongDAO;
 import com.example.louishotelmanagement.model.LoaiPhong;
 import com.example.louishotelmanagement.model.Phong;
 import com.example.louishotelmanagement.model.TrangThaiPhong;
-import com.example.louishotelmanagement.util.BadgeUtil;
-import com.example.louishotelmanagement.util.BadgeVariant;
-import com.example.louishotelmanagement.util.ThongBaoUtil;
+import com.example.louishotelmanagement.ui.components.Badge;
+import com.example.louishotelmanagement.ui.models.BadgeVariant;
 import com.example.louishotelmanagement.util.ContentSwitcher;
-
+import com.example.louishotelmanagement.util.ThongBaoUtil;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleObjectProperty;
@@ -88,6 +87,7 @@ public class PhongController implements Initializable {
         chonPhong.setCellValueFactory(new PropertyValueFactory<>("selected"));
         chonPhong.setCellFactory(column -> new TableCell<Phong, Boolean>() {
             private final CheckBox checkBox = new CheckBox();
+
             {
                 checkBox.setOnAction(event -> {
                     Phong phong = getTableView().getItems().get(getIndex());
@@ -95,6 +95,7 @@ public class PhongController implements Initializable {
                 });
                 setStyle("-fx-alignment: CENTER;");
             }
+
             @Override
             protected void updateItem(Boolean item, boolean empty) {
                 super.updateItem(item, empty);
@@ -131,6 +132,7 @@ public class PhongController implements Initializable {
         });
         donGia.setCellFactory(column -> new TableCell<Phong, Double>() {
             private final NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+
             @Override
             protected void updateItem(Double item, boolean empty) {
                 super.updateItem(item, empty);
@@ -164,8 +166,8 @@ public class PhongController implements Initializable {
                     };
 
                     Label badge = isHighlighted
-                            ? BadgeUtil.createBadge(trangThaiHienThi.toString(), variant, "6px 16px", true)
-                            : BadgeUtil.createBadge(trangThaiHienThi.toString(), variant);
+                            ? Badge.createBadge(trangThaiHienThi.toString(), variant, "6px 16px", true)
+                            : Badge.createBadge(trangThaiHienThi.toString(), variant);
 
                     setGraphic(badge);
                     setStyle("-fx-alignment: CENTER;");
@@ -285,12 +287,14 @@ public class PhongController implements Initializable {
 
             if (isTrucTiep) {
                 DatPhongTaiQuayController ctrl = loader.getController();
-                ArrayList<Phong> list = new ArrayList<>(); list.add(phong);
+                ArrayList<Phong> list = new ArrayList<>();
+                list.add(phong);
                 ctrl.nhanDanhSachPhongDaChon(list);
             } else {
                 DatPhongController ctrl = loader.getController();
                 ctrl.setContentSwitcher(this.switcher);
-                ArrayList<Phong> list = new ArrayList<>(); list.add(phong);
+                ArrayList<Phong> list = new ArrayList<>();
+                list.add(phong);
                 ctrl.nhanDuLieuTuPhongView(list, LocalDate.now(), LocalDate.now().plusDays(1));
             }
             switcher.switchContent(root);
@@ -457,14 +461,19 @@ public class PhongController implements Initializable {
         try {
             boolean isTrong = phongDAO.kiemTraPhongTrongTheoKhoangThoiGian(phong.getMaPhong(), dpTuNgay.getValue(), dpDenNgay.getValue());
             return isTrong ? TrangThaiPhong.TRONG : TrangThaiPhong.DA_DAT;
-        } catch (SQLException e) { return phong.getTrangThai(); }
+        } catch (SQLException e) {
+            return phong.getTrangThai();
+        }
     }
 
     private boolean kiemTraCoTheChonPhong(Phong phong) {
-        if (dpTuNgay.getValue() == null || dpDenNgay.getValue() == null) return phong.getTrangThai() == TrangThaiPhong.TRONG;
+        if (dpTuNgay.getValue() == null || dpDenNgay.getValue() == null)
+            return phong.getTrangThai() == TrangThaiPhong.TRONG;
         try {
             return phongDAO.kiemTraPhongTrongTheoKhoangThoiGian(phong.getMaPhong(), dpTuNgay.getValue(), dpDenNgay.getValue());
-        } catch (SQLException e) { return false; }
+        } catch (SQLException e) {
+            return false;
+        }
     }
 
     // Hàm thông minh để lấy danh sách phòng (ưu tiên Checkbox, nếu rỗng thì lấy dòng Highlight)
@@ -571,7 +580,9 @@ public class PhongController implements Initializable {
                 ctrl.setContentSwitcher(switcher);
                 ctrl.nhanDuLieuTuPhongView(dsTarget, ngayDenVal, ngayDiVal);
                 switcher.switchContent(root);
-            } catch (IOException e) { e.printStackTrace(); }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -585,7 +596,9 @@ public class PhongController implements Initializable {
                 DatPhongTaiQuayController ctrl = loader.getController();
                 if (!dsTarget.isEmpty()) ctrl.nhanDanhSachPhongDaChon(dsTarget);
                 switcher.switchContent(root);
-            } catch (IOException e) { e.printStackTrace(); }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

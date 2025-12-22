@@ -1,0 +1,30 @@
+/* Quản Lý Phòng View Styles */
+
+/* Header icon container */
+.header-icon-container {
+    -fx-background-color: #d1fae5;
+    -fx-background-radius: 12;
+    -fx-padding: 16;
+}
+
+/* Add room button */
+.add-room-button {
+    -fx-background-color: #10b981;
+    -fx-text-fill: white;
+    -fx-background-radius: 8;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+/* Header title */
+.header-title {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #111827;
+}
+
+/* Header subtitle */
+.header-subtitle {
+    -fx-font-size: 14px;
+    -fx-text-fill: #6b7280;
+}

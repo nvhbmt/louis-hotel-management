@@ -45,7 +45,6 @@ public class ThanhToanDialogController {
     private final KhachHangDAO khachHangDAO = new KhachHangDAO();
     private final KhuyenMaiDAO khuyenMaiDAO = new KhuyenMaiDAO();
     private final HoaDonDAO hoaDonDAO = new HoaDonDAO();
-    private final HoaDonDAO2 hoaDonDAO2 = new HoaDonDAO2();
 
     private HoaDon hoaDon;
 
@@ -134,8 +133,8 @@ public class ThanhToanDialogController {
             tienDichVu = cthddv.tinhTongTienDichVu(hoaDon.getMaHD());
 
             // 1. Giảm giá mã Voucher
-            if (hoaDon.getMaGG() != null) {
-                KhuyenMai km = khuyenMaiDAO.layKhuyenMaiTheoMa(hoaDon.getMaGG());
+            if (hoaDon.getMaKM() != null) {
+                KhuyenMai km = khuyenMaiDAO.layKhuyenMaiTheoMa(hoaDon.getMaKM());
                 if (km != null) {
                     if (km.getKieuGiamGia() == KieuGiamGia.PERCENT)
                         giamGiaMaGGChiTiet = tienPhong.multiply(BigDecimal.valueOf(km.getGiamGia() / 100.0));
@@ -225,7 +224,7 @@ public class ThanhToanDialogController {
             // Lưu ý: Đảm bảo hoaDon.setTienPhat(finalTienPhat) nếu DB có cột tổng phạt
 
             // 4. Gọi DAO để thực thi Stored Procedure
-            boolean success = hoaDonDAO2.capNhatHoaDon(hoaDon);
+            boolean success = hoaDonDAO.capNhatHoaDon(hoaDon);
 
             if (success) {
                 ThongBaoUtil.hienThiThongBao("Thành công", "Hóa đơn " + hoaDon.getMaHD() + " đã được thanh toán và lưu trữ chi tiết.");
@@ -269,7 +268,7 @@ public class ThanhToanDialogController {
             KhuyenMai selected = ctrl.getKhuyenMaiDuocChon();
             if (selected != null) {
                 txtMaKhuyenMai.setText(selected.getMaKM());
-                hoaDon.setMaGG(selected.getMaKM());
+                hoaDon.setMaKM(selected.getMaKM());
                 tinhTongThanhToan();
                 hienThiChiTietHoaDon();
             }
@@ -281,7 +280,7 @@ public class ThanhToanDialogController {
         txtMaKhuyenMai.clear();
         rbtnTienMat.setSelected(false);
         rbtnTheNganHang.setSelected(false);
-        hoaDon.setMaGG(null);
+        hoaDon.setMaKM(null);
         tinhTongThanhToan();
         hienThiChiTietHoaDon();
     }

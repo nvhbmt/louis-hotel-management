@@ -172,22 +172,6 @@ public class CTHoaDonPhongDAO {
     }
 
     // ==================================================
-    // 9. Xóa cứng (ít dùng – giữ cho admin)
-    // ==================================================
-    public boolean xoaCTHoaDonPhong(String maHD, String maPhong) throws SQLException {
-        String sql = "{CALL sp_XoaCTHoaDonPhong(?, ?)}";
-
-        try (Connection conn = CauHinhDatabase.getConnection();
-             CallableStatement cs = conn.prepareCall(sql)) {
-
-            cs.setString(1, maHD);
-            cs.setString(2, maPhong);
-
-            return cs.executeUpdate() > 0;
-        }
-    }
-
-    // ==================================================
     // 10. Hủy phòng khỏi phiếu (xóa mềm)
     // ==================================================
     public boolean huyCTHoaDonPhong(String maHD, String maPhong) throws SQLException {
@@ -205,7 +189,6 @@ public class CTHoaDonPhongDAO {
             return cs.getInt(3) > 0;
         }
     }
-
 
 
     // ==================================================

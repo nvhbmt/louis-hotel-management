@@ -1,0 +1,95 @@
+/* Đặt Dịch Vụ View Styles */
+
+/* Main split pane background */
+.main-background {
+    -fx-background-color: #f4f6f8;
+}
+
+/* Left panel background */
+.left-panel {
+    -fx-background-color: #ffffff;
+}
+
+/* Service list title */
+.service-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+/* Search field rounded */
+.search-field {
+    -fx-background-radius: 20;
+}
+
+/* Scroll pane transparent background */
+.transparent-scroll {
+    -fx-background-color: transparent;
+    -fx-background: white;
+}
+
+/* Flow pane padding */
+.flow-container {
+    -fx-padding: 10;
+}
+
+/* Right panel background */
+.right-panel {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #dee2e6;
+    -fx-border-width: 0 0 0 1;
+}
+
+/* Order info title */
+.order-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #007bff;
+}
+
+/* Employee field background */
+.employee-field {
+    -fx-background-color: #f8f9fa;
+}
+
+/* Bold label */
+.bold-label {
+    -fx-font-weight: bold;
+}
+
+/* Center alignment */
+.center-align {
+    -fx-alignment: CENTER;
+}
+
+/* Center right alignment */
+.center-right-align {
+    -fx-alignment: CENTER-RIGHT;
+}
+
+/* Center alignment */
+.center-align {
+    -fx-alignment: CENTER;
+}
+
+/* Summary container */
+.summary-container {
+    -fx-background-color: #f8f9fa;
+    -fx-background-radius: 8;
+    -fx-padding: 15;
+}
+
+/* Total amount text */
+.total-amount {
+    -fx-font-weight: bold;
+    -fx-text-fill: #d32f2f;
+}
+
+/* Confirm button */
+.confirm-button {
+    -fx-background-color: #28a745;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+}

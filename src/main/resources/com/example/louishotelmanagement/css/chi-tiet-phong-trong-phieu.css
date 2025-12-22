@@ -1,0 +1,38 @@
+/* Chi Tiết Phòng Trong Phiếu View Styles */
+
+/* Main title label */
+.title-label {
+    -fx-font-weight: bold;
+    -fx-font-size: 18px;
+    -fx-alignment: CENTER;
+    -fx-max-width: Infinity;
+}
+
+/* Section headers */
+.section-header {
+    -fx-font-weight: bold;
+    -fx-padding: 0 0 5 0;
+}
+
+.detail-header {
+    -fx-font-weight: bold;
+    -fx-font-size: 16px;
+    -fx-text-fill: #007bff;
+}
+
+/* Detail section container */
+.detail-section {
+    -fx-padding: 10;
+}
+
+/* Field labels */
+.field-label {
+    -fx-font-weight: bold;
+}
+
+/* Description section */
+.description-label {
+    -fx-font-weight: bold;
+    -fx-padding: 10 0 0 0;
+}
+

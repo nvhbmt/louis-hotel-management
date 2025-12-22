@@ -31,7 +31,7 @@
             </VBox>
 
             <!-- Feature Cards Grid -->
-            <GridPane hgap="30" vgap="30" alignment="CENTER" style="-fx-padding: 20;">
+            <GridPane hgap="30" vgap="30" alignment="CENTER" styleClass="feature-grid-padding">
                 <!-- Room Management Card -->
                 <VBox styleClass="feature-card" GridPane.columnIndex="0" GridPane.rowIndex="0">
                     <VBox alignment="CENTER" spacing="15.0" styleClass="card-content">
@@ -98,7 +98,7 @@
             </GridPane>
 
             <!-- Quick Actions -->
-            <VBox alignment="CENTER" spacing="15.0" style="-fx-padding: 20;">
+            <VBox alignment="CENTER" spacing="15.0" styleClass="quick-actions-padding">
                 <Label styleClass="quick-actions-title" text="Hành động nhanh"/>
                 <HBox alignment="CENTER" spacing="20.0">
                     <Button styleClass="quick-action-button" text="Đặt phòng mới" onAction="#moDatPhong"/>
