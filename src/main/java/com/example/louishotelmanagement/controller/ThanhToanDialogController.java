@@ -25,24 +25,24 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 public class ThanhToanDialogController {
-    @FXML
+
     private final VBox thanhToanContent;
-    @FXML private TextField txtMaKhachHang, txtHoTen, txtSoDienThoai, txtEmail;
-    @FXML private TextField txtHangkhach, txtSoPhong, txtNgayNhan, txtNgayTra, txtMaKhuyenMai;
-    @FXML private RadioButton rbtnTienMat, rbtnTheNganHang;
-    @FXML private Button btnThanhToan, btnHuy, btnLamMoi;
+    private TextField txtMaKhachHang, txtHoTen, txtSoDienThoai, txtEmail;
+    private TextField txtHangkhach, txtSoPhong, txtNgayNhan, txtNgayTra, txtMaKhuyenMai;
+    private RadioButton rbtnTienMat, rbtnTheNganHang;
+    private Button btnThanhToan, btnHuy, btnLamMoi;
 
     // Label thống kê
-    @FXML private Label lblTongTienPhong, lblTongTienDichVu, lblVat, lblTienCoc, lblTamTinh, lblTongThanhToan;
-    @FXML private Label lblTongTienPhat, lblPhatNhanTre, lblPhatTraSom, lblPhatTraTre;
-    @FXML private Label lblGiamGiaMaGG, lblGiamGiaHangKH;
+    private Label lblTongTienPhong, lblTongTienDichVu, lblVat, lblTienCoc, lblTamTinh, lblTongThanhToan;
+    private Label lblTongTienPhat, lblPhatNhanTre, lblPhatTraSom, lblPhatTraTre;
+    private Label lblGiamGiaMaGG, lblGiamGiaHangKH;
 
     // TableView chi tiết
-    @FXML private TableView<HoaDonChiTietItem> tblChiTietHoaDon;
-    @FXML private TableColumn<HoaDonChiTietItem, Integer> colStt;
-    @FXML private TableColumn<HoaDonChiTietItem, String> colTen;
-    @FXML private TableColumn<HoaDonChiTietItem, Integer> colSL;
-    @FXML private TableColumn<HoaDonChiTietItem, BigDecimal> colDonGia, colThanhTien;
+    private TableView<HoaDonChiTietItem> tblChiTietHoaDon;
+    private TableColumn<HoaDonChiTietItem, Integer> colStt;
+    private TableColumn<HoaDonChiTietItem, String> colTen;
+    private TableColumn<HoaDonChiTietItem, Integer> colSL;
+    private TableColumn<HoaDonChiTietItem, BigDecimal> colDonGia, colThanhTien;
 
     private final PhieuDatPhongDAO pdpDao = new PhieuDatPhongDAO();
     private final CTHoaDonPhongDAO cthddpDao = new CTHoaDonPhongDAO();
@@ -297,7 +297,7 @@ public class ThanhToanDialogController {
         if (controller.isTransactionConfirmed()) xuLyThanhToan(PhuongThucThanhToan.CHUYEN_KHOAN);
     }
 
-    @FXML private void handleChonGiamGia() {
+    private void handleChonGiamGia() {
         ChonKhuyenMaiDiaLogView view = new ChonKhuyenMaiDiaLogView();
         ChonKhuyenMaiController controller = new ChonKhuyenMaiController(view);
         Parent root = view.getRoot();

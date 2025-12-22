@@ -4,76 +4,70 @@ import com.example.louishotelmanagement.dao.DichVuDAO;
 import com.example.louishotelmanagement.model.DichVu;
 import com.example.louishotelmanagement.ui.components.Badge;
 import com.example.louishotelmanagement.ui.components.CustomButton;
+import com.example.louishotelmanagement.ui.components.StatsCard;
 import com.example.louishotelmanagement.ui.models.BadgeVariant;
 import com.example.louishotelmanagement.ui.models.ButtonVariant;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
 import com.example.louishotelmanagement.view.DichVuFormDialogView;
+import com.example.louishotelmanagement.view.QuanLyDichVuView;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
+import javafx.collections.transformation.FilteredList;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.io.IOException;
-import java.net.URL;
 import java.util.List;
-import java.util.ResourceBundle;
 
-public class QuanLyDichVuController implements Initializable {
-    @FXML
-    public Label lblTongSoDichVu;
-    @FXML
-    public Label lblSoDichVuConKinhDoanh;
-    @FXML
-    public Label lblSoDichVuNgungKinhDoanh;
-    @FXML
-    public Label lblTongGiaTriDichVu;
-    @FXML
-    public BorderPane rootPane;
-    @FXML
+public class QuanLyDichVuController {
+    private StatsCard totalServicesCard;
+    private StatsCard activeServicesCard;
+    private StatsCard dailyRevenueCard;
+    private StatsCard monthlyRevenueCard;
     private TextField txtTimKiem;
-    @FXML
     private ComboBox<String> cbTrangThaiKinhDoanh;
 
-    @FXML
     private TableView<DichVu> tableViewDichVu;
-    @FXML
     private TableColumn<DichVu, String> colMaDV;
-    @FXML
     private TableColumn<DichVu, String> colTenDV;
-    @FXML
     private TableColumn<DichVu, Integer> colSoLuong;
-    @FXML
     private TableColumn<DichVu, Double> colDonGia;
-    @FXML
     private TableColumn<DichVu, String> colMoTa;
-    @FXML
     private TableColumn<DichVu, Boolean> colTrangThai;
-    @FXML
     public TableColumn<DichVu, Void> colThaoTac;
-
-    @FXML
-    private Label lblTrangThai;
-    @FXML
-    private Label lblSoLuong;
 
     private DichVuDAO dichVuDAO;
     private ObservableList<DichVu> danhSachDichVu;
     private ObservableList<DichVu> danhSachDichVuFiltered;
+    private FilteredList<DichVu> filteredDichVuList;
     private List<DichVu> dsDichVu;
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    public QuanLyDichVuController(QuanLyDichVuView view) {
+        this.totalServicesCard = view.getTotalServicesCard();
+        this.activeServicesCard = view.getActiveServicesCard();
+        this.dailyRevenueCard = view.getDailyRevenueCard();
+        this.monthlyRevenueCard = view.getMonthlyRevenueCard();
+        this.cbTrangThaiKinhDoanh = view.getCbTrangThaiKinhDoanh();
+        this.txtTimKiem = view.getTxtTimKiem();
+        this.tableViewDichVu = view.getTableViewDichVu();
+        this.colMaDV = view.getColMaDV();
+        this.colTenDV = view.getColTenDV();
+        this.colSoLuong = view.getColSoLuong();
+        this.colDonGia = view.getColDonGia();
+        this.colMoTa = view.getColMoTa();
+        this.colTrangThai = view.getColTrangThai();
+        this.colThaoTac = view.getColThaoTac();
+        setupController();
+    }
+
+    public void setupController() {
         try {
             dichVuDAO = new DichVuDAO();
 
@@ -81,7 +75,7 @@ public class QuanLyDichVuController implements Initializable {
             khoiTaoDuLieu();
             khoiTaoTableView();
             khoiTaoComboBox();
-            khoiTaoSukien();
+            cauHinhLoc();
 
             // Load dữ liệu
             taiDuLieu();
@@ -108,16 +102,18 @@ public class QuanLyDichVuController implements Initializable {
             tongGiaTri += dv.getDonGia() * dv.getSoLuong();
         }
 
-        lblTongSoDichVu.setText(String.valueOf(tongSo));
-        lblSoDichVuConKinhDoanh.setText(String.valueOf(conKinhDoanh));
-        //lblSoDichVuNgungKinhDoanh.setText(String.valueOf(ngungKinhDoanh));
-        //lblTongGiaTriDichVu.setText(String.format("%.0f VNĐ", tongGiaTri));
+        // Update StatsCard values
+        totalServicesCard.setValue(String.valueOf(tongSo));
+        activeServicesCard.setValue(String.valueOf(conKinhDoanh));
+        dailyRevenueCard.setValue(String.format("%.0f VNĐ", tongGiaTri));
+        monthlyRevenueCard.setValue(String.format("%.0f VNĐ", tongGiaTri));
     }
 
 
     private void khoiTaoDuLieu() {
         danhSachDichVu = FXCollections.observableArrayList();
         danhSachDichVuFiltered = FXCollections.observableArrayList();
+        filteredDichVuList = new FilteredList<>(danhSachDichVu, p -> true);
     }
 
     private void khoiTaoTableView() {
@@ -194,8 +190,8 @@ public class QuanLyDichVuController implements Initializable {
 
         colThaoTac.setCellValueFactory(_ -> new ReadOnlyObjectWrapper<>(null));
 
-        // Thiết lập TableView
-        tableViewDichVu.setItems(danhSachDichVuFiltered);
+        // Thiết lập TableView với FilteredList
+        tableViewDichVu.setItems(filteredDichVuList);
 
         // Cho phép chọn nhiều dòng
         tableViewDichVu.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
@@ -227,6 +223,33 @@ public class QuanLyDichVuController implements Initializable {
                 }
             }
         });
+
+        // Set default values
+        cbTrangThaiKinhDoanh.setValue("Tất cả trạng thái");
+
+        // Thiết lập reactive filtering
+        cauHinhLoc();
+    }
+
+    private void cauHinhLoc() {
+        filteredDichVuList.predicateProperty().bind(Bindings.createObjectBinding(() -> {
+            String timKiemText = txtTimKiem.getText();
+            String trangThaiDaChon = cbTrangThaiKinhDoanh.getValue();
+
+            return dichVu -> {
+                // Filter theo tìm kiếm
+                boolean timKiemMatch = timKiemText == null || timKiemText.trim().isEmpty() ||
+                        (dichVu.getTenDV() != null && dichVu.getTenDV().toLowerCase().contains(timKiemText.toLowerCase())) ||
+                        (dichVu.getMaDV() != null && dichVu.getMaDV().toLowerCase().contains(timKiemText.toLowerCase()));
+
+                // Filter theo trạng thái
+                boolean trangThaiMatch = (trangThaiDaChon == null || trangThaiDaChon.equals("Tất cả trạng thái")) ||
+                        (trangThaiDaChon.equals("Đang kinh doanh") && dichVu.isConKinhDoanh()) ||
+                        (trangThaiDaChon.equals("Ngừng kinh doanh") && !dichVu.isConKinhDoanh());
+
+                return timKiemMatch && trangThaiMatch;
+            };
+        }, txtTimKiem.textProperty(), cbTrangThaiKinhDoanh.valueProperty()));
     }
 
     private void taiDuLieu() {
@@ -238,43 +261,15 @@ public class QuanLyDichVuController implements Initializable {
             danhSachDichVu.addAll(dsDichVu);
             capNhatThongKe();
 
-            // Áp dụng filter hiện tại
-            apDungFilter();
-
-            //capNhatTrangThai("Đã tải " + dsDichVu.size() + " dịch vụ");
+            // FilteredList will automatically apply filters
 
         } catch (Exception e) {
             ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể tải dữ liệu dịch vụ: " + e.getMessage());
         }
     }
 
-    private void apDungFilter() {
-        String timKiem = txtTimKiem.getText() != null ? txtTimKiem.getText().trim().toLowerCase() : "";
-        String trangThaiFilter = cbTrangThaiKinhDoanh.getValue();
 
-        // Xóa dữ liệu cũ
-        danhSachDichVuFiltered.clear();
-
-        for (DichVu dv : dsDichVu) {
-            // Lọc theo tìm kiếm (tên hoặc mã)
-            boolean matchTimKiem = timKiem.isEmpty() ||
-                    (dv.getTenDV() != null && dv.getTenDV().toLowerCase().contains(timKiem)) ||
-                    (dv.getMaDV() != null && dv.getMaDV().toLowerCase().contains(timKiem));
-
-            // Lọc theo trạng thái
-            boolean matchTrangThai = trangThaiFilter == null || trangThaiFilter.equals("Tất cả trạng thái") ||
-                    (trangThaiFilter.equals("Đang kinh doanh") && dv.isConKinhDoanh()) ||
-                    (trangThaiFilter.equals("Ngừng kinh doanh") && !dv.isConKinhDoanh());
-
-            // Nếu thỏa cả 2 điều kiện, thêm vào filtered list
-            if (matchTimKiem && matchTrangThai) {
-                danhSachDichVuFiltered.add(dv);
-            }
-        }
-    }
-
-    @FXML
-    private void handleThemDichVu() {
+    public void handleThemDichVu() {
         DichVuFormDialogView view = new DichVuFormDialogView();
         DichVuDialogController controller = new DichVuDialogController(view);
         Parent root = view.getRoot();
@@ -291,8 +286,7 @@ public class QuanLyDichVuController implements Initializable {
 
     }
 
-    @FXML
-    private void handleSuaDichVu(DichVu dichVu) {
+    public void handleSuaDichVu(DichVu dichVu) {
         DichVuFormDialogView view = new DichVuFormDialogView();
         DichVuDialogController controller = new DichVuDialogController(view);
         Parent root = view.getRoot();
@@ -311,8 +305,7 @@ public class QuanLyDichVuController implements Initializable {
 
     }
 
-    @FXML
-    private void handleXoaDichVu(DichVu dichVu) {
+    public void handleXoaDichVu(DichVu dichVu) {
         // Xác nhận xóa
         String message = "Bạn có chắc chắn muốn ngừng kinh doanh dịch vụ này?\nDịch vụ: " + dichVu.getMaDV() + " - " + dichVu.getTenDV();
         if (ThongBaoUtil.hienThiXacNhan("Xác nhận ngừng kinh doanh", message)) {
@@ -331,16 +324,14 @@ public class QuanLyDichVuController implements Initializable {
         }
     }
 
-    private void khoiTaoSukien() {
-        txtTimKiem.textProperty().addListener((obs, oldVal, newVal) -> apDungFilter());
-        cbTrangThaiKinhDoanh.valueProperty().addListener((obs, oldVal, newVal) -> apDungFilter());
-    }
-
-    @FXML
-    private void handleLamMoi() {
+    public void handleLamMoi() {
         taiDuLieu();
         txtTimKiem.clear();
-        cbTrangThaiKinhDoanh.setValue(null);
+        cbTrangThaiKinhDoanh.setValue("Tất cả trạng thái");
+    }
+
+    public void handleTimKiem() {
+        // Filtering is now automatic via reactive binding
     }
 
 
