@@ -46,23 +46,6 @@ END
 GO
 
 
-/* =========================================================
-   2. LẤY CHI TIẾT THEO MÃ PHIẾU (KHÔNG LỌC daHuy)
-   ========================================================= */
-CREATE PROCEDURE sp_SelectCTHoaDonPhongByMaPhieu
-@maPhieu NVARCHAR(10)
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    SELECT maHD, maPhieu, maPhong,
-           ngayDen, ngayDi, giaPhong,
-           thanhTien, daHuy, ngayHuy
-    FROM CTHoaDonPhong
-    WHERE maPhieu = @maPhieu
-      AND daHuy = 0;
-END
-GO
 
 
 /* =========================================================

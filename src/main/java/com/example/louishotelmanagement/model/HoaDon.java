@@ -12,7 +12,7 @@ public class HoaDon {
     private BigDecimal tongTien;
     private String maKH;
     private String maNV;
-    private String maGG;
+    private String maKM;
     private KhachHang khachHang;
     private String soPhong;
     private LocalDate ngayCheckOut;
@@ -50,7 +50,7 @@ public class HoaDon {
 
     public HoaDon(String maHD, LocalDate ngayLap, PhuongThucThanhToan phuongThuc,
                   TrangThaiHoaDon trangThai, BigDecimal tongTien,
-                  String maKH, String maNV, String maGG) {
+                  String maKH, String maNV, String maKM) {
         this.maHD = maHD;
         this.ngayLap = ngayLap;
         this.phuongThuc = phuongThuc;
@@ -58,7 +58,7 @@ public class HoaDon {
         this.tongTien = tongTien;
         this.maKH = maKH;
         this.maNV = maNV;
-        this.maGG = maGG;
+        this.maKM = maKM;
         this.khachHang = new KhachHang();
     }
 
@@ -87,8 +87,8 @@ public class HoaDon {
     public String getMaNV() { return maNV; }
     public void setMaNV(String maNV) { this.maNV = maNV; }
 
-    public String getMaGG() { return maGG; }
-    public void setMaGG(String maGG) { this.maGG = maGG; }
+    public String getMaKM() { return maKM; }
+    public void setMaKM(String maKM) { this.maKM = maKM; }
 
     public LocalDate getNgayCheckOut() { return ngayCheckOut; }
     public void setNgayCheckOut(LocalDate ngayCheckOut) { this.ngayCheckOut = ngayCheckOut; }

@@ -1,25 +1,24 @@
 package com.example.louishotelmanagement.controller;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import com.example.louishotelmanagement.dao.TaiKhoanDAO;
 import com.example.louishotelmanagement.model.TaiKhoan;
 import com.example.louishotelmanagement.service.AuthService;
 import com.example.louishotelmanagement.util.PasswordUtil;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
-
+import com.example.louishotelmanagement.view.DangNhapView;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-import java.io.IOException;
-import java.net.URL;
-import java.sql.SQLException;
-import java.util.ResourceBundle;
-
-public class DangNhapController implements Initializable {
+public class DangNhapController{
 
     @FXML
     private TextField tenDangNhapField;
@@ -36,8 +35,17 @@ public class DangNhapController implements Initializable {
     private TaiKhoanDAO taiKhoanDAO;
     private AuthService authService;
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
+
+    public DangNhapController(DangNhapView view) {
+        this.tenDangNhapField = view.getTenDangNhapField();
+        this.matKhauField = view.getMatKhauField();
+        this.dangNhapBtn = view.getDangNhapBtn();
+        this.thongBaoLabel = view.getThongBaoLabel();
+        initialize();
+    }
+
+
+    public void initialize() {
         taiKhoanDAO = new TaiKhoanDAO();
         authService = AuthService.getInstance();
 
