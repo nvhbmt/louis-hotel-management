@@ -1,5 +1,6 @@
 package com.example.louishotelmanagement.util;
 
+import com.example.louishotelmanagement.view.TrangChuView;
 import javafx.scene.Parent;
 
 public interface ContentSwitcher {
@@ -22,7 +23,7 @@ public interface ContentSwitcher {
      * Chuyển về trang chủ
      */
     default void switchToHome() {
-        switchContent("/com/example/louishotelmanagement/fxml/trang-chu-view.fxml");
+        switchContent(new TrangChuView().getRoot());
     }
 }
 
