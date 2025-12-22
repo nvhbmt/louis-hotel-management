@@ -11,6 +11,7 @@ import com.example.louishotelmanagement.ui.models.MenuItemModel;
 
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
@@ -31,13 +32,13 @@ public class MenuBuilder {
      */
     public static class MenuBuildResult {
         private final VBox menuContainer;
-        private final Map<String, Button> fxmlPathToButton;
+        private final Map<Parent, Button> rootToButton;
         private final Map<Button, VBox> groupButtonToSubmenu;
-        
-        public MenuBuildResult(VBox menuContainer, Map<String, Button> fxmlPathToButton, 
+
+        public MenuBuildResult(VBox menuContainer, Map<Parent, Button> rootToButton,
                               Map<Button, VBox> groupButtonToSubmenu) {
             this.menuContainer = menuContainer;
-            this.fxmlPathToButton = fxmlPathToButton;
+            this.rootToButton = rootToButton;
             this.groupButtonToSubmenu = groupButtonToSubmenu;
         }
         
@@ -45,10 +46,10 @@ public class MenuBuilder {
             return menuContainer;
         }
         
-        public Map<String, Button> getFxmlPathToButton() {
-            return fxmlPathToButton;
+        public Map<Parent, Button> getRootToButton() {
+            return rootToButton;
         }
-        
+
         public Map<Button, VBox> getGroupButtonToSubmenu() {
             return groupButtonToSubmenu;
         }
@@ -58,7 +59,7 @@ public class MenuBuilder {
      * Interface để xử lý sự kiện khi click vào menu item
      */
     public interface MenuItemActionHandler {
-        void onMenuItemClick(String fxmlPath, Button button);
+        void onMenuItemClick(Parent root, Button button);
     }
     
     /**
@@ -75,12 +76,12 @@ public class MenuBuilder {
      * @param submenuToggleHandler Handler để xử lý khi toggle submenu
      * @return MenuBuildResult chứa menu container và các mappings
      */
-    public static MenuBuildResult buildMenu(MenuItemActionHandler menuItemActionHandler, 
+    public static MenuBuildResult buildMenu(MenuItemActionHandler menuItemActionHandler,
                                             SubmenuToggleHandler submenuToggleHandler) {
         VBox menuContainer = new VBox();
         menuContainer.getStyleClass().add("menu-container");
-        
-        Map<String, Button> fxmlPathToButton = new HashMap<>();
+
+        Map<Parent, Button> rootToButton = new HashMap<>();
         Map<Button, VBox> groupButtonToSubmenu = new HashMap<>();
         
         TreeItem<MenuItemModel> root = MenuData.createMenuTree();
@@ -94,13 +95,13 @@ public class MenuBuilder {
                 Button menuButton = createMenuButton(model, menuItemActionHandler);
                 menuContainer.getChildren().add(menuButton);
                 
-                if (model.getFxmlPath() != null) {
-                    fxmlPathToButton.put(model.getFxmlPath(), menuButton);
+                if (model.getRoot() != null) {
+                    rootToButton.put(model.getRoot(), menuButton);
                 }
             } else {
                 // Parent item - expandable group
                 Button groupHeader = createGroupHeader(model);
-                VBox submenu = createSubmenu(item.getChildren(), menuItemActionHandler, fxmlPathToButton);
+                VBox submenu = createSubmenu(item.getChildren(), menuItemActionHandler, rootToButton);
                 groupButtonToSubmenu.put(groupHeader, submenu);
                 
                 // Initially hide submenu
@@ -119,7 +120,7 @@ public class MenuBuilder {
             }
         }
         
-        return new MenuBuildResult(menuContainer, fxmlPathToButton, groupButtonToSubmenu);
+        return new MenuBuildResult(menuContainer, rootToButton, groupButtonToSubmenu);
     }
     
     /**
@@ -133,8 +134,8 @@ public class MenuBuilder {
             button.setGraphic(model.getIconNode());
         }
         
-        if (model.getFxmlPath() != null && handler != null) {
-            button.setOnAction(_ -> handler.onMenuItemClick(model.getFxmlPath(), button));
+        if (model.getRoot() != null && handler != null) {
+            button.setOnAction(_ -> handler.onMenuItemClick(model.getRoot(), button));
         }
         
         return button;
@@ -179,9 +180,9 @@ public class MenuBuilder {
     /**
      * Tạo submenu container cho children
      */
-    private static VBox createSubmenu(List<TreeItem<MenuItemModel>> children, 
+    private static VBox createSubmenu(List<TreeItem<MenuItemModel>> children,
                                      MenuItemActionHandler handler,
-                                     Map<String, Button> fxmlPathToButton) {
+                                     Map<Parent, Button> rootToButton) {
         VBox submenu = new VBox();
         submenu.getStyleClass().add("menu-submenu");
         
@@ -194,11 +195,11 @@ public class MenuBuilder {
                 submenuButton.setGraphic(model.getIconNode());
             }
             
-            if (model.getFxmlPath() != null) {
+            if (model.getRoot() != null) {
                 if (handler != null) {
-                    submenuButton.setOnAction(_ -> handler.onMenuItemClick(model.getFxmlPath(), submenuButton));
+                    submenuButton.setOnAction(_ -> handler.onMenuItemClick(model.getRoot(), submenuButton));
                 }
-                fxmlPathToButton.put(model.getFxmlPath(), submenuButton);
+                rootToButton.put(model.getRoot(), submenuButton);
             }
             
             submenu.getChildren().add(submenuButton);

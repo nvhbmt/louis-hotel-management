@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import javafx.fxml.FXMLLoader;
+
 import com.example.louishotelmanagement.service.AuthService;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
 import com.example.louishotelmanagement.util.ContentSwitcher;
@@ -25,31 +27,42 @@ import javafx.stage.Stage;
 
 public class LayoutController implements Initializable, ContentSwitcher {
 
+    // Static reference để các controller khác có thể access
+    private static LayoutController instance;
+
     @FXML
     private VBox menuContainer;
 
     @FXML
     private BorderPane mainBorderPane;
-    
+
     @FXML
     private Label userInfoLabel;
-    
+
     @FXML
     private Button logoutBtn;
-    
+
     private Button currentActiveButton;
+    private Map<Parent, Button> rootToButton = new HashMap<>();
     private Map<String, Button> fxmlPathToButton = new HashMap<>();
     private Map<Button, VBox> groupButtonToSubmenu = new HashMap<>();
     private AuthService authService;
 
+    /**
+     * Get current LayoutController instance
+     */
+    public static LayoutController getInstance() {
+        return instance;
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        instance = this; // Set static instance
         authService = AuthService.getInstance();
         setupUserInfo();
         setupMenuVBox();
         loadFXML("/com/example/louishotelmanagement/fxml/trang-chu-view.fxml");
-        // Set trang chủ làm active mặc định
-        setActiveButtonByPath("/com/example/louishotelmanagement/fxml/trang-chu-view.fxml");
+        // Note: TrangChuController sẽ tự setup ContentSwitcher trong initialize() method của nó
     }
     
     private void setupUserInfo() {
@@ -94,25 +107,32 @@ public class LayoutController implements Initializable, ContentSwitcher {
     @Override
     public void switchContent(Parent root) {
         if (root != null) {
-            // Sử dụng đúng biến mainBorderPane của class LayoutController
-            this.mainBorderPane.setCenter(root);
+            // Load Parent vào vùng trung tâm
+            loadParent(root);
 
-            // Vì đây là trang được nạp động (dynamic), ta nên xóa trạng thái active của menu cũ
-            if (currentActiveButton != null) {
-                currentActiveButton.getStyleClass().remove("active");
-                currentActiveButton = null;
+            // Tìm button tương ứng và set active
+            Button correspondingButton = rootToButton.get(root);
+            if (correspondingButton != null) {
+                setActiveButton(correspondingButton);
+            } else {
+                // Nếu không tìm thấy button tương ứng, xóa trạng thái active
+                if (currentActiveButton != null) {
+                    currentActiveButton.getStyleClass().remove("active");
+                    currentActiveButton = null;
+                }
             }
         }
     }
+
     /** Khởi tạo VBox menu và xử lý sự kiện */
     private void setupMenuVBox() {
         menuContainer.getChildren().clear();
-        
+
         // Sử dụng MenuBuilder để xây dựng menu
         MenuBuilder.MenuBuildResult result = MenuBuilder.buildMenu(
             // Handler cho menu item click
-            (fxmlPath, button) -> {
-                loadFXML(fxmlPath);
+            (root, button) -> {
+                loadParent(root);
                 setActiveButton(button);
             },
             // Handler cho submenu toggle
@@ -121,8 +141,11 @@ public class LayoutController implements Initializable, ContentSwitcher {
         
         // Lấy các components từ kết quả
         VBox builtMenu = result.getMenuContainer();
-        fxmlPathToButton = result.getFxmlPathToButton();
+        rootToButton = result.getRootToButton();
         groupButtonToSubmenu = result.getGroupButtonToSubmenu();
+
+        // Setup fxmlPath to button mapping for string-based navigation
+        setupFxmlPathToButtonMapping();
         
         // Thêm menu vào container
         menuContainer.getChildren().addAll(builtMenu.getChildren());
@@ -163,6 +186,11 @@ public class LayoutController implements Initializable, ContentSwitcher {
     private void loadFXML(String path) {
         ContentManager.loadFXML(path, mainBorderPane, this);
     }
+
+    /** Load Parent vào vùng trung tâm */
+    private void loadParent(Parent root) {
+        mainBorderPane.setCenter(root);
+    }
     
     /** Set button làm active */
     private void setActiveButton(Button button) {
@@ -176,15 +204,6 @@ public class LayoutController implements Initializable, ContentSwitcher {
         }
     }
     
-    /** Set active button theo FXML path */
-    private void setActiveButtonByPath(String fxmlPath) {
-        Button button = fxmlPathToButton.get(fxmlPath);
-        if (button != null) {
-            setActiveButton(button);
-            // Expand parent group if needed
-            expandToButton(button);
-        }
-    }
     
     /** Expand group để hiển thị button được chọn */
     private void expandToButton(Button button) {
@@ -205,13 +224,111 @@ public class LayoutController implements Initializable, ContentSwitcher {
     public void switchContent(String fxmlPath) {
         switchContent(fxmlPath, true);
     }
-    
+
     @Override
     public void switchContent(String fxmlPath, boolean updateMenuActive) {
-        loadFXML(fxmlPath);
-        
-        if (updateMenuActive) {
-            setActiveButtonByPath(fxmlPath);
+        // Load FXML to get Parent, then delegate to Parent-based method
+        try {
+            Parent root = loadFXMLToParent(fxmlPath);
+            switchContent(root);
+
+            // Try to find and set active button if this fxmlPath corresponds to a menu item
+            Button correspondingButton = findButtonForFxmlPath(fxmlPath);
+            if (correspondingButton != null) {
+                setActiveButtonForNavigation(correspondingButton);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Fallback to direct FXML loading
+            loadFXML(fxmlPath);
         }
+    }
+
+    /**
+     * Setup mapping from fxmlPath to Button for string-based navigation
+     */
+    private void setupFxmlPathToButtonMapping() {
+        // Create mapping based on known fxmlPath patterns
+        fxmlPathToButton.put("/com/example/louishotelmanagement/fxml/trang-chu-view.fxml", findButtonByTitle("Trang chủ"));
+        fxmlPathToButton.put("/com/example/louishotelmanagement/fxml/phong-view.fxml", findButtonByTitle("Đặt phòng"));
+        fxmlPathToButton.put("/com/example/louishotelmanagement/fxml/quan-ly-phong-view.fxml", findButtonByTitle("Quản lý phòng"));
+        fxmlPathToButton.put("/com/example/louishotelmanagement/fxml/quan-ly-loai-phong-view.fxml", findButtonByTitle("Loại phòng"));
+        fxmlPathToButton.put("/com/example/louishotelmanagement/fxml/quan-ly-phieu-dat-phong.fxml", findButtonByTitle("Phiếu đặt phòng"));
+        fxmlPathToButton.put("/com/example/louishotelmanagement/fxml/dat-dich-vu-view.fxml", findButtonByTitle("Cung cấp dịch vụ"));
+        fxmlPathToButton.put("/com/example/louishotelmanagement/fxml/quan-ly-dich-vu-view.fxml", findButtonByTitle("Quản lý dịch vụ"));
+        fxmlPathToButton.put("/com/example/louishotelmanagement/fxml/quan-ly-khuyen-mai-view.fxml", findButtonByTitle("Khuyến mãi"));
+        fxmlPathToButton.put("/com/example/louishotelmanagement/fxml/quan-ly-hoa-don-view.fxml", findButtonByTitle("Hóa đơn"));
+        fxmlPathToButton.put("/com/example/louishotelmanagement/fxml/thong-ke-view.fxml", findButtonByTitle("Thống kê"));
+        fxmlPathToButton.put("/com/example/louishotelmanagement/fxml/quan-ly-nhan-vien-view.fxml", findButtonByTitle("Nhân viên"));
+        fxmlPathToButton.put("/com/example/louishotelmanagement/fxml/quan-ly-khach-hang-view.fxml", findButtonByTitle("Khách hàng"));
+    }
+
+    /**
+     * Find button by its title text
+     */
+    private Button findButtonByTitle(String title) {
+        for (Button button : rootToButton.values()) {
+            if (title.equals(button.getText())) {
+                return button;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Set active button for navigation, handling submenu expansion if needed
+     */
+    private void setActiveButtonForNavigation(Button button) {
+        // Check if this button is in a submenu (not a direct menu button)
+        Button parentGroupButton = findParentGroupButton(button);
+
+        if (parentGroupButton != null) {
+            // This is a submenu button, expand parent group
+            expandToButton(button); // expandToButton expects the submenu button, not the group button
+            // Set active only for the submenu button
+            setActiveButton(button);
+        } else {
+            // This is a direct menu button
+            setActiveButton(button);
+        }
+    }
+
+    /**
+     * Find the parent group button for a submenu button
+     */
+    private Button findParentGroupButton(Button submenuButton) {
+        for (Map.Entry<Button, VBox> entry : groupButtonToSubmenu.entrySet()) {
+            Button groupButton = entry.getKey();
+            VBox submenu = entry.getValue();
+
+            // Check if the submenu contains this button
+            if (submenu.getChildren().contains(submenuButton)) {
+                return groupButton;
+            }
+        }
+        return null; // Not a submenu button
+    }
+
+    /**
+     * Find button corresponding to fxmlPath using the fxmlPathToButton mapping
+     */
+    private Button findButtonForFxmlPath(String fxmlPath) {
+        return fxmlPathToButton.get(fxmlPath);
+    }
+
+    /**
+     * Load FXML and return Parent instead of setting it directly to container
+     */
+    private Parent loadFXMLToParent(String fxmlPath) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+        Parent root = loader.load();
+
+        // Set up the controller with ContentSwitcher if needed
+        Object controller = loader.getController();
+        if (controller != null) {
+            ContentManager.updateControllerSwitcher(controller, this);
+        }
+
+        return root;
     }
 }
