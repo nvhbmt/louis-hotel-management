@@ -24,7 +24,7 @@ BEGIN
             RAISERROR (N'Mã dịch vụ không được để trống.', 16, 1)
         END
 
-    IF EXISTS (SELECT 1 FROM DichVu WHERE maDV = @maDV)
+    IF EXISTS (SELECT 1 FROM DichVu WHERE maDV = @maDV AND daXoaLuc IS NULL)
         BEGIN
             RAISERROR (N'Mã dịch vụ đã tồn tại. Vui lòng chọn mã khác.', 16, 1)
         END
@@ -67,14 +67,15 @@ CREATE PROCEDURE sp_XoaDichVu @maDV NVARCHAR(10)
 AS
 BEGIN
     -- Kiểm tra xem mã dịch vụ có tồn tại không
-    IF NOT EXISTS (SELECT 1 FROM DichVu WHERE maDV = @maDV)
+    IF NOT EXISTS (SELECT 1 FROM DichVu WHERE maDV = @maDV AND daXoaLuc IS NULL)
         BEGIN
             RAISERROR (N'Không tìm thấy mã dịch vụ để xóa/ngừng kinh doanh.', 16, 1)
         END
 
     UPDATE DichVu
-    SET conKinhDoanh = 0 -- Đánh dấu là ngừng kinh doanh thay vì xóa cứng (Hard Delete)
+    SET daXoaLuc = GETDATE()
     WHERE maDV = @maDV
+      AND daXoaLuc IS NULL
 END
 GO
 
@@ -94,7 +95,7 @@ BEGIN
             RAISERROR (N'Mã dịch vụ không được để trống khi cập nhật.', 16, 1)
         END
 
-    IF NOT EXISTS (SELECT 1 FROM DichVu WHERE maDV = @maDV)
+    IF NOT EXISTS (SELECT 1 FROM DichVu WHERE maDV = @maDV AND daXoaLuc IS NULL)
         BEGIN
             RAISERROR (N'Không tìm thấy mã dịch vụ này để cập nhật.', 16, 1)
         END
@@ -146,6 +147,7 @@ BEGIN
            conKinhDoanh
     FROM DichVu
     WHERE (@chiLayConKinhDoanh IS NULL OR conKinhDoanh = @chiLayConKinhDoanh)
+      AND daXoaLuc IS NULL
     ORDER BY maDV
 END
 GO
@@ -171,37 +173,30 @@ GO
 -- TÊN PROCEDURE: sp_CapNhatSoLuongTonKho
 -- MỤC ĐÍCH: Cập nhật số lượng tồn kho (soLuong) của một dịch vụ.
 
-CREATE PROCEDURE sp_CapNhatSoLuongTonKho
-    @maDV NVARCHAR(10),       -- Mã Dịch Vụ cần cập nhật
-    @soLuongMoi INT           -- Số lượng tồn kho mới
+CREATE PROCEDURE sp_CapNhatSoLuongTonKho @maDV NVARCHAR(10), -- Mã Dịch Vụ cần cập nhật
+                                         @soLuongMoi INT -- Số lượng tồn kho mới
 AS
 BEGIN
     SET NOCOUNT ON;
 
     UPDATE DichVu
-    SET
-        soLuong = @soLuongMoi
-    WHERE
-        maDV = @maDV;
+    SET soLuong = @soLuongMoi
+    WHERE maDV = @maDV;
 
     -- Trả về số dòng bị ảnh hưởng (0 hoặc 1)
     SELECT @@ROWCOUNT;
 END
 GO
 
-CREATE PROCEDURE sp_TimDichVuTheoMa
-@MaDV NVARCHAR(10)
+CREATE PROCEDURE sp_TimDichVuTheoMa @MaDV NVARCHAR(10)
 AS
 BEGIN
-    SELECT
-        maDV,
-        tenDV,
-        soLuong,
-        donGia,
-        moTa,
-        conKinhDoanh
-    FROM
-        DichVu
-    WHERE
-        maDV = @MaDV;
+    SELECT maDV,
+           tenDV,
+           soLuong,
+           donGia,
+           moTa,
+           conKinhDoanh
+    FROM DichVu
+    WHERE maDV = @MaDV;
 END

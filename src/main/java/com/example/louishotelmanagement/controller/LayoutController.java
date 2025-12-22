@@ -1,19 +1,10 @@
 package com.example.louishotelmanagement.controller;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.ResourceBundle;
-
-import javafx.fxml.FXMLLoader;
-
 import com.example.louishotelmanagement.service.AuthService;
-import com.example.louishotelmanagement.util.ThongBaoUtil;
-import com.example.louishotelmanagement.util.ContentSwitcher;
 import com.example.louishotelmanagement.util.ContentManager;
+import com.example.louishotelmanagement.util.ContentSwitcher;
 import com.example.louishotelmanagement.util.MenuBuilder;
-
+import com.example.louishotelmanagement.util.ThongBaoUtil;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -24,6 +15,12 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.ResourceBundle;
 
 public class LayoutController implements Initializable, ContentSwitcher {
 
@@ -64,33 +61,33 @@ public class LayoutController implements Initializable, ContentSwitcher {
         loadFXML("/com/example/louishotelmanagement/fxml/trang-chu-view.fxml");
         // Note: TrangChuController sẽ tự setup ContentSwitcher trong initialize() method của nó
     }
-    
+
     private void setupUserInfo() {
         if (authService.isLoggedIn()) {
             String hoTen = authService.getCurrentUser().getNhanVien().getHoTen();
             String userRole = authService.getCurrentUserRole() == "manager" ? "Quản lý" : "Nhân viên";
             userInfoLabel.setText(hoTen + " (" + userRole + ")");
         }
-        
+
         logoutBtn.setOnAction(_ -> handleLogout());
     }
-    
+
     private void handleLogout() {
         if (ThongBaoUtil.hienThiXacNhan("Xác nhận đăng xuất", "Bạn có chắc chắn muốn đăng xuất?")) {
             authService.logout();
             showLoginScreen();
         }
     }
-    
+
     private void showLoginScreen() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/dang-nhap-view.fxml"));
             Scene scene = new Scene(loader.load(), 400, 500);
-            
+
             Stage stage = (Stage) logoutBtn.getScene().getWindow();
             stage.setScene(scene);
             stage.setTitle("Đăng nhập - Hệ thống quản lý khách sạn Louis");
-            
+
             // Reset kích thước và thuộc tính Stage
             stage.setResizable(false);
             stage.setMinWidth(400);
@@ -104,6 +101,7 @@ public class LayoutController implements Initializable, ContentSwitcher {
             e.printStackTrace();
         }
     }
+
     @Override
     public void switchContent(Parent root) {
         if (root != null) {
@@ -115,7 +113,6 @@ public class LayoutController implements Initializable, ContentSwitcher {
             if (correspondingButton != null) {
                 setActiveButton(correspondingButton);
             } else {
-                // Nếu không tìm thấy button tương ứng, xóa trạng thái active
                 if (currentActiveButton != null) {
                     currentActiveButton.getStyleClass().remove("active");
                     currentActiveButton = null;
@@ -124,21 +121,23 @@ public class LayoutController implements Initializable, ContentSwitcher {
         }
     }
 
-    /** Khởi tạo VBox menu và xử lý sự kiện */
+    /**
+     * Khởi tạo VBox menu và xử lý sự kiện
+     */
     private void setupMenuVBox() {
         menuContainer.getChildren().clear();
 
         // Sử dụng MenuBuilder để xây dựng menu
         MenuBuilder.MenuBuildResult result = MenuBuilder.buildMenu(
-            // Handler cho menu item click
-            (root, button) -> {
-                loadParent(root);
-                setActiveButton(button);
-            },
-            // Handler cho submenu toggle
-            this::toggleSubmenu
+                // Handler cho menu item click
+                (root, button) -> {
+                    loadParent(root);
+                    setActiveButton(button);
+                },
+                // Handler cho submenu toggle
+                this::toggleSubmenu
         );
-        
+
         // Lấy các components từ kết quả
         VBox builtMenu = result.getMenuContainer();
         rootToButton = result.getRootToButton();
@@ -146,15 +145,17 @@ public class LayoutController implements Initializable, ContentSwitcher {
 
         // Setup fxmlPath to button mapping for string-based navigation
         setupFxmlPathToButtonMapping();
-        
+
         // Thêm menu vào container
         menuContainer.getChildren().addAll(builtMenu.getChildren());
     }
-    
-    /** Toggle submenu visibility */
+
+    /**
+     * Toggle submenu visibility
+     */
     private void toggleSubmenu(Button groupHeader, VBox submenu) {
         boolean isExpanded = submenu.isVisible();
-        
+
         // Close all other groups
         for (Map.Entry<Button, VBox> entry : groupButtonToSubmenu.entrySet()) {
             if (entry.getKey() != groupHeader) {
@@ -165,11 +166,11 @@ public class LayoutController implements Initializable, ContentSwitcher {
                 MenuBuilder.resetArrowRotation(entry.getKey());
             }
         }
-        
+
         // Toggle current group
         submenu.setVisible(!isExpanded);
         submenu.setManaged(!isExpanded);
-        
+
         if (!isExpanded) {
             groupHeader.getStyleClass().add("expanded");
             // Rotate arrow (arrow ở cuối cùng)
@@ -180,32 +181,40 @@ public class LayoutController implements Initializable, ContentSwitcher {
             MenuBuilder.rotateArrow(groupHeader, 0);
         }
     }
-    
-    
-    /** Load FXML vào vùng trung tâm với caching */
+
+
+    /**
+     * Load FXML vào vùng trung tâm với caching
+     */
     private void loadFXML(String path) {
         ContentManager.loadFXML(path, mainBorderPane, this);
     }
 
-    /** Load Parent vào vùng trung tâm */
+    /**
+     * Load Parent vào vùng trung tâm
+     */
     private void loadParent(Parent root) {
         mainBorderPane.setCenter(root);
     }
-    
-    /** Set button làm active */
+
+    /**
+     * Set button làm active
+     */
     private void setActiveButton(Button button) {
         if (currentActiveButton != null) {
             currentActiveButton.getStyleClass().remove("active");
         }
-        
+
         currentActiveButton = button;
         if (button != null) {
             button.getStyleClass().add("active");
         }
     }
-    
-    
-    /** Expand group để hiển thị button được chọn */
+
+
+    /**
+     * Expand group để hiển thị button được chọn
+     */
     private void expandToButton(Button button) {
         // Find which group contains this button
         for (Map.Entry<Button, VBox> entry : groupButtonToSubmenu.entrySet()) {
@@ -308,6 +317,7 @@ public class LayoutController implements Initializable, ContentSwitcher {
         }
         return null; // Not a submenu button
     }
+
 
     /**
      * Find button corresponding to fxmlPath using the fxmlPathToButton mapping

@@ -114,7 +114,6 @@ public class DichVuDAO {
             return cs.getString(1);
         }
     }
-    // ⚙️ Cập nhật số lượng tồn kho của dịch vụ
     public boolean capNhatSoLuongTonKho(String maDV, int soLuongMoi) throws Exception {
         String sql = "{CALL sp_CapNhatSoLuongTonKho(?, ?)}";
 

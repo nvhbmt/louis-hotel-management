@@ -3,6 +3,7 @@ package com.example.louishotelmanagement.controller;
 import com.example.louishotelmanagement.dao.*;
 import com.example.louishotelmanagement.model.*;
 import com.example.louishotelmanagement.service.AuthService;
+import com.example.louishotelmanagement.util.Refreshable;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -26,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class DatDichVuController implements Initializable {
+public class DatDichVuController implements Initializable, Refreshable {
 
     public ComboBox dsKhachHang;
     public ComboBox dsPhong;
@@ -48,7 +49,6 @@ public class DatDichVuController implements Initializable {
     private TableColumn<CTHoaDonDichVu, String> colGH_ThanhTien;
     @FXML
     private TableColumn<CTHoaDonDichVu, Void> colGH_Xoa;
-
 
 
     public KhachHangDAO kDao;
@@ -102,7 +102,7 @@ public class DatDichVuController implements Initializable {
 
             // Hiển thị mã nhân viên
             AuthService auth = AuthService.getInstance();
-            if(auth.getCurrentUser() != null && auth.getCurrentUser().getNhanVien() != null)
+            if (auth.getCurrentUser() != null && auth.getCurrentUser().getNhanVien() != null)
                 maNV.setText(auth.getCurrentUser().getNhanVien().getMaNV());
 
             maPhieuDV = pdvDao.layMaPhieuDichVuTiepTheo();
@@ -197,7 +197,9 @@ public class DatDichVuController implements Initializable {
             try {
                 DichVu dv = dvDao.timDichVuTheoMa(cellData.getValue().getMaDV());
                 return new SimpleStringProperty(dv != null ? dv.getTenDV() : cellData.getValue().getMaDV());
-            } catch (Exception e) { return new SimpleStringProperty("Unk"); }
+            } catch (Exception e) {
+                return new SimpleStringProperty("Unk");
+            }
         });
 
         colGH_SL.setCellValueFactory(new PropertyValueFactory<>("soLuong"));
@@ -222,8 +224,11 @@ public class DatDichVuController implements Initializable {
             @Override
             protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
-                if (empty) { setGraphic(null); }
-                else { setGraphic(btnDelete); }
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(btnDelete);
+                }
             }
         });
 
@@ -298,12 +303,14 @@ public class DatDichVuController implements Initializable {
                 if (ctHoaDonDichVuHienCo == null) {
                     cthddv.setMaPhieuDV(pdv.getMaPhieuDV());
                     if (!cthddvDao.themCTHoaDonDichVu(cthddv)) {
-                        allItemsSuccessful = false; break;
+                        allItemsSuccessful = false;
+                        break;
                     }
                 } else {
                     int soLuongMoi = ctHoaDonDichVuHienCo.getSoLuong() + cthddv.getSoLuong();
                     if (!cthddvDao.capNhatSoLuongCTHDDV(ctHoaDonDichVuHienCo.getMaHD(), ctHoaDonDichVuHienCo.getMaDV(), soLuongMoi)) {
-                        allItemsSuccessful = false; break;
+                        allItemsSuccessful = false;
+                        break;
                     }
                 }
                 dvDao.capNhatSoLuongTonKho(dv.getMaDV(), dv.getSoLuong() - cthddv.getSoLuong());
@@ -333,7 +340,7 @@ public class DatDichVuController implements Initializable {
 
     public void laydsPhongTheoKhachHang() throws SQLException {
         dsPhong.getItems().clear();
-        if(dsKhachHang.getSelectionModel().getSelectedIndex() < 0) return;
+        if (dsKhachHang.getSelectionModel().getSelectedIndex() < 0) return;
 
         ArrayList<PhieuDatPhong> dsPhieu = phieuDatPhongDAO.layDSPhieuDatPhongTheoKhachHang(dsMaKH.get(dsKhachHang.getSelectionModel().getSelectedIndex()));
         if (dsPhieu.size() > 0) {
@@ -345,7 +352,7 @@ public class DatDichVuController implements Initializable {
                     }
                 }
             }
-            if(!dsPhong.getItems().isEmpty()) dsPhong.getSelectionModel().selectFirst();
+            if (!dsPhong.getItems().isEmpty()) dsPhong.getSelectionModel().selectFirst();
         }
     }
 
@@ -356,9 +363,9 @@ public class DatDichVuController implements Initializable {
         gioHangList.clear();
         loadVaHienThiDichVu();
         capNhatTongTien();
-
+        System.out.println("Dat dich vu - Refresh data");
         AuthService auth = AuthService.getInstance();
-        if(auth.getCurrentUser() != null) maNV.setText(auth.getCurrentUser().getNhanVien().getMaNV());
+        if (auth.getCurrentUser() != null) maNV.setText(auth.getCurrentUser().getNhanVien().getMaNV());
         maPhieuDV = pdvDao.layMaPhieuDichVuTiepTheo();
         txtGhiChu.clear();
     }

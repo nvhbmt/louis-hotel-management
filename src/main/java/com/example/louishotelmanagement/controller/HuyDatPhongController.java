@@ -125,7 +125,7 @@ public class HuyDatPhongController implements Initializable, Refreshable {
                 } else {
                     setText(item.toString());
 
-                    // 💡 Ánh xạ trạng thái Enum sang tên class CSS phù hợp
+                    // Ánh xạ trạng thái Enum sang tên class CSS phù hợp
                     switch (item) {
                         case HOAN_THANH -> getStyleClass().add("status-hoan-thanh");
                         case DA_DAT -> getStyleClass().add("status-da-dat");

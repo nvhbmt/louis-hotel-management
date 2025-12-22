@@ -175,26 +175,7 @@
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
                     </columnResizePolicy>
                 </TableView>
-                <VBox fx:id="vbEmptyState" alignment="CENTER" prefHeight="200.0" prefWidth="1014.0"
-                      styleClass="empty-state" visible="false">
-                    <padding>
-                        <Insets bottom="20.0" top="20.0"/>
-                    </padding>
-                    <ImageView fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true">
-                        <VBox.margin>
-                            <Insets bottom="10.0"/>
-                        </VBox.margin>
-                        <Image url="@../image/calendar.png"/>
-                    </ImageView>
-                    <Label styleClass="empty-title"
-                           text="Chưa có phòng trống">
-                        <VBox.margin>
-                            <Insets bottom="5.0"/>
-                        </VBox.margin>
-                    </Label>
-                    <Label styleClass="empty-subtitle"
-                           text="Vui lòng chọn khoảng thời gian khác hoặc thử lại sau"/>
-                </VBox>
+             
             </VBox>
         </VBox>
     </center>

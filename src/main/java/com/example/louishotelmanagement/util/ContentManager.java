@@ -1,8 +1,6 @@
 package com.example.louishotelmanagement.util;
 
-import com.example.louishotelmanagement.controller.PhongController;
-import com.example.louishotelmanagement.controller.TrangChuController;
-import com.example.louishotelmanagement.controller.TraPhongController;
+
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.layout.BorderPane;
@@ -27,6 +25,7 @@ public class ContentManager {
         try {
             // Kiểm tra cache trước
             if (!reload&&cachedViews.containsKey(fxmlPath)) {
+                System.out.println("Loading from cache for: " + fxmlPath);
                 Parent cachedView = cachedViews.get(fxmlPath);
                 Object cachedController = cachedControllers.get(fxmlPath);
                 
@@ -60,31 +59,43 @@ public class ContentManager {
     }
     
     /**
-     * Setup Parent object đã được load sẵn với ContentSwitcher
+     * Load FXML với custom controller đã được setup sẵn
      */
-    public static void setupParent(Parent root, ContentSwitcher switcher) {
-        // Tìm controller từ Parent (nếu có)
-        // Note: JavaFX Parent không có method getController() trực tiếp
-        // Chúng ta có thể cần một cách khác để associate controller với Parent
+    public static Parent loadFXMLWithCustomController(String fxmlPath, Object customController, ContentSwitcher switcher) {
+        try {
+            FXMLLoader loader = new FXMLLoader(ContentManager.class.getResource(fxmlPath));
+            loader.setController(customController);
+            Parent view = loader.load();
 
-        // Hiện tại, vì chúng ta đã có controller từ loadFXMLToParent(),
-        // method này có thể không cần thiết. Logic setup đã được xử lý ở đó.
+            // Setup controller với switcher
+            updateControllerSwitcher(customController, switcher);
+
+            // Setup cho Refreshable
+            if (customController instanceof Refreshable) {
+                try {
+                    ((Refreshable) customController).refreshData();
+                } catch (Exception e) {
+                    System.err.println("Lỗi khi refreshData cho custom controller: " + e.getMessage());
+                }
+            }
+
+            return view;
+
+        } catch (IOException e) {
+            System.err.println("Lỗi khi load FXML với custom controller: " + fxmlPath);
+            e.printStackTrace();
+            return null;
+        }
     }
 
     /**
      * Cập nhật ContentSwitcher cho controller
      */
     public static void updateControllerSwitcher(Object controller, ContentSwitcher switcher) {
-        if (controller instanceof PhongController) {
-            ((PhongController) controller).setContentSwitcher(switcher);
+        if (controller instanceof ContentSwitchable) {
+            ((ContentSwitchable) controller).setContentSwitcher(switcher);
         }
-        if (controller instanceof TrangChuController) {
-            ((TrangChuController) controller).setContentSwitcher(switcher);
-        }
-        if (controller instanceof TraPhongController) {
-            // "this" là chính LayoutController/ContentManager, phải triển khai ContentSwitcher
-            ((TraPhongController) controller).setContentSwitcher(switcher);
-        }
+        
         if (controller instanceof Refreshable) {
             try {
                 ((Refreshable) controller).refreshData();
@@ -117,21 +128,6 @@ public class ContentManager {
      */
     public static boolean isCached(String fxmlPath) {
         return cachedViews.containsKey(fxmlPath);
-    }
-    /**
-     * Helper: safe switch with null guard and error handling
-     */
-    public static void safeSwitch(ContentSwitcher switcher, String fxmlPath) {
-        if (switcher == null) {
-            System.err.println("ContentSwitcher chưa được khởi tạo!");
-            return;
-        }
-        try {
-            switcher.switchContent(fxmlPath, true);
-        } catch (Exception e) {
-            System.err.println("Lỗi khi chuyển đến trang: " + fxmlPath);
-            e.printStackTrace();
-        }
     }
 }
 

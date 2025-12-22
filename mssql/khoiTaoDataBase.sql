@@ -10,7 +10,8 @@ CREATE TABLE LoaiPhong
     maLoaiPhong nvarchar(10) PRIMARY KEY,
     tenLoai     NVARCHAR(100)  NOT NULL,
     moTa        NVARCHAR(255),
-    donGia      DECIMAL(18, 2) NOT NULL
+    donGia      DECIMAL(18, 2) NOT NULL,
+    daXoaLuc    DATETIME NULL
 );
 GO
 -- Bảng phòng
@@ -21,6 +22,7 @@ CREATE TABLE Phong
     trangThai   NVARCHAR(50) CHECK (trangThai IN (N'Trống', N'Đang sử dụng', N'Đã đặt', N'Bảo trì')) DEFAULT N'Trống',
     moTa        NVARCHAR(255),
     maLoaiPhong nvarchar(10),
+    daXoaLuc    DATETIME NULL,
     FOREIGN KEY (maLoaiPhong) REFERENCES LoaiPhong (maLoaiPhong)
 );
 GO
@@ -37,8 +39,9 @@ CREATE TABLE KhachHang
     CCCD      NVARCHAR(20)  NULL,
     hangKhach NVARCHAR(50) DEFAULT N'Khách thường',
     --(Khách VIP, Khách quen)
-    trangThai NVARCHAR(50) DEFAULT N'Đang lưu trú'
+    trangThai NVARCHAR(50) DEFAULT N'Đang lưu trú',
     --(Enum TrangThaiKhachHang)
+    daXoaLuc  DATETIME NULL
 );
 GO
 -- Bảng nhân viên
@@ -49,7 +52,8 @@ CREATE TABLE NhanVien
     soDT     NVARCHAR(15),
     diaChi   NVARCHAR(255),
     chucVu   NVARCHAR(50),
-    ngaySinh DATE
+    ngaySinh DATE,
+    daXoaLuc DATETIME NULL
 );
 GO
 -- Bảng tài khoản
@@ -62,6 +66,7 @@ CREATE TABLE TaiKhoan
     quyen       NVARCHAR(50),
     trangThai   BIT DEFAULT 1,
     -- 1 = Hoạt động, 0 = Khóa
+    daXoaLuc    DATETIME NULL,
     FOREIGN KEY (maNV) REFERENCES NhanVien (maNV)
 );
 
@@ -77,6 +82,7 @@ CREATE TABLE PhieuDatPhong
     maKH      nvarchar(10),
     maNV      nvarchar(10),
     tienCoc   DECIMAL(18, 2) NULL, -- Trường tiền cọc đã được thêm vào
+    daXoaLuc  DATETIME NULL,
     FOREIGN KEY (maKH) REFERENCES KhachHang (maKH),
     FOREIGN KEY (maNV) REFERENCES NhanVien (maNV)
 );
@@ -89,7 +95,8 @@ CREATE TABLE DichVu
     soLuong      INT,
     donGia       DECIMAL(18, 2),
     moTa         NVARCHAR(255),
-    conKinhDoanh BIT
+    conKinhDoanh BIT,
+    daXoaLuc     DATETIME NULL
 );
 GO
 -- Bảng mã khuyến mãi
@@ -105,6 +112,7 @@ CREATE TABLE KhuyenMai
     moTa             NVARCHAR(255),
     trangThai        NVARCHAR(50),
     maNV             nvarchar(10),
+    daXoaLuc         DATETIME NULL,
     FOREIGN KEY (maNV) REFERENCES NhanVien (maNV)
 );
 GO
@@ -116,6 +124,7 @@ CREATE TABLE PhieuDichVu
     ngayLap   DATE,
     maNV      nvarchar(10),
     ghiChu    NVARCHAR(255) NULL,
+    daXoaLuc  DATETIME NULL,
     FOREIGN KEY (maNV) REFERENCES NhanVien (maNV)
 );
 GO
@@ -145,6 +154,8 @@ CREATE TABLE HoaDon
     maNV             NVARCHAR(10),
     maKM             NVARCHAR(10)   NULL,
 
+    daXoaLuc         DATETIME NULL,
+
     FOREIGN KEY (maKH) REFERENCES KhachHang (maKH),
     FOREIGN KEY (maNV) REFERENCES NhanVien (maNV),
     FOREIGN KEY (maKM) REFERENCES KhuyenMai (maKM)
@@ -169,6 +180,7 @@ CREATE TABLE CTHoaDonPhong
         ) PERSISTED,
     daHuy     BIT      NOT NULL DEFAULT 0,
     ngayHuy   DATETIME NULL,
+    daXoaLuc  DATETIME NULL,
     PRIMARY KEY (maHD, maPhong),
     FOREIGN KEY (maHD) REFERENCES HoaDon (maHD),
     FOREIGN KEY (maPhieu) REFERENCES PhieuDatPhong (maPhieu),
@@ -183,6 +195,7 @@ CREATE TABLE CTHoaDonDichVu
     soLuong   INT,
     donGia    DECIMAL(18, 2),
     thanhTien AS (soLuong * donGia) PERSISTED,
+    daXoaLuc DATETIME NULL,
     PRIMARY KEY (maHD, maDV),
     FOREIGN KEY (maHD) REFERENCES HoaDon (maHD),
     FOREIGN KEY (maPhieuDV) REFERENCES PhieuDichVu (maPhieuDV),
@@ -242,6 +255,154 @@ IF NOT EXISTS (SELECT 1
         CREATE NONCLUSTERED INDEX IX_CTHoaDonPhong_MaPhieu
             ON CTHoaDonPhong (maPhieu)
             INCLUDE (maPhong, ngayDen, ngayDi);
+    END
+GO
+
+-- =============================================
+-- Indexes cho Soft Delete (daXoaLuc)
+-- =============================================
+
+-- Index cho LoaiPhong để optimize soft delete queries
+IF NOT EXISTS (SELECT 1
+               FROM sys.indexes
+               WHERE name = 'IX_LoaiPhong_DaXoaLuc'
+                 AND object_id = OBJECT_ID('LoaiPhong'))
+    BEGIN
+        CREATE NONCLUSTERED INDEX IX_LoaiPhong_DaXoaLuc
+            ON LoaiPhong (daXoaLuc)
+            WHERE daXoaLuc IS NULL;
+    END
+GO
+
+-- Index cho Phong để optimize soft delete queries
+IF NOT EXISTS (SELECT 1
+               FROM sys.indexes
+               WHERE name = 'IX_Phong_DaXoaLuc'
+                 AND object_id = OBJECT_ID('Phong'))
+    BEGIN
+        CREATE NONCLUSTERED INDEX IX_Phong_DaXoaLuc
+            ON Phong (daXoaLuc)
+            WHERE daXoaLuc IS NULL;
+    END
+GO
+
+-- Index cho KhachHang để optimize soft delete queries
+IF NOT EXISTS (SELECT 1
+               FROM sys.indexes
+               WHERE name = 'IX_KhachHang_DaXoaLuc'
+                 AND object_id = OBJECT_ID('KhachHang'))
+    BEGIN
+        CREATE NONCLUSTERED INDEX IX_KhachHang_DaXoaLuc
+            ON KhachHang (daXoaLuc)
+            WHERE daXoaLuc IS NULL;
+    END
+GO
+
+-- Index cho NhanVien để optimize soft delete queries
+IF NOT EXISTS (SELECT 1
+               FROM sys.indexes
+               WHERE name = 'IX_NhanVien_DaXoaLuc'
+                 AND object_id = OBJECT_ID('NhanVien'))
+    BEGIN
+        CREATE NONCLUSTERED INDEX IX_NhanVien_DaXoaLuc
+            ON NhanVien (daXoaLuc)
+            WHERE daXoaLuc IS NULL;
+    END
+GO
+
+-- Index cho TaiKhoan để optimize soft delete queries
+IF NOT EXISTS (SELECT 1
+               FROM sys.indexes
+               WHERE name = 'IX_TaiKhoan_DaXoaLuc'
+                 AND object_id = OBJECT_ID('TaiKhoan'))
+    BEGIN
+        CREATE NONCLUSTERED INDEX IX_TaiKhoan_DaXoaLuc
+            ON TaiKhoan (daXoaLuc)
+            WHERE daXoaLuc IS NULL;
+    END
+GO
+
+-- Index cho PhieuDatPhong để optimize soft delete queries
+IF NOT EXISTS (SELECT 1
+               FROM sys.indexes
+               WHERE name = 'IX_PhieuDatPhong_DaXoaLuc'
+                 AND object_id = OBJECT_ID('PhieuDatPhong'))
+    BEGIN
+        CREATE NONCLUSTERED INDEX IX_PhieuDatPhong_DaXoaLuc
+            ON PhieuDatPhong (daXoaLuc)
+            WHERE daXoaLuc IS NULL;
+    END
+GO
+
+-- Index cho DichVu để optimize soft delete queries
+IF NOT EXISTS (SELECT 1
+               FROM sys.indexes
+               WHERE name = 'IX_DichVu_DaXoaLuc'
+                 AND object_id = OBJECT_ID('DichVu'))
+    BEGIN
+        CREATE NONCLUSTERED INDEX IX_DichVu_DaXoaLuc
+            ON DichVu (daXoaLuc)
+            WHERE daXoaLuc IS NULL;
+    END
+GO
+
+-- Index cho KhuyenMai để optimize soft delete queries
+IF NOT EXISTS (SELECT 1
+               FROM sys.indexes
+               WHERE name = 'IX_KhuyenMai_DaXoaLuc'
+                 AND object_id = OBJECT_ID('KhuyenMai'))
+    BEGIN
+        CREATE NONCLUSTERED INDEX IX_KhuyenMai_DaXoaLuc
+            ON KhuyenMai (daXoaLuc)
+            WHERE daXoaLuc IS NULL;
+    END
+GO
+
+-- Index cho PhieuDichVu để optimize soft delete queries
+IF NOT EXISTS (SELECT 1
+               FROM sys.indexes
+               WHERE name = 'IX_PhieuDichVu_DaXoaLuc'
+                 AND object_id = OBJECT_ID('PhieuDichVu'))
+    BEGIN
+        CREATE NONCLUSTERED INDEX IX_PhieuDichVu_DaXoaLuc
+            ON PhieuDichVu (daXoaLuc)
+            WHERE daXoaLuc IS NULL;
+    END
+GO
+
+-- Index cho HoaDon để optimize soft delete queries
+IF NOT EXISTS (SELECT 1
+               FROM sys.indexes
+               WHERE name = 'IX_HoaDon_DaXoaLuc'
+                 AND object_id = OBJECT_ID('HoaDon'))
+    BEGIN
+        CREATE NONCLUSTERED INDEX IX_HoaDon_DaXoaLuc
+            ON HoaDon (daXoaLuc)
+            WHERE daXoaLuc IS NULL;
+    END
+GO
+
+-- Index cho CTHoaDonPhong để optimize soft delete queries
+IF NOT EXISTS (SELECT 1
+               FROM sys.indexes
+               WHERE name = 'IX_CTHoaDonPhong_DaXoaLuc'
+                 AND object_id = OBJECT_ID('CTHoaDonPhong'))
+    BEGIN
+        CREATE NONCLUSTERED INDEX IX_CTHoaDonPhong_DaXoaLuc
+            ON CTHoaDonPhong (daXoaLuc)
+            WHERE daXoaLuc IS NULL;
+    END
+GO
+
+-- Index cho CTHoaDonDichVu để optimize soft delete queries
+IF NOT EXISTS (SELECT 1
+               FROM sys.indexes
+               WHERE name = 'IX_CTHoaDonDichVu_DaXoaLuc'
+                 AND object_id = OBJECT_ID('CTHoaDonDichVu'))
+    BEGIN
+        CREATE NONCLUSTERED INDEX IX_CTHoaDonDichVu_DaXoaLuc
+            ON CTHoaDonDichVu (daXoaLuc)
+            WHERE daXoaLuc IS NULL;
     END
 GO
 

@@ -1,28 +1,31 @@
 package com.example.louishotelmanagement.controller;
 
-import com.example.louishotelmanagement.dao.KhuyenMaiDAO;
-import com.example.louishotelmanagement.model.KieuGiamGia;
-import com.example.louishotelmanagement.model.KhuyenMai;
-import com.example.louishotelmanagement.util.Refreshable;
-import com.example.louishotelmanagement.util.ThongBaoUtil;
-import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
-import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.stage.Stage;
-
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ResourceBundle;
+import com.example.louishotelmanagement.dao.KhuyenMaiDAO;
+import com.example.louishotelmanagement.model.KhuyenMai;
+import com.example.louishotelmanagement.model.KieuGiamGia;
+import com.example.louishotelmanagement.util.Refreshable;
+import com.example.louishotelmanagement.util.ThongBaoUtil;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
 
 public class ChonKhuyenMaiController implements Initializable, Refreshable {
 

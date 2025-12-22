@@ -71,7 +71,7 @@ BEGIN
         GiamGiaMaGG = @giamGiaMaGG,
         GiamGiaHangKH = @giamGiaHangKH,
         TongVAT = @tongVAT
-    WHERE maHD = @maHD;
+    WHERE maHD = @maHD AND daXoaLuc IS NULL;
 END;
 GO
 

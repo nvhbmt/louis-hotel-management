@@ -12,6 +12,7 @@ public class PhieuDatPhongDAO {
 
     /**
      * Hàm helper để xây dựng đối tượng PhieuDatPhong từ ResultSet.
+     *
      * @param rs ResultSet chứa dữ liệu phiếu đặt phòng.
      * @return PhieuDatPhong object.
      * @throws SQLException
@@ -207,17 +208,6 @@ public class PhieuDatPhongDAO {
             cs.setString(1, maPhieu);
             cs.setString(2, trangThai);
 
-            return cs.executeUpdate() > 0;
-        }
-    }
-
-    // Xóa phiếu đặt phòng (Giữ nguyên)
-    public boolean xoaPhieuDatPhong(String maPhieu) throws SQLException {
-        String sql = "{call sp_XoaPhieuDatPhong(?)}";
-        try (Connection con = CauHinhDatabase.getConnection();
-             CallableStatement cs = con.prepareCall(sql)) {
-
-            cs.setString(1, maPhieu);
             return cs.executeUpdate() > 0;
         }
     }

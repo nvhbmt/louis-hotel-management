@@ -2,6 +2,7 @@ package com.example.louishotelmanagement.controller;
 
 import com.example.louishotelmanagement.dao.*;
 import com.example.louishotelmanagement.model.*;
+import com.example.louishotelmanagement.util.ContentSwitchable;
 import com.example.louishotelmanagement.util.ContentSwitcher;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
 import com.example.louishotelmanagement.util.Refreshable;
@@ -26,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class DoiPhongController implements Initializable, Refreshable {
+public class DoiPhongController implements Initializable, Refreshable,ContentSwitchable {
 
     @FXML public ComboBox<String> dsKhachHang;
     @FXML public ComboBox<String> dsPhongHienTai;

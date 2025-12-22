@@ -1,5 +1,4 @@
-package com.example.louishotelmanagement.controller;// package com.example.louishotelmanagement.controller;
-// File: ChiTietPhongTrongPhieuController.java
+package com.example.louishotelmanagement.controller;
 
 import com.example.louishotelmanagement.dao.PhongDAO;
 import com.example.louishotelmanagement.model.CTHoaDonPhong;
@@ -31,7 +30,7 @@ public class ChiTietPhongTrongPhieuController implements Initializable {
     @FXML private TableColumn<Phong, Double> colGia;
     @FXML private TableColumn<Phong, Integer> colTang;
 
-    // 💡 KHAI BÁO MỚI CHO VÙNG THÔNG TIN CHI TIẾT
+
     @FXML private Label lblChiTietMaPhong;
     @FXML private Label lblChiTietTang;
     @FXML private Label lblChiTietTrangThai;
@@ -46,7 +45,6 @@ public class ChiTietPhongTrongPhieuController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         colMaPhong.setCellValueFactory(new PropertyValueFactory<>("maPhong"));
 
-        // Sửa lỗi binding cũ và sử dụng SimpleStringProperty
         colTenLoaiPhong.setCellValueFactory(cellData -> {
             LoaiPhong loaiPhong = cellData.getValue().getLoaiPhong();
             return loaiPhong != null ?
@@ -61,7 +59,6 @@ public class ChiTietPhongTrongPhieuController implements Initializable {
         });
         colTang.setCellValueFactory(new PropertyValueFactory<>("tang"));
 
-        // 💡 THAY ĐỔI: THÊM LISTENER KHI CHỌN DÒNG
         tblChiTietPhong.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Phong>() {
             @Override
             public void changed(ObservableValue<? extends Phong> observable, Phong oldValue, Phong newValue) {

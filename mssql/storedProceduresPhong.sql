@@ -18,7 +18,7 @@ AS
 BEGIN
 
     -- Kiểm tra mã loại phòng đã tồn tại chưa
-    IF EXISTS (SELECT 1 FROM LoaiPhong WHERE maLoaiPhong = @maLoaiPhong)
+    IF EXISTS (SELECT 1 FROM LoaiPhong WHERE maLoaiPhong = @maLoaiPhong AND daXoaLuc IS NULL)
         BEGIN
             RAISERROR ('Mã loại phòng đã tồn tại!', 16, 1);
             RETURN;
@@ -57,6 +57,7 @@ BEGIN
 
     SELECT maLoaiPhong, tenLoai, moTa, donGia
     FROM LoaiPhong
+    WHERE daXoaLuc IS NULL
     ORDER BY tenLoai;
 END
 GO
@@ -68,7 +69,7 @@ BEGIN
 
     SELECT maLoaiPhong, tenLoai, moTa, donGia
     FROM LoaiPhong
-    WHERE maLoaiPhong = @maLoaiPhong;
+    WHERE maLoaiPhong = @maLoaiPhong AND daXoaLuc IS NULL;
 END
 GO
 
@@ -81,7 +82,7 @@ AS
 BEGIN
 
     -- Kiểm tra loại phòng có tồn tại không
-    IF NOT EXISTS (SELECT 1 FROM LoaiPhong WHERE maLoaiPhong = @maLoaiPhong)
+    IF NOT EXISTS (SELECT 1 FROM LoaiPhong WHERE maLoaiPhong = @maLoaiPhong AND daXoaLuc IS NULL)
         BEGIN
             RAISERROR ('Loại phòng không tồn tại!', 16, 1);
             RETURN;
@@ -115,21 +116,21 @@ AS
 BEGIN
 
     -- Kiểm tra loại phòng có tồn tại không
-    IF NOT EXISTS (SELECT 1 FROM LoaiPhong WHERE maLoaiPhong = @maLoaiPhong)
+    IF NOT EXISTS (SELECT 1 FROM LoaiPhong WHERE maLoaiPhong = @maLoaiPhong AND daXoaLuc IS NULL)
         BEGIN
             RAISERROR ('Loại phòng không tồn tại!', 16, 1);
             RETURN;
         END
 
     -- Kiểm tra loại phòng có đang được sử dụng không
-    IF EXISTS (SELECT 1 FROM Phong WHERE maLoaiPhong = @maLoaiPhong)
+    IF EXISTS (SELECT 1 FROM Phong WHERE maLoaiPhong = @maLoaiPhong AND daXoaLuc IS NULL)
         BEGIN
             RAISERROR ('Không thể xóa loại phòng này vì đang được sử dụng!', 16, 1);
             RETURN;
         END
 
     -- Xóa loại phòng
-    DELETE FROM LoaiPhong WHERE maLoaiPhong = @maLoaiPhong;
+    UPDATE LoaiPhong SET daXoaLuc = GETDATE() WHERE maLoaiPhong = @maLoaiPhong AND daXoaLuc IS NULL;
 END
 GO
 
@@ -190,7 +191,7 @@ BEGIN
         END
 
     -- Kiểm tra loại phòng có tồn tại không
-    IF NOT EXISTS (SELECT 1 FROM LoaiPhong WHERE maLoaiPhong = @maLoaiPhong)
+    IF NOT EXISTS (SELECT 1 FROM LoaiPhong WHERE maLoaiPhong = @maLoaiPhong AND daXoaLuc IS NULL)
         BEGIN
             RAISERROR ('Loại phòng không tồn tại!', 16, 1);
             RETURN;
@@ -216,6 +217,7 @@ BEGIN
            lp.donGia
     FROM Phong p
              LEFT JOIN LoaiPhong lp ON p.maLoaiPhong = lp.maLoaiPhong
+    WHERE p.daXoaLuc IS NULL
     ORDER BY p.tang, p.maPhong;
 END
 GO
@@ -330,7 +332,7 @@ BEGIN
         END
 
     -- Kiểm tra loại phòng có tồn tại không
-    IF NOT EXISTS (SELECT 1 FROM LoaiPhong WHERE maLoaiPhong = @maLoaiPhong)
+    IF NOT EXISTS (SELECT 1 FROM LoaiPhong WHERE maLoaiPhong = @maLoaiPhong AND daXoaLuc IS NULL)
         BEGIN
             RAISERROR ('Loại phòng không tồn tại!', 16, 1);
             RETURN;
@@ -387,7 +389,7 @@ BEGIN
         END
 
     -- Xóa phòng
-    DELETE FROM Phong WHERE maPhong = @maPhong;
+    UPDATE Phong SET daXoaLuc = GETDATE() WHERE maPhong = @maPhong AND daXoaLuc IS NULL;
 END
 GO
 
