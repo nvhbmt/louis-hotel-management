@@ -1,16 +1,16 @@
 package com.example.louishotelmanagement.app;
 
+import java.io.IOException;
+import org.kordamp.bootstrapfx.BootstrapFX;
 import com.example.louishotelmanagement.config.CauHinhDatabase;
+import com.example.louishotelmanagement.controller.DangNhapController;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
-
+import com.example.louishotelmanagement.view.DangNhapView;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.kordamp.bootstrapfx.BootstrapFX;
-
-import java.io.IOException;
 
 public class Starting extends Application {
     @Override
@@ -21,8 +21,10 @@ public class Starting extends Application {
             return;
         }
 
-        FXMLLoader fxmlLoader = new FXMLLoader(Starting.class.getResource("/com/example/louishotelmanagement/fxml/dang-nhap-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 400, 800);
+        DangNhapView dangNhapView = new DangNhapView();
+        new DangNhapController(dangNhapView);
+        Parent root = dangNhapView.getRoot();
+        Scene scene = new Scene(root, 400, 800);
         scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
         stage.setTitle("Đăng nhập - Hệ thống quản lý khách sạn Louis");
         stage.setScene(scene);
