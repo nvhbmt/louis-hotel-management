@@ -82,25 +82,25 @@ VALUES ('TK001', 'NV001', 'manager', '4XKzp/qajqT93GnwSpzI3k00cLhgU/fEFLw/RW1tsq
        ('TK005', 'NV005', 'longngo', 'j+NE/7ITxbv5hcu41ShyHze7rEOu+3rJVS/pCcDVyKs1xKlDgyPNxFmQhcC0iVZ3', 'Staff');
 INSERT INTO KhachHang (maKH, hoTen, soDT, email, diaChi, ngaySinh, ghiChu, CCCD, hangKhach, trangThai)
 VALUES ('KH001', N'Nguyễn Thanh Tùng', '0912345678', 'tung.nguyen@company.com', N'Hà Nội', '1995-02-15',
-        N'Khách doanh nghiệp, cần hóa đơn VAT', '012345678901', N'Khách doanh nghiệp', 'DANG_LUU_TRU'),
+        N'Khách doanh nghiệp, cần hóa đơn VAT', '012345678901', N'Khách doanh nghiệp', 'Check-out'), -- Hoàn thành booking PD001
        ('KH002', N'Trần Thị Mai Hương', '0987654321', 'huong.tran@email.com', N'TP.HCM', '1998-06-22',
-        N'Khách du lịch nước ngoài (đặt phòng VIP)', '012345678902', N'Khách VIP', 'DA_DAT'),
+        N'Khách du lịch nước ngoài (đặt phòng VIP)', '012345678902', N'Khách VIP', 'Check-out'), -- Hoàn thành booking PD002
        ('KH003', N'Lê Văn Chiến', '0934567890', 'chien.le@web.com', N'Đà Nẵng', '2000-09-10', N'Khách ở lần đầu',
-        '012345678903', N'Khách thường', 'CHECK_OUT'),
+        '012345678903', N'Khách thường', N'Đang lưu trú'), -- Đang sử dụng booking PD006 (ưu tiên active)
        ('KH004', N'Phạm Thị Yến', '0945678901', 'yen.pham@private.com', N'Hải Phòng', '1992-03-20',
-        N'Khách quen, thích phòng tầng cao', '012345678904', N'Khách quen', 'DANG_LUU_TRU'),
+        N'Khách quen, thích phòng tầng cao', '012345678904', N'Khách quen', N'Đang lưu trú'), -- Đang sử dụng booking PD007 (ưu tiên active)
        ('KH005', N'Hoàng Anh Dũng', '0956789012', 'dung.hoang@contact.com', N'Quảng Ninh', '1989-11-05',
-        N'Thanh toán bằng thẻ tín dụng', '012345678905', N'Khách VIP', 'DA_DAT'),
+        N'Thanh toán bằng thẻ tín dụng', '012345678905', N'Khách VIP', 'Check-out'), -- Hoàn thành booking PD005
        ('KH006', N'Ngô Minh Quân', '0962345678', 'quan.ngo@email.com', N'Cần Thơ', '1996-08-14',
-        N'Khách đặt qua ứng dụng', '012345678906', N'Khách thường', 'DANG_LUU_TRU'),
+        N'Khách đặt qua ứng dụng', '012345678906', N'Khách thường', N'Đang lưu trú'), -- Khách mới, chưa có booking
        ('KH007', N'Đặng Thảo Nhi', '0973456789', 'nhi.dang@company.com', N'Bình Dương', '1999-01-09',
-        N'Khách trẻ, hay đi công tác', '012345678907', N'Khách doanh nghiệp', 'CHECK_OUT'),
+        N'Khách trẻ, hay đi công tác', '012345678907', N'Khách doanh nghiệp', N'Đang lưu trú'), -- Khách mới, chưa có booking
        ('KH008', N'Tạ Đức Long', '0984567890', 'long.ta@hotel.com', N'Huế', '1993-12-30', N'Khách VIP lâu năm',
-        '012345678908', N'Khách VIP', 'DANG_LUU_TRU'),
+        '012345678908', N'Khách VIP', N'Đang lưu trú'), -- Khách tiềm năng, chưa có booking
        ('KH009', N'Vũ Quỳnh Anh', '0995678901', 'anh.vu@personal.com', N'Nha Trang', '1997-07-21',
-        N'Khách nữ thân thiết, đặt phòng view biển', '012345678909', N'Khách quen', 'DA_DAT'),
+        N'Khách nữ thân thiết, đặt phòng view biển', '012345678909', N'Khách quen', N'Đã Đặt'), -- Có thể đã đặt trước
        ('KH010', N'Trịnh Quốc Hưng', '0906789012', 'hung.trinh@email.com', N'Hà Nội', '1991-10-01',
-        N'Khách lâu năm, yêu cầu dịch vụ cao cấp', '012345678910', N'Khách VIP', 'CHECK_OUT');
+        N'Khách lâu năm, yêu cầu dịch vụ cao cấp', '012345678910', N'Khách VIP', N'Đang lưu trú'); -- Khách VIP tiềm năng
 GO
 
 -------------------------------------------------------------------
@@ -264,9 +264,6 @@ GO
 -- 12. CTHoaDonDichVu (Chi tiết hóa đơn dịch vụ)
 -------------------------------------------------------------------
 PRINT N'-- 12. Đang thêm dữ liệu bảng CTHoaDonDichVu (Sửa đơn giá)...';
--- XÓA DỮ LIỆU CŨ CỦA CTHoaDonDichVu (Nếu bạn chạy script nhiều lần)
-DELETE FROM CTHoaDonDichVu WHERE maHD IN ('HD001', 'HD002', 'HD003');
-
 INSERT INTO CTHoaDonDichVu (maHD, maPhieuDV, maDV, soLuong, donGia)
 VALUES
 -- HD001 (DV001: Giặt ủi 60k; DV002: Đưa đón 350k) -> Tổng 2*(60k) + 350k = 470k
