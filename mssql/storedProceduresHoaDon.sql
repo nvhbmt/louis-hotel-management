@@ -9,7 +9,7 @@ CREATE PROCEDURE sp_ThemHoaDon
     @tongTien DECIMAL(18,2),
     @maKH NVARCHAR(10),
     @maNV NVARCHAR(10),
-    @maGG NVARCHAR(10) = NULL,
+    @maKM NVARCHAR(10) = NULL,
     @trangThai NVARCHAR(50),
     @ngayCheckOut DATE = NULL,
     -- Các trường dưới đây sẽ tự động bằng 0 nếu Java không truyền vào
@@ -26,13 +26,13 @@ BEGIN
         maHD, ngayLap, phuongThuc, trangThai, tongTien,
         PhatNhanPhongTre, PhatTraPhongSom, PhatTraPhongTre,
         GiamGiaMaGG, GiamGiaHangKH, TongVAT, NgayCheckOut,
-        maKH, maNV, maGG
+        maKH, maNV, maKM
     )
     VALUES (
                @maHD, @ngayLap, @phuongThuc, @trangThai, @tongTien,
                @phatNhanTre, @phatTraSom, @phatTraTre,
                @giamGiaMaGG, @giamGiaHangKH, @tongVAT, @ngayCheckOut,
-               @maKH, @maNV, @maGG
+               @maKH, @maNV, @maKM
            );
 END;
 GO
@@ -45,7 +45,7 @@ CREATE PROCEDURE sp_SuaHoaDon
     @tongTien DECIMAL(18,2),
     @maKH NVARCHAR(10),
     @maNV NVARCHAR(10),
-    @maGG NVARCHAR(10),
+    @maKM NVARCHAR(10),
     @trangThai NVARCHAR(50),
     @ngayCheckOut DATE,
     @phatNhanTre DECIMAL(18,2),
@@ -62,7 +62,7 @@ BEGIN
         tongTien = @tongTien,
         maKH = @maKH,
         maNV = @maNV,
-        maGG = @maGG,
+        maKM = @maKM,
         trangThai = @trangThai,
         NgayCheckOut = @ngayCheckOut,
         PhatNhanPhongTre = @phatNhanTre,

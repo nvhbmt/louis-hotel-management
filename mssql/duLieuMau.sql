@@ -107,7 +107,7 @@ GO
 -- 6. KhuyenMai (Mã giảm giá)
 -------------------------------------------------------------------
 PRINT N'-- 6. Đang thêm dữ liệu bảng KhuyenMai...';
-INSERT INTO KhuyenMai (maGG, code, giamGia, kieuGiamGia, ngayBatDau, ngayKetThuc, tongTienToiThieu, moTa, trangThai, maNV)
+INSERT INTO KhuyenMai (maKM, code, giamGia, kieuGiamGia, ngayBatDau, ngayKetThuc, tongTienToiThieu, moTa, trangThai, maNV)
 VALUES
     -- GG001: Khuyến mãi cả năm (Active)
     -- Giảm 10% (PERCENT)
@@ -178,7 +178,7 @@ INSERT INTO HoaDon
     maHD, ngayLap, phuongThuc, trangThai, tongTien,
     PhatNhanPhongTre, PhatTraPhongSom, PhatTraPhongTre,
     GiamGiaMaGG, GiamGiaHangKH,
-    TongVAT, NgayCheckOut, maKH, maNV, maGG
+    TongVAT, NgayCheckOut, maKH, maNV, maKM
 )
 VALUES
 -- HD001: Giảm giá 10% qua mã GG001 (307k), không phạt

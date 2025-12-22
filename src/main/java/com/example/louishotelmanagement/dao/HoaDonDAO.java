@@ -49,7 +49,7 @@ public class HoaDonDAO {
         hd.setTongTien(rs.getBigDecimal("tongTien"));
         hd.setMaKH(rs.getString("maKH"));
         hd.setMaNV(rs.getString("maNV"));
-        hd.setMaGG(rs.getString("maGG"));
+        hd.setMaKM(rs.getString("maKM"));
         hd.setTrangThai(TrangThaiHoaDon.fromString(rs.getString("trangThai")));
 
         // Đọc các trường ngày tháng thực tế
@@ -95,7 +95,7 @@ public class HoaDonDAO {
         hd.setTongTien(rs.getBigDecimal("tongTien"));
         hd.setMaKH(rs.getString("maKH"));
         hd.setMaNV(rs.getString("maNV"));
-        hd.setMaGG(rs.getString("maGG"));
+        hd.setMaKM(rs.getString("maKM"));
         hd.setTrangThai(TrangThaiHoaDon.fromString(rs.getString("trangThai")));
         Date checkOut = rs.getDate("ngayCheckOut");
         if (checkOut != null) hd.setNgayCheckOut(checkOut.toLocalDate());
@@ -148,7 +148,7 @@ public class HoaDonDAO {
             cs.setBigDecimal(4, hd.getTongTien());
             cs.setString(5, hd.getMaKH());
             cs.setString(6, hd.getMaNV());
-            cs.setString(7, hd.getMaGG());
+            cs.setString(7, hd.getMaKM());
             cs.setString(8, hd.getTrangThai() != null ? hd.getTrangThai().toString() : null);
             cs.setDate(9, hd.getNgayCheckOut() != null ? Date.valueOf(hd.getNgayCheckOut()) : null);
 
@@ -180,7 +180,7 @@ public class HoaDonDAO {
             cs.setBigDecimal(4, hd.getTongTien());
             cs.setString(5, hd.getMaKH());
             cs.setString(6, hd.getMaNV());
-            cs.setString(7, hd.getMaGG());
+            cs.setString(7, hd.getMaKM());
             cs.setString(8, hd.getTrangThai() != null ? hd.getTrangThai().toString() : "Chưa thanh toán");
             cs.setDate(9, hd.getNgayCheckOut() != null ? Date.valueOf(hd.getNgayCheckOut()) : null);
 

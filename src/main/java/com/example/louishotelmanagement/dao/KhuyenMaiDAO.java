@@ -38,7 +38,7 @@ public class KhuyenMaiDAO {
 
             while (rs.next()) {
                 KhuyenMai khuyenMai = new KhuyenMai(
-                        rs.getString("maGG"),
+                        rs.getString("maKM"),
                         rs.getString("code"),
                         rs.getDouble("giamGia"),
                         KieuGiamGia.fromString(rs.getString("kieuGiamGia")),
@@ -65,7 +65,7 @@ public class KhuyenMaiDAO {
 
             while (rs.next()) {
                 KhuyenMai khuyenMai = new KhuyenMai(
-                        rs.getString("maGG"),
+                        rs.getString("maKM"),
                         rs.getString("code"),
                         rs.getDouble("giamGia"),
                         KieuGiamGia.fromString(rs.getString("kieuGiamGia")),
@@ -102,25 +102,25 @@ public class KhuyenMaiDAO {
     }
 
     // Xóa mã giảm giá
-    public boolean xoaKhuyenMai(String maGG) throws SQLException {
+    public boolean xoaKhuyenMai(String maKM) throws SQLException {
         String sql = "{call sp_XoaKhuyenMai(?)}";
         try (Connection con = CauHinhDatabase.getConnection();
              CallableStatement cs = con.prepareCall(sql)) {
 
-            cs.setString(1, maGG);
+            cs.setString(1, maKM);
             return cs.executeUpdate() > 0;
         }
     }
     //laykm
-    public KhuyenMai layKhuyenMaiTheoMa(String maGG) throws SQLException {
+    public KhuyenMai layKhuyenMaiTheoMa(String maKM) throws SQLException {
         String sql = "{call sp_LayKhuyenMaiTheoMa(?)}";
         try (Connection con = CauHinhDatabase.getConnection();
                 CallableStatement cs = con.prepareCall(sql)) {
 
-            cs.setString(1, maGG);
+            cs.setString(1, maKM);
             try (ResultSet rs = cs.executeQuery()) {
                 if (rs.next()) {
-                    return new KhuyenMai(rs.getString("maGG"), rs.getString("code"),
+                    return new KhuyenMai(rs.getString("maKM"), rs.getString("code"),
                             rs.getDouble("giamGia"),
                             KieuGiamGia.fromString(rs.getString("kieuGiamGia")),
                             rs.getDate("ngayBatDau").toLocalDate(),
@@ -139,7 +139,7 @@ public class KhuyenMaiDAO {
                 CallableStatement cs = con.prepareCall(sql)) {
             try (ResultSet rs = cs.executeQuery()) {
                 if (rs.next()) {
-                    return rs.getString("maGG");
+                    return rs.getString("maKM");
                 }
             }
         }

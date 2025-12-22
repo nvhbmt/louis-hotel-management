@@ -92,10 +92,10 @@ CREATE TABLE DichVu
     conKinhDoanh BIT
 );
 GO
--- Bảng mã giảm giá
+-- Bảng mã khuyến mãi
 CREATE TABLE KhuyenMai
 (
-    maGG             nvarchar(10) PRIMARY KEY,
+    maKM             nvarchar(10) PRIMARY KEY,
     code             NVARCHAR(50) UNIQUE NOT NULL,
     giamGia          DECIMAL(18, 2)      NOT NULL,
     kieuGiamGia      NVARCHAR(10) CHECK (kieuGiamGia IN ('PERCENT', 'AMOUNT')) DEFAULT 'PERCENT',
@@ -123,21 +123,15 @@ GO
 CREATE TABLE HoaDon
 (
     maHD             NVARCHAR(10) PRIMARY KEY,
-
     ngayLap          DATE,
     phuongThuc       NVARCHAR(50),
-
-    trangThai        NVARCHAR(50)
-        CHECK (trangThai IN (N'Chưa thanh toán', N'Đã thanh toán')),
-
+    trangThai        NVARCHAR(50)  CHECK (trangThai IN (N'Chưa thanh toán', N'Đã thanh toán')),
     -- ========= TIỀN PHÒNG + TỔNG =========
     tongTien         DECIMAL(18, 2),                -- Tổng tiền cuối cùng phải thanh toán
-
     -- ========= PHÍ / PHẠT =========
     PhatNhanPhongTre DECIMAL(18, 2) NULL DEFAULT 0, -- Nhận phòng trễ
     PhatTraPhongSom  DECIMAL(18, 2) NULL DEFAULT 0, -- Trả phòng sớm
     PhatTraPhongTre  DECIMAL(18, 2) NULL DEFAULT 0, -- Trả phòng trễ
-
     -- ========= GIẢM GIÁ =========
     GiamGiaMaGG      DECIMAL(18, 2) NULL DEFAULT 0, -- Giảm theo mã GG
     GiamGiaHangKH    DECIMAL(18, 2) NULL DEFAULT 0, -- Giảm theo hạng KH
@@ -149,11 +143,11 @@ CREATE TABLE HoaDon
     -- ========= KHÓA NGOẠI =========
     maKH             NVARCHAR(10),
     maNV             NVARCHAR(10),
-    maGG             NVARCHAR(10)   NULL,
+    maKM             NVARCHAR(10)   NULL,
 
     FOREIGN KEY (maKH) REFERENCES KhachHang (maKH),
     FOREIGN KEY (maNV) REFERENCES NhanVien (maNV),
-    FOREIGN KEY (maGG) REFERENCES KhuyenMai (maGG)
+    FOREIGN KEY (maKM) REFERENCES KhuyenMai (maKM)
 );
 GO
 

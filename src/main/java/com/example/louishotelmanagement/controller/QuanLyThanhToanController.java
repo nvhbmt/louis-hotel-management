@@ -90,7 +90,7 @@ public class QuanLyThanhToanController implements Refreshable {
         colTongTien.setCellValueFactory(new PropertyValueFactory<>("tongTien"));
 
         colMaKhuyenMai.setCellValueFactory(data -> {
-            String maKM = data.getValue().getMaGG();
+            String maKM = data.getValue().getMaKM();
             if (maKM == null || maKM.isEmpty()) return new SimpleStringProperty("");
             try {
                 KhuyenMaiDAO khuyenMaiDAO = new KhuyenMaiDAO();
@@ -321,7 +321,7 @@ public class QuanLyThanhToanController implements Refreshable {
         lblCheckout.setText(String.format("%,.0f ₫", revenueToday.doubleValue()));
 
         long KhuyenMaicount = visible.stream()
-                .filter(hd -> hd.getMaGG() != null)
+                .filter(hd -> hd.getMaKM() != null)
                 .count();
         lblKhuyenMai.setText(String.valueOf(KhuyenMaicount));
     }
