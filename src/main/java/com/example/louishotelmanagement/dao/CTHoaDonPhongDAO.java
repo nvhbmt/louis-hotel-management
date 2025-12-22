@@ -44,7 +44,7 @@ public class CTHoaDonPhongDAO {
     // ==================================================
     public ArrayList<CTHoaDonPhong> getCTHoaDonPhongTheoMaPhieu(String maPhieu) throws SQLException {
         ArrayList<CTHoaDonPhong> list = new ArrayList<>();
-        String sql = "{CALL SP_SelectCTHoaDonPhongByMaPhieu(?)}";
+        String sql = "{CALL sp_layCTHoaDonPhongByMaPhieu(?)}";
 
         try (Connection conn = CauHinhDatabase.getConnection();
              CallableStatement cs = conn.prepareCall(sql)) {
