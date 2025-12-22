@@ -118,6 +118,8 @@ public class DatPhongController implements Initializable, Refreshable {
             dsKhachHang.getItems().add(khachHang.getHoTen());
             dsMaKH.add(khachHang.getMaKH());
         }
+
+        com.example.louishotelmanagement.util.SearchBoxUtil.makeSearchable(dsKhachHang);
     }
 
     private void khoiTaoDinhDangNgay() {
