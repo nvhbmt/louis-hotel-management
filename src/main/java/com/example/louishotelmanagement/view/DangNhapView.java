@@ -1,6 +1,5 @@
 package com.example.louishotelmanagement.view;
 
-import com.example.louishotelmanagement.controller.DangNhapController;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -140,7 +139,7 @@ public class DangNhapView {
         BorderPane.setAlignment(footerVBox, Pos.CENTER);
         this.root = mainBorderPane;
 
-        new DangNhapController(this);
+        new com.example.louishotelmanagement.controller.DangNhapController(this);
     }
 
     public Parent getRoot() {

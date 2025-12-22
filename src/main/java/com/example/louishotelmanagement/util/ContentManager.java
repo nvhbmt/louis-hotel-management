@@ -60,9 +60,21 @@ public class ContentManager {
     }
     
     /**
+     * Setup Parent object đã được load sẵn với ContentSwitcher
+     */
+    public static void setupParent(Parent root, ContentSwitcher switcher) {
+        // Tìm controller từ Parent (nếu có)
+        // Note: JavaFX Parent không có method getController() trực tiếp
+        // Chúng ta có thể cần một cách khác để associate controller với Parent
+
+        // Hiện tại, vì chúng ta đã có controller từ loadFXMLToParent(),
+        // method này có thể không cần thiết. Logic setup đã được xử lý ở đó.
+    }
+
+    /**
      * Cập nhật ContentSwitcher cho controller
      */
-    private static void updateControllerSwitcher(Object controller, ContentSwitcher switcher) {
+    public static void updateControllerSwitcher(Object controller, ContentSwitcher switcher) {
         if (controller instanceof PhongController) {
             ((PhongController) controller).setContentSwitcher(switcher);
         }

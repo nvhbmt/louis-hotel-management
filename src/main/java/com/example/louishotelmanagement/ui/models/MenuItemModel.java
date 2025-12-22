@@ -1,47 +1,48 @@
 package com.example.louishotelmanagement.ui.models;
 
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import org.kordamp.ikonli.javafx.FontIcon;
 
 /**
  * Model đại diện cho 1 item trong menu
- * Hỗ trợ hiển thị icon (ảnh hoặc text) và mở file FXML tương ứng.
+ * Hỗ trợ hiển thị icon (ảnh hoặc text) và lưu trữ Parent component.
  */
 public class MenuItemModel {
     private final String title;      // Tên hiển thị
     private final String iconText;   // Icon dạng text hoặc emoji (tùy chọn)
     private final String iconPath;   // Đường dẫn ảnh icon (tùy chọn)
-    private final String fxmlPath;   // Đường dẫn tới file FXML
+    private final Parent root;       // Parent component của menu item
 
     /**
      * Constructor cơ bản (dùng icon text)
      */
-    public MenuItemModel(String title, String iconText, String fxmlPath) {
-        this(title, iconText, null, fxmlPath, false);
+    public MenuItemModel(String title, String iconText, Parent root) {
+        this(title, iconText, null, root);
     }
 
     /**
      * Constructor cho icon dạng ảnh
      */
-    public MenuItemModel(String title, String iconPath, String fxmlPath, boolean isImageIcon) {
-        this(title, null, iconPath, fxmlPath, false);
+    public MenuItemModel(String title, String iconPath, Parent root, boolean isImageIcon) {
+        this(title, null, iconPath, root);
     }
 
     /**
      * Constructor đầy đủ
      */
-    public MenuItemModel(String title, String iconText, String iconPath, String fxmlPath, boolean _isParent) {
+    public MenuItemModel(String title, String iconText, String iconPath, Parent root) {
         this.title = title;
         this.iconText = iconText;
         this.iconPath = iconPath;
-        this.fxmlPath = fxmlPath;
+        this.root = root;
     }
 
     // Getter
     public String getTitle() { return title; }
-    public String getFxmlPath() { return fxmlPath; }
+    public Parent getRoot() { return root; }
 
     public Node getIconNode() {
         if (iconPath != null) {
