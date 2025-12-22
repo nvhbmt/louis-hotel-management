@@ -169,7 +169,6 @@
                         <TableColumn fx:id="colTrangThai" prefWidth="100.0" text="Trạng thái"/>
                         <TableColumn fx:id="colMoTa" minWidth="0.0" prefWidth="280.0" text="Mô tả"/>
                         <TableColumn fx:id="colThaoTac" prefWidth="90.0" text="Thao tác"/>
-                        <TableColumn fx:id="colDaChon" prefWidth="90.0" text="Đã chọn"/>
                     </columns>
                     <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>

@@ -425,23 +425,32 @@ CREATE PROCEDURE sp_LayDSPhongTrongTheoKhoangThoiGian @ngayDen DATE,
                                                       @ngayDi DATE
 AS
 BEGIN
-    SELECT p.maPhong,
-           p.Tang,
-           lp.maLoaiPhong,
-           lp.TenLoai,
-           lp.DonGia,
-           COALESCE(pdp.TrangThai, 'TRONG') AS TrangThai
+    SELECT
+        p.MaPhong,
+        p.Tang,
+        lp.MaLoaiPhong,
+        lp.TenLoai,
+        lp.DonGia,
+        COALESCE(x.TrangThai, N'TRỐNG') AS TrangThai
     FROM Phong p
-             JOIN LoaiPhong lp
-                  ON p.maLoaiPhong = lp.maLoaiPhong
-             LEFT JOIN CTHoaDonPhong ct
-                       ON p.maPhong = ct.maPhong
-             LEFT JOIN PhieuDatPhong pdp
-                       ON ct.MaPhieu = pdp.MaPhieu
-                           AND pdp.TrangThai IN ('DA_DAT', 'DANG_SU_DUNG')
-                           AND @ngayDen <= ct.NgayDi
-                           AND @ngayDi >= ct.NgayDen
-    WHERE p.TrangThai != 'BAO_TRI';
+    JOIN LoaiPhong lp
+        ON p.MaLoaiPhong = lp.MaLoaiPhong
+    OUTER APPLY (
+        SELECT TOP 1 pdp.TrangThai
+        FROM CTHoaDonPhong ct
+        JOIN PhieuDatPhong pdp
+            ON ct.MaPhieu = pdp.MaPhieu
+        WHERE ct.MaPhong = p.MaPhong
+        AND pdp.TrangThai IN (N'Đang sử dụng', N'Đã Đặt')
+         AND @ngayDen <= ct.NgayDi
+        AND @ngayDi >= ct.NgayDen
+        ORDER BY
+            CASE pdp.TrangThai
+                WHEN N'Đang sử dụng' THEN 1
+                WHEN N'Đã Đặt' THEN 2
+            END
+    ) x
+    WHERE p.TrangThai != N'Bảo trì';
 END
 GO
 
@@ -459,7 +468,7 @@ BEGIN
     FROM CTHoaDonPhong ct
              JOIN PhieuDatPhong pdp ON ct.MaPhieu = pdp.MaPhieu
     WHERE ct.MaPhong = @maPhong
-      AND (pdp.TrangThai = 'DA_DAT' OR pdp.TrangThai = 'DANG_SU_DUNG')
+      AND (pdp.TrangThai = 'Đã đặt' OR pdp.TrangThai = N'Đang sử dụng')
       AND (
         (@ngayDen <= ct.NgayDi) OR (@ngayDi >= ct.NgayDen)
         )
