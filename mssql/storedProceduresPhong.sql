@@ -461,7 +461,7 @@ BEGIN
     WHERE ct.MaPhong = @maPhong
       AND (pdp.TrangThai = 'DA_DAT' OR pdp.TrangThai = 'DANG_SU_DUNG')
       AND (
-        (@ngayDen <= ct.NgayDi) AND (@ngayDi >= ct.NgayDen)
+        (@ngayDen <= ct.NgayDi) OR (@ngayDi >= ct.NgayDen)
         )
       AND ct.daXoaLuc IS NULL
       AND pdp.daXoaLuc IS NULL;
