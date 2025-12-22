@@ -8,6 +8,7 @@ import com.example.louishotelmanagement.ui.components.Badge;
 import com.example.louishotelmanagement.ui.models.BadgeVariant;
 import com.example.louishotelmanagement.util.ContentSwitcher;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
+import com.example.louishotelmanagement.view.QuanLyHoaDonView;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -396,8 +397,9 @@ public class PhongController {
     }
 
     public void moThanhToan(ActionEvent actionEvent) {
+        QuanLyHoaDonView quanLyHoaDonView = QuanLyHoaDonView.getInstance();
         if (switcher != null)
-            switcher.switchContent("/com/example/louishotelmanagement/fxml/quan-ly-hoa-don-view.fxml");
+            switcher.switchContent(quanLyHoaDonView.getRoot());
     }
 
     public void moHuy(ActionEvent actionEvent) { // Nút Trả phòng

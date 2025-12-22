@@ -3,6 +3,7 @@ package com.example.louishotelmanagement.view;
 
 import com.example.louishotelmanagement.controller.LayoutController;
 import com.example.louishotelmanagement.util.ContentSwitcher;
+import com.example.louishotelmanagement.view.QuanLyDichVuView;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -236,7 +237,7 @@ public class TrangChuView {
     }
 
     private void moQuanLyPhong(ActionEvent e) {
-        switcher.switchContent("/com/example/louishotelmanagement/fxml/quan-ly-phong-view.fxml");
+        switcher.switchContent(new QuanLyPhongView().getRoot());
     }
 
     private void moQuanLyKhachHang(ActionEvent e) {
@@ -244,7 +245,8 @@ public class TrangChuView {
     }
 
     private void moQuanLyDichVu(ActionEvent e) {
-        switcher.switchContent("/com/example/louishotelmanagement/fxml/quan-ly-dich-vu-view.fxml");
+        QuanLyDichVuView quanLyDichVuView = QuanLyDichVuView.getInstance();
+        switcher.switchContent(quanLyDichVuView.getRoot());
     }
 
     private void moThongKe(ActionEvent e) {

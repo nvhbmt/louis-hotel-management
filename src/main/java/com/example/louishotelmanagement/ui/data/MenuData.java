@@ -1,9 +1,17 @@
 package com.example.louishotelmanagement.ui.data;
 
 import com.example.louishotelmanagement.controller.PhongController;
+import com.example.louishotelmanagement.controller.QuanLyDichVuController;
+import com.example.louishotelmanagement.controller.QuanLyHoaDonController;
+import com.example.louishotelmanagement.controller.QuanLyLoaiPhongController;
+import com.example.louishotelmanagement.controller.QuanLyPhongController;
 import com.example.louishotelmanagement.service.AuthService;
 import com.example.louishotelmanagement.ui.models.MenuItemModel;
 import com.example.louishotelmanagement.view.PhongView;
+import com.example.louishotelmanagement.view.QuanLyDichVuView;
+import com.example.louishotelmanagement.view.QuanLyHoaDonView;
+import com.example.louishotelmanagement.view.QuanLyLoaiPhongView;
+import com.example.louishotelmanagement.view.QuanLyPhongView;
 import com.example.louishotelmanagement.view.TrangChuView;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -52,9 +60,9 @@ public class MenuData {
         if ("Manager".equals(userRole)) {
                 phongGroup.getChildren().addAll(List.of(
                         new TreeItem<>(new MenuItemModel("Quản lý phòng", "mdi2b-bed",
-                                loadFxml("/com/example/louishotelmanagement/fxml/quan-ly-phong-view.fxml"))),
+                                new QuanLyPhongView().getRoot())),
                         new TreeItem<>(new MenuItemModel("Loại phòng", "mdi2t-tag",
-                                loadFxml("/com/example/louishotelmanagement/fxml/quan-ly-loai-phong-view.fxml")))
+                                QuanLyLoaiPhongView.getInstance().getRoot()))
                 ));
             }
         TreeItem<MenuItemModel> PhieuDatPhongGroup = new TreeItem<>(
@@ -69,9 +77,12 @@ public class MenuData {
         ));
 
         if ("Manager".equals(userRole)) {
+            // Get QuanLyDichVuView instance
+            QuanLyDichVuView quanLyDichVuView = QuanLyDichVuView.getInstance();
+                
             dichVuGroup.getChildren().addAll(List.of(
                 new TreeItem<>(new MenuItemModel("Quản lý dịch vụ", "mdi2c-coffee",
-                        loadFxml("/com/example/louishotelmanagement/fxml/quan-ly-dich-vu-view.fxml")))
+                        quanLyDichVuView.getRoot()))
             ));
         }
 
@@ -80,7 +91,7 @@ public class MenuData {
         );
 
         TreeItem<MenuItemModel> hoaDonGroup = new TreeItem<>(
-                new MenuItemModel("Hóa đơn", "mdi2c-cash-multiple", loadFxml("/com/example/louishotelmanagement/fxml/quan-ly-hoa-don-view.fxml"))
+                new MenuItemModel("Hóa đơn", "mdi2c-cash-multiple", QuanLyHoaDonView.getInstance().getRoot())
         );
 
 //        if ("Manager".equals(userRole)) {

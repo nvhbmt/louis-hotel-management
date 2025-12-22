@@ -158,13 +158,9 @@ public class LoaiPhongDialogController{
 
     public void setLoaiPhong(LoaiPhong loaiPhong) {
         if (loaiPhong == null) return;
-
-        // Set values
-        maLoaiPhongField.valueProperty().set(loaiPhong.getMaLoaiPhong());
-        maLoaiPhongField.editable(false);
-        tenLoaiField.valueProperty().set(loaiPhong.getTenLoai());
-        donGiaField.valueProperty().set(loaiPhong.getDonGia());
-        moTaField.valueProperty().set(loaiPhong.getMoTa());
+        formContainer.getChildren().clear();
+        taoForm(loaiPhong.getMaLoaiPhong(), loaiPhong.getTenLoai(), loaiPhong.getDonGia(), loaiPhong.getMoTa());
+        hienThiForm();
     }
 
     @FXML

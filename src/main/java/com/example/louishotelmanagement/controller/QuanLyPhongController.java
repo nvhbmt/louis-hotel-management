@@ -1,5 +1,7 @@
 package com.example.louishotelmanagement.controller;
 
+import java.sql.SQLException;
+import java.util.List;
 import com.example.louishotelmanagement.dao.LoaiPhongDAO;
 import com.example.louishotelmanagement.dao.PhongDAO;
 import com.example.louishotelmanagement.model.LoaiPhong;
@@ -11,30 +13,32 @@ import com.example.louishotelmanagement.ui.models.BadgeVariant;
 import com.example.louishotelmanagement.ui.models.ButtonVariant;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
 import com.example.louishotelmanagement.view.PhongFormDialogView;
+import com.example.louishotelmanagement.view.QuanLyPhongView;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.io.IOException;
-import java.net.URL;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
-
-public class QuanLyPhongController implements Initializable {
+public class QuanLyPhongController  {
     @FXML
     public Label lblsoPhongTrong;
     @FXML
@@ -48,7 +52,7 @@ public class QuanLyPhongController implements Initializable {
     @FXML
     private TextField txtTimKiem;
     @FXML
-    private ComboBox<Integer> cbTang;
+    private ComboBox<String> cbTang;
     @FXML
     private ComboBox<String> cbTrangThai;
     @FXML
@@ -73,9 +77,28 @@ public class QuanLyPhongController implements Initializable {
     private LoaiPhongDAO loaiPhongDAO;
     private ObservableList<Phong> danhSachPhong;
     private ObservableList<Phong> danhSachPhongFiltered;
+    private FilteredList<Phong> filteredPhongList;
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    public QuanLyPhongController(QuanLyPhongView view) {
+        this.lblsoPhongTrong = view.getLblsoPhongTrong();
+        this.lblSoPhongTrong = view.getLblSoPhongTrong();
+        this.lblSoPhongSuDung = view.getLblSoPhongSuDung();
+        this.lblSoPhongBaoTri = view.getLblSoPhongBaoTri();
+        this.cbTrangThai = view.getCbTrangThai();
+        this.cbTang = view.getCbTang();
+        this.cbLocLoaiPhong = view.getCbLocLoaiPhong();
+        this.txtTimKiem = view.getTxtTimKiem();
+        this.tableViewPhong = view.getTableViewPhong();
+        this.colMaPhong = view.getColMaPhong();
+        this.colTenLoaiPhong = view.getColTenLoaiPhong();
+        this.colTang = view.getColTang();
+        this.colTrangThai = view.getColTrangThai();
+        this.colMoTa = view.getColMoTa();
+        this.colThaoTac = view.getColThaoTac();
+        initialize();
+      }
+
+    public void initialize() {
         try {
             phongDAO = new PhongDAO();
             loaiPhongDAO = new LoaiPhongDAO();
@@ -108,6 +131,7 @@ public class QuanLyPhongController implements Initializable {
     private void khoiTaoDuLieu() {
         danhSachPhong = FXCollections.observableArrayList();
         danhSachPhongFiltered = FXCollections.observableArrayList();
+        filteredPhongList = new FilteredList<>(danhSachPhong, p -> true);
     }
 
     private void khoiTaoTableView() {
@@ -184,8 +208,8 @@ public class QuanLyPhongController implements Initializable {
 
         colThaoTac.setCellValueFactory(_ -> new ReadOnlyObjectWrapper<>(null));
 
-        // Thiết lập TableView
-        tableViewPhong.setItems(danhSachPhongFiltered);
+        // Thiết lập TableView với FilteredList
+        tableViewPhong.setItems(filteredPhongList);
 
         // Cho phép chọn nhiều dòng
         tableViewPhong.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
@@ -193,43 +217,29 @@ public class QuanLyPhongController implements Initializable {
 
     private void khoiTaoComboBox() {
         // Khởi tạo ComboBox tầng
-        List<Integer> danhSachTang = new ArrayList<>();
-        for (int i = 1; i <= 10; i++) {
-            danhSachTang.add(i);
-        }
-        cbTang.setItems(FXCollections.observableArrayList(danhSachTang));
-        cbTang.setButtonCell(new ListCell<>() {
-            @Override
-            protected void updateItem(Integer item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText("Chọn tầng");
-                } else {
-                    setText("Tầng " + item);
-                }
-            }
-        });
-        cbTang.setCellFactory(_ -> new ListCell<>() {
-            @Override
-            protected void updateItem(Integer item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText("Chọn tầng");
-                } else {
-                    setText("Tầng " + item);
-                }
-            }
-        });
+        ObservableList<String> danhSachTang = FXCollections.observableArrayList();
+        danhSachTang.add("Tất cả các tầng");
+        for (int i = 1; i <= 4; i++) danhSachTang.add("Tầng " + i);
+        cbTang.setItems(danhSachTang);
+        cbTang.setValue("Tất cả các tầng");
 
-        // Khởi tạo ComboBox trạng thái với các trạng thái phù hợp
-        List<String> danhSachTrangThai = List.of("Trống", "Đã đặt", "Đang sử dụng", "Bảo trì");
-        cbTrangThai.setItems(FXCollections.observableArrayList(danhSachTrangThai));
+        ObservableList<String> danhSachTrangThai = FXCollections.observableArrayList(
+            "Tất cả trạng thái",
+            TrangThaiPhong.TRONG.toString(),
+            TrangThaiPhong.DANG_SU_DUNG.toString(),
+            TrangThaiPhong.DA_DAT.toString(),
+            TrangThaiPhong.BAO_TRI.toString()
+        );
+        cbTrangThai.setItems(danhSachTrangThai);
+        cbTrangThai.setValue("Tất cả trạng thái");
+
+        cbLocLoaiPhong.setValue(null);
         cbTrangThai.setButtonCell(new ListCell<>() {
             @Override
             protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty || item == null) {
-                    setText("Chọn trạng thái");
+                    cbTrangThai.setValue("Tất cả trạng thái");
                 } else {
                     setText(item);
                 }
@@ -249,6 +259,40 @@ public class QuanLyPhongController implements Initializable {
 
         // Khởi tạo ComboBox loại phòng để filter
         khoiTaoComboBoxLoaiPhong();
+
+        // Thiết lập reactive filtering
+        cauHinhLoc();
+    }
+
+    private void cauHinhLoc() {
+        filteredPhongList.predicateProperty().bind(Bindings.createObjectBinding(() -> {
+            String trangThaiDaChon = cbTrangThai.getValue();
+            String timKiemText = txtTimKiem.getText();
+            String tangDaChon = cbTang.getValue();
+            LoaiPhong loaiPhongDaChon = cbLocLoaiPhong.getValue();
+
+            return phong -> {
+                // Filter theo tìm kiếm
+                boolean timKiemMatch = timKiemText == null || timKiemText.trim().isEmpty() ||
+                        phong.getMaPhong().toLowerCase().contains(timKiemText.toLowerCase()) ||
+                        (phong.getTang() != null && phong.getTang().toString().contains(timKiemText));
+
+                // Filter theo tầng
+                boolean tangMatch = (tangDaChon == null || tangDaChon.equals("Tất cả các tầng")) ||
+                (phong.getTang() != null && phong.getTang() == Integer.parseInt(tangDaChon.split("\\s+")[1]));
+
+                // Filter theo trạng thái
+                boolean trangThaiMatch = (trangThaiDaChon == null || trangThaiDaChon.equals("Tất cả trạng thái")) ||
+                        trangThaiMatchesFilter(phong.getTrangThai(), trangThaiDaChon);
+
+                // Filter theo loại phòng
+                boolean loaiPhongMatch = (loaiPhongDaChon == null) ||
+                        (phong.getLoaiPhong() != null &&
+                                phong.getLoaiPhong().getMaLoaiPhong().equals(loaiPhongDaChon.getMaLoaiPhong()));
+
+                return timKiemMatch && tangMatch && trangThaiMatch && loaiPhongMatch;
+            };
+        }, cbTang.valueProperty(), cbTrangThai.valueProperty(), txtTimKiem.textProperty(), cbLocLoaiPhong.valueProperty()));
     }
 
     private void khoiTaoComboBoxLoaiPhong() {
@@ -296,54 +340,26 @@ public class QuanLyPhongController implements Initializable {
             danhSachPhong.addAll(dsPhong);
             capNhatThongKe();
 
-            // Áp dụng filter hiện tại
-            apDungFilter();
+            // FilteredList will automatically apply filters
         } catch (SQLException e) {
             ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể tải dữ liệu phòng: " + e.getMessage());
         }
     }
 
-    private void apDungFilter() {
-        danhSachPhongFiltered.clear();
 
-        List<Phong> filtered = danhSachPhong.stream()
-                .filter(phong -> {
-                    // Filter theo tìm kiếm
-                    String timKiem = txtTimKiem.getText().toLowerCase();
-                    if (!timKiem.isEmpty()) {
-                        boolean matchMaPhong = phong.getMaPhong().toLowerCase().contains(timKiem);
-                        boolean matchTang = phong.getTang() != null &&
-                                phong.getTang().toString().contains(timKiem);
-                        if (!matchMaPhong && !matchTang) {
-                            return false;
-                        }
-                    }
+    /**
+     * Helper method to check if a room status matches the filter string
+     */
+    private boolean trangThaiMatchesFilter(TrangThaiPhong trangThai, String filterString) {
+        if (trangThai == null || filterString == null) {
+            return false;
+        }
 
-                    // Filter theo tầng
-                    Integer tangFilter = cbTang.getValue();
-                    if (tangFilter != null && (phong.getTang() == null || !phong.getTang().equals(tangFilter))) {
-                        return false;
-                    }
-
-                    // Filter theo trạng thái
-                    String trangThaiFilter = cbTrangThai.getValue();
-                    if (trangThaiFilter != null && (phong.getTrangThai() == null ||
-                            !phong.getTrangThai().toString().equalsIgnoreCase(trangThaiFilter))) {
-                        return false;
-                    }
-
-                    // Filter theo loại phòng
-                    LoaiPhong loaiPhongFilter = cbLocLoaiPhong.getValue();
-                    return loaiPhongFilter == null || (phong.getLoaiPhong() != null &&
-                            phong.getLoaiPhong().getMaLoaiPhong().equals(loaiPhongFilter.getMaLoaiPhong()));
-                })
-                .toList();
-
-        danhSachPhongFiltered.addAll(filtered);
+        return    (filterString == null || filterString.equals("Tất cả trạng thái")) ||
+        (trangThai!= null && trangThai.toString().equals(filterString));
     }
 
-    @FXML
-    private void handleThemPhong() {
+    public void handleThemPhong() {
         PhongFormDialogView view = new PhongFormDialogView();
         PhongDialogController controller = new PhongDialogController(view);
         Parent root = view.getRoot();
@@ -361,8 +377,7 @@ public class QuanLyPhongController implements Initializable {
 
     }
 
-    @FXML
-    private void handleSuaPhong(Phong phong) {
+    public void handleSuaPhong(Phong phong) {
 
         PhongFormDialogView view = new PhongFormDialogView();
         PhongDialogController controller = new PhongDialogController(view);
@@ -381,8 +396,7 @@ public class QuanLyPhongController implements Initializable {
 
     }
 
-    @FXML
-    private void handleXoaPhong(Phong phong) {
+    public void handleXoaPhong(Phong phong) {
 
         // Xác nhận xóa
         String message = "Bạn có chắc chắn muốn xóa phòng này?\nPhòng: " + phong.getMaPhong() + " - Tầng: " + phong.getTang();
@@ -404,32 +418,27 @@ public class QuanLyPhongController implements Initializable {
         }
     }
 
-    @FXML
-    private void handleLamMoi() {
+    public void handleLamMoi() {
         taiDuLieu();
         txtTimKiem.clear();
-        cbTang.setValue(null);
-        cbTrangThai.setValue(null);
+        cbTang.setValue("Tất cả các tầng");
+        cbTrangThai.setValue("Tất cả trạng thái");
         cbLocLoaiPhong.setValue(null);
     }
 
-    @FXML
-    private void handleTimKiem() {
-        apDungFilter();
+    public void handleTimKiem() {
+        // Filtering is now automatic via reactive binding
     }
 
-    @FXML
-    private void handleLocTang() {
-        apDungFilter();
+    public void handleLocTang() {
+        // Filtering is now automatic via reactive binding
     }
 
-    @FXML
-    private void handleLocTrangThai() {
-        apDungFilter();
+    public void handleLocTrangThai() {
+        // Filtering is now automatic via reactive binding
     }
 
-    @FXML
-    private void handleLocLoaiPhong() {
-        apDungFilter();
+    public void handleLocLoaiPhong() {
+        // Filtering is now automatic via reactive binding
     }
 }

@@ -3,15 +3,16 @@ package com.example.louishotelmanagement.controller;
 import com.example.louishotelmanagement.dao.LoaiPhongDAO;
 import com.example.louishotelmanagement.model.LoaiPhong;
 import com.example.louishotelmanagement.ui.components.CustomButton;
+import com.example.louishotelmanagement.ui.components.StatsCard;
 import com.example.louishotelmanagement.ui.models.ButtonVariant;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
 import com.example.louishotelmanagement.view.LoaiPhongFormDialogView;
+import com.example.louishotelmanagement.view.QuanLyLoaiPhongView;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
+import javafx.collections.transformation.FilteredList;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -21,49 +22,45 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.io.IOException;
-import java.net.URL;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.ResourceBundle;
 
-public class LoaiPhongController implements Initializable {
+public class QuanLyLoaiPhongController {
 
-    @FXML
-    private Label lblTongSoLoaiPhong;
-    @FXML
-    private Label lblGiaThapNhat;
-    @FXML
-    private Label lblGiaCaoNhat;
-    @FXML
-    private Label lblGiaTrungBinh;
-    @FXML
+    private StatsCard totalRoomTypesCard;
+    private StatsCard lowestPriceCard;
+    private StatsCard highestPriceCard;
+    private StatsCard averagePriceCard;
     private TextField txtTimKiem;
-    @FXML
     private ComboBox<String> cbLocGia;
-    @FXML
     private TableView<LoaiPhong> tableViewLoaiPhong;
-    @FXML
     private TableColumn<LoaiPhong, String> colMaLoaiPhong;
-    @FXML
     private TableColumn<LoaiPhong, String> colTenLoai;
-    @FXML
     private TableColumn<LoaiPhong, Double> colDonGia;
-    @FXML
     private TableColumn<LoaiPhong, String> colMoTa;
-    @FXML
     private TableColumn<LoaiPhong, Void> colThaoTac;
-    @FXML
-    private Button btnThemLoaiPhong;
-    @FXML
-    private Button btnLamMoi;
 
     private LoaiPhongDAO loaiPhongDAO;
     private ObservableList<LoaiPhong> danhSachLoaiPhong;
-    private ObservableList<LoaiPhong> danhSachLoaiPhongFiltered;
+    private FilteredList<LoaiPhong> filteredLoaiPhongList;
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    public QuanLyLoaiPhongController(QuanLyLoaiPhongView view) {
+        this.totalRoomTypesCard = view.getTotalRoomTypesCard();
+        this.lowestPriceCard = view.getLowestPriceCard();
+        this.highestPriceCard = view.getHighestPriceCard();
+        this.averagePriceCard = view.getAveragePriceCard();
+        this.cbLocGia = view.getCbLocGia();
+        this.txtTimKiem = view.getTxtTimKiem();
+        this.tableViewLoaiPhong = view.getTableViewLoaiPhong();
+        this.colMaLoaiPhong = view.getColMaLoaiPhong();
+        this.colTenLoai = view.getColTenLoai();
+        this.colDonGia = view.getColDonGia();
+        this.colMoTa = view.getColMoTa();
+        this.colThaoTac = view.getColThaoTac();
+        initialize();
+    }
+
+    public void initialize() {
         try {
             loaiPhongDAO = new LoaiPhongDAO();
 
@@ -71,6 +68,7 @@ public class LoaiPhongController implements Initializable {
             khoiTaoDuLieu();
             khoiTaoTableView();
             khoiTaoComboBox();
+            cauHinhLoc();
 
             // Load dữ liệu
             taiDuLieu();
@@ -84,7 +82,7 @@ public class LoaiPhongController implements Initializable {
         List<LoaiPhong> dsLoaiPhong = loaiPhongDAO.layDSLoaiPhong();
 
         int tongSoLoaiPhong = dsLoaiPhong.size();
-        lblTongSoLoaiPhong.setText(String.valueOf(tongSoLoaiPhong));
+        totalRoomTypesCard.setValue(String.valueOf(tongSoLoaiPhong));
 
         if (tongSoLoaiPhong > 0) {
             Double giaThapNhat = dsLoaiPhong.stream()
@@ -101,13 +99,13 @@ public class LoaiPhongController implements Initializable {
                     .map(LoaiPhong::getDonGia)
                     .reduce(0.0, Double::sum) / tongSoLoaiPhong;
 
-            lblGiaThapNhat.setText(formatCurrency(giaThapNhat));
-            lblGiaCaoNhat.setText(formatCurrency(giaCaoNhat));
-            lblGiaTrungBinh.setText(formatCurrency(giaTrungBinh));
+            lowestPriceCard.setValue(formatCurrency(giaThapNhat));
+            highestPriceCard.setValue(formatCurrency(giaCaoNhat));
+            averagePriceCard.setValue(formatCurrency(giaTrungBinh));
         } else {
-            lblGiaThapNhat.setText("0 VNĐ");
-            lblGiaCaoNhat.setText("0 VNĐ");
-            lblGiaTrungBinh.setText("0 VNĐ");
+            lowestPriceCard.setValue("0 VNĐ");
+            highestPriceCard.setValue("0 VNĐ");
+            averagePriceCard.setValue("0 VNĐ");
         }
     }
 
@@ -118,7 +116,7 @@ public class LoaiPhongController implements Initializable {
 
     private void khoiTaoDuLieu() {
         danhSachLoaiPhong = FXCollections.observableArrayList();
-        danhSachLoaiPhongFiltered = FXCollections.observableArrayList();
+        filteredLoaiPhongList = new FilteredList<>(danhSachLoaiPhong, p -> true);
     }
 
     private void khoiTaoTableView() {
@@ -174,8 +172,8 @@ public class LoaiPhongController implements Initializable {
 
         colThaoTac.setCellValueFactory(_ -> new ReadOnlyObjectWrapper<>(null));
 
-        // Thiết lập TableView
-        tableViewLoaiPhong.setItems(danhSachLoaiPhongFiltered);
+        // Thiết lập TableView với FilteredList
+        tableViewLoaiPhong.setItems(filteredLoaiPhongList);
 
         // Cho phép chọn một dòng
         tableViewLoaiPhong.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
@@ -207,12 +205,62 @@ public class LoaiPhongController implements Initializable {
             protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty || item == null) {
-                    setText("Chọn khoảng giá");
+                    setText("Tất cả khoảng giá");
                 } else {
                     setText(item);
                 }
             }
         });
+
+        // Set default values
+        cbLocGia.setValue("Tất cả khoảng giá");
+
+        // Thiết lập reactive filtering
+        cauHinhLoc();
+    }
+
+    private void cauHinhLoc() {
+        filteredLoaiPhongList.predicateProperty().bind(Bindings.createObjectBinding(() -> {
+            String timKiemText = txtTimKiem.getText();
+            String giaFilter = cbLocGia.getValue();
+
+            return loaiPhong -> {
+                // Filter theo tìm kiếm
+                boolean timKiemMatch = timKiemText == null || timKiemText.trim().isEmpty() ||
+                        (loaiPhong.getMaLoaiPhong() != null && loaiPhong.getMaLoaiPhong().toLowerCase().contains(timKiemText.toLowerCase())) ||
+                        (loaiPhong.getTenLoai() != null && loaiPhong.getTenLoai().toLowerCase().contains(timKiemText.toLowerCase()));
+
+                // Filter theo giá
+                boolean giaMatch = (giaFilter == null || giaFilter.equals("Tất cả khoảng giá")) ||
+                        giaMatchesFilter(loaiPhong.getDonGia(), giaFilter);
+
+                return timKiemMatch && giaMatch;
+            };
+        }, txtTimKiem.textProperty(), cbLocGia.valueProperty()));
+    }
+
+    /**
+     * Helper method to check if a price matches the filter string
+     */
+    private boolean giaMatchesFilter(Double donGia, String filterString) {
+        if (donGia == null || filterString == null) {
+            return false;
+        }
+
+        switch (filterString) {
+            case "Dưới 1 triệu":
+                return donGia < 1000000.0;
+            case "1-2 triệu":
+                return donGia >= 1000000.0 && donGia <= 2000000.0;
+            case "2-5 triệu":
+                return donGia > 2000000.0 && donGia <= 5000000.0;
+            case "5-10 triệu":
+                return donGia > 5000000.0 && donGia <= 10000000.0;
+            case "Trên 10 triệu":
+                return donGia > 10000000.0;
+            default:
+                return false;
+        }
     }
 
     private void taiDuLieu() {
@@ -224,58 +272,15 @@ public class LoaiPhongController implements Initializable {
             danhSachLoaiPhong.addAll(dsLoaiPhong);
             capNhatThongKe();
 
-            // Áp dụng filter hiện tại
-            apDungFilter();
+            // FilteredList will automatically apply filters
 
         } catch (SQLException e) {
             ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể tải dữ liệu loại phòng: " + e.getMessage());
         }
     }
 
-    private void apDungFilter() {
-        danhSachLoaiPhongFiltered.clear();
 
-        List<LoaiPhong> filtered = danhSachLoaiPhong.stream()
-                .filter(loaiPhong -> {
-                    // Filter theo tìm kiếm
-                    String timKiem = txtTimKiem.getText().toLowerCase();
-                    if (!timKiem.isEmpty()) {
-                        boolean matchMa = loaiPhong.getMaLoaiPhong().toLowerCase().contains(timKiem);
-                        boolean matchTen = loaiPhong.getTenLoai().toLowerCase().contains(timKiem);
-                        if (!matchMa && !matchTen) {
-                            return false;
-                        }
-                    }
-
-                    // Filter theo giá
-                    String giaFilter = cbLocGia.getValue();
-                    if (giaFilter != null) {
-                        Double donGia = loaiPhong.getDonGia();
-                        if (donGia == null) return false;
-
-                        switch (giaFilter) {
-                            case "Dưới 1 triệu":
-                                return donGia < 1000000.0;
-                            case "1-2 triệu":
-                                return donGia >= 1000000.0 && donGia <= 2000000.0;
-                            case "2-5 triệu":
-                                return donGia > 2000000.0 && donGia <= 5000000.0;
-                            case "5-10 triệu":
-                                return donGia > 5000000.0 && donGia <= 10000000.0;
-                            case "Trên 10 triệu":
-                                return donGia > 10000000.0;
-                        }
-                    }
-
-                    return true;
-                })
-                .toList();
-
-        danhSachLoaiPhongFiltered.addAll(filtered);
-    }
-
-    @FXML
-    private void handleThemLoaiPhong() {
+    public void handleThemLoaiPhong() {
         LoaiPhongFormDialogView view = new LoaiPhongFormDialogView();
         LoaiPhongDialogController controller = new LoaiPhongDialogController(view);
         Parent root = view.getRoot();
@@ -293,8 +298,7 @@ public class LoaiPhongController implements Initializable {
 
     }
 
-    @FXML
-    private void handleSuaLoaiPhong(LoaiPhong loaiPhong) {
+    public void handleSuaLoaiPhong(LoaiPhong loaiPhong) {
         LoaiPhongFormDialogView view = new LoaiPhongFormDialogView();
         LoaiPhongDialogController controller = new LoaiPhongDialogController(view);
         Parent root = view.getRoot();
@@ -312,8 +316,7 @@ public class LoaiPhongController implements Initializable {
 
     }
 
-    @FXML
-    private void handleXoaLoaiPhong(LoaiPhong loaiPhong) {
+    public void handleXoaLoaiPhong(LoaiPhong loaiPhong) {
         // Xác nhận xóa
         String message = "Bạn có chắc chắn muốn xóa loại phòng này?\nLoại phòng: " + loaiPhong.getTenLoai() + " - Mã: " + loaiPhong.getMaLoaiPhong();
         if (ThongBaoUtil.hienThiXacNhan("Xác nhận xóa", message)) {
@@ -338,21 +341,18 @@ public class LoaiPhongController implements Initializable {
         }
     }
 
-    @FXML
-    private void handleLamMoi() {
+    public void handleLamMoi() {
         taiDuLieu();
         txtTimKiem.clear();
-        cbLocGia.setValue(null);
+        cbLocGia.setValue("Tất cả khoảng giá");
     }
 
-    @FXML
-    private void handleTimKiem() {
-        apDungFilter();
+    public void handleTimKiem() {
+        // Filtering is now automatic via reactive binding
     }
 
-    @FXML
-    private void handleLocGia() {
-        apDungFilter();
+    public void handleLocGia() {
+        // Filtering is now automatic via reactive binding
     }
 
 
