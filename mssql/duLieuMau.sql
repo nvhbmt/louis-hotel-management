@@ -178,7 +178,7 @@ INSERT INTO HoaDon
     maHD, ngayLap, phuongThuc, trangThai, tongTien,
     PhatNhanPhongTre, PhatTraPhongSom, PhatTraPhongTre,
     GiamGiaMaGG, GiamGiaHangKH,
-    TongVAT, NgayCheckOut, maKH, maNV, maKM
+    TongVAT, ngayDi, maKH, maNV, maKM
 )
 VALUES
 -- HD001: Áp dụng mã khuyến mãi KM0001 giảm 10% (307k), không phạt

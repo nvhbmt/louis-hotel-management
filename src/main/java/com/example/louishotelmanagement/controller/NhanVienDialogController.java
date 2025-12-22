@@ -5,6 +5,7 @@ import com.example.louishotelmanagement.dao.TaiKhoanDAO;
 import com.example.louishotelmanagement.model.NhanVien;
 import com.example.louishotelmanagement.model.TaiKhoan;
 import com.example.louishotelmanagement.util.PasswordUtil;
+import com.example.louishotelmanagement.view.NhanVienDialogView;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -29,6 +30,25 @@ public class NhanVienDialogController {
     private NhanVien nhanVienToEdit;
     private TaiKhoan taiKhoanToEdit;
     private boolean isEditMode = false;
+
+    public NhanVienDialogController(NhanVienDialogView view) {
+        this.lblTitle = view.getLblTitle();
+        this.tfMaNV = view.getTfMaNV();
+        this.tfHoTen = view.getTfHoTen();
+        this.dpNgaySinh = view.getDpNgaySinh();
+        this.tfSoDT = view.getTfSoDT();
+        this.tfDiaChi = view.getTfDiaChi();
+        this.cbChucVu = view.getCbChucVu();
+        this.tfTenDangNhap = view.getTfTenDangNhap();
+        this.pfMatKhau = view.getPfMatKhau();
+        this.cbQuyen = view.getCbQuyen();
+        this.ckTrangThai = view.getCkTrangThai();
+        this.btnLuu = view.getBtnLuu();
+        this.btnHuy = view.getBtnHuy();
+        this.btnLuu.setOnAction(event -> handleLuu());
+        this.btnHuy.setOnAction(event -> handleHuy());
+        initialize();
+    }
 
     public void initialize() {
         nhanVienDAO = new NhanVienDAO();

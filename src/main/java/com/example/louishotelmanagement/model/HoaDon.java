@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class HoaDon {
-
     private String maHD;
     private LocalDate ngayLap;
     private PhuongThucThanhToan phuongThuc;
@@ -15,27 +14,30 @@ public class HoaDon {
     private String maKM;
     private KhachHang khachHang;
     private String soPhong;
-    private LocalDate ngayCheckOut;
+    private LocalDate ngayDi; // Đã đổi tên từ ngayDi
+
+    // Tiền phạt & Giảm giá (Khởi tạo mặc định để tránh Null)
+    private BigDecimal phatNhanPhongTre = BigDecimal.ZERO;
+    private BigDecimal phatTraPhongSom = BigDecimal.ZERO;
+    private BigDecimal phatTraPhongTre = BigDecimal.ZERO;
+    private BigDecimal giamGiaTheoMa = BigDecimal.ZERO;
+    private BigDecimal giamGiaTheoHangKH = BigDecimal.ZERO;
+    private BigDecimal tongVAT = BigDecimal.ZERO;
 
     // =======================================================
     // ====== TỔNG TIỀN (DB ĐANG DÙNG) =======================
     // =======================================================
     private BigDecimal tienPhat;        // Tổng tiền phạt
-    private BigDecimal tongGiamGia;     // Tổng giảm giá
-    private BigDecimal tongVAT;         // Tổng VAT
+    private BigDecimal tongGiamGia;     // Tổng giảm giá// Tổng VAT
 
     // =======================================================
     // ====== CHI TIẾT TIỀN PHẠT (UI / TƯƠNG LAI) ============
-    // =======================================================
-    private BigDecimal phatNhanPhongTre;   // Nhận phòng trễ
-    private BigDecimal phatTraPhongSom;    // Trả phòng sớm
-    private BigDecimal phatTraPhongTre;    // Trả phòng trễ
+    // =======================================================// Trả phòng trễ
 
     // =======================================================
     // ====== CHI TIẾT GIẢM GIÁ (UI / TƯƠNG LAI) ==============
     // =======================================================
-    private BigDecimal giamGiaTheoMa;       // Mã giảm giá
-    private BigDecimal giamGiaTheoHangKH;   // Hạng khách hàng
+    // Hạng khách hàng
 
     // =======================================================
     // ================= CONSTRUCTOR =========================
@@ -90,8 +92,8 @@ public class HoaDon {
     public String getMaKM() { return maKM; }
     public void setMaKM(String maKM) { this.maKM = maKM; }
 
-    public LocalDate getNgayCheckOut() { return ngayCheckOut; }
-    public void setNgayCheckOut(LocalDate ngayCheckOut) { this.ngayCheckOut = ngayCheckOut; }
+    public LocalDate getngayDi() { return ngayDi; }
+    public void setngayDi(LocalDate ngayDi) { this.ngayDi = ngayDi; }
 
     // ===== TỔNG =====
     public BigDecimal getTienPhat() { return tienPhat; }

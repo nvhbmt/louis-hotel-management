@@ -5,6 +5,7 @@ import com.example.louishotelmanagement.dao.KhachHangDAO;
 import com.example.louishotelmanagement.model.HoaDon;
 import com.example.louishotelmanagement.model.HoaDonChiTietItem;
 import com.example.louishotelmanagement.model.KhachHang;
+import com.example.louishotelmanagement.view.XemChiTietHoaDonView;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -42,6 +43,30 @@ public class XemChiTietHoaDonController {
     private final HoaDonDAO hoaDonDAO = new HoaDonDAO();
     private final KhachHangDAO khachHangDAO = new KhachHangDAO();
 
+    public XemChiTietHoaDonController(XemChiTietHoaDonView view) {
+        this.lblMaHD = view.getLblMaHD();
+        this.lblNgayLap = view.getLblNgayLap();
+        this.lblNgayCheckout = view.getLblNgayCheckout();
+        this.lblTenKH = view.getLblTenKH();
+        this.lblPhuongThuc = view.getLblPhuongThuc();
+        this.lblTrangThai = view.getLblTrangThai();
+        this.lblGiamGiaMa = view.getLblGiamGiaMa();
+        this.lblGiamGiaHang = view.getLblGiamGiaHang();
+        this.lblVAT = view.getLblVAT();
+        this.lblPhatNhanTre = view.getLblPhatNhanTre();
+        this.lblPhatTraSom = view.getLblPhatTraSom();
+        this.lblPhatTraTre = view.getLblPhatTraTre();
+        this.lblTongTien = view.getLblTongTien();
+        this.cbFilter = view.getCbFilter();
+        this.tableChiTiet = view.getTableChiTiet();
+        this.colTenDV = view.getColTenDV();
+        this.colSoLuong = view.getColSoLuong();
+        this.colDonGia = view.getColDonGia();
+        this.colThanhTien = view.getColThanhTien();
+        this.btnClose = view.getBtnClose();
+        this.btnClose.setOnAction(event -> handleHuy());
+    }
+
     public void loadData(String maHD) throws SQLException {
         HoaDon hd = hoaDonDAO.timHoaDonTheoMa(maHD);
 
@@ -53,7 +78,7 @@ public class XemChiTietHoaDonController {
         // 1. Thông tin cơ bản
         lblMaHD.setText(hd.getMaHD());
         lblNgayLap.setText(hd.getNgayLap() != null ? hd.getNgayLap().format(dateFormat) : "N/A");
-        lblNgayCheckout.setText(hd.getNgayCheckOut() != null ? hd.getNgayCheckOut().format(dateFormat) : "Chưa checkout");
+        lblNgayCheckout.setText(hd.getngayDi() != null ? hd.getngayDi().format(dateFormat) : "Chưa checkout");
 
         KhachHang kh = khachHangDAO.layKhachHangTheoMa(hd.getMaKH());
         lblTenKH.setText(kh != null ? kh.getHoTen() : "Khách vãng lai");
@@ -132,5 +157,14 @@ public class XemChiTietHoaDonController {
         Alert a = new Alert(Alert.AlertType.WARNING, msg, ButtonType.OK);
         a.setHeaderText(null);
         a.show();
+    }
+    @FXML
+    private void handleHuy() {
+        // 1. Lấy Stage (cửa sổ) hiện tại thông qua bất kỳ một Control nào đó trong View
+        // Ở đây ta dùng nút btnClose là thuận tiện nhất
+        Stage stage = (Stage) btnClose.getScene().getWindow();
+
+        // 2. Thực hiện đóng cửa sổ
+        stage.close();
     }
 }

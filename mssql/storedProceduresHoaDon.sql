@@ -1,79 +1,36 @@
 USE QuanLyKhachSan;
 GO
-
--- 1. CẬP NHẬT PROCEDURE THÊM HÓA ĐƠN (MẶC ĐỊNH HÓA)
-CREATE PROCEDURE sp_ThemHoaDon
-    @maHD NVARCHAR(10),
-    @ngayLap DATE,
-    @phuongThuc NVARCHAR(50),
-    @tongTien DECIMAL(18,2),
-    @maKH NVARCHAR(10),
-    @maNV NVARCHAR(10),
-    @maKM NVARCHAR(10) = NULL,
-    @trangThai NVARCHAR(50),
-    @ngayCheckOut DATE = NULL,
-    -- Các trường dưới đây sẽ tự động bằng 0 nếu Java không truyền vào
-    @phatNhanTre DECIMAL(18,2) = 0,
-    @phatTraSom DECIMAL(18,2) = 0,
-    @phatTraTre DECIMAL(18,2) = 0,
-    @giamGiaMaGG DECIMAL(18,2) = 0,
-    @giamGiaHangKH DECIMAL(18,2) = 0,
-    @tongVAT DECIMAL(18,2) = 0
+-- THÊM HÓA ĐƠN
+ALTER PROCEDURE sp_ThemHoaDon
+    @maHD NVARCHAR(10), @ngayLap DATE, @phuongThuc NVARCHAR(50), @tongTien DECIMAL(18,2),
+    @maKH NVARCHAR(10), @maNV NVARCHAR(10), @maKM NVARCHAR(10) = NULL, @trangThai NVARCHAR(50),
+    @ngayDi DATE = NULL, -- Đã cập nhật tên tham số
+    @phatNhanTre DECIMAL(18,2) = 0, @phatTraSom DECIMAL(18,2) = 0, @phatTraTre DECIMAL(18,2) = 0,
+    @giamGiaMaGG DECIMAL(18,2) = 0, @giamGiaHangKH DECIMAL(18,2) = 0, @tongVAT DECIMAL(18,2) = 0
 AS
 BEGIN
-    SET NOCOUNT ON;
-    INSERT INTO HoaDon (
-        maHD, ngayLap, phuongThuc, trangThai, tongTien,
-        PhatNhanPhongTre, PhatTraPhongSom, PhatTraPhongTre,
-        GiamGiaMaGG, GiamGiaHangKH, TongVAT, NgayCheckOut,
-        maKH, maNV, maKM
-    )
-    VALUES (
-               @maHD, @ngayLap, @phuongThuc, @trangThai, @tongTien,
-               @phatNhanTre, @phatTraSom, @phatTraTre,
-               @giamGiaMaGG, @giamGiaHangKH, @tongVAT, @ngayCheckOut,
-               @maKH, @maNV, @maKM
-           );
+    INSERT INTO HoaDon (maHD, ngayLap, phuongThuc, trangThai, tongTien, maKH, maNV, maKM, ngayDi,
+                        PhatNhanPhongTre, PhatTraPhongSom, PhatTraPhongTre, GiamGiaMaGG, GiamGiaHangKH, TongVAT)
+    VALUES (@maHD, @ngayLap, @phuongThuc, @trangThai, @tongTien, @maKH, @maNV, @maKM, @ngayDi,
+            @phatNhanTre, @phatTraSom, @phatTraTre, @giamGiaMaGG, @giamGiaHangKH, @tongVAT);
 END;
 GO
 
--- 2. CẬP NHẬT PROCEDURE SỬA HÓA ĐƠN
-CREATE PROCEDURE sp_SuaHoaDon
-    @maHD NVARCHAR(10),
-    @ngayLap DATE,
-    @phuongThuc NVARCHAR(50),
-    @tongTien DECIMAL(18,2),
-    @maKH NVARCHAR(10),
-    @maNV NVARCHAR(10),
-    @maKM NVARCHAR(10),
-    @trangThai NVARCHAR(50),
-    @ngayCheckOut DATE,
-    @phatNhanTre DECIMAL(18,2),
-    @phatTraSom DECIMAL(18,2),
-    @phatTraTre DECIMAL(18,2),
-    @giamGiaMaGG DECIMAL(18,2),
-    @giamGiaHangKH DECIMAL(18,2),
-    @tongVAT DECIMAL(18,2)
+-- SỬA HÓA ĐƠN
+ALTER PROCEDURE sp_SuaHoaDon
+    @maHD NVARCHAR(10), @ngayLap DATE, @phuongThuc NVARCHAR(50), @tongTien DECIMAL(18,2),
+    @maKH NVARCHAR(10), @maNV NVARCHAR(10), @maKM NVARCHAR(10), @trangThai NVARCHAR(50),
+    @ngayDi DATE, @phatNhanTre DECIMAL(18,2), @phatTraSom DECIMAL(18,2), @phatTraTre DECIMAL(18,2),
+    @giamGiaMaGG DECIMAL(18,2), @giamGiaHangKH DECIMAL(18,2), @tongVAT DECIMAL(18,2)
 AS
 BEGIN
-    UPDATE HoaDon
-    SET ngayLap = @ngayLap,
-        phuongThuc = @phuongThuc,
-        tongTien = @tongTien,
-        maKH = @maKH,
-        maNV = @maNV,
-        maKM = @maKM,
-        trangThai = @trangThai,
-        NgayCheckOut = @ngayCheckOut,
-        PhatNhanPhongTre = @phatNhanTre,
-        PhatTraPhongSom = @phatTraSom,
-        PhatTraPhongTre = @phatTraTre,
-        GiamGiaMaGG = @giamGiaMaGG,
-        GiamGiaHangKH = @giamGiaHangKH,
-        TongVAT = @tongVAT
+    UPDATE HoaDon SET
+                      ngayLap = @ngayLap, phuongThuc = @phuongThuc, tongTien = @tongTien, maKH = @maKH, maNV = @maNV,
+                      maKM = @maKM, trangThai = @trangThai, ngayDi = @ngayDi, PhatNhanPhongTre = @phatNhanTre,
+                      PhatTraPhongSom = @phatTraSom, PhatTraPhongTre = @phatTraTre, GiamGiaMaGG = @giamGiaMaGG,
+                      GiamGiaHangKH = @giamGiaHangKH, TongVAT = @tongVAT
     WHERE maHD = @maHD;
 END;
-GO
 
 
 

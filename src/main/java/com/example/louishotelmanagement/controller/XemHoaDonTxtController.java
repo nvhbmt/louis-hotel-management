@@ -1,5 +1,6 @@
 package com.example.louishotelmanagement.controller;
 
+import com.example.louishotelmanagement.view.XemHoaDonTxtView;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
@@ -34,6 +35,15 @@ public class XemHoaDonTxtController {
     /**
      * Hàm này được gọi từ QuanLyHoaDonController để nhận nội dung TXT
      */
+
+    public XemHoaDonTxtController(XemHoaDonTxtView view) {
+        this.txtHoaDon = view.getTxtHoaDon();
+        this.btnInHoaDon = view.getBtnInHoaDon();
+        this.btnDong = view.getBtnDong();
+        btnInHoaDon.setOnAction(this::handleIn);
+        btnDong.setOnAction(this::handleDong);
+    }
+
     public void initData(String noiDungHoaDon) {
         txtHoaDon.setText(noiDungHoaDon);
     }

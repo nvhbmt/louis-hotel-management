@@ -8,6 +8,9 @@ import com.example.louishotelmanagement.ui.models.ButtonVariant;
 import com.example.louishotelmanagement.util.ContentSwitcher;
 import com.example.louishotelmanagement.util.Refreshable;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
+import com.example.louishotelmanagement.view.KhachHangFormDialogView;
+import com.example.louishotelmanagement.view.PhieuDatPhongPDFView;
+import com.example.louishotelmanagement.view.TienCocDialogView;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -559,22 +562,17 @@ public class DatPhongController implements Initializable, Refreshable {
     }
 
     public void hienThiPhieuDatPhong(PhieuDatPhong pdp, ArrayList<Phong> dsPhong) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/phieu-dat-phong-pdf-view.fxml"));
-            Parent root = loader.load();
-            PhieuDatPhongPDFController controller = loader.getController();
-            controller.setPhieuDatPhongData(pdp, dsPhong);
-            Stage stage = new Stage();
-            Scene scene = new Scene(root);
-            scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
-            stage.setTitle("Phiếu Xác Nhận Đặt Phòng " + pdp.getMaPhieu());
-            stage.setScene(scene);
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.show();
-        } catch (IOException e) {
-            ThongBaoUtil.hienThiThongBao("Lỗi giao diện", "Không thể tải giao diện phiếu xác nhận.");
-            e.printStackTrace();
-        }
+        PhieuDatPhongPDFView view = new PhieuDatPhongPDFView();
+        PhieuDatPhongPDFController controller = new PhieuDatPhongPDFController(view);
+        Parent root = view.getRoot();
+        controller.setPhieuDatPhongData(pdp, dsPhong);
+        Stage stage = new Stage();
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
+        stage.setTitle("Phiếu Xác Nhận Đặt Phòng " + pdp.getMaPhieu());
+        stage.setScene(scene);
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.show();
     }
 
     private static class TienCocResult {
@@ -587,9 +585,9 @@ public class DatPhongController implements Initializable, Refreshable {
     }
 
     private TienCocResult hienThiTienCocDialog(double tongTienPhong) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/tien-coc-dialog.fxml"));
-        Parent root = loader.load();
-        TienCocDialogController controller = loader.getController();
+        TienCocDialogView view = new TienCocDialogView();
+        TienCocDialogController controller = new TienCocDialogController(view);
+        Parent root = view.getRoot();
         controller.setTongTien(tongTienPhong);
         Stage stage = new Stage();
         stage.setTitle("Xác Nhận Tiền Cọc");
@@ -751,16 +749,15 @@ public class DatPhongController implements Initializable, Refreshable {
 
     public void handleThemKhachHang(ActionEvent actionEvent) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/khach-hang-form-dialog.fxml"));
-            Parent parent = loader.load();
-            Stage dialogStage = new Stage();
-            dialogStage.setTitle("Thêm Khách Hàng Mới");
-            dialogStage.initModality(Modality.APPLICATION_MODAL);
-            dialogStage.setScene(new Scene(parent));
-            dialogStage.showAndWait();
+            KhachHangFormDialogView view = new KhachHangFormDialogView();
+            KhachHangDialogController controller = new KhachHangDialogController(view);
+            Parent root = view.getRoot();
+            Stage dialog = new Stage();
+            dialog.setTitle("Thêm Khách Hàng Mới");
+            dialog.initModality(Modality.APPLICATION_MODAL);
+            dialog.setScene(new Scene(root));
+            dialog.showAndWait();
             refreshData();
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

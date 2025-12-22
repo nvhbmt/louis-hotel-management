@@ -7,6 +7,8 @@ import com.example.louishotelmanagement.dao.KhuyenMaiDAO;
 import com.example.louishotelmanagement.model.*;
 import com.example.louishotelmanagement.util.Refreshable;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
+import com.example.louishotelmanagement.view.XemChiTietHoaDonView;
+import com.example.louishotelmanagement.view.XemHoaDonTxtView;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -158,17 +160,14 @@ public class QuanLyThanhToanController implements Refreshable {
 
     private void XemChiTiet(HoaDon hoaDon){
         try {
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/com/example/louishotelmanagement/fxml/xem-chi-tiet-hoa-don.fxml")
-            );
-
-            Parent ui = loader.load();
-            XemChiTietHoaDonController ctr = loader.getController();
-            ctr.loadData(hoaDon.getMaHD());
+            XemChiTietHoaDonView view = new XemChiTietHoaDonView();
+            XemChiTietHoaDonController controller = new XemChiTietHoaDonController(view);
+            Parent root = view.getRoot();
+            controller.loadData(hoaDon.getMaHD());
 
             Stage st = new Stage();
             st.setTitle("Chi tiết hóa đơn");
-            st.setScene(new Scene(ui));
+            st.setScene(new Scene(root));
             st.showAndWait();
 
         } catch (Exception ex) {
@@ -223,10 +222,9 @@ public class QuanLyThanhToanController implements Refreshable {
             String noiDungHoaDon = generator.taoNoiDungHoaDon(hoaDonHoanChinh); // <-- DÙNG đối tượng HOÀN CHỈNH
 
             // 4. Load giao diện và hiển thị (Giữ nguyên logic FXML)
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/xem-hoa-don-txt.fxml"));
-            Parent root = loader.load();
-
-            XemHoaDonTxtController controller = loader.getController();
+            XemHoaDonTxtView view = new XemHoaDonTxtView();
+            XemHoaDonTxtController controller = new XemHoaDonTxtController(view);
+            Parent root = view.getRoot();
             controller.initData(noiDungHoaDon);
 
             Stage stage = new Stage();
@@ -240,12 +238,6 @@ public class QuanLyThanhToanController implements Refreshable {
             alert.setTitle("Lỗi Truy Vấn Dữ Liệu");
             alert.setHeaderText("Không thể tải chi tiết hóa đơn.");
             alert.setContentText("Lỗi SQL: " + e.getMessage());
-            alert.showAndWait();
-        } catch (IOException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Lỗi Giao Diện");
-            alert.setHeaderText("Không thể mở màn hình xem hóa đơn.");
-            alert.setContentText("Lỗi FXML (kiểm tra lại đường dẫn): " + e.getMessage());
             alert.showAndWait();
         }
     }

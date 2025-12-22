@@ -3,6 +3,7 @@ package com.example.louishotelmanagement.controller;
 import com.example.louishotelmanagement.model.Phong;
 import com.example.louishotelmanagement.model.TrangThaiPhieuDatPhong;
 import com.example.louishotelmanagement.model.TrangThaiPhong;
+import com.example.louishotelmanagement.view.ChonPhongDialogView;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
@@ -28,9 +29,22 @@ public class DialogChonPhongController {
     private TableColumn<Phong, TrangThaiPhong> colTrangThai;
     @FXML
     private TableColumn<Phong, Void> colChon;
-
+    @FXML
+    private Button btnDong;
     private Phong phongDuocChon;
 
+
+    public DialogChonPhongController(ChonPhongDialogView view) {
+        this.tblPhong = view.getTblPhong();
+        this.colMaPhong = view.getColMaPhong();
+        this.colLoaiPhong = view.getColLoaiPhong();
+        this.colGiaPhong = view.getColGiaPhong();
+        this.colTrangThai = view.getColTrangThai();
+        this.colChon = view.getColChon();
+        this.btnDong = view.getBtnDong();
+        this.btnDong.setOnAction(event -> handleDong());
+        initialize();
+    }
     // ================= INIT =================
     @FXML
     private void initialize() {

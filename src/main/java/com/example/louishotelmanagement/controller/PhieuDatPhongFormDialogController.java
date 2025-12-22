@@ -5,6 +5,9 @@ import com.example.louishotelmanagement.dao.PhieuDatPhongDAO;
 import com.example.louishotelmanagement.dao.PhongDAO;
 import com.example.louishotelmanagement.model.*;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
+import com.example.louishotelmanagement.view.ChonPhongDialogView;
+import com.example.louishotelmanagement.view.MaQRView;
+import com.example.louishotelmanagement.view.PhieuDatPhongFormDialogView;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -24,7 +27,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
 
-public class PhieuDatPhongFormDialogController implements Initializable {
+public class PhieuDatPhongFormDialogController {
 
     // ===== FORM =====
     @FXML private TextField txtMaPhieu;
@@ -40,6 +43,9 @@ public class PhieuDatPhongFormDialogController implements Initializable {
     @FXML private TableColumn<CTHoaDonPhong, BigDecimal> colGiaPhong;
     @FXML private TableColumn<CTHoaDonPhong, Void> colAction;
 
+    @FXML private Button btnThanhToan;
+    @FXML private Button btnLuu;
+    @FXML private Button btnHuy;
     // ===== THANH TOÁN =====
     @FXML private HBox boxThanhToan;
     @FXML private ComboBox<PhuongThucThanhToan> cbThanhToan;
@@ -52,8 +58,29 @@ public class PhieuDatPhongFormDialogController implements Initializable {
     private PhieuDatPhong phieuDatPhongHienTai;
     private BigDecimal soTienCanThuThem = BigDecimal.ZERO;
 
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
+    public PhieuDatPhongFormDialogController(PhieuDatPhongFormDialogView view) {
+        this.txtMaPhieu = view.getTxtMaPhieu();
+        this.dpNgayDen = view.getDpNgayDen();
+        this.dpNgayDi = view.getDpNgayDi();
+        this.txtTienCocCu = view.getTxtTienCocCu();
+        this.tblPhong = view.getTblPhong();
+        this.colMaPhong = view.getColMaPhong();
+        this.colNgayDen = view.getColNgayDen();
+        this.colNgayDi = view.getColNgayDi();
+        this.colGiaPhong = view.getColGiaPhong();
+        this.colAction = view.getColAction();
+        this.boxThanhToan = view.getBoxThanhToan();
+        this.lblSoTienThuThem = view.getLblSoTienThuThem();
+        this.cbThanhToan = view.getCbThanhToan();
+        this.btnThanhToan = view.getBtnThanhToan();
+        this.btnLuu = view.getBtnLuu();
+        this.btnHuy = view.getBtnHuy();
+        this.btnThanhToan.setOnAction(event -> handleThanhToan());
+        this.btnLuu.setOnAction(event -> handleLuu());
+        this.btnHuy.setOnAction(event -> handleHuy());
+        initialize();
+    }
+    public void initialize() {
         phongDAO = new PhongDAO();
         cbThanhToan.setItems(FXCollections.observableArrayList(
                 PhuongThucThanhToan.TIEN_MAT,
@@ -266,17 +293,12 @@ public class PhieuDatPhongFormDialogController implements Initializable {
     }
 
     private Phong DialogChonPhong() throws IOException, SQLException {
-        FXMLLoader loader = new FXMLLoader(
-                getClass().getResource(
-                        "/com/example/louishotelmanagement/fxml/chon-phong-dialog.fxml"
-                )
-        );
-
+        ChonPhongDialogView view = new ChonPhongDialogView();
+        DialogChonPhongController controller = new DialogChonPhongController(view);
+        Parent root = view.getRoot();
         Stage stage = new Stage();
-        stage.setScene(new Scene(loader.load()));
+        stage.setScene(new Scene(root));
         stage.initModality(Modality.APPLICATION_MODAL);
-
-        DialogChonPhongController controller = loader.getController();
         controller.setDanhSachPhong(phongDAO.layDSPhongTrong());
         stage.showAndWait();
 
@@ -306,26 +328,19 @@ public class PhieuDatPhongFormDialogController implements Initializable {
     }
 
     private void moManHinhQRCode() {
-        try {
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/com/example/louishotelmanagement/fxml/ma-qr-view.fxml")
-            );
-            Parent parent = loader.load();
-            QRController qrController = loader.getController();
+        MaQRView view = new MaQRView();
+        QRController controller = new QRController(view);
+        Parent root = view.getRoot();
+        Stage stage = new Stage();
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.setTitle("Mã QR Thanh Toán");
+        stage.setScene(new Scene(root));
+        stage.showAndWait();
 
-            Stage stage = new Stage();
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setTitle("Mã QR Thanh Toán");
-            stage.setScene(new Scene(parent));
-            stage.showAndWait();
-
-            if (qrController.isTransactionConfirmed()) {
-                xuLyThanhToan(PhuongThucThanhToan.CHUYEN_KHOAN);
-            }
-
-        } catch (IOException e) {
-            ThongBaoUtil.hienThiLoi("Lỗi", "Không thể mở màn hình QR");
+        if (controller.isTransactionConfirmed()) {
+            xuLyThanhToan(PhuongThucThanhToan.CHUYEN_KHOAN);
         }
+
     }
 
     // ================= SAVE =================

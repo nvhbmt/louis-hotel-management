@@ -5,6 +5,7 @@ import com.example.louishotelmanagement.dao.PhongDAO;
 import com.example.louishotelmanagement.model.CTHoaDonPhong;
 import com.example.louishotelmanagement.model.LoaiPhong;
 import com.example.louishotelmanagement.model.Phong;
+import com.example.louishotelmanagement.view.ChiTietPhongTrongPhieuView;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
@@ -22,7 +23,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-public class ChiTietPhongTrongPhieuController implements Initializable {
+public class ChiTietPhongTrongPhieuController{
 
     @FXML private Label lblMaPhieu;
     @FXML private TableView<Phong> tblChiTietPhong;
@@ -38,12 +39,29 @@ public class ChiTietPhongTrongPhieuController implements Initializable {
     @FXML private Label lblChiTietLoaiPhong;
     @FXML private Label lblChiTietGia;
     @FXML private TextArea txtChiTietMoTa;
+    @FXML private Button btnClose;
 
 
     private PhongDAO phDao = new PhongDAO();
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
+    public ChiTietPhongTrongPhieuController(ChiTietPhongTrongPhieuView view) {
+        this.lblMaPhieu = view.getLblMaPhieu();
+        this.tblChiTietPhong = view.getTblChiTietPhong();
+        this.colTang = view.getColTang();
+        this.colMaPhong = view.getColMaPhong();
+        this.colTenLoaiPhong = view.getColTenLoaiPhong();
+        this.colGia = view.getColGia();
+        this.lblChiTietMaPhong = view.getLblChiTietMaPhong();
+        this.lblChiTietTang = view.getLblChiTietTang();
+        this.lblChiTietTrangThai = view.getLblChiTietTrangThai();
+        this.lblChiTietLoaiPhong = view.getLblChiTietLoaiPhong();
+        this.lblChiTietGia = view.getLblChiTietGia();
+        this.txtChiTietMoTa = view.getTxtChiTietMoTa();
+        this.btnClose = view.getBtnClose();
+        this.btnClose.setOnAction(event -> handleClose());
+        initialize();
+    }
+    public void initialize() {
         colMaPhong.setCellValueFactory(new PropertyValueFactory<>("maPhong"));
 
         // Sửa lỗi binding cũ và sử dụng SimpleStringProperty

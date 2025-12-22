@@ -8,6 +8,7 @@ import com.example.louishotelmanagement.ui.components.CustomButton;
 import com.example.louishotelmanagement.ui.models.BadgeVariant;
 import com.example.louishotelmanagement.ui.models.ButtonVariant;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
+import com.example.louishotelmanagement.view.KhuyenMaiFormDialogView;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -15,6 +16,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -388,25 +390,21 @@ public class QuanLyKhuyenMaiController implements Initializable {
 
     @FXML
     private void handleThemKhuyenMai() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/khuyen-mai-form-dialog.fxml"));
-            Stage dialog = new Stage();
-            dialog.setTitle("Thêm Khuyến Mãi Mới");
-            dialog.initModality(Modality.APPLICATION_MODAL);
-            dialog.setScene(new Scene(loader.load()));
+        KhuyenMaiFormDialogView view = new KhuyenMaiFormDialogView();
+        KhuyenMaiDialogController controller = new KhuyenMaiDialogController(view);
+        Parent root = view.getRoot();
+        Stage dialog = new Stage();
+        dialog.setTitle("Thêm Khuyến Mãi Mới");
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.setScene(new Scene(root));
+        // Thiết lập controller và dữ liệu
+        controller.setMode("ADD");
 
-            // Thiết lập controller và dữ liệu
-            KhuyenMaiDialogController controller = loader.getController();
-            controller.setMode("ADD");
+        dialog.showAndWait();
 
-            dialog.showAndWait();
+        // Làm mới dữ liệu sau khi thêm
+        taiDuLieu();
 
-            // Làm mới dữ liệu sau khi thêm
-            taiDuLieu();
-
-        } catch (IOException e) {
-            ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể mở form thêm khuyến mãi: " + e.getMessage());
-        }
     }
 
     @FXML
@@ -414,14 +412,14 @@ public class QuanLyKhuyenMaiController implements Initializable {
         try {
             // Load lại dữ liệu đầy đủ từ database
             KhuyenMai khuyenMaiDayDu = khuyenMaiDAO.layKhuyenMaiTheoMa(khuyenMai.getMaKM());
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/khuyen-mai-form-dialog.fxml"));
+            KhuyenMaiFormDialogView view = new KhuyenMaiFormDialogView();
+            KhuyenMaiDialogController controller = new KhuyenMaiDialogController(view);
+            Parent root = view.getRoot();
             Stage dialog = new Stage();
             dialog.setTitle("Sửa Thông Tin Khuyến Mãi");
             dialog.initModality(Modality.APPLICATION_MODAL);
-            dialog.setScene(new Scene(loader.load()));
-
+            dialog.setScene(new Scene(root));
             // Thiết lập controller và dữ liệu
-            KhuyenMaiDialogController controller = loader.getController();
             controller.setMode("EDIT");
 
             // Set dữ liệu sau khi dialog hiển thị
@@ -433,8 +431,6 @@ public class QuanLyKhuyenMaiController implements Initializable {
 
         } catch (SQLException e) {
             ThongBaoUtil.hienThiThongBao("Lỗi", "Lỗi khi load dữ liệu khuyến mãi: " + e.getMessage());
-        } catch (IOException e) {
-            ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể mở form sửa khuyến mãi: " + e.getMessage());
         }
     }
 

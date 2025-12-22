@@ -8,6 +8,7 @@ import com.example.louishotelmanagement.ui.components.CustomButton;
 import com.example.louishotelmanagement.ui.models.BadgeVariant;
 import com.example.louishotelmanagement.ui.models.ButtonVariant;
 import com.example.louishotelmanagement.util.HoaDonTxtGenerator;
+import com.example.louishotelmanagement.view.XemHoaDonTxtView;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -111,7 +112,7 @@ public class QuanLyHoaDonController implements Initializable {
         });
 
         colCheckOut.setCellValueFactory(cellData -> {
-            LocalDate ngayDi = cellData.getValue().getNgayCheckOut();
+            LocalDate ngayDi = cellData.getValue().getngayDi();
             if (ngayDi == null) return Bindings.createStringBinding(() -> "N/A");
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -243,10 +244,9 @@ public class QuanLyHoaDonController implements Initializable {
 
 
             // 3. Load giao diện và hiển thị
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/xem-hoa-don-txt.fxml"));
-            Parent root = loader.load();
-
-            XemHoaDonTxtController controller = loader.getController();
+            XemHoaDonTxtView view = new XemHoaDonTxtView();
+            XemHoaDonTxtController controller = new XemHoaDonTxtController(view);
+            Parent root = view.getRoot();
             controller.initData(noiDungHoaDon);
 
             Stage stage = new Stage();
@@ -260,12 +260,6 @@ public class QuanLyHoaDonController implements Initializable {
             alert.setTitle("Lỗi Truy Vấn Dữ Liệu");
             alert.setHeaderText("Không thể tải chi tiết hóa đơn.");
             alert.setContentText("Lỗi SQL: " + e.getMessage());
-            alert.showAndWait();
-        } catch (IOException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Lỗi Giao Diện");
-            alert.setHeaderText("Không thể mở màn hình xem hóa đơn.");
-            alert.setContentText("Lỗi FXML (kiểm tra lại đường dẫn): " + e.getMessage());
             alert.showAndWait();
         }
     }

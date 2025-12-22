@@ -2,6 +2,7 @@ package com.example.louishotelmanagement.controller;// package com.example.louis
 // File: TienCocDialogController.java
 
 import com.example.louishotelmanagement.util.ThongBaoUtil;
+import com.example.louishotelmanagement.view.TienCocDialogView;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -18,7 +19,7 @@ import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ResourceBundle;
 
-public class TienCocDialogController implements Initializable { // 💡 TRIỂN KHAI INITIALIZABLE
+public class TienCocDialogController { // 💡 TRIỂN KHAI INITIALIZABLE
 
     @FXML
     private Label lblTongTienPhong;
@@ -45,8 +46,21 @@ public class TienCocDialogController implements Initializable { // 💡 TRIỂN 
 
     private static final DecimalFormat currencyFormat = new DecimalFormat("#,##0 VND");
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
+    public TienCocDialogController(TienCocDialogView view) {
+        this.lblTongTienPhong = view.getLblTongTienPhong();
+        this.lblTienCocDeXuat = view.getLblTienCocDeXuat();
+        this.txtTienCocThucTe = view.getTxtTienCocThucTe();
+        this.cboPhuongThucTT = view.getCboPhuongThucTT();
+        this.vbQrCodeContainer = view.getVbQrCodeContainer();
+        this.imgQrCode = view.getImgQrCode();
+        this.btnXacNhan = view.getBtnXacNhan();
+        this.btnHuy = view.getBtnHuy();
+        this.btnXacNhan.setOnAction(actionEvent ->handleXacNhan());
+        this.btnHuy.setOnAction(event -> handleHuy());
+        initialize();
+    }
+
+    public void initialize() {
         // Khởi tạo ComboBox
         cboPhuongThucTT.getItems().addAll("Tiền mặt", "Chuyển khoản");
         cboPhuongThucTT.getSelectionModel().selectFirst(); // Mặc định chọn Tiền mặt

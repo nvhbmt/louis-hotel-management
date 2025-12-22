@@ -6,6 +6,7 @@ import com.example.louishotelmanagement.util.ContentSwitcher;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
 import com.example.louishotelmanagement.util.Refreshable;
 
+import com.example.louishotelmanagement.view.ChiTietPhongTrongPhieuView;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,7 +18,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 
-import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -210,42 +210,25 @@ public class TraPhongController implements Initializable, Refreshable {
     public void handleTraPhong(ActionEvent actionEvent) throws Exception {
         String maPhieu = maPhieuThue.getText();
         if (maPhieu == null || maPhieu.isEmpty()) {
-            ThongBaoUtil.hienThiLoi("Lỗi", "Vui lòng kiểm tra phiếu trước khi trả.");
+            ThongBaoUtil.hienThiLoi("Lỗi", "Vui lòng kiểm tra phiếu.");
             return;
         }
 
         ArrayList<CTHoaDonPhong> listCT = cthdpDao.getCTHoaDonPhongTheoMaPhieu(maPhieu);
         if (listCT.isEmpty()) return;
 
-        CTHoaDonPhong activeCT = listCT.get(0);
-        HoaDon hd = hdDao.timHoaDonTheoMa(activeCT.getMaHD());
-        PhieuDatPhong pdp = phieuDatPhongDAO.layPhieuDatPhongTheoMa(maPhieu);
+        HoaDon hd = hdDao.timHoaDonTheoMa(listCT.get(0).getMaHD());
 
-        if (hd != null) {
-            if (hd.getTrangThai().equals(TrangThaiHoaDon.CHUA_THANH_TOAN)) {
-                moDialogThanhToan(hd);
-            } else {
-                // 1. Cập nhật trạng thái phiếu và phòng
-                phieuDatPhongDAO.capNhatTrangThaiPhieuDatPhong(maPhieu, TrangThaiPhieuDatPhong.HOAN_THANH.toString());
-                for (CTHoaDonPhong ct : listCT) {
-                    phDao.capNhatTrangThaiPhong(ct.getMaPhong(), TrangThaiPhong.TRONG.toString());
-                    cthdpDao.capNhatNgayDiThucTe(ct.getMaHD(), ct.getMaPhong(), LocalDate.now());
-                }
+        // Luôn mở dialog thanh toán để kiểm tra/thu tiền
+        boolean thanhToanXong = moDialogThanhToan(hd);
 
-                // 2. THÊM MỚI: Cập nhật trạng thái khách hàng sang CHECK_OUT
-                if (pdp != null) {
-                    khDao.capNhatTrangThaiKhachHang(pdp.getMaKH(), TrangThaiKhachHang.CHECK_OUT);
-                }
-
-                ThongBaoUtil.hienThiThongBao("Thành công", "Đã trả phòng và cập nhật trạng thái khách hàng!");
-                refreshData();
-                boolean daThanhToanXong = moDialogThanhToan(hd);
-                if(daThanhToanXong) {
-                    thucHienTraPhong(maPhieu, listCT);
-                } else {
-                    ThongBaoUtil.hienThiLoi("Lỗi", "Thanh toán chưa hoàn tất, không thể trả phòng.");
-                }
-            }
+        if (thanhToanXong) {
+            thucHienTraPhong(maPhieu, listCT);
+            // Cập nhật trạng thái khách hàng
+            PhieuDatPhong pdp = phieuDatPhongDAO.layPhieuDatPhongTheoMa(maPhieu);
+            khDao.capNhatTrangThaiKhachHang(pdp.getMaKH(), TrangThaiKhachHang.CHECK_OUT);
+        } else {
+            ThongBaoUtil.hienThiLoi("Lỗi", "Chưa hoàn tất thanh toán.");
         }
     }
 
@@ -292,18 +275,16 @@ public class TraPhongController implements Initializable, Refreshable {
         String maPhieu = dsPhieu.getSelectionModel().getSelectedItem();
         if (maPhieu == null) return;
 
-        try {
-            ArrayList<CTHoaDonPhong> dsCTP = cthdpDao.getCTHoaDonPhongTheoMaPhieu(maPhieu);
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/chi-tiet-phong-trong-phieu-view.fxml"));
-            Parent root = loader.load();
-            ChiTietPhongTrongPhieuController ctrl = loader.getController();
-            ctrl.setChiTietData(maPhieu, dsCTP);
+        ArrayList<CTHoaDonPhong> dsCTP = cthdpDao.getCTHoaDonPhongTheoMaPhieu(maPhieu);
+        ChiTietPhongTrongPhieuView view = new ChiTietPhongTrongPhieuView();
+        ChiTietPhongTrongPhieuController controller = new ChiTietPhongTrongPhieuController(view);
+        Parent root = view.getRoot();
+        controller.setChiTietData(maPhieu, dsCTP);
 
-            Stage stage = new Stage();
-            stage.setScene(new Scene(root));
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.showAndWait();
-        } catch (IOException e) { e.printStackTrace(); }
+        Stage stage = new Stage();
+        stage.setScene(new Scene(root));
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.showAndWait();
     }
 
     @Override
