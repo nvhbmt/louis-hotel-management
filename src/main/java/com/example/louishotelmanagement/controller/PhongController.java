@@ -431,20 +431,4 @@ public class PhongController implements Initializable {
             }
         }
     }
-
-    @FXML
-    private void moDatTT(ActionEvent actionEvent) {
-        ArrayList<Phong> dsTarget = layDanhSachPhongTarget();
-        if (switcher != null) {
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/dat-phong-truc-tiep-view.fxml"));
-                Parent root = loader.load();
-                DatPhongTaiQuayController ctrl = loader.getController();
-                if (!dsTarget.isEmpty()) ctrl.nhanDanhSachPhongDaChon(dsTarget);
-                switcher.switchContent(root);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 }

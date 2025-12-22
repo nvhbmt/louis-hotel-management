@@ -219,6 +219,32 @@ public class TraPhongController implements Initializable, Refreshable,ContentSwi
         ArrayList<CTHoaDonPhong> listCT = cthdpDao.getCTHoaDonPhongTheoMaPhieu(maPhieu);
         if (listCT.isEmpty()) return;
 
+        // --- BẮT ĐẦU KIỂM TRA TRẢ PHÒNG SỚM ---
+        LocalDate homNay = LocalDate.now();
+        boolean coPhongTraSom = false;
+
+        for (CTHoaDonPhong ct : listCT) {
+            // Nếu ngày đi dự kiến vẫn còn trong tương lai
+            if (ct.getNgayDi().isAfter(homNay)) {
+                coPhongTraSom = true;
+                break;
+            }
+        }
+
+        if (coPhongTraSom) {
+            // Sử dụng Alert của JavaFX hoặc ThongBaoUtil nếu bạn đã viết hàm xác nhận
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Xác nhận trả phòng sớm");
+            alert.setHeaderText("Thông báo trả phòng sớm");
+            alert.setContentText("Ngày đi dự kiến của phiếu này là sau ngày hôm nay. Bạn có chắc chắn muốn trả phòng sớm không?");
+
+            var result = alert.showAndWait();
+            if (result.isEmpty() || result.get() != ButtonType.OK) {
+                return; // Người dùng nhấn Cancel, dừng việc trả phòng
+            }
+        }
+        // --- KẾT THÚC KIỂM TRA ---
+
         HoaDon hd = hdDao.timHoaDonTheoMa(listCT.get(0).getMaHD());
 
         // Luôn mở dialog thanh toán để kiểm tra/thu tiền
@@ -226,7 +252,6 @@ public class TraPhongController implements Initializable, Refreshable,ContentSwi
 
         if (thanhToanXong) {
             thucHienTraPhong(maPhieu, listCT);
-            // Cập nhật trạng thái khách hàng
             PhieuDatPhong pdp = phieuDatPhongDAO.layPhieuDatPhongTheoMa(maPhieu);
             khDao.capNhatTrangThaiKhachHang(pdp.getMaKH(), TrangThaiKhachHang.CHECK_OUT);
         } else {
