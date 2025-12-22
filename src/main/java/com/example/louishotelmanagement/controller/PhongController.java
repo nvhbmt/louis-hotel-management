@@ -23,9 +23,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -37,27 +35,27 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 
-public class PhongController implements Initializable {
+public class PhongController {
 
     // --- FXML Components ---
-    @FXML private Label tieuDeLabel;
-    @FXML private Button btnNhanPhong, btnDatTT, btnDoiPhong, btnHuyDat, btnDichVu;
-    @FXML private ComboBox<String> cbxTang;
-    @FXML private ComboBox<String> cbxTrangThai;
-    @FXML private DatePicker dpTuNgay;
-    @FXML private DatePicker dpDenNgay;
+   private ComboBox<String> cbxTang;
+   private ComboBox<String> cbxTrangThai;
+   private DatePicker dpTuNgay;
+   private DatePicker dpDenNgay;
 
-    @FXML private TableView<Phong> tableViewPhong;
-    @FXML private TableColumn<Phong, Boolean> chonPhong;
-    @FXML private TableColumn<Phong, String> maPhong;
-    @FXML private TableColumn<Phong, String> loaiPhong;
-    @FXML private TableColumn<Phong, Double> donGia;
-    @FXML private TableColumn<Phong, TrangThaiPhong> trangThai;
+   private TableView<Phong> tableViewPhong;
+   private TableColumn<Phong, Boolean> chonPhong;
+   private TableColumn<Phong, String> maPhong;
+   private TableColumn<Phong, String> loaiPhong;
+   private TableColumn<Phong, Double> donGia;
+   private TableColumn<Phong, TrangThaiPhong> trangThai;
 
-    @FXML private Label lblTongPhong;
-    @FXML private Label lblPhongTrong;
-    @FXML private Label lblPhongSuDung;
-    @FXML private Label lblPhongBaoTri;
+   private Label lblTongPhong;
+   private Label lblPhongTrong;
+   private Label lblPhongSuDung;
+   private Label lblPhongBaoTri;
+
+    private Button btnLamMoi;
 
     // --- Data and DAO ---
     private PhongDAO phongDAO;
@@ -66,19 +64,26 @@ public class PhongController implements Initializable {
 
     private ContentSwitcher switcher;
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    public PhongController() {
         phongDAO = new PhongDAO();
+        // UI components will be set up later via setupController()
+    }
 
-        cauHinhBang();
-        cauHinhCBX();
-        cauHinhDatePicker();
-        cauHinhLoc();
-        taiBang();
-        
-        ContentSwitcher switcher = LayoutController.getInstance();
-        if (switcher != null) {
-            this.switcher = switcher;
+    /**
+     * Set up the controller with UI components from PhongView
+     */
+    public void setupController() {
+        if (tableViewPhong != null) {
+            cauHinhBang();
+            cauHinhCBX();
+            cauHinhDatePicker();
+            cauHinhLoc();
+            taiBang();
+
+            ContentSwitcher switcher = LayoutController.getInstance();
+            if (switcher != null) {
+                this.switcher = switcher;
+            }
         }
     }
 
@@ -286,8 +291,7 @@ public class PhongController implements Initializable {
         lblPhongBaoTri.setText(String.valueOf(soBaoTri));
     }
 
-    @FXML
-    private void handleLamMoi(ActionEvent event) {
+    public void handleLamMoi(ActionEvent event) {
         cbxTang.setValue("Tất cả các tầng");
         cbxTrangThai.setValue("Tất cả trạng thái");
         dpTuNgay.setValue(null);
@@ -327,14 +331,14 @@ public class PhongController implements Initializable {
 
     // --- CÁC HÀM SỰ KIỆN NÚT BẤM (ĐÃ CẬP NHẬT LOGIC MỚI) ---
 
-    @FXML
-    private void moNhanPhong(ActionEvent actionEvent) {
+    public void moNhanPhong(ActionEvent actionEvent) {
         ArrayList<Phong> dsTarget = layDanhSachPhongTarget();
         String maPhongCanNhan = dsTarget.isEmpty() ? null : dsTarget.get(0).getMaPhong();
 
         if (switcher != null) {
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/nhan-phong-view.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource(
+                        "/com/example/louishotelmanagement/fxml/nhan-phong-view.fxml"));
                 Parent root = loader.load();
 
                 if (maPhongCanNhan != null) {
@@ -343,12 +347,13 @@ public class PhongController implements Initializable {
                     controller.nhanDuLieuTuPhong(maPhongCanNhan);
                 }
                 switcher.switchContent(root);
-            } catch (Exception e) { e.printStackTrace(); }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
-    @FXML
-    private void moDoiPhong(ActionEvent actionEvent) throws SQLException {
+    public void moDoiPhong(ActionEvent actionEvent) {
         ArrayList<Phong> dsTarget = layDanhSachPhongTarget();
 
         // 1. Kiểm tra nếu chưa chọn phòng nào
@@ -358,37 +363,43 @@ public class PhongController implements Initializable {
         }
 
         String maPhongCanDoi = dsTarget.get(0).getMaPhong();
-        TrangThaiPhong tt = phongDAO.layPhongTheoMa(maPhongCanDoi).getTrangThai();
+        try {
+            TrangThaiPhong tt = phongDAO.layPhongTheoMa(maPhongCanDoi).getTrangThai();
+                
+            // 2. SỬA TẠI ĐÂY: Nếu trạng thái KHÁC "DANG_SU_DUNG" thì mới báo lỗi
+            if (!tt.equals(TrangThaiPhong.DANG_SU_DUNG)) {
+                ThongBaoUtil.hienThiCanhBao("Lỗi", "Vui lòng chọn phòng đang sử dụng để đổi phòng");
+                return;
+            }
 
-        // 2. SỬA TẠI ĐÂY: Nếu trạng thái KHÁC "DANG_SU_DUNG" thì mới báo lỗi
-        if (!tt.equals(TrangThaiPhong.DANG_SU_DUNG)) {
-            ThongBaoUtil.hienThiCanhBao("Lỗi", "Vui lòng chọn phòng đang sử dụng để đổi phòng");
+            // 3. Logic chuyển màn hình nếu thỏa mãn điều kiện
+            if (switcher != null) {
+                try {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/doi-phong-view.fxml"));
+                    Parent root = loader.load();
+
+                    DoiPhongController controller = loader.getController();
+                    controller.setContentSwitcher(this.switcher);
+                    controller.nhanDuLieuTuPhong(maPhongCanDoi);
+
+                    switcher.switchContent(root);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            ThongBaoUtil.hienThiLoi("Lỗi", "Không thể lấy thông tin phòng: " + e.getMessage());
             return;
         }
 
-        // 3. Logic chuyển màn hình nếu thỏa mãn điều kiện
-        if (switcher != null) {
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/doi-phong-view.fxml"));
-                Parent root = loader.load();
-
-                DoiPhongController controller = loader.getController();
-                controller.setContentSwitcher(this.switcher);
-                controller.nhanDuLieuTuPhong(maPhongCanDoi);
-
-                switcher.switchContent(root);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
-    @FXML private void moDichVu(ActionEvent actionEvent) { if (switcher != null) switcher.switchContent("/com/example/louishotelmanagement/fxml/dat-dich-vu-view.fxml"); }
-    @FXML private void moHuyDat(ActionEvent actionEvent) { if (switcher != null) switcher.switchContent("/com/example/louishotelmanagement/fxml/huy-dat-phong-view.fxml"); }
-    @FXML private void moThanhToan(ActionEvent actionEvent) { if (switcher != null) switcher.switchContent("/com/example/louishotelmanagement/fxml/quan-ly-hoa-don-view.fxml"); }
+    public void moDichVu(ActionEvent actionEvent) { if (switcher != null) switcher.switchContent("/com/example/louishotelmanagement/fxml/dat-dich-vu-view.fxml"); }
+    public void moHuyDat(ActionEvent actionEvent) { if (switcher != null) switcher.switchContent("/com/example/louishotelmanagement/fxml/huy-dat-phong-view.fxml"); }
+    public void moThanhToan(ActionEvent actionEvent) { if (switcher != null) switcher.switchContent("/com/example/louishotelmanagement/fxml/quan-ly-hoa-don-view.fxml"); }
 
-    @FXML
-    private void moHuy(ActionEvent actionEvent) { // Nút Trả phòng
+    public void moHuy(ActionEvent actionEvent) { // Nút Trả phòng
         ArrayList<Phong> dsTarget = layDanhSachPhongTarget();
 
         if (dsTarget.isEmpty()) {
@@ -404,8 +415,7 @@ public class PhongController implements Initializable {
         chuyenSangManHinhTraPhong(p);
     }
 
-    @FXML
-    private void moDatPhong(ActionEvent actionEvent) {
+    public void moDatPhong(ActionEvent actionEvent) {
         ArrayList<Phong> dsTarget = layDanhSachPhongTarget();
 
         if (dsTarget.isEmpty()) {
@@ -429,5 +439,84 @@ public class PhongController implements Initializable {
                 e.printStackTrace();
             }
         }
+    }
+
+    public void moDatTT(ActionEvent actionEvent) {
+        ArrayList<Phong> dsTarget = layDanhSachPhongTarget();
+        if (switcher != null) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/dat-phong-truc-tiep-view.fxml"));
+                Parent root = loader.load();
+                DatPhongTaiQuayController ctrl = loader.getController();
+                if (!dsTarget.isEmpty()) ctrl.nhanDanhSachPhongDaChon(dsTarget);
+                switcher.switchContent(root);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    // ============================================
+    // UI COMPONENT SETTERS
+    // ============================================
+
+    public void setTableViewPhong(TableView tableViewPhong) {
+        this.tableViewPhong = tableViewPhong;
+    }
+
+    public void setChonPhong(TableColumn chonPhong) {
+        this.chonPhong = chonPhong;
+    }
+
+    public void setMaPhong(TableColumn maPhong) {
+        this.maPhong = maPhong;
+    }
+
+    public void setLoaiPhong(TableColumn loaiPhong) {
+        this.loaiPhong = loaiPhong;
+    }
+
+    public void setDonGia(TableColumn donGia) {
+        this.donGia = donGia;
+    }
+
+    public void setTrangThai(TableColumn trangThai) {
+        this.trangThai = trangThai;
+    }
+
+    public void setLblTongPhong(Label lblTongPhong) {
+        this.lblTongPhong = lblTongPhong;
+    }
+
+    public void setLblPhongTrong(Label lblPhongTrong) {
+        this.lblPhongTrong = lblPhongTrong;
+    }
+
+    public void setLblPhongSuDung(Label lblPhongSuDung) {
+        this.lblPhongSuDung = lblPhongSuDung;
+    }
+
+    public void setLblPhongBaoTri(Label lblPhongBaoTri) {
+        this.lblPhongBaoTri = lblPhongBaoTri;
+    }
+
+    public void setCbxTrangThai(ComboBox cbxTrangThai) {
+        this.cbxTrangThai = cbxTrangThai;
+    }
+
+    public void setCbxTang(ComboBox cbxTang) {
+        this.cbxTang = cbxTang;
+    }
+
+    public void setDpTuNgay(DatePicker dpTuNgay) {
+        this.dpTuNgay = dpTuNgay;
+    }
+
+    public void setDpDenNgay(DatePicker dpDenNgay) {
+        this.dpDenNgay = dpDenNgay;
+    }
+
+    public void setBtnLamMoi(Button btnLamMoi) {
+        this.btnLamMoi = btnLamMoi;
     }
 }

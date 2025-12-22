@@ -132,6 +132,7 @@ public class DangNhapController{
         } catch (IOException e) {   
             ThongBaoUtil.hienThiLoi("Lỗi", "Không thể tải màn hình chính: " + e.getMessage());
             System.out.println("Không thể tải màn hình chính: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }
