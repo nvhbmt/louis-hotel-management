@@ -196,12 +196,6 @@
                             <Cursor fx:constant="HAND" />
                         </cursor>
                     </Button>
-
-                    <Button fx:id="btnThanhToan" maxWidth="Infinity" minHeight="50.0" mnemonicParsing="false" onAction="#moThanhToan" prefHeight="50.0" styleClass="btn-payment" text="💳 Thanh toán">
-                        <cursor>
-                            <Cursor fx:constant="HAND" />
-                        </cursor>
-                    </Button>
                 </VBox>
             </HBox>
         </VBox>

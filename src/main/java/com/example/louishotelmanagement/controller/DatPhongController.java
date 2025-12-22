@@ -1,34 +1,5 @@
 package com.example.louishotelmanagement.controller;
 
-import com.example.louishotelmanagement.dao.*;
-import com.example.louishotelmanagement.model.*;
-import com.example.louishotelmanagement.service.AuthService;
-import com.example.louishotelmanagement.ui.components.CustomButton;
-import com.example.louishotelmanagement.ui.models.ButtonVariant;
-import com.example.louishotelmanagement.util.Refreshable;
-import com.example.louishotelmanagement.util.ThongBaoUtil;
-import com.example.louishotelmanagement.view.KhachHangFormDialogView;
-import com.example.louishotelmanagement.view.PhieuDatPhongPDFView;
-import com.example.louishotelmanagement.view.TienCocDialogView;
-import javafx.beans.binding.Bindings;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.util.StringConverter;
-import org.kordamp.bootstrapfx.BootstrapFX;
-
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
@@ -41,6 +12,56 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.kordamp.bootstrapfx.BootstrapFX;
+import com.example.louishotelmanagement.dao.CTHoaDonPhongDAO;
+import com.example.louishotelmanagement.dao.HoaDonDAO;
+import com.example.louishotelmanagement.dao.KhachHangDAO;
+import com.example.louishotelmanagement.dao.LoaiPhongDAO;
+import com.example.louishotelmanagement.dao.PhieuDatPhongDAO;
+import com.example.louishotelmanagement.dao.PhongDAO;
+import com.example.louishotelmanagement.model.CTHoaDonPhong;
+import com.example.louishotelmanagement.model.HoaDon;
+import com.example.louishotelmanagement.model.KhachHang;
+import com.example.louishotelmanagement.model.LoaiPhong;
+import com.example.louishotelmanagement.model.PhieuDatPhong;
+import com.example.louishotelmanagement.model.Phong;
+import com.example.louishotelmanagement.model.TrangThaiHoaDon;
+import com.example.louishotelmanagement.model.TrangThaiKhachHang;
+import com.example.louishotelmanagement.model.TrangThaiPhieuDatPhong;
+import com.example.louishotelmanagement.model.TrangThaiPhong;
+import com.example.louishotelmanagement.service.AuthService;
+import com.example.louishotelmanagement.ui.components.CustomButton;
+import com.example.louishotelmanagement.ui.models.ButtonVariant;
+import com.example.louishotelmanagement.util.Refreshable;
+import com.example.louishotelmanagement.util.SearchBoxUtil;
+import com.example.louishotelmanagement.util.ThongBaoUtil;
+import com.example.louishotelmanagement.view.KhachHangFormDialogView;
+import com.example.louishotelmanagement.view.PhieuDatPhongPDFView;
+import com.example.louishotelmanagement.view.TienCocDialogView;
+import javafx.beans.binding.Bindings;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.HBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.util.StringConverter;
 
 public class DatPhongController implements Initializable, Refreshable {
 
@@ -72,7 +93,6 @@ public class DatPhongController implements Initializable, Refreshable {
     @FXML private TableColumn<Phong, String> colTenLoaiPhong;
     @FXML private TableColumn<Phong, Double> colDonGia;
     @FXML public TableColumn<Phong, Void> colThaoTac;
-    @FXML public TableColumn<Phong, Void> colDaChon;
     @FXML private TableView<Phong> tablePhong;
 
     private String maPhieu;
@@ -114,7 +134,7 @@ public class DatPhongController implements Initializable, Refreshable {
             dsMaKH.add(khachHang.getMaKH());
         }
 
-        com.example.louishotelmanagement.util.SearchBoxUtil.makeSearchable(dsKhachHang);
+        SearchBoxUtil.makeSearchable(dsKhachHang);
     }
 
     private void khoiTaoDinhDangNgay() {
@@ -207,23 +227,6 @@ public class DatPhongController implements Initializable, Refreshable {
                     }
                     HBox box = new HBox(10, btnThem);
                     box.setAlignment(Pos.TOP_CENTER);
-                    setGraphic(box);
-                }
-            }
-        });
-        colDaChon.setCellFactory(param -> new TableCell<>() {
-            private CheckBox checkBox = new CheckBox();
-            @Override
-            protected void updateItem(Void item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty) {
-                    setGraphic(null);
-                } else {
-                    Phong phong = getTableView().getItems().get(getIndex());
-                    boolean isChecked = listPhongDuocDat.stream().map(Phong::getMaPhong).anyMatch(maPhong -> maPhong.equals(phong.getMaPhong()));
-                    checkBox.setSelected(isChecked);
-                    HBox box = new HBox(8, checkBox);
-                    box.setAlignment(Pos.CENTER);
                     setGraphic(box);
                 }
             }
@@ -626,6 +629,11 @@ public class DatPhongController implements Initializable, Refreshable {
         } catch (IOException e) {
             ThongBaoUtil.hienThiLoi("Lỗi giao diện", "Không thể mở màn hình xác nhận tiền cọc.");
             e.printStackTrace();
+            return;
+        }
+
+        if (dsKhachHang.getSelectionModel().getSelectedIndex() == -1) {
+            ThongBaoUtil.hienThiLoi("Lỗi", "Vui lòng chọn khách hàng trước khi đặt phòng.");
             return;
         }
 

@@ -41,7 +41,7 @@ public class PhongController implements Initializable {
 
     // --- FXML Components ---
     @FXML private Label tieuDeLabel;
-    @FXML private Button btnNhanPhong, btnDatTT, btnDoiPhong, btnHuyDat, btnDichVu, btnThanhToan;
+    @FXML private Button btnNhanPhong, btnDatTT, btnDoiPhong, btnHuyDat, btnDichVu;
     @FXML private ComboBox<String> cbxTang;
     @FXML private ComboBox<String> cbxTrangThai;
     @FXML private DatePicker dpTuNgay;
@@ -190,7 +190,6 @@ public class PhongController implements Initializable {
                         dpDenNgay.getValue());
             } else {
                 dsPhong = phongDAO.layDSPhong();
-                System.out.println("get all");
             }
             phongObservableList.clear();
             phongObservableList.addAll(dsPhong);

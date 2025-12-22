@@ -1,5 +1,7 @@
 package com.example.louishotelmanagement.model;
 
+import java.util.Objects;
+
 public class Phong {
     private String maPhong;
     private Integer tang;
@@ -91,5 +93,17 @@ public class Phong {
                 ", moTa='" + moTa + '\'' +
                 ", loaiPhong=" + (loaiPhong != null ? loaiPhong.getTenLoai() : "null") +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Phong phong = (Phong) o;
+        return Objects.equals(maPhong, phong.maPhong);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(maPhong);
     }
 }

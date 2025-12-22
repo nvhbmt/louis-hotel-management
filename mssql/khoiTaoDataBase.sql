@@ -11,7 +11,7 @@ CREATE TABLE LoaiPhong
     tenLoai     NVARCHAR(100)  NOT NULL,
     moTa        NVARCHAR(255),
     donGia      DECIMAL(18, 2) NOT NULL,
-    daXoaLuc    DATETIME NULL
+    daXoaLuc    DATETIME       NULL
 );
 GO
 -- Bảng phòng
@@ -37,11 +37,12 @@ CREATE TABLE KhachHang
     ngaySinh  DATE          NULL,
     ghiChu    NVARCHAR(255) NULL,
     CCCD      NVARCHAR(20)  NULL,
-    hangKhach NVARCHAR(50) DEFAULT N'Khách thường',
+    hangKhach NVARCHAR(50) CHECK (hangKhach IN (N'Khách VIP', N'Khách quen', N'Khách thường',
+                                                N'Khách doanh nghiệp'))                    DEFAULT N'Khách thường',
     --(Khách VIP, Khách quen)
-    trangThai NVARCHAR(50) DEFAULT N'Đang lưu trú',
+    trangThai NVARCHAR(50) CHECK (trangThai IN (N'Đang lưu trú', N'Check-out', N'Đã Đặt')) DEFAULT N'Đang lưu trú',
     --(Enum TrangThaiKhachHang)
-    daXoaLuc  DATETIME NULL
+    daXoaLuc  DATETIME      NULL
 );
 GO
 -- Bảng nhân viên
@@ -66,7 +67,7 @@ CREATE TABLE TaiKhoan
     quyen       NVARCHAR(50),
     trangThai   BIT DEFAULT 1,
     -- 1 = Hoạt động, 0 = Khóa
-    daXoaLuc    DATETIME NULL,
+    daXoaLuc    DATETIME            NULL,
     FOREIGN KEY (maNV) REFERENCES NhanVien (maNV)
 );
 
@@ -77,12 +78,12 @@ CREATE TABLE PhieuDatPhong
     ngayDat   DATE,
     ngayDen   DATE,
     ngayDi    DATE,
-    trangThai NVARCHAR(50),
+    trangThai NVARCHAR(50) CHECK (trangThai IN (N'Hoàn thành', N'Đã đặt', N'Đã hủy', N'Đang sử dụng')),
     ghiChu    NVARCHAR(255),
     maKH      nvarchar(10),
     maNV      nvarchar(10),
     tienCoc   DECIMAL(18, 2) NULL, -- Trường tiền cọc đã được thêm vào
-    daXoaLuc  DATETIME NULL,
+    daXoaLuc  DATETIME       NULL,
     FOREIGN KEY (maKH) REFERENCES KhachHang (maKH),
     FOREIGN KEY (maNV) REFERENCES NhanVien (maNV)
 );
@@ -112,7 +113,7 @@ CREATE TABLE KhuyenMai
     moTa             NVARCHAR(255),
     trangThai        NVARCHAR(50),
     maNV             nvarchar(10),
-    daXoaLuc         DATETIME NULL,
+    daXoaLuc         DATETIME            NULL,
     FOREIGN KEY (maNV) REFERENCES NhanVien (maNV)
 );
 GO
@@ -124,7 +125,7 @@ CREATE TABLE PhieuDichVu
     ngayLap   DATE,
     maNV      nvarchar(10),
     ghiChu    NVARCHAR(255) NULL,
-    daXoaLuc  DATETIME NULL,
+    daXoaLuc  DATETIME      NULL,
     FOREIGN KEY (maNV) REFERENCES NhanVien (maNV)
 );
 GO
@@ -134,7 +135,7 @@ CREATE TABLE HoaDon
     maHD             NVARCHAR(10) PRIMARY KEY,
     ngayLap          DATE,
     phuongThuc       NVARCHAR(50),
-    trangThai        NVARCHAR(50)  CHECK (trangThai IN (N'Chưa thanh toán', N'Đã thanh toán')),
+    trangThai        NVARCHAR(50) CHECK (trangThai IN (N'Chưa thanh toán', N'Đã thanh toán')),
     tongTien         DECIMAL(18, 2),
     -- Phí phạt
     PhatNhanPhongTre DECIMAL(18, 2) NULL DEFAULT 0,
@@ -151,7 +152,7 @@ CREATE TABLE HoaDon
     maNV             NVARCHAR(10),
     maKM             NVARCHAR(10)   NULL,
 
-    daXoaLuc         DATETIME NULL,
+    daXoaLuc         DATETIME       NULL,
 
     FOREIGN KEY (maKH) REFERENCES KhachHang (maKH),
     FOREIGN KEY (maNV) REFERENCES NhanVien (maNV),
@@ -191,7 +192,7 @@ CREATE TABLE CTHoaDonDichVu
     soLuong   INT,
     donGia    DECIMAL(18, 2),
     thanhTien AS (soLuong * donGia) PERSISTED,
-    daXoaLuc DATETIME NULL,
+    daXoaLuc  DATETIME NULL,
     PRIMARY KEY (maHD, maDV),
     FOREIGN KEY (maHD) REFERENCES HoaDon (maHD),
     FOREIGN KEY (maPhieuDV) REFERENCES PhieuDichVu (maPhieuDV),
