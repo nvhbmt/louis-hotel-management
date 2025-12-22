@@ -1,5 +1,6 @@
 package com.example.louishotelmanagement.ui.models;
 
+import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import org.kordamp.ikonli.javafx.FontIcon;
@@ -42,7 +43,7 @@ public class MenuItemModel {
     public String getTitle() { return title; }
     public String getFxmlPath() { return fxmlPath; }
 
-    public javafx.scene.Node getIconNode() {
+    public Node getIconNode() {
         if (iconPath != null) {
             Image img = new Image(getClass().getResourceAsStream(iconPath), 20, 20, true, true);
             return new ImageView(img);

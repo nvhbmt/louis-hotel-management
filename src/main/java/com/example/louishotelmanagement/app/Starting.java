@@ -3,12 +3,10 @@ package com.example.louishotelmanagement.app;
 import java.io.IOException;
 import org.kordamp.bootstrapfx.BootstrapFX;
 import com.example.louishotelmanagement.config.CauHinhDatabase;
-import com.example.louishotelmanagement.controller.DangNhapController;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
 import com.example.louishotelmanagement.view.DangNhapView;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
@@ -21,10 +19,7 @@ public class Starting extends Application {
             return;
         }
 
-        DangNhapView dangNhapView = new DangNhapView();
-        new DangNhapController(dangNhapView);
-        Parent root = dangNhapView.getRoot();
-        Scene scene = new Scene(root, 400, 800);
+        Scene scene = new Scene(new DangNhapView().getRoot(), 400, 800);
         scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
         stage.setTitle("Đăng nhập - Hệ thống quản lý khách sạn Louis");
         stage.setScene(scene);
