@@ -3,7 +3,7 @@ package com.example.louishotelmanagement.model;
 public enum HangKhach {
     KHACH_THUONG("Khách thường"),
     KHACH_QUEN("Khách quen"),
-    KHACH_VIP("Khách vip"),
+    KHACH_VIP("Khách VIP"),
     KHACH_DOANH_NGHIEP("Khách doanh nghiệp");
 
     private final String hangKhach;

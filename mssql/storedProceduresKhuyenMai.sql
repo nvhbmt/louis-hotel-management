@@ -5,7 +5,7 @@
 USE QuanLyKhachSan;
 GO
 
--- 1. Lấy toàn bộ danh sách mã giảm giá
+-- 1. Lấy toàn bộ danh sách mã giảm giá (chỉ những mã chưa bị xóa mềm)
 CREATE PROCEDURE sp_LayDSKhuyenMai
 AS
 BEGIN
@@ -19,7 +19,8 @@ BEGIN
            moTa,
            trangThai,
            maNV
-    FROM KhuyenMai;
+    FROM KhuyenMai
+    WHERE daXoaLuc IS NULL;
 END
 GO
 
@@ -30,7 +31,8 @@ BEGIN
     SELECT *
     FROM KhuyenMai
     WHERE trangThai = N'Đang diễn ra'
-      AND GETDATE() BETWEEN ngayBatDau AND ngayKetThuc;
+      AND GETDATE() BETWEEN ngayBatDau AND ngayKetThuc
+      AND daXoaLuc IS NULL;
 END
 GO
 
@@ -59,6 +61,7 @@ CREATE PROCEDURE sp_CapNhatKhuyenMai @maKM NVARCHAR(10), -- Mã khuyến mãi
                                      @code NVARCHAR(50), -- Code giảm giá
                                      @giamGia DECIMAL(18, 2), -- Giá trị giảm
                                      @kieuGiamGia NVARCHAR(10), -- Kiểu giảm
+                                     @ngayBatDau DATE, -- Ngày bắt đầu mới
                                      @ngayKetThuc DATE, -- Ngày kết thúc mới
                                      @moTa NVARCHAR(255), -- Mô tả mới
                                      @trangThai NVARCHAR(50) -- Trạng thái mới
@@ -68,6 +71,7 @@ BEGIN
     SET code        = @code,
         giamGia     = @giamGia,
         kieuGiamGia = @kieuGiamGia,
+        ngayBatDau  = @ngayBatDau,
         ngayKetThuc = @ngayKetThuc,
         moTa        = @moTa,
         trangThai   = @trangThai
@@ -107,7 +111,7 @@ BEGIN
     FROM
         KhuyenMai
     WHERE
-        maKM = @maKM;
+        maKM = @maKM AND daXoaLuc IS NULL;
 END;
 GO
 
@@ -124,7 +128,7 @@ BEGIN
 
     SELECT @maxMaKM = MAX(maKM)
     FROM KhuyenMai
-    WHERE maKM LIKE 'KM%';
+    WHERE maKM LIKE 'KM%' AND daXoaLuc IS NULL;
 
     IF @maxMaKM IS NULL
     BEGIN

@@ -83,9 +83,9 @@ public class KhuyenMaiDAO {
     }
     // Cập nhật khuyến mãi
     public boolean capNhatKhuyenMai(KhuyenMai khuyenMai) throws SQLException {
-        
+
         System.out.println("khuyến mãi: " + khuyenMai);
-        String sql = "{call sp_CapNhatKhuyenMai(?,?,?,?,?,?,?)}";
+        String sql = "{call sp_CapNhatKhuyenMai(?,?,?,?,?,?,?,?)}";
         try (Connection con = CauHinhDatabase.getConnection();
              CallableStatement cs = con.prepareCall(sql)) {
 
@@ -93,9 +93,10 @@ public class KhuyenMaiDAO {
             cs.setString(2, khuyenMai.getCode());
             cs.setDouble(3, khuyenMai.getGiamGia());
             cs.setString(4, khuyenMai.getKieuGiamGia().toString());
-            cs.setDate(5, Date.valueOf(khuyenMai.getNgayKetThuc()));
-            cs.setString(6, khuyenMai.getMoTa());
-            cs.setString(7, khuyenMai.getTrangThai());
+            cs.setDate(5, Date.valueOf(khuyenMai.getNgayBatDau()));
+            cs.setDate(6, Date.valueOf(khuyenMai.getNgayKetThuc()));
+            cs.setString(7, khuyenMai.getMoTa());
+            cs.setString(8, khuyenMai.getTrangThai());
 
             return cs.executeUpdate() > 0;
         }

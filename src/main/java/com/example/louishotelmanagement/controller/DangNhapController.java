@@ -8,6 +8,7 @@ import com.example.louishotelmanagement.service.AuthService;
 import com.example.louishotelmanagement.util.PasswordUtil;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
 import com.example.louishotelmanagement.view.DangNhapView;
+import com.example.louishotelmanagement.view.LayoutView;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -104,8 +105,8 @@ public class DangNhapController{
     
     private void chuyenDenManHinhChinh() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/layout-chinh.fxml"));
-            Scene scene = new Scene(loader.load(), 1200, 800);
+            LayoutView layoutView = LayoutView.getInstance();
+            Scene scene = new Scene(layoutView.getRoot(), 1200, 800);
             
             Stage stage = (Stage) dangNhapBtn.getScene().getWindow();
             stage.setScene(scene);
@@ -128,7 +129,7 @@ public class DangNhapController{
             Platform.runLater(() -> {
                 stage.setMaximized(true);
             });
-        } catch (IOException e) {   
+        } catch (Exception e) {
             ThongBaoUtil.hienThiLoi("Lỗi", "Không thể tải màn hình chính: " + e.getMessage());
             System.out.println("Không thể tải màn hình chính: " + e.getMessage());
             e.printStackTrace();

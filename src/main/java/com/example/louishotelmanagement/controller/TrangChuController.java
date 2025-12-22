@@ -3,8 +3,10 @@ package com.example.louishotelmanagement.controller;
 import com.example.louishotelmanagement.util.ContentSwitchable;
 import com.example.louishotelmanagement.util.ContentSwitcher;
 import com.example.louishotelmanagement.view.QuanLyDichVuView;
+import com.example.louishotelmanagement.view.QuanLyKhachHangView;
 import com.example.louishotelmanagement.view.QuanLyPhongView;
 import com.example.louishotelmanagement.view.NhanPhongView;
+import com.example.louishotelmanagement.view.ThongKeView;
 import com.example.louishotelmanagement.view.TraPhongView;
 import javafx.fxml.FXML;
 
@@ -34,12 +36,13 @@ public class TrangChuController implements ContentSwitchable {
 
     @FXML
     public void moQuanLyKhachHang() {
-        switcher.switchContent("/com/example/louishotelmanagement/fxml/quan-ly-khach-hang-view.fxml");
+        QuanLyKhachHangView quanLyKhachHangView = QuanLyKhachHangView.getInstance();
+        switcher.switchContent(quanLyKhachHangView.getRoot());
     }
 
     @FXML
     public void moThongKe() {
-        switcher.switchContent("/com/example/louishotelmanagement/fxml/thong-ke-view.fxml");
+        switcher.switchContent(ThongKeView.getInstance().getRoot());
     }
 
     @FXML

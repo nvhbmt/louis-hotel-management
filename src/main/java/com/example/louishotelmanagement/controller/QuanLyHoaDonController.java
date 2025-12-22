@@ -1,22 +1,20 @@
 package com.example.louishotelmanagement.controller;
 
 import com.example.louishotelmanagement.dao.HoaDonDAO;
-import com.example.louishotelmanagement.model.HoaDon;
-import com.example.louishotelmanagement.model.KhachHang;
-import com.example.louishotelmanagement.ui.components.Badge;
-import com.example.louishotelmanagement.ui.components.CustomButton;
-import com.example.louishotelmanagement.ui.models.BadgeVariant;
-import com.example.louishotelmanagement.ui.models.ButtonVariant;
-import com.example.louishotelmanagement.util.HoaDonTxtGenerator;
+import com.example.louishotelmanagement.dao.KhuyenMaiDAO;
+import com.example.louishotelmanagement.model.*;
+import com.example.louishotelmanagement.ui.components.StatsCard;
+import com.example.louishotelmanagement.util.Refreshable;
+import com.example.louishotelmanagement.util.ThongBaoUtil;
+import com.example.louishotelmanagement.view.QuanLyHoaDonView;
+import com.example.louishotelmanagement.view.XemChiTietHoaDonView;
 import com.example.louishotelmanagement.view.XemHoaDonTxtView;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -26,111 +24,165 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.net.URL;
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.ResourceBundle;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
-public class QuanLyHoaDonController implements Initializable {
+public class QuanLyHoaDonController implements Refreshable {
 
-    // --- FXML Components ---
-    @FXML
+    private StatsCard unpaidInvoicesCard;
+    private StatsCard paidInvoicesCard;
+    private StatsCard dailyRevenueCard;
+    private StatsCard promotionalInvoicesCard;
+
     private TextField txtTimKiem;
-    @FXML
-    private ComboBox<String> cbNgayTao;
-    @FXML
-    private TableView<HoaDon> hoaDonTable;
-    @FXML
+    private ComboBox<String> cmbNgayLap;
+    private Button btnLamMoi;
+    private TableView<HoaDon> tableViewKhachHang;
     private TableColumn<HoaDon, String> colMaHD;
-    @FXML
-    private TableColumn<HoaDon, String> colHoTen;
-    @FXML
-    private TableColumn<HoaDon, String> colSoPhong;
-    @FXML
-    private TableColumn<HoaDon, String> colCheckOut;
-    @FXML
+    private TableColumn<HoaDon, LocalDate> colNgayLap;
     private TableColumn<HoaDon, Void> colThaoTac;
-    @FXML
+    private TableColumn<HoaDon, String> colPhuongThuc;
     private TableColumn<HoaDon, String> colTrangThai;
+    private TableColumn<HoaDon, BigDecimal> colTongTien;
+    private TableColumn<HoaDon, String> colMaKhuyenMai;
+    private TableColumn<HoaDon, String> colTenKH;
 
-    // --- Data and DAO ---
     private HoaDonDAO hoaDonDAO;
-    private ObservableList<HoaDon> danhSachHoaDon;
+    private ObservableList<HoaDon> masterList;
     private FilteredList<HoaDon> filteredHoaDonList;
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
+    private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+    public QuanLyHoaDonController(QuanLyHoaDonView view) {
+        this.unpaidInvoicesCard = view.getUnpaidInvoicesCard();
+        this.paidInvoicesCard = view.getPaidInvoicesCard();
+        this.dailyRevenueCard = view.getDailyRevenueCard();
+        this.promotionalInvoicesCard = view.getPromotionalInvoicesCard();
+        this.txtTimKiem = view.getTxtTimKiem();
+        this.cmbNgayLap = view.getCmbNgayLap();
+        this.btnLamMoi = view.getBtnLamMoi();
+        this.tableViewKhachHang = view.getTableViewKhachHang();
+        this.colMaHD = view.getColMaHD();
+        this.colNgayLap = view.getColNgayLap();
+        this.colPhuongThuc = view.getColPhuongThuc();
+        this.colTrangThai = view.getColTrangThai();
+        this.colTongTien = view.getColTongTien();
+        this.colMaKhuyenMai = view.getColMaKhuyenMai();
+        this.colTenKH = view.getColTenKH();
+        this.colThaoTac = view.getColThaoTac();
+        initialize();
+    }
+
+    public void initialize() {
+        masterList = FXCollections.observableArrayList();
+        filteredHoaDonList = new FilteredList<>(masterList, p -> true);
+        tableViewKhachHang.setItems(filteredHoaDonList);
+
         hoaDonDAO = new HoaDonDAO();
-        khoiTaoComboBox();
-        cauHinhBang();
-        thietLapBoLoc();
-        taiDuLieuHoaDon();
+
+        // Load data trước
+        try {
+            loadHoaDonChuaThanhToan();
+        } catch (SQLException ex) {
+            showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể tải danh sách hóa đơn: " + ex.getMessage());
+            ex.printStackTrace();
+        }
+
+        // Sau đó setup UI
+        setupTableColumns();
+        setupComboBox();
+        cauHinhLoc();
     }
 
-    private void khoiTaoComboBox() {
-        cbNgayTao.setItems(FXCollections.observableArrayList(
-                "Tất cả", "Hôm nay", "7 ngày qua", "Tháng này"
-        ));
-        cbNgayTao.setValue("Tất cả");
+    private void cauHinhLoc() {
+        filteredHoaDonList.predicateProperty().bind(Bindings.createObjectBinding(() -> {
+            String timKiemText = txtTimKiem.getText();
+            String ngayLapFilter = cmbNgayLap.getValue();
+
+            return hoaDon -> {
+                // Filter theo tìm kiếm
+                boolean timKiemMatch = timKiemText == null || timKiemText.trim().isEmpty() ||
+                        (hoaDon.getMaHD() != null && hoaDon.getMaHD().toLowerCase().contains(timKiemText.toLowerCase())) ||
+                        (hoaDon.getKhachHang() != null && hoaDon.getKhachHang().getHoTen() != null &&
+                                hoaDon.getKhachHang().getHoTen().toLowerCase().contains(timKiemText.toLowerCase()));
+
+                // Filter theo ngày lập
+                boolean ngayMatch = ngayLapFilter == null || ngayLapFilter.equals("Tất cả ngày") ||
+                        checkDateFilter(hoaDon.getNgayLap(), ngayLapFilter);
+
+                return timKiemMatch && ngayMatch;
+            };
+        }, txtTimKiem.textProperty(), cmbNgayLap.valueProperty()));
     }
 
-    private void cauHinhBang() {
-        danhSachHoaDon = FXCollections.observableArrayList();
-        filteredHoaDonList = new FilteredList<>(danhSachHoaDon, p -> true);
-        hoaDonTable.setItems(filteredHoaDonList);
+    private void setupTableColumns() {
 
         colMaHD.setCellValueFactory(new PropertyValueFactory<>("maHD"));
-
-        colHoTen.setCellValueFactory(cellData -> {
-            KhachHang kh = cellData.getValue().getKhachHang();
-            return Bindings.createStringBinding(() -> (kh != null && kh.getHoTen() != null) ? kh.getHoTen() : "N/A");
+        colNgayLap.setCellValueFactory(data -> new javafx.beans.property.SimpleObjectProperty<>(data.getValue().getNgayLap()));
+        colPhuongThuc.setCellValueFactory(data -> {
+            PhuongThucThanhToan p = data.getValue().getPhuongThuc();
+            return new SimpleStringProperty(p != null ? p.toString() : "");
         });
+        colTrangThai.setCellValueFactory(data -> {
+            TrangThaiHoaDon t = data.getValue().getTrangThai();
+            return new SimpleStringProperty(t != null ? t.toString() : "");
+        });
+        colTongTien.setCellValueFactory(new PropertyValueFactory<>("tongTien"));
 
-        colSoPhong.setCellValueFactory(new PropertyValueFactory<>("soPhong"));
-
-        colTrangThai.setCellValueFactory(new PropertyValueFactory<>("trangThai"));
-        colTrangThai.setCellFactory(_ -> new TableCell<>() {
-            @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                setGraphic(null);
-                if (empty || item == null) {
-                    setText(null);
-                } else {
-                    switch (item.toLowerCase()) {
-                        case "Đã thanh toán" -> setGraphic(Badge.createBadge(item, BadgeVariant.SUCCESS));
-                        case "Chưa thanh toán" -> setGraphic(Badge.createBadge(item, BadgeVariant.DANGER));
-                        default -> setText(item);
-                    }
-                }
+        colMaKhuyenMai.setCellValueFactory(data -> {
+            String maKM = data.getValue().getMaKM();
+            if (maKM == null || maKM.isEmpty()) return new SimpleStringProperty("");
+            try {
+                KhuyenMaiDAO khuyenMaiDAO = new KhuyenMaiDAO();
+                KhuyenMai km = khuyenMaiDAO.layKhuyenMaiTheoMa(maKM);
+                return new SimpleStringProperty(km != null ? km.getCode() : "");
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return new SimpleStringProperty("");
             }
         });
 
-        colCheckOut.setCellValueFactory(cellData -> {
-            LocalDate ngayDi = cellData.getValue().getngayDi();
-            if (ngayDi == null) return Bindings.createStringBinding(() -> "N/A");
+        colTenKH.setCellValueFactory(data -> {
+            KhachHang kh = data.getValue().getKhachHang();
+            String tenKH = kh != null ? kh.getHoTen() : "";
+            return new SimpleStringProperty(tenKH);
+        });
 
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            return Bindings.createStringBinding(() -> ngayDi.format(formatter));
+        colTongTien.setCellFactory(tc -> new TableCell<>() {
+            @Override
+            protected void updateItem(BigDecimal value, boolean empty) {
+                super.updateItem(value, empty);
+                setText(empty || value == null ? "" : String.format("%,.0f ₫", value.doubleValue()));
+            }
+        });
+
+        colNgayLap.setCellFactory(tc -> new TableCell<>() {
+            @Override
+            protected void updateItem(LocalDate date, boolean empty) {
+                super.updateItem(date, empty);
+                setText(empty || date == null ? "" : dateFormatter.format(date));
+            }
         });
 
         colThaoTac.setCellFactory(param -> new TableCell<>() {
-            private final Button btnPrint;
-            private final Button btnView;
-            private final HBox pane;
+            private final Button btnView = new Button("Xem");
+            private final Button btnIn = new Button("In");
+            private final HBox pane = new HBox(10, btnIn, btnView);
 
             {
-                btnPrint = CustomButton.createButton("In", ButtonVariant.OUTLINE, 70);
-                btnView = CustomButton.createButton("Xem", ButtonVariant.SUCCESS, 70);
-                pane = new HBox(10, btnPrint, btnView);
                 pane.setAlignment(Pos.CENTER);
-                btnPrint.setOnAction(event -> handleInHoaDon(getTableView().getItems().get(getIndex())));
+                double buttonWidth = 70;
+                btnView.setPrefWidth(buttonWidth);
+                btnView.setStyle("-fx-background-color: #f0f0f0;-fx-border-radius: 10");
                 btnView.setOnAction(event -> handleXemChiTiet(getTableView().getItems().get(getIndex())));
+                btnIn.setPrefWidth(buttonWidth);
+                btnIn.setStyle("-fx-background-color: #28a745; -fx-text-fill: white; -fx-border-radius: 10;");
+                btnIn.setOnAction(event -> handleInChiTiet(getTableView().getItems().get(getIndex())));
             }
 
             @Override
@@ -139,92 +191,55 @@ public class QuanLyHoaDonController implements Initializable {
                 setGraphic(empty ? null : pane);
             }
         });
+
+        // Table items are already set in initialize() with filteredHoaDonList
     }
 
-    private void thietLapBoLoc() {
-        filteredHoaDonList.predicateProperty().bind(Bindings.createObjectBinding(() -> {
-            String tuKhoa = txtTimKiem.getText().toLowerCase();
-            String locNgay = cbNgayTao.getValue();
-
-            return hoaDon -> {
-                boolean timKiemMatch = tuKhoa.isEmpty() ||
-                        (hoaDon.getMaHD() != null && hoaDon.getMaHD().toLowerCase().contains(tuKhoa)) ||
-                        (hoaDon.getKhachHang() != null && hoaDon.getKhachHang().getHoTen() != null && hoaDon.getKhachHang().getHoTen().toLowerCase().contains(tuKhoa)) ||
-                        (hoaDon.getSoPhong() != null && hoaDon.getSoPhong().toLowerCase().contains(tuKhoa));
-
-                boolean locNgayMatch = false;
-                LocalDate ngayHoaDon = hoaDon.getNgayLap();
-                if (locNgay.equals("Tất cả") || ngayHoaDon == null) {
-                    locNgayMatch = true;
-                } else {
-                    LocalDate now = LocalDate.now();
-                    switch (locNgay) {
-                        case "Hôm nay":
-                            locNgayMatch = ngayHoaDon.isEqual(now);
-                            break;
-                        case "7 ngày qua":
-                            locNgayMatch = !ngayHoaDon.isBefore(now.minusDays(7)) && !ngayHoaDon.isAfter(now);
-                            break;
-                        case "Tháng này":
-                            locNgayMatch = ngayHoaDon.getMonth() == now.getMonth() && ngayHoaDon.getYear() == now.getYear();
-                            break;
-                    }
-                }
-                return timKiemMatch && locNgayMatch;
-            };
-        }, txtTimKiem.textProperty(), cbNgayTao.valueProperty()));
-    }
-
-    private void taiDuLieuHoaDon() {
+    private void XemChiTiet(HoaDon hoaDon) {
         try {
-            List<HoaDon> ds = hoaDonDAO.layDanhSachHoaDon();
-            danhSachHoaDon.setAll(ds);
+            XemChiTietHoaDonView view = new XemChiTietHoaDonView();
+            XemChiTietHoaDonController controller = new XemChiTietHoaDonController(view);
+            Parent root = view.getRoot();
+            controller.loadData(hoaDon.getMaHD());
 
+            Stage st = new Stage();
+            st.setTitle("Chi tiết hóa đơn");
+            st.setScene(new Scene(root));
+            st.showAndWait();
 
-        } catch (Exception e) {
-
-
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Lỗi Tải Dữ Liệu Hóa Đơn");
-            alert.setHeaderText("Không thể tải danh sách hóa đơn!");
-            alert.setContentText("Lỗi chi tiết: " + e.getMessage());
-
-            StringWriter sw = new StringWriter();
-            PrintWriter pw = new PrintWriter(sw);
-            e.printStackTrace(pw);
-            String exceptionText = sw.toString();
-
-            TextArea textArea = new TextArea(exceptionText);
-            textArea.setEditable(false);
-            textArea.setWrapText(true);
-            textArea.setMaxWidth(Double.MAX_VALUE);
-            textArea.setMaxHeight(Double.MAX_VALUE);
-            alert.getDialogPane().setExpandableContent(textArea);
-
-            alert.showAndWait();
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
 
+    private void handleXemChiTiet(HoaDon hoaDon) {
+        if (hoaDon == null) return;
+        if (hoaDon.getTrangThai().equals(TrangThaiHoaDon.CHUA_THANH_TOAN)) {
+            if (ThongBaoUtil.hienThiXacNhan("Xác nhận", "Bạn có thể sẽ không thấy đầy đủ số liệu nếu chưa trả phòng")) {
+                XemChiTiet(hoaDon);
+            }
+        } else {
+            XemChiTiet(hoaDon);
+        }
 
-    private void handleInHoaDon(HoaDon hoaDon) {
 
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Thông báo");
-        alert.setHeaderText("Chức năng đang phát triển");
-        alert.setContentText("Logic in hóa đơn cho hóa đơn " + hoaDon.getMaHD() + " sẽ được triển khai ở đây.");
-        alert.showAndWait();
     }
 
+    private void handleInChiTiet(HoaDon hoaDon) {
 
-    private void handleXemChiTiet(HoaDon hoaDon) {
-        // *LƯU Ý: Thêm kiểm tra trạng thái DA_THANH_TOAN nếu chưa có ở đây, dựa trên code cũ.*
+        // 1. Kiểm tra trạng thái hóa đơn (Giữ nguyên logic kiểm tra)
+        if (!hoaDon.getTrangThai().equals(TrangThaiHoaDon.DA_THANH_TOAN)) {
+            // ThongBaoUtil.hienThiLoi phải là một dependency đã được import
+            ThongBaoUtil.hienThiLoi("Lỗi", "Vui lòng trả phòng và thanh toán hóa đơn trước khi xem");
+            return;
+        }
 
         try {
             // Lấy Mã Hóa Đơn từ đối tượng được chọn trên TableView
             String maHD = hoaDon.getMaHD();
 
-            // 1. Tải lại hóa đơn HOÀN CHỈNH từ database (sử dụng maHD)
-            // Gọi phương thức DAO đã được chứng minh là tải đầy đủ dữ liệu (TongGiamGia, TongVAT)
+            // 2. *** FIX QUAN TRỌNG ***: Tải lại hóa đơn HOÀN CHỈNH từ database
+            // Sử dụng phương thức DAO đã được chứng minh là tải đầy đủ dữ liệu (TongGiamGia, TongVAT, v.v.)
             // GIẢ ĐỊNH: Lớp Controller có thể truy cập 'this.hoaDonDAO'
             HoaDon hoaDonHoanChinh = this.hoaDonDAO.timHoaDonTheoMa(maHD);
 
@@ -237,13 +252,12 @@ public class QuanLyHoaDonController implements Initializable {
                 return;
             }
 
-            // 2. Khởi tạo Generator và tạo nội dung TXT
-            HoaDonTxtGenerator generator = new HoaDonTxtGenerator();
-            // SỬ DỤNG đối tượng HOÀN CHỈNH đã tải lại
-            String noiDungHoaDon = generator.taoNoiDungHoaDon(hoaDonHoanChinh);
+            // 3. Khởi tạo Generator và tạo nội dung TXT
+            // Đảm bảo HoaDonTxtGenerator.taoNoiDungHoaDon nhận đối tượng HoaDon
+            com.example.louishotelmanagement.util.HoaDonTxtGenerator generator = new com.example.louishotelmanagement.util.HoaDonTxtGenerator();
+            String noiDungHoaDon = generator.taoNoiDungHoaDon(hoaDonHoanChinh); // <-- DÙNG đối tượng HOÀN CHỈNH
 
-
-            // 3. Load giao diện và hiển thị
+            // 4. Load giao diện và hiển thị (Giữ nguyên logic FXML)
             XemHoaDonTxtView view = new XemHoaDonTxtView();
             XemHoaDonTxtController controller = new XemHoaDonTxtController(view);
             Parent root = view.getRoot();
@@ -264,20 +278,103 @@ public class QuanLyHoaDonController implements Initializable {
         }
     }
 
-    public void handleLamMoi(ActionEvent actionEvent) {
-
+    private void setupComboBox() {
+        cmbNgayLap.setItems(FXCollections.observableArrayList("Tất cả ngày", "1 ngày", "3 ngày", "1 tuần"));
+        cmbNgayLap.setValue("Tất cả ngày");
         txtTimKiem.clear();
-
-
-        cbNgayTao.setValue("Tất cả");
-
-
-        taiDuLieuHoaDon();
     }
 
-    @FXML
-    public void handleAutoRefreshOnMouseEntered() {
-        taiDuLieuHoaDon();
-        // Auto refresh cập nhật mới thông tin hóa đơn mỗi khi di chuyển chuột qua
+
+    private void loadHoaDonChuaThanhToan() throws SQLException {
+        List<HoaDon> all = hoaDonDAO.layDanhSachHoaDon();
+        List<HoaDon> chuaTT = all.stream()
+                .collect(Collectors.toList());
+        masterList.setAll(chuaTT);
+        capNhatThongKe();
+    }
+
+
+    private void capNhatThongKe() {
+        List<HoaDon> visible = tableViewKhachHang.getItems();
+        long countKHChuaThanhToan = visible.stream()
+                .filter(hd -> hd.getTrangThai() == TrangThaiHoaDon.CHUA_THANH_TOAN)
+                .count();
+        unpaidInvoicesCard.setValue(String.valueOf(countKHChuaThanhToan));
+
+        long countKHDaThanhToan = visible.stream()
+                .filter(hd -> hd.getTrangThai() == TrangThaiHoaDon.DA_THANH_TOAN)
+                .count();
+        paidInvoicesCard.setValue(String.valueOf(countKHDaThanhToan));
+
+        LocalDate today = LocalDate.now();
+        BigDecimal revenueToday = visible.stream()
+                .filter(hd -> hd.getNgayLap() != null && hd.getNgayLap().isEqual(today) && hd.getTrangThai().equals(TrangThaiHoaDon.DA_THANH_TOAN))
+                .map(HoaDon::getTongTien)
+                .filter(Objects::nonNull)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        dailyRevenueCard.setValue(String.format("%,.0f ₫", revenueToday.doubleValue()));
+
+        long KhuyenMaicount = visible.stream()
+                .filter(hd -> hd.getMaKM() != null)
+                .count();
+        promotionalInvoicesCard.setValue(String.valueOf(KhuyenMaicount));
+    }
+
+    private void onLamMoi(ActionEvent event) {
+        txtTimKiem.clear();
+        cmbNgayLap.getSelectionModel().selectFirst();
+        try {
+            loadHoaDonChuaThanhToan();
+        } catch (SQLException e) {
+            showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể làm mới: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void showAlert(Alert.AlertType type, String title, String message) {
+        Alert a = new Alert(type);
+        a.setTitle(title);
+        a.setHeaderText(null);
+        a.setContentText(message);
+        a.showAndWait();
+    }
+
+    @Override
+    public void refreshData() throws SQLException, Exception {
+        setupTableColumns();
+        setupComboBox();
+        loadHoaDonChuaThanhToan();
+    }
+
+    public void handleLamMoi() {
+        txtTimKiem.clear();
+        cmbNgayLap.setValue("Tất cả ngày");
+        try {
+            loadHoaDonChuaThanhToan();
+        } catch (SQLException ex) {
+            showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể tải danh sách hóa đơn: " + ex.getMessage());
+        }
+    }
+
+    public void handleTimKiem() {
+    }
+
+
+    private boolean checkDateFilter(LocalDate hoaDonDate, String filter) {
+        if (hoaDonDate == null) return false;
+
+        LocalDate today = LocalDate.now();
+        return switch (filter) {
+            case "1 ngày" -> hoaDonDate.isEqual(today);
+            case "3 ngày" -> {
+                LocalDate threeDaysAgo = today.minusDays(2); // Hôm nay + 2 ngày trước = 3 ngày
+                yield !hoaDonDate.isBefore(threeDaysAgo);
+            }
+            case "1 tuần" -> {
+                LocalDate oneWeekAgo = today.minusWeeks(1).plusDays(1); // Hôm nay + 6 ngày trước = 1 tuần
+                yield !hoaDonDate.isBefore(oneWeekAgo);
+            }
+            default -> false;
+        };
     }
 }

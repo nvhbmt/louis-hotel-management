@@ -43,6 +43,11 @@ public class QuanLyPhongView {
   private Parent root;
   private QuanLyPhongController quanLyPhongController;
 
+  public static String getIdentifier() {
+
+    return "quan-ly-phong-view";
+  }
+
   public QuanLyPhongView() {
     // ============================================
     // MAIN CONTAINER SETUP

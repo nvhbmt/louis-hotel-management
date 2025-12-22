@@ -7,10 +7,10 @@ import com.example.louishotelmanagement.dao.ThongKeDAO;
 import com.example.louishotelmanagement.model.LoaiPhong;
 import com.example.louishotelmanagement.model.Phong;
 import com.example.louishotelmanagement.model.TrangThaiPhong;
+import com.example.louishotelmanagement.ui.components.StatsCard;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
+import com.example.louishotelmanagement.view.ThongKeView;
 import javafx.collections.FXCollections;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
@@ -19,99 +19,50 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 
-import java.net.URL;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Year;
 import java.util.*;
 
-public class ThongKeController implements Initializable {
+public class ThongKeController {
 
-    @FXML
-    public BarChart thongkeBarChart;
-    @FXML
-    private VBox thongKeContent;
+    private ThongKeView view;
 
-    // Statistics Cards
-    @FXML
-    private Label lblTongSoPhong;
-    @FXML
-    private Label lblPhongDangSuDung;
-    @FXML
-    private Label lblTiLeSuDung;
-    @FXML
-    private Label lblTongKhachHang;
-    @FXML
-    private Label lblTongLoaiPhong;
-
-    // Room Status Details
-    @FXML
-    private Label lblPhongTrong;
-    @FXML
-    private Label lblPhongDaDat;
-    @FXML
-    private Label lblPhongDangSuDungChiTiet;
-    @FXML
-    private Label lblPhongBaoTri;
-
-    // Bar Charts
-    @FXML
-    private Rectangle barPhongTrong;
-    @FXML
-    private Rectangle barPhongDaDat;
-    @FXML
-    private Rectangle barPhongDangSuDung;
-    @FXML
-    private Rectangle barPhongBaoTri;
-
-    // Percentages
-    @FXML
-    private Label lblTiLeTrong;
-    @FXML
-    private Label lblTiLeDaDat;
-    @FXML
-    private Label lblTiLeDangSuDung;
-    @FXML
-    private Label lblTiLeBaoTri;
-
-    // Room Types
-    @FXML
-    private VBox vboxLoaiPhong;
-    @FXML
-    private Label lblGiaTrungBinh;
-    @FXML
-    private Label lblGiaCaoNhat;
-    @FXML
-    private Label lblGiaThapNhat;
-
-    // Revenue Chart Controls
-    @FXML
-    private ToggleButton btnTheoNgay;
-    @FXML
-    private ToggleButton btnTheoTuan;
-    @FXML
-    private ToggleButton btnTheoThang;
-    @FXML
-    private HBox hboxChonNgay;
-    @FXML
-    private HBox hboxChonNam;
-    @FXML
-    private HBox vboxSelectionControls;
-    @FXML
-    private DatePicker dpTuNgay;
-    @FXML
-    private DatePicker dpDenNgay;
-    @FXML
-    private ComboBox<Integer> cbNam;
-    @FXML
-    private VBox vboxChart;
-    @FXML
-    private Label lblTongDoanhThu;
-
-    // Refresh
-    @FXML
+    // UI Components from view
+    private Button btnLamMoi;
     private Label lblCapNhatCuoi;
+    private StatsCard totalRoomsCard;
+    private StatsCard occupiedRoomsCard;
+    private StatsCard totalCustomersCard;
+    private StatsCard roomTypesCard;
+    private ToggleButton btnTheoNgay;
+    private ToggleButton btnTheoTuan;
+    private ToggleButton btnTheoThang;
+    private HBox hboxChonNgay;
+    private DatePicker dpTuNgay;
+    private DatePicker dpDenNgay;
+    private HBox hboxChonNam;
+    private ComboBox<Integer> cbNam;
+    private Button btnCapNhatChart;
+    private BarChart<String, Number> thongkeBarChart;
+    private Label lblTongDoanhThu;
+    private Label lblPhongTrong;
+    private Label lblPhongDaDat;
+    private Label lblPhongDangSuDungChiTiet;
+    private Label lblPhongBaoTri;
+    private Rectangle barPhongTrong;
+    private Label lblTiLeTrong;
+    private Rectangle barPhongDaDat;
+    private Label lblTiLeDaDat;
+    private Rectangle barPhongDangSuDung;
+    private Label lblTiLeDangSuDung;
+    private Rectangle barPhongBaoTri;
+    private Label lblTiLeBaoTri;
+    private VBox vboxLoaiPhong;
+    private Label lblGiaTrungBinh;
+    private Label lblGiaCaoNhat;
+    private Label lblGiaThapNhat;
 
     private PhongDAO phongDAO;
     private LoaiPhongDAO loaiPhongDAO;
@@ -120,8 +71,48 @@ public class ThongKeController implements Initializable {
     private SimpleDateFormat dateFormat;
     private String currentChartType = "THANG"; // NGAY, TUAN, THANG
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    public ThongKeController(ThongKeView view) {
+        this.view = view;
+
+        // Get UI components from view
+        this.btnLamMoi = view.getBtnLamMoi();
+        this.lblCapNhatCuoi = view.getLblCapNhatCuoi();
+        this.totalRoomsCard = view.getTotalRoomsCard();
+        this.occupiedRoomsCard = view.getOccupiedRoomsCard();
+        this.totalCustomersCard = view.getTotalCustomersCard();
+        this.roomTypesCard = view.getRoomTypesCard();
+        this.btnTheoNgay = view.getBtnTheoNgay();
+        this.btnTheoTuan = view.getBtnTheoTuan();
+        this.btnTheoThang = view.getBtnTheoThang();
+        this.hboxChonNgay = view.getHboxChonNgay();
+        this.dpTuNgay = view.getDpTuNgay();
+        this.dpDenNgay = view.getDpDenNgay();
+        this.hboxChonNam = view.getHboxChonNam();
+        this.cbNam = view.getCbNam();
+        this.btnCapNhatChart = view.getBtnCapNhatChart();
+        this.thongkeBarChart = view.getThongkeBarChart();
+        this.lblTongDoanhThu = view.getLblTongDoanhThu();
+        this.lblPhongTrong = view.getLblPhongTrong();
+        this.lblPhongDaDat = view.getLblPhongDaDat();
+        this.lblPhongDangSuDungChiTiet = view.getLblPhongDangSuDungChiTiet();
+        this.lblPhongBaoTri = view.getLblPhongBaoTri();
+        this.barPhongTrong = view.getBarPhongTrong();
+        this.lblTiLeTrong = view.getLblTiLeTrong();
+        this.barPhongDaDat = view.getBarPhongDaDat();
+        this.lblTiLeDaDat = view.getLblTiLeDaDat();
+        this.barPhongDangSuDung = view.getBarPhongDangSuDung();
+        this.lblTiLeDangSuDung = view.getLblTiLeDangSuDung();
+        this.barPhongBaoTri = view.getBarPhongBaoTri();
+        this.lblTiLeBaoTri = view.getLblTiLeBaoTri();
+        this.vboxLoaiPhong = view.getVboxLoaiPhong();
+        this.lblGiaTrungBinh = view.getLblGiaTrungBinh();
+        this.lblGiaCaoNhat = view.getLblGiaCaoNhat();
+        this.lblGiaThapNhat = view.getLblGiaThapNhat();
+
+        setupController();
+    }
+
+    public void setupController() {
         try {
             phongDAO = new PhongDAO();
             loaiPhongDAO = new LoaiPhongDAO();
@@ -172,11 +163,10 @@ public class ThongKeController implements Initializable {
 
         double tiLeSuDung = tongSoPhong > 0 ? (double) phongDangSuDung / tongSoPhong * 100 : 0;
 
-        lblTongSoPhong.setText(String.valueOf(tongSoPhong));
-        lblPhongDangSuDung.setText(String.valueOf(phongDangSuDung));
-        lblTiLeSuDung.setText(String.format("%.1f%%", tiLeSuDung));
-        lblTongKhachHang.setText(String.valueOf(tongKhachHang));
-        lblTongLoaiPhong.setText(String.valueOf(dsLoaiPhong.size()));
+        totalRoomsCard.setValue(String.valueOf(tongSoPhong));
+        occupiedRoomsCard.setValue(String.valueOf(phongDangSuDung) + " (" + String.format("%.1f%%", tiLeSuDung) + ")");
+        totalCustomersCard.setValue(String.valueOf(tongKhachHang));
+        roomTypesCard.setValue(String.valueOf(dsLoaiPhong.size()));
     }
 
     private void capNhatTrangThaiPhong(List<Phong> dsPhong) {
@@ -275,8 +265,7 @@ public class ThongKeController implements Initializable {
         }
     }
 
-    @FXML
-    private void handleLamMoi() {
+    public void handleLamMoi() {
         taiDuLieuThongKe();
         taiDuLieuChart();
     }
@@ -306,42 +295,36 @@ public class ThongKeController implements Initializable {
         taiDuLieuChart();
     }
 
-    @FXML
-    private void handleChonTheoNgay() {
+    public void handleChonTheoNgay() {
         currentChartType = "NGAY";
         hboxChonNgay.setVisible(true);
         hboxChonNam.setVisible(false);
         taiDuLieuChart();
     }
 
-    @FXML
-    private void handleChonTheoTuan() {
+    public void handleChonTheoTuan() {
         currentChartType = "TUAN";
         hboxChonNgay.setVisible(true);
         hboxChonNam.setVisible(true);
         taiDuLieuChart();
     }
 
-    @FXML
-    private void handleChonTheoThang() {
+    public void handleChonTheoThang() {
         currentChartType = "THANG";
         hboxChonNgay.setVisible(false);
         hboxChonNam.setVisible(true);
         taiDuLieuChart();
     }
 
-    @FXML
-    private void handleChonNgay() {
+    public void handleChonNgay() {
         taiDuLieuChart();
     }
 
-    @FXML
-    private void handleChonNam() {
+    public void handleChonNam() {
         taiDuLieuChart();
     }
 
-    @FXML
-    private void handleCapNhatChart() {
+    public void handleCapNhatChart() {
         taiDuLieuChart();
     }
 

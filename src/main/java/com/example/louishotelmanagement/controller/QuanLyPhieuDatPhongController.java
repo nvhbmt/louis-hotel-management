@@ -9,17 +9,16 @@ import com.example.louishotelmanagement.model.PhieuDatPhong;
 import com.example.louishotelmanagement.model.TrangThaiPhieuDatPhong;
 import com.example.louishotelmanagement.ui.components.Badge;
 import com.example.louishotelmanagement.ui.components.CustomButton;
+import com.example.louishotelmanagement.ui.components.StatsCard;
 import com.example.louishotelmanagement.ui.models.BadgeVariant;
 import com.example.louishotelmanagement.ui.models.ButtonVariant;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
 import com.example.louishotelmanagement.view.ChiTietPhongTrongPhieuView;
 import com.example.louishotelmanagement.view.PhieuDatPhongFormDialogView;
+import com.example.louishotelmanagement.view.QuanLyPhieuDatPhongView;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -30,51 +29,34 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.math.BigDecimal;
-import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ResourceBundle;
 
-public class QuanLyPhieuDatPhongController implements Initializable {
+public class QuanLyPhieuDatPhongController {
 
-    @FXML
-    public BorderPane rootPane;
-    @FXML
-    public Label lblTongSoPhieu;
-    @FXML
+    private QuanLyPhieuDatPhongView view;
+
+    // UI Components from view
+    private StatsCard totalBookingsCard;
+    private StatsCard reservedBookingsCard;
+    private StatsCard activeBookingsCard;
+    private StatsCard completedBookingsCard;
     private TextField txtTimKiem;
-    @FXML
     private ComboBox<String> cbTrangThai;
-
-    @FXML
+    private Button btnLamMoi;
     private TableView<PhieuDatPhong> tableViewPhieuDatPhong;
-    @FXML
-    public TableColumn<PhieuDatPhong, String> colMaPDP;
-    @FXML
-    public TableColumn<PhieuDatPhong, String> colKH;
-    @FXML
-    public TableColumn<PhieuDatPhong, LocalDate> colNgayDat;
-    @FXML
-    public TableColumn<PhieuDatPhong, LocalDate> colNgayDen;
-    @FXML
-    public TableColumn<PhieuDatPhong, LocalDate> colNgayDi;
-    @FXML
-    public TableColumn<PhieuDatPhong, BigDecimal> colTienCoc;
-    @FXML
-    public Label lblPhieuHoanThanh;
-    @FXML
-    public Label lblPhieuDangSuDung;
-    @FXML
-    public Label lblSoPhieuDaDat;
-    @FXML
+    private TableColumn<PhieuDatPhong, String> colMaPDP;
+    private TableColumn<PhieuDatPhong, String> colKH;
+    private TableColumn<PhieuDatPhong, LocalDate> colNgayDat;
+    private TableColumn<PhieuDatPhong, LocalDate> colNgayDen;
+    private TableColumn<PhieuDatPhong, LocalDate> colNgayDi;
+    private TableColumn<PhieuDatPhong, BigDecimal> colTienCoc;
     private TableColumn<PhieuDatPhong, TrangThaiPhieuDatPhong> colTrangThai;
-    @FXML
-    public TableColumn<PhieuDatPhong, Void> colThaoTac;
+    private TableColumn<PhieuDatPhong, Void> colThaoTac;
 
     private PhieuDatPhongDAO phieuDatPhongDAO;
     private KhachHangDAO khachHangDAO;
@@ -82,9 +64,31 @@ public class QuanLyPhieuDatPhongController implements Initializable {
     private ObservableList<PhieuDatPhong> danhSachPhieuDatPhong;
     private ObservableList<PhieuDatPhong> danhSachPhieuDatPhongFiltered;
 
+    public QuanLyPhieuDatPhongController(QuanLyPhieuDatPhongView view) {
+        this.view = view;
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
+        // Get UI components from view
+        this.totalBookingsCard = view.getTotalBookingsCard();
+        this.reservedBookingsCard = view.getReservedBookingsCard();
+        this.activeBookingsCard = view.getActiveBookingsCard();
+        this.completedBookingsCard = view.getCompletedBookingsCard();
+        this.txtTimKiem = view.getTxtTimKiem();
+        this.cbTrangThai = view.getCbTrangThai();
+        this.btnLamMoi = view.getBtnLamMoi();
+        this.tableViewPhieuDatPhong = view.getTableViewPhieuDatPhong();
+        this.colMaPDP = view.getColMaPDP();
+        this.colKH = view.getColKH();
+        this.colNgayDat = view.getColNgayDat();
+        this.colNgayDen = view.getColNgayDen();
+        this.colNgayDi = view.getColNgayDi();
+        this.colTrangThai = view.getColTrangThai();
+        this.colTienCoc = view.getColTienCoc();
+        this.colThaoTac = view.getColThaoTac();
+
+        setupController();
+    }
+
+    public void setupController() {
         try {
             phieuDatPhongDAO = new PhieuDatPhongDAO();
             khachHangDAO = new KhachHangDAO();
@@ -115,10 +119,10 @@ public class QuanLyPhieuDatPhongController implements Initializable {
         long tongPhieuDatPhongDaHoanThanh = dsPhieuDatPhong.stream()
                 .filter(PDP -> PDP.getTrangThai().equals(TrangThaiPhieuDatPhong.HOAN_THANH))
                 .count();
-        lblTongSoPhieu.setText(Long.toString(tongPhieuDatPhong));
-        lblSoPhieuDaDat.setText(String.valueOf(tongPhieuDatPhongDaDat));
-        lblPhieuDangSuDung.setText(String.valueOf(tongPhieuDatPhongDangSuDung));
-        lblPhieuHoanThanh.setText(String.valueOf(tongPhieuDatPhongDaHoanThanh));
+        totalBookingsCard.setValue(Long.toString(tongPhieuDatPhong));
+        reservedBookingsCard.setValue(String.valueOf(tongPhieuDatPhongDaDat));
+        activeBookingsCard.setValue(String.valueOf(tongPhieuDatPhongDangSuDung));
+        completedBookingsCard.setValue(String.valueOf(tongPhieuDatPhongDaHoanThanh));
     }
 
     private void khoiTaoDuLieu() {
@@ -265,7 +269,7 @@ public class QuanLyPhieuDatPhongController implements Initializable {
 
     private void khoiTaoComboBox() {
         // Khởi tạo ComboBox trạng thái
-        List<String> danhSachTrangThai = List.of("Đã đặt", "Đang sử dụng", "Hoàn thành");
+        List<String> danhSachTrangThai = List.of("Tất cả trạng thái", "Đã đặt", "Đang sử dụng", "Hoàn thành");
         cbTrangThai.setItems(FXCollections.observableArrayList(danhSachTrangThai));
         cbTrangThai.setButtonCell(new ListCell<>() {
             @Override
@@ -333,8 +337,9 @@ public class QuanLyPhieuDatPhongController implements Initializable {
 
                     // Filter theo trạng thái
                     String trangThaiFilter = cbTrangThai.getValue();
-                    if (trangThaiFilter != null && (phieuDatPhong.getTrangThai() == null ||
-                            !phieuDatPhong.getTrangThai().equals(trangThaiFilter))) {
+                    if (trangThaiFilter != null && !trangThaiFilter.equals("Tất cả trạng thái") &&
+                            (phieuDatPhong.getTrangThai() == null ||
+                            !phieuDatPhong.getTrangThai().toString().equals(trangThaiFilter))) {
                         return false;
                     }
 
@@ -348,7 +353,6 @@ public class QuanLyPhieuDatPhongController implements Initializable {
 
     // Trong QuanLyPhieuDatPhongController
 
-    @FXML
     private void handleSuaPhieuDatPhong(PhieuDatPhong phieuDatPhong) {
         try {
             if (phieuDatPhong.getTrangThai().equals(TrangThaiPhieuDatPhong.DA_DAT)) {
@@ -414,25 +418,18 @@ public class QuanLyPhieuDatPhongController implements Initializable {
         }
     }
 
-    @FXML
-    private void handleLamMoi() {
-        taiDuLieu();
+    // Event handlers called from view
+    public void handleTimKiem() {
+        apDungFilter();
+    }
+
+    public void handleLamMoi() {
         txtTimKiem.clear();
-        cbTrangThai.setValue(null);
-    }
-
-    @FXML
-    private void handleTimKiem() {
+        cbTrangThai.setValue("Tất cả trạng thái");
         apDungFilter();
     }
 
-    @FXML
-    private void handleLocKieuGiamGia() {
-        apDungFilter();
-    }
-
-    @FXML
-    private void handleLocTrangThai() {
+    public void handleLocTrangThai() {
         apDungFilter();
     }
 }

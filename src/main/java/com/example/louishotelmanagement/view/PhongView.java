@@ -445,7 +445,7 @@ public class PhongView {
 
     private void handleDichVu(ActionEvent e) {
         if (phongController != null) {
-            phongController.moDichVu(e);
+            phongController.moDatPhong(e);
         }
     }
 }

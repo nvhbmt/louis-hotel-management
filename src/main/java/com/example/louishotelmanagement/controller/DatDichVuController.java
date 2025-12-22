@@ -5,12 +5,11 @@ import com.example.louishotelmanagement.model.*;
 import com.example.louishotelmanagement.service.AuthService;
 import com.example.louishotelmanagement.util.Refreshable;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
+import com.example.louishotelmanagement.view.DatDichVuView;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -20,53 +19,65 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 
 import java.math.BigDecimal;
-import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ResourceBundle;
 
-public class DatDichVuController implements Initializable, Refreshable {
+public class DatDichVuController implements Refreshable {
 
-    public ComboBox dsKhachHang;
-    public ComboBox dsPhong;
-    public TextField maNV;
-    public TextArea txtGhiChu;
-    public Label lblTongTienTam;
-    @FXML
-    private FlowPane pnDanhSachDichVu; // Panel chứa các thẻ dịch vụ (Bên trái)
-    @FXML
+    private DatDichVuView view;
+
+    // UI Components from view
+    private FlowPane pnDanhSachDichVu;
     private TextField txtTimKiem;
-
-    @FXML
+    private ComboBox<String> dsKhachHang;
+    private ComboBox<String> dsPhong;
+    private TextField maNV;
+    private TextArea txtGhiChu;
+    private Label lblTongTienTam;
     private TableView<CTHoaDonDichVu> tblGioHang;
-    @FXML
     private TableColumn<CTHoaDonDichVu, String> colGH_Ten;
-    @FXML
     private TableColumn<CTHoaDonDichVu, Integer> colGH_SL;
-    @FXML
     private TableColumn<CTHoaDonDichVu, String> colGH_ThanhTien;
-    @FXML
     private TableColumn<CTHoaDonDichVu, Void> colGH_Xoa;
 
 
-    public KhachHangDAO kDao;
-    public PhongDAO pDao;
-    public CTHoaDonDichVuDAO cthddvDao;
-    public CTHoaDonPhongDAO cthddphongDao;
-    public PhieuDichVuDAO pdvDao;
-    public DichVuDAO dvDao;
-    public PhieuDatPhongDAO phieuDatPhongDAO;
-    public HoaDonDAO hdDao;
+    private KhachHangDAO kDao;
+    private PhongDAO pDao;
+    private CTHoaDonDichVuDAO cthddvDao;
+    private CTHoaDonPhongDAO cthddphongDao;
+    private PhieuDichVuDAO pdvDao;
+    private DichVuDAO dvDao;
+    private PhieuDatPhongDAO phieuDatPhongDAO;
+    private HoaDonDAO hdDao;
 
-    public ArrayList<String> dsMaKH;
+    private ArrayList<String> dsMaKH;
     private ObservableList<CTHoaDonDichVu> gioHangList = FXCollections.observableArrayList(); // List bind vào bảng giỏ hàng
     private List<DichVu> allDichVu; // Danh sách gốc để lọc/hiển thị
     private String maPhieuDV;
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    public DatDichVuController(DatDichVuView view) {
+        this.view = view;
+
+        // Get UI components from view
+        this.pnDanhSachDichVu = view.getPnDanhSachDichVu();
+        this.txtTimKiem = view.getTxtTimKiem();
+        this.dsKhachHang = view.getDsKhachHang();
+        this.dsPhong = view.getDsPhong();
+        this.maNV = view.getMaNV();
+        this.txtGhiChu = view.getTxtGhiChu();
+        this.lblTongTienTam = view.getLblTongTienTam();
+        this.tblGioHang = view.getTblGioHang();
+        this.colGH_Ten = view.getColGH_Ten();
+        this.colGH_SL = view.getColGH_SL();
+        this.colGH_ThanhTien = view.getColGH_ThanhTien();
+        this.colGH_Xoa = view.getColGH_Xoa();
+
+        setupController();
+    }
+
+    public void setupController() {
         // 1. Khởi tạo DAO
         kDao = new KhachHangDAO();
         pDao = new PhongDAO();
@@ -108,8 +119,8 @@ public class DatDichVuController implements Initializable, Refreshable {
             maPhieuDV = pdvDao.layMaPhieuDichVuTiepTheo();
 
         } catch (Exception e) {
+            ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể khởi tạo màn hình đặt dịch vụ: " + e.getMessage());
             e.printStackTrace();
-            ThongBaoUtil.hienThiLoi("Lỗi khởi tạo", e.getMessage());
         }
     }
 
@@ -272,6 +283,10 @@ public class DatDichVuController implements Initializable, Refreshable {
             total = total.add(item.getThanhTien());
         }
         lblTongTienTam.setText(String.format("%,.0f VND", total));
+    }
+
+    public void handleTimKiem() {
+        // Method for search handling - already handled by listener
     }
 
     public void handleXacNhanLapPhieu(ActionEvent actionEvent) throws Exception {

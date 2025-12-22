@@ -5,13 +5,18 @@ import com.example.louishotelmanagement.util.ContentManager;
 import com.example.louishotelmanagement.util.ContentSwitcher;
 import com.example.louishotelmanagement.util.MenuBuilder;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
+import com.example.louishotelmanagement.view.LayoutView;
 import com.example.louishotelmanagement.view.QuanLyDichVuView;
 import com.example.louishotelmanagement.view.QuanLyHoaDonView;
+import com.example.louishotelmanagement.view.QuanLyKhachHangView;
+import com.example.louishotelmanagement.view.QuanLyKhuyenMaiView;
+import com.example.louishotelmanagement.view.QuanLyNhanVienView;
+import com.example.louishotelmanagement.view.QuanLyPhieuDatPhongView;
+import com.example.louishotelmanagement.view.ThongKeView;
+import com.example.louishotelmanagement.view.QuanLyPhongView;
+import com.example.louishotelmanagement.view.DatDichVuView;
 import com.example.louishotelmanagement.view.QuanLyLoaiPhongView;
 import com.example.louishotelmanagement.view.TrangChuView;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -19,28 +24,27 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
 import java.io.IOException;
+import javafx.fxml.FXMLLoader;
+import java.net.URL;
+import java.util.ResourceBundle;
+import javafx.fxml.Initializable;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-public class LayoutController implements Initializable, ContentSwitcher {
+public class LayoutController implements ContentSwitcher, Initializable {
 
     // Static reference để các controller khác có thể access
     private static LayoutController instance;
 
-    @FXML
+    private LayoutView view;
+
+    // UI Components from view
     private VBox menuContainer;
-
-    @FXML
     private BorderPane mainBorderPane;
-
-    @FXML
     private Label userInfoLabel;
-
-    @FXML
     private Button logoutBtn;
 
     private Button currentActiveButton;
@@ -48,6 +52,28 @@ public class LayoutController implements Initializable, ContentSwitcher {
     private Map<String, Button> fxmlPathToButton = new HashMap<>();
     private Map<Button, VBox> groupButtonToSubmenu = new HashMap<>();
     private AuthService authService;
+
+    public LayoutController(LayoutView view) {
+        this.view = view;
+
+        // Get UI components from view
+        this.menuContainer = view.getMenuContainer();
+        this.mainBorderPane = view.getMainBorderPane();
+        this.userInfoLabel = view.getUserInfoLabel();
+        this.logoutBtn = view.getLogoutBtn();
+
+        setupController();
+    }
+
+    public void setupController() {
+        instance = this; // Set static instance
+        authService = AuthService.getInstance();
+        setupUserInfo();
+        setupMenuVBox();
+        // Load TrangChuView programmatically instead of FXML
+        loadParent(new TrangChuView().getRoot());
+        // Note: TrangChuController sẽ tự setup ContentSwitcher trong initialize() method của nó
+    }
 
     /**
      * Get current LayoutController instance
@@ -58,13 +84,8 @@ public class LayoutController implements Initializable, ContentSwitcher {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        instance = this; // Set static instance
-        authService = AuthService.getInstance();
-        setupUserInfo();
-        setupMenuVBox();
-        // Load TrangChuView programmatically instead of FXML
-        loadParent(new TrangChuView().getRoot());
-        // Note: TrangChuController sẽ tự setup ContentSwitcher trong initialize() method của nó
+        // Method kept for compatibility but logic moved to setupController()
+        // This method may be called by FXML loader if still using FXML
     }
 
     private void setupUserInfo() {
@@ -262,6 +283,48 @@ public class LayoutController implements Initializable, ContentSwitcher {
             return;
         }
 
+        // Handle QuanLyKhachHangView identifier
+        if (QuanLyKhachHangView.getIdentifier().equals(fxmlPath)) {
+            QuanLyKhachHangView quanLyKhachHangView = QuanLyKhachHangView.getInstance();
+            switchContent(quanLyKhachHangView.getRoot());
+            return;
+        }
+
+        // Handle QuanLyKhuyenMaiView identifier
+        if (QuanLyKhuyenMaiView.getIdentifier().equals(fxmlPath)) {
+            QuanLyKhuyenMaiView quanLyKhuyenMaiView = QuanLyKhuyenMaiView.getInstance();
+            switchContent(quanLyKhuyenMaiView.getRoot());
+            return;
+        }
+
+        // Handle QuanLyNhanVienView identifier
+        if (QuanLyNhanVienView.getIdentifier().equals(fxmlPath)) {
+            QuanLyNhanVienView quanLyNhanVienView = QuanLyNhanVienView.getInstance();
+            switchContent(quanLyNhanVienView.getRoot());
+            return;
+        }
+
+        // Handle QuanLyPhieuDatPhongView identifier
+        if (QuanLyPhieuDatPhongView.getIdentifier().equals(fxmlPath)) {
+            QuanLyPhieuDatPhongView quanLyPhieuDatPhongView = QuanLyPhieuDatPhongView.getInstance();
+            switchContent(quanLyPhieuDatPhongView.getRoot());
+            return;
+        }
+
+        // Handle ThongKeView identifier
+        if (ThongKeView.getIdentifier().equals(fxmlPath)) {
+            ThongKeView thongKeView = ThongKeView.getInstance();
+            switchContent(thongKeView.getRoot());
+            return;
+        }
+
+        // Handle DatDichVuView identifier
+        if (DatDichVuView.getIdentifier().equals(fxmlPath)) {
+            DatDichVuView datDichVuView = DatDichVuView.getInstance();
+            switchContent(datDichVuView.getRoot());
+            return;
+        }
+
         // Load FXML to get Parent, then delegate to Parent-based method
         try {
             Parent root = loadFXMLToParent(fxmlPath);
@@ -288,7 +351,7 @@ public class LayoutController implements Initializable, ContentSwitcher {
         fxmlPathToButton.clear();
 
  
-        fxmlPathToButton.put("/com/example/louishotelmanagement/fxml/quan-ly-phong-view.fxml",
+        fxmlPathToButton.put(QuanLyPhongView.getIdentifier(),
                            findButtonByTitle("Quản lý phòng"));
         fxmlPathToButton.put(QuanLyLoaiPhongView.getIdentifier(),
                            findButtonByTitle("Loại phòng"));
@@ -296,13 +359,13 @@ public class LayoutController implements Initializable, ContentSwitcher {
         // ============================================
         // BOOKING MANAGEMENT
         // ============================================
-        fxmlPathToButton.put("/com/example/louishotelmanagement/fxml/quan-ly-phieu-dat-phong.fxml",
+        fxmlPathToButton.put(QuanLyPhieuDatPhongView.getIdentifier(),
                            findButtonByTitle("Phiếu đặt phòng"));
 
         // ============================================
         // SERVICE MANAGEMENT
         // ============================================
-        fxmlPathToButton.put("/com/example/louishotelmanagement/fxml/dat-dich-vu-view.fxml",
+        fxmlPathToButton.put(DatDichVuView.getIdentifier(),
                            findButtonByTitle("Cung cấp dịch vụ"));
         fxmlPathToButton.put(QuanLyDichVuView.getIdentifier(),
                            findButtonByTitle("Quản lý dịch vụ"));
@@ -310,7 +373,7 @@ public class LayoutController implements Initializable, ContentSwitcher {
         // ============================================
         // PROMOTION & BILLING
         // ============================================
-        fxmlPathToButton.put("/com/example/louishotelmanagement/fxml/quan-ly-khuyen-mai-view.fxml",
+        fxmlPathToButton.put(QuanLyKhuyenMaiView.getIdentifier(),
                            findButtonByTitle("Khuyến mãi"));
         fxmlPathToButton.put(QuanLyHoaDonView.getIdentifier(),
                            findButtonByTitle("Hóa đơn"));
@@ -318,15 +381,15 @@ public class LayoutController implements Initializable, ContentSwitcher {
         // ============================================
         // REPORTING & ANALYTICS
         // ============================================
-        fxmlPathToButton.put("/com/example/louishotelmanagement/fxml/thong-ke-view.fxml",
+        fxmlPathToButton.put(ThongKeView.getIdentifier(),
                            findButtonByTitle("Thống kê"));
 
         // ============================================
         // USER MANAGEMENT
         // ============================================
-        fxmlPathToButton.put("/com/example/louishotelmanagement/fxml/quan-ly-nhan-vien-view.fxml",
+        fxmlPathToButton.put(QuanLyNhanVienView.getIdentifier(),
                            findButtonByTitle("Nhân viên"));
-        fxmlPathToButton.put("/com/example/louishotelmanagement/fxml/quan-ly-khach-hang-view.fxml",
+        fxmlPathToButton.put(QuanLyKhachHangView.getIdentifier(),
                            findButtonByTitle("Khách hàng"));
     }
 

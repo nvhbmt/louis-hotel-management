@@ -8,7 +8,12 @@ import com.example.louishotelmanagement.ui.components.Badge;
 import com.example.louishotelmanagement.ui.models.BadgeVariant;
 import com.example.louishotelmanagement.util.ContentSwitcher;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
+import com.example.louishotelmanagement.view.DatPhongView;
+import com.example.louishotelmanagement.view.DoiPhongView;
+import com.example.louishotelmanagement.view.HuyDatPhongView;
+import com.example.louishotelmanagement.view.NhanPhongView;
 import com.example.louishotelmanagement.view.QuanLyHoaDonView;
+import com.example.louishotelmanagement.view.TraPhongView;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -373,15 +378,12 @@ public class PhongController {
             switcher.switchContent(root);
         }
 
+        } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
     }
 
-    public void moDichVu(ActionEvent actionEvent) {
-        if (switcher != null) switcher.switchContent("/com/example/louishotelmanagement/fxml/dat-dich-vu-view.fxml");
-    }
-
-    @FXML private void moDichVu(ActionEvent actionEvent) { if (switcher != null) switcher.switchContent("/com/example/louishotelmanagement/fxml/dat-dich-vu-view.fxml"); }
-    @FXML
-    private void moHuyDat(ActionEvent actionEvent) {
+    public void moHuyDat(ActionEvent actionEvent) {
         if (switcher != null) {
             // 1. Khởi tạo View (Giao diện)
             HuyDatPhongView view = new HuyDatPhongView();
@@ -389,13 +391,12 @@ public class PhongController {
             // 2. Khởi tạo Controller và truyền View vào
             // (Lúc này Constructor của Controller sẽ nạp dữ liệu từ DB lên View)
             HuyDatPhongController controller = new HuyDatPhongController(view);
-
-    public void moThanhToan(ActionEvent actionEvent) {
-        QuanLyHoaDonView quanLyHoaDonView = QuanLyHoaDonView.getInstance();
-        if (switcher != null)
-            switcher.switchContent(quanLyHoaDonView.getRoot());
+            Parent root = view.getRoot();
+            switcher.switchContent(root);
+        }
     }
-    @FXML private void moThanhToan(ActionEvent actionEvent) { if (switcher != null) switcher.switchContent("/com/example/louishotelmanagement/fxml/quan-ly-hoa-don-view.fxml"); }
+
+   private void moThanhToan(ActionEvent actionEvent) { if (switcher != null) switcher.switchContent("/com/example/louishotelmanagement/fxml/quan-ly-hoa-don-view.fxml"); }
 
     public void moHuy(ActionEvent actionEvent) { // Nút Trả phòng
         ArrayList<Phong> dsTarget = layDanhSachPhongTarget();

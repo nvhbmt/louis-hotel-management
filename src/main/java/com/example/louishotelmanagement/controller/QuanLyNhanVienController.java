@@ -3,16 +3,15 @@ package com.example.louishotelmanagement.controller;
 import com.example.louishotelmanagement.dao.NhanVienDAO;
 import com.example.louishotelmanagement.model.NhanVien;
 import com.example.louishotelmanagement.ui.components.CustomButton;
+import com.example.louishotelmanagement.ui.components.StatsCard;
 import com.example.louishotelmanagement.ui.models.ButtonVariant;
 import com.example.louishotelmanagement.view.NhanVienDialogView;
+import com.example.louishotelmanagement.view.QuanLyNhanVienView;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -22,49 +21,32 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.io.IOException;
-import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Optional;
-import java.util.ResourceBundle;
 
-public class QuanLyNhanVienController implements Initializable {
+public class QuanLyNhanVienController {
 
-    // --- FXML Components ---
-    @FXML
-    private Label lblTongTaiKhoan;
-    @FXML
-    private Label lblTaiKhoanHoatDong; // Sẽ dùng cho Lễ tân
-    @FXML
-    private Label lblTaiKhoanBiKhoa;   // Sẽ dùng cho Nhân viên khác
-    @FXML
-    private Label lblTaiKhoanManager;  // Sẽ dùng cho Quản lý
-    @FXML
+    private QuanLyNhanVienView view;
+
+    // UI Components from view
+    private StatsCard totalEmployeesCard;
+    private StatsCard receptionistsCard;
+    private StatsCard otherEmployeesCard;
+    private StatsCard managersCard;
     private Button btnThemNV;
-    @FXML
     private TextField timKiemField;
-    @FXML
     private ComboBox<String> cbxChucVu;
-    @FXML
     private Button btnLamMoi;
-    @FXML
     private TableView<NhanVien> nhanVienTable;
-    @FXML
     private TableColumn<NhanVien, String> colMaNV;
-    @FXML
     private TableColumn<NhanVien, String> colHoTen;
-    @FXML
-    private TableColumn<NhanVien, LocalDate> colNgaySinh; // Kiểu LocalDate
-    @FXML
+    private TableColumn<NhanVien, LocalDate> colNgaySinh;
     private TableColumn<NhanVien, String> colDiaChi;
-    @FXML
     private TableColumn<NhanVien, String> colSDT;
-    @FXML
     private TableColumn<NhanVien, String> colChucVu;
-    @FXML
     private TableColumn<NhanVien, Void> colThaoTac;
 
     // --- Data and DAO ---
@@ -75,8 +57,31 @@ public class QuanLyNhanVienController implements Initializable {
     // Định dạng ngày
     private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
+    public QuanLyNhanVienController(QuanLyNhanVienView view) {
+        this.view = view;
+
+        // Get UI components from view
+        this.totalEmployeesCard = view.getTotalEmployeesCard();
+        this.receptionistsCard = view.getReceptionistsCard();
+        this.otherEmployeesCard = view.getOtherEmployeesCard();
+        this.managersCard = view.getManagersCard();
+        this.btnThemNV = view.getBtnThemNV();
+        this.timKiemField = view.getTimKiemField();
+        this.cbxChucVu = view.getCbxChucVu();
+        this.btnLamMoi = view.getBtnLamMoi();
+        this.nhanVienTable = view.getNhanVienTable();
+        this.colMaNV = view.getColMaNV();
+        this.colHoTen = view.getColHoTen();
+        this.colNgaySinh = view.getColNgaySinh();
+        this.colDiaChi = view.getColDiaChi();
+        this.colSDT = view.getColSDT();
+        this.colChucVu = view.getColChucVu();
+        this.colThaoTac = view.getColThaoTac();
+
+        setupController();
+    }
+
+    public void setupController() {
         nhanVienDAO = new NhanVienDAO();
 
         cauHinhBang();
@@ -156,7 +161,7 @@ public class QuanLyNhanVienController implements Initializable {
     private void khoiTaoComboBox() {
         // Tạm thời dùng danh sách cố định, bạn có thể lấy từ CSDL nếu muốn
         ObservableList<String> chucVuList = FXCollections.observableArrayList(
-                "Tất cả chức vụ", "Quản lý", "Lễ tân", "Nhân viên" // Thêm các chức vụ khác nếu có
+                "Tất cả chức vụ", "Quản lý", "Lễ tân"
         );
         cbxChucVu.setItems(chucVuList);
         cbxChucVu.setValue("Tất cả chức vụ");
@@ -201,7 +206,7 @@ public class QuanLyNhanVienController implements Initializable {
     }
 
     /**
-     * Cập nhật các Label thống kê.
+     * Cập nhật các StatsCard thống kê.
      */
     private void capNhatThongKe() {
         long tongSo = danhSachNhanVien.size();
@@ -210,18 +215,22 @@ public class QuanLyNhanVienController implements Initializable {
         long soQuanLy = danhSachNhanVien.stream().filter(nv -> "Quản lý".equalsIgnoreCase(nv.getChucVu())).count();
         long soKhac = tongSo - soLeTan - soQuanLy; // Số còn lại là nhân viên khác
 
-        lblTongTaiKhoan.setText(String.valueOf(tongSo));
-        lblTaiKhoanHoatDong.setText(String.valueOf(soLeTan)); // Dùng cho Lễ tân
-        lblTaiKhoanBiKhoa.setText(String.valueOf(soKhac));    // Dùng cho Nhân viên khác
-        lblTaiKhoanManager.setText(String.valueOf(soQuanLy));  // Dùng cho Quản lý
+        totalEmployeesCard.setValue(String.valueOf(tongSo));
+        receptionistsCard.setValue(String.valueOf(soLeTan)); // Dùng cho Lễ tân
+        otherEmployeesCard.setValue(String.valueOf(soKhac));    // Dùng cho Nhân viên khác
+        managersCard.setValue(String.valueOf(soQuanLy));  // Dùng cho Quản lý
     }
 
     // --- Event Handlers ---
 
-    @FXML
     private void handleThem(ActionEvent event) {
         // Mở dialog/cửa sổ thêm nhân viên
         moDialogNhanVien(null); // Truyền null để biết là chế độ THÊM
+    }
+
+    // Event handler called from view
+    public void handleThemNV() {
+        handleThem(null);
     }
 
     private void handleSua(NhanVien nhanVien) {
@@ -254,11 +263,23 @@ public class QuanLyNhanVienController implements Initializable {
         }
     }
 
-    @FXML
     private void handleLamMoi(ActionEvent event) {
         timKiemField.clear();
         cbxChucVu.setValue("Tất cả chức vụ");
         taiDuLieuNhanVien(); // Tải lại dữ liệu gốc
+    }
+
+    // Event handlers called from view
+    public void handleTimKiem() {
+        // Filtering is handled by reactive bindings in thietLapBoLoc()
+    }
+
+    public void handleLocChucVu() {
+        // Filtering is handled by reactive bindings in thietLapBoLoc()
+    }
+
+    public void handleLamMoi() {
+        handleLamMoi(null);
     }
 
     /**
