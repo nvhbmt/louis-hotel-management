@@ -8,6 +8,7 @@ import com.example.louishotelmanagement.model.*;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
 import com.example.louishotelmanagement.util.Refreshable;
 import com.example.louishotelmanagement.view.ChiTietPhongTrongPhieuView;
+import com.example.louishotelmanagement.view.HuyDatPhongView;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -28,7 +29,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-public class HuyDatPhongController implements Initializable, Refreshable {
+public class HuyDatPhongController implements Initializable,Refreshable {
 
     public TextField searchTextField;
     @FXML
@@ -57,7 +58,6 @@ public class HuyDatPhongController implements Initializable, Refreshable {
     public TextField txtMaPhieu;
     public TextField txtSoPhong;
     public ArrayList<String> dsMaKH = new ArrayList<>();
-
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -291,4 +291,6 @@ public class HuyDatPhongController implements Initializable, Refreshable {
             e.printStackTrace();
         }
     }
+
+
 }
