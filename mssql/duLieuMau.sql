@@ -22,7 +22,7 @@ INSERT INTO Phong (maPhong, tang, trangThai, moTa, maLoaiPhong)
 VALUES
 -- Tầng 1
 ('P101', 1, N'Trống', N'Phòng đơn tầng 1, cửa sổ hướng sân vườn', 'LP001'),
-('P102', 1, N'Trống', N'Phòng đơn tầng 1, cửa sổ hướng đường lớn', 'LP001'),
+('P102', 1, N'Đang sử dụng', N'Phòng đơn tầng 1, cửa sổ hướng đường lớn', 'LP001'),
 ('P103', 1, N'Trống', N'Phòng đơn tầng 1, yên tĩnh', 'LP001'),
 ('P104', 1, N'Trống', N'Phòng đôi tầng 1, cửa sổ hướng sân', 'LP002'),
 ('P105', 1, N'Trống', N'Phòng đôi tầng 1, cửa sổ hướng đường', 'LP002'),
@@ -153,101 +153,55 @@ GO
 PRINT N'-- 8. Đang thêm dữ liệu bảng PhieuDatPhong...';
 INSERT INTO PhieuDatPhong (maPhieu, ngayDat, ngayDen, ngayDi, trangThai, ghiChu, maKH, maNV, tienCoc)
 VALUES
--- Đặt trực tiếp: tiền cọc = 0
+-- Nhóm Hoàn thành (Đã thanh toán)
 ('PD001', '2025-10-10', '2025-10-10', '2025-10-12', N'Hoàn thành', N'Đặt trực tiếp', 'KH001', 'NV002', 0.00),
 ('PD002', '2025-10-14', '2025-10-14', '2025-10-15', N'Hoàn thành', N'Đặt trực tiếp', 'KH002', 'NV004', 0.00),
 ('PD003', '2025-10-16', '2025-10-16', '2025-10-17', N'Hoàn thành', N'Đặt trực tiếp', 'KH003', 'NV002', 0.00),
--- Đặt trước: tiền cọc = 20% tổng chi phí phòng
-('PD004', '2025-10-20', '2025-10-22', '2025-10-25', N'Hoàn thành', N'Đặt trước', 'KH004', 'NV003', 300000.00),
-('PD005', '2025-10-21', '2025-10-24', '2025-10-26', N'Hoàn thành', N'Đặt trước', 'KH005', 'NV004', 200000.00),
--- Đã đặt (Đặt trực tiếp): tiền cọc = 0
-('PD006', '2025-12-03', '2025-12-03', '2025-12-09', N'Đang sử dụng', N'Đặt trực tiếp', 'KH003', 'NV001', 0.00),
--- Đã đặt (Đặt trước): tiền cọc = 20% tổng chi phí phòng
-('PD007', '2025-11-25', '2025-12-06', '2025-12-10', N'Đang sử dụng', N'Đặt trước', 'KH004', 'NV003', 510000.00);
+('PD004', '2025-10-15', '2025-10-22', '2025-10-25', N'Hoàn thành', N'Đặt trước', 'KH004', 'NV003', 300000.00),
+('PD005', '2025-10-18', '2025-10-24', '2025-10-26', N'Hoàn thành', N'Đặt trước', 'KH005', 'NV004', 200000.00),
+-- Nhóm Đang sử dụng (Chưa thanh toán)
+('PD006', '2025-12-20', '2025-12-20', '2025-12-22', N'Đang sử dụng', N'Đặt trực tiếp', 'KH002', 'NV001', 0.00),
+('PD007', '2025-12-20', '2025-12-20', '2025-12-23', N'Đang sử dụng', N'Đặt trực tiếp', 'KH003', 'NV001', 0.00),
+('PD008', '2025-12-15', '2025-12-19', '2025-12-24', N'Đang sử dụng', N'Đặt trước', 'KH004', 'NV003', 500000.00);
 GO
 
 -------------------------------------------------------------------
--- 9. HoaDon (Hóa đơn)
+-- 9. HoaDon (Hóa đơn) - Tính toán theo logic Controller Java
 -------------------------------------------------------------------
-PRINT N'-- 9. Đang thêm dữ liệu bảng HoaDon (Sửa Tổng Tiền)...';
--- XÓA DỮ LIỆU CŨ CỦA HoaDon (Nếu bạn chạy script nhiều lần)
-DELETE FROM HoaDon WHERE maHD IN ('HD001', 'HD002', 'HD003', 'HD004', 'HD005', 'HD006', 'HD007');
-
+PRINT N'-- 9. Đang thêm dữ liệu bảng HoaDon...';
 INSERT INTO HoaDon
-(
-    maHD, ngayLap, phuongThuc, trangThai, tongTien,
-    PhatNhanPhongTre, PhatTraPhongSom, PhatTraPhongTre,
-    GiamGiaMaGG, GiamGiaHangKH,
-    TongVAT, ngayDi, maKH, maNV, maKM
-)
+(maHD, ngayLap, phuongThuc, trangThai, tongTien, PhatNhanPhongTre, PhatTraPhongSom, PhatTraPhongTre, GiamGiaMaGG, GiamGiaHangKH, TongVAT, ngayDi, maKH, maNV, maKM)
 VALUES
--- HD001: Áp dụng mã khuyến mãi KM0001 giảm 10% (307k), không phạt
-('HD001', '2025-10-12', N'Chuyển khoản', N'Đã thanh toán', 2763000.00,
- 0.00, 0.00, 0.00,
- 307000.00, 0.00,
- 276300.00, '2025-10-12', 'KH001', 'NV002', 'KM0001'),
-
--- HD002: Khách VIP - Giảm giá hạng khách 15% (447k), không phạt
-('HD002', '2025-10-15', N'Tiền mặt', N'Đã thanh toán', 2980000.00,
- 0.00, 0.00, 0.00,
- 0.00, 447000.00,
- 298000.00, '2025-10-15', 'KH002', 'NV004', NULL),
-
--- HD003: Áp dụng mã khuyến mãi KM0002 giảm 500k, không phạt
-('HD003', '2025-10-17', N'Ví điện tử', N'Đã thanh toán', 710000.00,
- 0.00, 0.00, 0.00,
- 500000.00, 0.00,
- 71000.00, '2025-10-17', 'KH003', 'NV002', 'KM0002'),
-
--- HD004: Khách quen - Giảm giá hạng khách 5% (75k), không phạt
-('HD004', '2025-10-23', N'Tiền mặt', N'Đã thanh toán', 1575000.00,
- 0.00, 0.00, 0.00,
- 0.00, 75000.00,
- 75000.00, '2025-10-25', 'KH004', 'NV003', NULL),
-
--- HD005: Khách VIP - Giảm giá hạng khách 15% (172.5k), không phạt
-('HD005', '2025-10-24', N'Chuyển khoản', N'Đã thanh toán', 1150000.00,
- 0.00, 0.00, 0.00,
- 0.00, 172500.00,
- 115000.00, '2025-10-26', 'KH005', 'NV004', NULL),
-
--- HD006: Chưa thanh toán, các giá trị tiền bằng 0
-('HD006', '2025-12-03', NULL, N'Chưa thanh toán', 0.00,
- 0.00, 0.00, 0.00,
- 0.00, 0.00,
- 0.00, NULL, 'KH003', 'NV001', NULL),
-
--- HD007: Chưa thanh toán, các giá trị tiền bằng 0
-('HD007', '2025-12-06', NULL, N'Chưa thanh toán', 0.00,
- 0.00, 0.00, 0.00,
- 0.00, 0.00,
- 0.00, NULL, 'KH004', 'NV002', NULL);
+-- HD001: P.Phòng 2.6M + DV 470k. KM giảm 260k. VAT 281k.
+('HD001', '2025-10-10', N'Chuyển khoản', N'Đã thanh toán', 3091000.00, 0, 0, 0, 260000.00, 0, 281000.00, '2025-10-12', 'KH001', 'NV002', 'KM0001'),
+-- HD002: P.Phòng 2.2M + DV 780k. VIP giảm 10% (220k). VAT 276k.
+('HD002', '2025-10-14', N'Tiền mặt', N'Đã thanh toán', 3036000.00, 0, 0, 0, 0, 220000.00, 276000.00, '2025-10-15', 'KH002', 'NV004', NULL),
+-- HD003: P.Phòng 850k + DV 360k. Phạt trả trễ 1 ngày (85k). VAT 129.5k.
+('HD003', '2025-10-16', N'Ví điện tử', N'Đã thanh toán', 1424500.00, 0, 0, 85000.00, 0, 0, 129500.00, '2025-10-18', 'KH003', 'NV002', NULL),
+-- HD004: P.Phòng 1.5M. Phạt nhận trễ (250k). Giảm 5% (75k). Cọc 300k. VAT 167.5k.
+('HD004', '2025-10-15', N'Tiền mặt', N'Đã thanh toán', 1542500.00, 250000.00, 0, 0, 0, 75000.00, 167500.00, '2025-10-25', 'KH004', 'NV003', NULL),
+-- HD005: P.Phòng 1M. VIP giảm 10% (100k). Cọc 200k. VAT 90k.
+('HD005', '2025-10-18', N'Chuyển khoản', N'Đã thanh toán', 790000.00, 0, 0, 0, 0, 100000.00, 90000.00, '2025-10-26', 'KH005', 'NV004', NULL),
+-- Nhóm chưa thanh toán (Tiền = 0, ngayDi = NULL)
+('HD006', '2025-12-20', NULL, N'Chưa thanh toán', 0.00, 0, 0, 0, 0, 0, 0, NULL, 'KH002', 'NV001', NULL),
+('HD007', '2025-12-20', NULL, N'Chưa thanh toán', 0.00, 0, 0, 0, 0, 0, 0, NULL, 'KH003', 'NV001', NULL),
+('HD008', '2025-12-15', NULL, N'Chưa thanh toán', 0.00, 0, 0, 0, 0, 0, 0, NULL, 'KH004', 'NV002', NULL);
 GO
+
 -------------------------------------------------------------------
 -- 10. CTHoaDonPhong (Chi tiết hóa đơn phòng)
 -------------------------------------------------------------------
--- LƯU Ý: Nếu cấu trúc CTHoaDonPhong của bạn thiếu cột thanhTien, hãy bổ sung nó.
--- (Tôi giả định cột thanhTien đã được bổ sung trong bảng CTHoaDonPhong)
-PRINT N'-- 10. Đang thêm dữ liệu bảng CTHoaDonPhong (Đã sửa ThanhTien)...';
--- XÓA DỮ LIỆU CŨ CỦA CTHoaDonPhong (Nếu bạn chạy script nhiều lần)
-DELETE FROM CTHoaDonPhong WHERE maHD IN ('HD001', 'HD002', 'HD003', 'HD004', 'HD005', 'HD006', 'HD007');
-
+PRINT N'-- 10. Đang thêm dữ liệu bảng CTHoaDonPhong...';
 INSERT INTO CTHoaDonPhong (maHD, maPhieu, maPhong, ngayDen, ngayDi, giaPhong)
 VALUES
--- HD001/PD001: P301 (1.3M/ngày) x 2 ngày
-('HD001', 'PD001', 'P301', '2025-10-10', '2025-10-12', 1300000),
--- HD002/PD002: P401 (2.2M/ngày) x 1 ngày
-('HD002', 'PD002', 'P401', '2025-10-14', '2025-10-15', 2200000),
--- HD003/PD003: P105 (850k/ngày) x 1 ngày
-('HD003', 'PD003', 'P105', '2025-10-16', '2025-10-17', 850000),
--- HD004/PD004: P101 (500k/ngày) x 3 ngày
-('HD004', 'PD004', 'P101', '2025-10-22', '2025-10-25', 500000),
--- HD005/PD005: P102 (500k/ngày) x 2 ngày
-('HD005', 'PD005', 'P102', '2025-10-24', '2025-10-26', 500000),
--- HD006 (Đang sử dụng) - Tiền tạm tính: 850k x 2 ngày
-('HD006', 'PD006', 'P204', '2025-12-03','2025-12-09' , 850000),
--- HD007 (Đang sử dụng) - Tiền tạm tính: 850k x 1 ngày
-('HD007', 'PD007', 'P205', '2025-12-06', '2025-12-10', 850000);
+    ('HD001', 'PD001', 'P301', '2025-10-10', '2025-10-12', 1300000),
+    ('HD002', 'PD002', 'P401', '2025-10-14', '2025-10-15', 2200000),
+    ('HD003', 'PD003', 'P105', '2025-10-16', '2025-10-18', 850000), -- Trễ 1 ngày so với phiếu
+    ('HD004', 'PD004', 'P101', '2025-10-23', '2025-10-25', 500000), -- Đến trễ 1 ngày so với phiếu
+    ('HD005', 'PD005', 'P102', '2025-10-24', '2025-10-26', 500000),
+    ('HD006', 'PD006', 'P102', '2025-12-20', '2025-12-22', 500000),
+    ('HD007', 'PD007', 'P204', '2025-12-20', '2025-12-23', 850000),
+    ('HD008', 'PD008', 'P205', '2025-12-19', '2025-12-24', 850000);
 GO
 
 -------------------------------------------------------------------
@@ -255,26 +209,22 @@ GO
 -------------------------------------------------------------------
 PRINT N'-- 11. Đang thêm dữ liệu bảng PhieuDichVu...';
 INSERT INTO PhieuDichVu (maPhieuDV, maHD, ngayLap, maNV, ghiChu)
-VALUES ('PDV001', 'HD001', '2025-10-11', 'NV003', N'Giặt ủi và dọn phòng cho khách phòng P301'),
-       ('PDV002', 'HD002', '2025-10-15', 'NV004', N'Đưa đón sân bay và phục vụ ăn sáng phòng P401'),
-       ('PDV003', 'HD003', '2025-10-16', 'NV002', N'Phục vụ ăn tối cho khách phòng P105');
+VALUES
+    ('PDV001', 'HD001', '2025-10-11', 'NV003', N'Giặt ủi HD001'),
+    ('PDV002', 'HD002', '2025-10-15', 'NV004', N'Ăn sáng HD002'),
+    ('PDV003', 'HD003', '2025-10-17', 'NV002', N'Ăn tối HD003');
 GO
 
 -------------------------------------------------------------------
 -- 12. CTHoaDonDichVu (Chi tiết hóa đơn dịch vụ)
 -------------------------------------------------------------------
-PRINT N'-- 12. Đang thêm dữ liệu bảng CTHoaDonDichVu (Sửa đơn giá)...';
+PRINT N'-- 12. Đang thêm dữ liệu bảng CTHoaDonDichVu...';
 INSERT INTO CTHoaDonDichVu (maHD, maPhieuDV, maDV, soLuong, donGia)
 VALUES
--- HD001 (DV001: Giặt ủi 60k; DV002: Đưa đón 350k) -> Tổng 2*(60k) + 350k = 470k
-('HD001', 'PDV001', 'DV001', 2, 60000),
-('HD001', 'PDV001', 'DV002', 1, 350000),
-
--- HD002 (DV003: Massage 600k; DV004: Ăn sáng 180k) -> Tổng 600k + 180k = 780k
-('HD002', 'PDV002', 'DV003', 1, 600000),
-('HD002', 'PDV002', 'DV004', 1, 180000),
-
--- HD003 (DV001: Giặt ủi 60k; DV004: Ăn sáng 180k) -> Tổng 3*(60k) + 180k = 360k
-('HD003', 'PDV003', 'DV001', 3, 60000),
-('HD003', 'PDV003', 'DV004', 1, 180000);
+    ('HD001', 'PDV001', 'DV001', 2, 60000),
+    ('HD001', 'PDV001', 'DV002', 1, 350000),
+    ('HD002', 'PDV002', 'DV003', 1, 600000),
+    ('HD002', 'PDV002', 'DV004', 1, 180000),
+    ('HD003', 'PDV003', 'DV001', 3, 60000),
+    ('HD003', 'PDV003', 'DV004', 1, 180000);
 GO

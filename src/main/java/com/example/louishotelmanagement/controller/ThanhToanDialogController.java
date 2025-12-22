@@ -5,12 +5,14 @@ import com.example.louishotelmanagement.model.*;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
 import com.example.louishotelmanagement.view.ChonKhuyenMaiDiaLogView;
 import com.example.louishotelmanagement.view.MaQRView;
+import com.example.louishotelmanagement.view.ThanhToanDialogView;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -23,7 +25,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 public class ThanhToanDialogController {
-
+    @FXML
+    private final VBox thanhToanContent;
     @FXML private TextField txtMaKhachHang, txtHoTen, txtSoDienThoai, txtEmail;
     @FXML private TextField txtHangkhach, txtSoPhong, txtNgayNhan, txtNgayTra, txtMaKhuyenMai;
     @FXML private RadioButton rbtnTienMat, rbtnTheNganHang;
@@ -61,6 +64,44 @@ public class ThanhToanDialogController {
     private BigDecimal phatTraTreChiTiet = BigDecimal.ZERO;
     private BigDecimal giamGiaMaGGChiTiet = BigDecimal.ZERO;
     private BigDecimal giamGiaHangKHChiTiet = BigDecimal.ZERO;
+
+    public ThanhToanDialogController(ThanhToanDialogView view) {
+        this.thanhToanContent = view.getThanhToanContent();
+        this.btnLamMoi = view.getBtnLamMoi();
+        this.txtMaKhachHang = view.getTxtMaKhachHang();
+        this.txtHoTen = view.getTxtHoTen();
+        this.txtSoDienThoai = view.getTxtSoDienThoai();
+        this.txtEmail = view.getTxtEmail();
+        this.txtHangkhach = view.getTxtHangkhach();
+        this.txtSoPhong = view.getTxtSoPhong();
+        this.txtNgayNhan = view.getTxtNgayNhan();
+        this.txtNgayTra = view.getTxtNgayTra();
+        this.txtMaKhuyenMai = view.getTxtMaKhuyenMai();
+        this.tblChiTietHoaDon = view.getTblChiTietHoaDon();
+        this.colStt = view.getColStt();
+        this.colTen = view.getColTen();
+        this.colSL = view.getColSL();
+        this.colDonGia = view.getColDonGia();
+        this.colThanhTien = view.getColThanhTien();
+        this.rbtnTienMat = view.getRbtnTienMat();
+        this.rbtnTheNganHang = view.getRbtnTheNganHang();
+        this.lblTongTienPhong = view.getLblTongTienPhong();
+        this.lblTongTienDichVu = view.getLblTongTienDichVu();
+        this.lblTienCoc = view.getLblTienCoc();
+        this.lblTamTinh = view.getLblTamTinh();
+        this.lblVat = view.getLblVat();
+        this.lblTongThanhToan = view.getLblTongThanhToan();
+        this.lblGiamGiaMaGG = view.getLblGiamGiaMaGG();
+        this.lblGiamGiaHangKH = view.getLblGiamGiaHangKH();
+        this.lblPhatNhanTre = view.getLblPhatNhanTre();
+        this.lblPhatTraSom = view.getLblPhatTraSom();
+        this.lblPhatTraTre = view.getLblPhatTraTre();
+        this.lblTongTienPhat = view.getLblTongTienPhat();
+        this.btnHuy = view.getBtnHuy();
+        this.btnThanhToan = view.getBtnThanhToan();
+
+        initialize();
+    }
 
     @FXML
     private void initialize() {
