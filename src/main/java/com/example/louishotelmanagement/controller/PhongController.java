@@ -12,8 +12,6 @@ import com.example.louishotelmanagement.dao.PhongDAO;
 import com.example.louishotelmanagement.model.LoaiPhong;
 import com.example.louishotelmanagement.model.Phong;
 import com.example.louishotelmanagement.model.TrangThaiPhong;
-import com.example.louishotelmanagement.util.ContentManager;
-import com.example.louishotelmanagement.util.ContentSwitchable;
 import com.example.louishotelmanagement.ui.components.Badge;
 import com.example.louishotelmanagement.ui.models.BadgeVariant;
 import com.example.louishotelmanagement.util.ContentSwitcher;
@@ -158,12 +156,10 @@ public class PhongController implements Initializable {
                     setGraphic(null);
                 } else {
                     Phong phong = getTableView().getItems().get(getIndex());
-                    TrangThaiPhong trangThaiHienThi = layTrangThaiPhongTheoNgay(phong);
 
-                    boolean isHighlighted = dpTuNgay.getValue() != null && dpDenNgay.getValue() != null
-                            && trangThaiHienThi == TrangThaiPhong.TRONG;
+                    boolean isHighlighted = phong.getTrangThai() != TrangThaiPhong.TRONG;
 
-                    BadgeVariant variant = switch (trangThaiHienThi) {
+                    BadgeVariant variant = switch (phong.getTrangThai()) {
                         case TRONG -> BadgeVariant.SUCCESS;
                         case DANG_SU_DUNG -> BadgeVariant.WARNING;
                         case DA_DAT -> BadgeVariant.DANGER;
@@ -172,8 +168,8 @@ public class PhongController implements Initializable {
                     };
 
                     Label badge = isHighlighted
-                            ? Badge.createBadge(trangThaiHienThi.toString(), variant, "6px 16px", true)
-                            : Badge.createBadge(trangThaiHienThi.toString(), variant);
+                            ? Badge.createBadge(phong.getTrangThai().toString(), variant, "6px 16px", true)
+                            : Badge.createBadge(phong.getTrangThai().toString(), variant);
 
                     setGraphic(badge);
                     setStyle("-fx-alignment: CENTER;");
@@ -184,12 +180,17 @@ public class PhongController implements Initializable {
 
     public void taiBang() {
         try {
-            ArrayList<Phong> dsPhong = phongDAO.layDSPhong();
+            ArrayList<Phong> dsPhong = new ArrayList<>();
             if (dpTuNgay.getValue() != null && dpDenNgay.getValue() != null) {
                 if (dpDenNgay.getValue().isBefore(dpTuNgay.getValue())) {
                     ThongBaoUtil.hienThiLoi("Lỗi", "Ngày kết thúc phải sau ngày bắt đầu!");
                     return;
                 }
+                dsPhong = phongDAO.layDSPhongTrongTheoKhoangThoiGian(dpTuNgay.getValue(),
+                        dpDenNgay.getValue());
+            } else {
+                dsPhong = phongDAO.layDSPhong();
+                System.out.println("get all");
             }
             phongObservableList.clear();
             phongObservableList.addAll(dsPhong);
@@ -296,16 +297,6 @@ public class PhongController implements Initializable {
         taiBang();
     }
 
-    private TrangThaiPhong layTrangThaiPhongTheoNgay(Phong phong) {
-        if (dpTuNgay.getValue() == null || dpDenNgay.getValue() == null) return phong.getTrangThai();
-        try {
-            boolean isTrong = phongDAO.kiemTraPhongTrongTheoKhoangThoiGian(phong.getMaPhong(), dpTuNgay.getValue(), dpDenNgay.getValue());
-            return isTrong ? TrangThaiPhong.TRONG : TrangThaiPhong.DA_DAT;
-        } catch (SQLException e) {
-            return phong.getTrangThai();
-        }
-    }
-
     private boolean kiemTraCoTheChonPhong(Phong phong) {
         if (dpTuNgay.getValue() == null || dpDenNgay.getValue() == null)
             return phong.getTrangThai() == TrangThaiPhong.TRONG;
@@ -410,7 +401,6 @@ public class PhongController implements Initializable {
 
         LocalDate ngayDenVal = dpTuNgay.getValue() != null ? dpTuNgay.getValue() : LocalDate.now();
         LocalDate ngayDiVal = dpDenNgay.getValue() != null ? dpDenNgay.getValue() : LocalDate.now().plusDays(1);
-        System.out.println("Mo dat phong - switcher: " + switcher);
         if (switcher != null) {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/dat-phong-view.fxml"));
@@ -420,7 +410,6 @@ public class PhongController implements Initializable {
                 ctrl.nhanDuLieuTuPhongView(dsTarget, ngayDenVal, ngayDiVal);
 
                 
-                System.out.println("Mo dat phong switcher");
                 switcher.switchContent(root);
             } catch (IOException e) {
                 e.printStackTrace();

@@ -67,3 +67,32 @@ BEGIN
     WHERE maNV = @maNV AND daXoaLuc IS NULL;
 END
 GO
+
+-- 6. Lấy mã nhân viên tiếp theo
+CREATE PROCEDURE sp_layMaNVTiepTheo
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    -- Lấy mã lớn nhất hiện tại và tăng lên 1
+    DECLARE @maxMaNV NVARCHAR(10);
+    DECLARE @nextNumber INT;
+
+    SELECT @maxMaNV = MAX(maNV)
+    FROM NhanVien
+    WHERE maNV LIKE 'NV[0-9][0-9][0-9]';
+
+    IF @maxMaNV IS NULL
+    BEGIN
+        SET @nextNumber = 1;
+    END
+    ELSE
+    BEGIN
+        -- Lấy số từ mã (bỏ 'NV' prefix)
+        SET @nextNumber = CAST(SUBSTRING(@maxMaNV, 3, LEN(@maxMaNV) - 2) AS INT) + 1;
+    END
+
+    -- Trả về mã mới (NV001, NV002, etc.)
+    SELECT 'NV' + RIGHT('000' + CAST(@nextNumber AS NVARCHAR(3)), 3) AS maNV;
+END
+GO

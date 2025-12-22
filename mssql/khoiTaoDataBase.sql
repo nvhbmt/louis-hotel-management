@@ -401,4 +401,3 @@ IF NOT EXISTS (SELECT 1
             WHERE daXoaLuc IS NULL;
     END
 GO
-

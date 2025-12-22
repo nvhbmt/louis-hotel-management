@@ -69,7 +69,8 @@ BEGIN
 
     SELECT maLoaiPhong, tenLoai, moTa, donGia
     FROM LoaiPhong
-    WHERE maLoaiPhong = @maLoaiPhong AND daXoaLuc IS NULL;
+    WHERE maLoaiPhong = @maLoaiPhong
+      AND daXoaLuc IS NULL;
 END
 GO
 
@@ -414,5 +415,55 @@ BEGIN
 
     -- Tạo mã loại phòng tiếp theo
     SET @maLoaiPhongTiepTheo = 'LP' + RIGHT('000' + CAST(@maxSo + 1 AS VARCHAR(3)), 3);
+END
+GO
+
+-- =============================================
+-- 11. Lấy danh sách phòng trống trong khoảng thời gian
+-- =============================================
+CREATE PROCEDURE sp_LayDSPhongTrongTheoKhoangThoiGian @ngayDen DATE,
+                                                      @ngayDi DATE
+AS
+BEGIN
+    SELECT p.maPhong,
+           p.Tang,
+           lp.maLoaiPhong,
+           lp.TenLoai,
+           lp.DonGia,
+           COALESCE(pdp.TrangThai, 'TRONG') AS TrangThai
+    FROM Phong p
+             JOIN LoaiPhong lp
+                  ON p.maLoaiPhong = lp.maLoaiPhong
+             LEFT JOIN CTHoaDonPhong ct
+                       ON p.maPhong = ct.maPhong
+             LEFT JOIN PhieuDatPhong pdp
+                       ON ct.MaPhieu = pdp.MaPhieu
+                           AND pdp.TrangThai IN ('DA_DAT', 'DANG_SU_DUNG')
+                           AND @ngayDen <= ct.NgayDi
+                           AND @ngayDi >= ct.NgayDen
+    WHERE p.TrangThai != 'BAO_TRI';
+END
+GO
+
+-- =============================================
+-- Đếm số lượng đặt phòng chồng lấn cho một phòng trong khoảng thời gian
+-- =============================================
+CREATE PROCEDURE sp_KiemTraPhongTrongTheoKhoangThoiGian @maPhong NVARCHAR(50),
+                                                        @ngayDen DATETIME,
+                                                        @ngayDi DATETIME
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT COUNT(*) as SoLuong
+    FROM CTHoaDonPhong ct
+             JOIN PhieuDatPhong pdp ON ct.MaPhieu = pdp.MaPhieu
+    WHERE ct.MaPhong = @maPhong
+      AND (pdp.TrangThai = 'DA_DAT' OR pdp.TrangThai = 'DANG_SU_DUNG')
+      AND (
+        (@ngayDen <= ct.NgayDi) AND (@ngayDi >= ct.NgayDen)
+        )
+      AND ct.daXoaLuc IS NULL
+      AND pdp.daXoaLuc IS NULL;
 END
 GO

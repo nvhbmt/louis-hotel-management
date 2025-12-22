@@ -96,34 +96,19 @@ public class NhanVienDAO {
         return null;
     }
     public String layMaNVTiepTheo() throws SQLException {
-        String sql = "SELECT TOP 1 maNV FROM NhanVien WHERE maNV LIKE 'NV[0-9][0-9][0-9]' ORDER BY maNV DESC";
-        String maNVCuoi = "NV000";
+        String sql = "{call sp_layMaNVTiepTheo()}";
 
         try (Connection con = CauHinhDatabase.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+             CallableStatement cs = con.prepareCall(sql);
+             ResultSet rs = cs.executeQuery()) {
 
             if (rs.next()) {
-                maNVCuoi = rs.getString("maNV");
+                return rs.getString("maNV");
             }
         }
 
-
-        int soHienTai = 0;
-        try {
-
-            soHienTai = Integer.parseInt(maNVCuoi.substring(2));
-        } catch (NumberFormatException | IndexOutOfBoundsException e) {
-            System.err.println("Lỗi khi phân tích mã NV cuối cùng: " + maNVCuoi + " - " + e.getMessage());
-
-            soHienTai = 0;
-        }
-
-
-        int soMoi = soHienTai + 1;
-
-
-        return String.format("NV%03d", soMoi);
+        // Fallback nếu không có kết quả
+        return "NV001";
     }
     public static void main(String[] args) throws SQLException {
         NhanVienDAO nvdao = new NhanVienDAO();

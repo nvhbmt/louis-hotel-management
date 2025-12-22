@@ -209,33 +209,20 @@ public class PhongDAO {
         }
         return false;
     }
-
-    // =================================================================================
-    // 🔥 2 HÀM MỚI BỔ SUNG (DÙNG RAW SQL TRỰC TIẾP, KHÔNG CẦN TẠO PROCEDURE) 🔥
-    // =================================================================================
-
+    // Kiểm tra phòng có trống trong khoảng thời gian
     public boolean kiemTraPhongTrongTheoKhoangThoiGian(String maPhong, LocalDate ngayDen, LocalDate ngayDi) throws SQLException {
         if (ngayDen == null || ngayDi == null || maPhong == null) return false;
 
-        String sql = """
-            SELECT COUNT(*) as SoLuong
-            FROM CTHoaDonPhong ct
-            JOIN PhieuDatPhong pdp ON ct.MaPhieu = pdp.MaPhieu
-            WHERE ct.MaPhong = ?
-            AND (pdp.TrangThai = 'DA_DAT' OR pdp.TrangThai = 'DANG_SU_DUNG')
-            AND (
-                (? <= ct.NgayDi) AND (? >= ct.NgayDen)
-            )
-        """;
+        String sql = "{call sp_KiemTraPhongTrongTheoKhoangThoiGian(?,?,?)}";
 
         try (Connection con = CauHinhDatabase.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+             CallableStatement cs = con.prepareCall(sql)) {
 
-            ps.setString(1, maPhong);
-            ps.setDate(2, Date.valueOf(ngayDen));
-            ps.setDate(3, Date.valueOf(ngayDi));
+            cs.setString(1, maPhong);
+            cs.setDate(2, Date.valueOf(ngayDen));
+            cs.setDate(3, Date.valueOf(ngayDi));
 
-            ResultSet rs = ps.executeQuery();
+            ResultSet rs = cs.executeQuery();
             if (rs.next()) {
                 return rs.getInt("SoLuong") == 0;
             }
@@ -248,41 +235,24 @@ public class PhongDAO {
 
         ArrayList<Phong> ds = new ArrayList<>();
 
-        String sql = """
-            SELECT p.*, lp.TenLoai, lp.DonGia
-            FROM Phong p
-            JOIN LoaiPhong lp ON p.MaLoaiPhong = lp.MaLoaiPhong
-            WHERE p.TrangThai != 'BAO_TRI'
-            AND p.MaPhong NOT IN (
-                SELECT ct.MaPhong 
-                FROM CTHoaDonPhong ct
-                JOIN PhieuDatPhong pdp ON ct.MaPhieu = pdp.MaPhieu
-                WHERE (pdp.TrangThai = 'DA_DAT' OR pdp.TrangThai = 'DANG_SU_DUNG')
-                AND (
-                    (? <= ct.NgayDi) AND (? >= ct.NgayDen)
-                )
-            )
-        """;
-
+        String sql = "{call sp_LayDSPhongTrongTheoKhoangThoiGian(?,?)}";
         try (Connection con = CauHinhDatabase.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+             CallableStatement cs = con.prepareCall(sql)) {
 
-            ps.setDate(1, Date.valueOf(ngayDen));
-            ps.setDate(2, Date.valueOf(ngayDi));
-
-            ResultSet rs = ps.executeQuery();
-
+            cs.setDate(1, Date.valueOf(ngayDen));
+            cs.setDate(2, Date.valueOf(ngayDi));
+            ResultSet rs = cs.executeQuery();
             while (rs.next()) {
                 LoaiPhong loaiPhong = new LoaiPhong();
-                loaiPhong.setMaLoaiPhong(rs.getString("MaLoaiPhong"));
+                loaiPhong.setMaLoaiPhong(rs.getString("maLoaiPhong"));
                 loaiPhong.setTenLoai(rs.getString("TenLoai"));
                 loaiPhong.setDonGia(rs.getDouble("DonGia"));
 
                 Phong phong = new Phong(
                         rs.getString("MaPhong"),
                         rs.getInt("Tang"),
-                        TrangThaiPhong.TRONG,
-                        rs.getString("MoTa"),
+                        TrangThaiPhong.fromString(rs.getString("TrangThai")),
+                        "",
                         loaiPhong
                 );
                 ds.add(phong);
