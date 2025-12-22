@@ -76,19 +76,6 @@ END;
 GO
 
 
-/* =====================================================
-   3. XÓA HÓA ĐƠN (XÓA CỨNG – ĐÚNG NGHIỆP VỤ)
-   ===================================================== */
-CREATE PROCEDURE sp_XoaHoaDon
-@maHD NVARCHAR(10)
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    DELETE FROM HoaDon
-    WHERE maHD = @maHD;
-END;
-GO
 
 
 /* =====================================================
@@ -162,21 +149,6 @@ END;
 GO
 
 
-/* =====================================================
-   7. CẬP NHẬT TRẠNG THÁI HÓA ĐƠN
-   ===================================================== */
-CREATE PROCEDURE sp_CapNhatTrangThaiHoaDon
-    @maHD NVARCHAR(10),
-    @trangThaiMoi NVARCHAR(50)
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    UPDATE HoaDon
-    SET trangThai = @trangThaiMoi
-    WHERE maHD = @maHD;
-END;
-GO
 
 
 /* =====================================================
@@ -224,25 +196,3 @@ END;
 GO
 
 
-CREATE PROCEDURE sp_CapNhatTongTienHoaDon
-@maHD NVARCHAR(10)
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    DECLARE @tongPhong DECIMAL(18,2) = 0;
-    DECLARE @tongDV DECIMAL(18,2) = 0;
-
-    SELECT @tongPhong = ISNULL(SUM(thanhTien), 0)
-    FROM CTHoaDonPhong
-    WHERE maHD = @maHD AND daHuy = 0;
-
-    SELECT @tongDV = ISNULL(SUM(thanhTien), 0)
-    FROM CTHoaDonDichVu
-    WHERE maHD = @maHD;
-
-    UPDATE HoaDon
-    SET tongTien = @tongPhong + @tongDV
-    WHERE maHD = @maHD;
-END;
-GO

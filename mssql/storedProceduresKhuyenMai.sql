@@ -140,14 +140,3 @@ BEGIN
     SELECT 'GG' + RIGHT('00000' + CAST(@nextNumber AS NVARCHAR(5)), 5) AS maGG;
 END;
 GO
-
-CREATE PROCEDURE sp_layMaKMTiepTheo
-AS
-BEGIN
-    SELECT TOP 1 maGG
-    FROM KhuyenMai
-    ORDER BY maGG DESC;
-    SELECT 'GG' + RIGHT('000' + CAST(RIGHT(MAX(maGG), 3) + 1 AS VARCHAR(3)), 3) AS maGG
-    FROM KhuyenMai;
-END;
-GO

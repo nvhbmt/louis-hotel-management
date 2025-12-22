@@ -1,7 +1,7 @@
 package com.example.louishotelmanagement.controller;
 
 import com.example.louishotelmanagement.dao.HoaDonDAO;
-import com.example.louishotelmanagement.dao.HoaDonDAO2;
+import com.example.louishotelmanagement.dao.HoaDonDAO;
 import com.example.louishotelmanagement.dao.KhachHangDAO;
 import com.example.louishotelmanagement.dao.KhuyenMaiDAO;
 import com.example.louishotelmanagement.model.*;
@@ -54,7 +54,7 @@ public class QuanLyThanhToanController implements Refreshable {
     @FXML private TableColumn<HoaDon, String> colTenKH;
     HoaDonDAO hoadonDAO;
 
-    private final HoaDonDAO2 hoaDonDAO2 = new HoaDonDAO2();
+    private final HoaDonDAO hoaDonDAO = new HoaDonDAO();
     private final ObservableList<HoaDon> masterList = FXCollections.observableArrayList();
 
     private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -205,7 +205,7 @@ public class QuanLyThanhToanController implements Refreshable {
 
             // 2. *** FIX QUAN TRỌNG ***: Tải lại hóa đơn HOÀN CHỈNH từ database
             // Sử dụng phương thức DAO đã được chứng minh là tải đầy đủ dữ liệu (TongGiamGia, TongVAT, v.v.)
-            // GIẢ ĐỊNH: Lớp Controller có thể truy cập 'this.hoaDonDAO2'
+            // GIẢ ĐỊNH: Lớp Controller có thể truy cập 'this.hoaDonDAO'
             HoaDon hoaDonHoanChinh = this.hoadonDAO.timHoaDonTheoMa(maHD);
 
             if (hoaDonHoanChinh == null) {
@@ -262,7 +262,7 @@ public class QuanLyThanhToanController implements Refreshable {
     }
 
     private void loadHoaDonChuaThanhToan() throws SQLException {
-        List<HoaDon> all = hoaDonDAO2.layDanhSachHoaDon(); // dùng DAO2
+        List<HoaDon> all = hoaDonDAO.layDanhSachHoaDon();
         List<HoaDon> chuaTT = all.stream()
                 .collect(Collectors.toList());
         masterList.setAll(chuaTT);

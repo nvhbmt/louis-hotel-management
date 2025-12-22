@@ -45,7 +45,6 @@ public class ThanhToanDialogController {
     private final KhachHangDAO khachHangDAO = new KhachHangDAO();
     private final KhuyenMaiDAO khuyenMaiDAO = new KhuyenMaiDAO();
     private final HoaDonDAO hoaDonDAO = new HoaDonDAO();
-    private final HoaDonDAO2 hoaDonDAO2 = new HoaDonDAO2();
 
     private HoaDon hoaDon;
 
@@ -225,7 +224,7 @@ public class ThanhToanDialogController {
             // Lưu ý: Đảm bảo hoaDon.setTienPhat(finalTienPhat) nếu DB có cột tổng phạt
 
             // 4. Gọi DAO để thực thi Stored Procedure
-            boolean success = hoaDonDAO2.capNhatHoaDon(hoaDon);
+            boolean success = hoaDonDAO.capNhatHoaDon(hoaDon);
 
             if (success) {
                 ThongBaoUtil.hienThiThongBao("Thành công", "Hóa đơn " + hoaDon.getMaHD() + " đã được thanh toán và lưu trữ chi tiết.");

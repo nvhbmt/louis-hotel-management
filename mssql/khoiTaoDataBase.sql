@@ -201,7 +201,7 @@ GO
 -- =============================================
 
 -- Index cho CTHoaDonPhong để optimize overlap check
--- Sử dụng cho stored procedure sp_LayDSPhongTrongTheoKhoangThoiGian
+-- Tối ưu cho việc kiểm tra phòng trống theo khoảng thời gian
 IF NOT EXISTS (SELECT 1
                FROM sys.indexes
                WHERE name = 'IX_CTHoaDonPhong_DateRange'

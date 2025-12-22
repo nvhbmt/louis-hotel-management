@@ -19,14 +19,14 @@ public class HoaDonTxtGenerator {
     private static final String LINE = "=========================================================================\n";
     private static final String SUB_LINE = "-------------------------------------------------------------------------\n";
 
-    private HoaDonDAO2 hoaDonDAO;
+    private HoaDonDAO hoaDonDAO;
     private KhuyenMaiDAO khuyenMaiDAO;
     private KhachHangDAO khachHangDAO;
     private CTHoaDonPhongDAO ctHoaDonPhongDAO;
     private PhieuDatPhongDAO phieuDatPhongDAO;
 
     public HoaDonTxtGenerator() {
-        this.hoaDonDAO = new HoaDonDAO2();
+        this.hoaDonDAO = new HoaDonDAO();
         this.khuyenMaiDAO = new KhuyenMaiDAO();
         this.khachHangDAO = new KhachHangDAO();
         this.phieuDatPhongDAO = new PhieuDatPhongDAO();

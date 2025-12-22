@@ -1,6 +1,6 @@
 package com.example.louishotelmanagement.controller;
 
-import com.example.louishotelmanagement.dao.HoaDonDAO2;
+import com.example.louishotelmanagement.dao.HoaDonDAO;
 import com.example.louishotelmanagement.model.HoaDon;
 import com.example.louishotelmanagement.model.KhachHang;
 import com.example.louishotelmanagement.ui.components.Badge;
@@ -58,13 +58,13 @@ public class QuanLyHoaDonController implements Initializable {
     private TableColumn<HoaDon, String> colTrangThai;
 
     // --- Data and DAO ---
-    private HoaDonDAO2 hoaDonDAO2;
+    private HoaDonDAO hoaDonDAO;
     private ObservableList<HoaDon> danhSachHoaDon;
     private FilteredList<HoaDon> filteredHoaDonList;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        hoaDonDAO2 = new HoaDonDAO2();
+        hoaDonDAO = new HoaDonDAO();
         khoiTaoComboBox();
         cauHinhBang();
         thietLapBoLoc();
@@ -176,7 +176,7 @@ public class QuanLyHoaDonController implements Initializable {
 
     private void taiDuLieuHoaDon() {
         try {
-            List<HoaDon> ds = hoaDonDAO2.layDanhSachHoaDon();
+            List<HoaDon> ds = hoaDonDAO.layDanhSachHoaDon();
             danhSachHoaDon.setAll(ds);
 
 
@@ -224,8 +224,8 @@ public class QuanLyHoaDonController implements Initializable {
 
             // 1. Tải lại hóa đơn HOÀN CHỈNH từ database (sử dụng maHD)
             // Gọi phương thức DAO đã được chứng minh là tải đầy đủ dữ liệu (TongGiamGia, TongVAT)
-            // GIẢ ĐỊNH: Lớp Controller có thể truy cập 'this.hoaDonDAO2'
-            HoaDon hoaDonHoanChinh = this.hoaDonDAO2.timHoaDonTheoMa(maHD);
+            // GIẢ ĐỊNH: Lớp Controller có thể truy cập 'this.hoaDonDAO'
+            HoaDon hoaDonHoanChinh = this.hoaDonDAO.timHoaDonTheoMa(maHD);
 
             if (hoaDonHoanChinh == null) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);

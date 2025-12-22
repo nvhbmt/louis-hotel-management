@@ -60,8 +60,8 @@ public class DichVuDialogController implements Initializable {
         if (!"ADD".equals(mode)) return "";
 
         try {
-            long number = System.currentTimeMillis() % 1000;
-            return String.format("DV%03d", number);
+            String maDV = dichVuDAO.layMaDichVuTiepTheo();
+            return maDV;
         } catch (Exception e) {
             ThongBaoUtil.hienThiThongBao("Lỗi", "Không thể lấy mã dịch vụ tiếp theo: " + e.getMessage());
             return "";
