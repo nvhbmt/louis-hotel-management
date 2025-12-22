@@ -8,6 +8,7 @@ import com.example.louishotelmanagement.ui.components.Badge;
 import com.example.louishotelmanagement.ui.models.BadgeVariant;
 import com.example.louishotelmanagement.util.ContentSwitcher;
 import com.example.louishotelmanagement.util.ThongBaoUtil;
+import com.example.louishotelmanagement.view.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -202,13 +203,11 @@ public class PhongController {
     private void chuyenSangManHinhTraPhong(Phong phong) {
         if (switcher != null) {
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/tra-phong-view.fxml"));
-                Parent root = loader.load();
-
-                TraPhongController ctrl = loader.getController();
-                ctrl.setContentSwitcher(this.switcher);
-                ctrl.truyenDuLieuTuPhong(phong.getMaPhong());
-
+                TraPhongView view = new TraPhongView();
+                TraPhongController controller = new TraPhongController(view);
+                Parent root = view.getRoot();
+                controller.setContentSwitcher(this.switcher);
+                controller.truyenDuLieuTuPhong(phong.getMaPhong());
                 switcher.switchContent(root);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -329,12 +328,11 @@ public class PhongController {
 
         if (switcher != null) {
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource(
-                        "/com/example/louishotelmanagement/fxml/nhan-phong-view.fxml"));
-                Parent root = loader.load();
+                NhanPhongView view = new NhanPhongView();
+                NhanPhongController controller = new NhanPhongController(view);
+                Parent root = view.getRoot();
 
                 if (maPhongCanNhan != null) {
-                    NhanPhongController controller = loader.getController();
                     controller.setContentSwitcher(this.switcher);
                     controller.nhanDuLieuTuPhong(maPhongCanNhan);
                 }
@@ -364,25 +362,15 @@ public class PhongController {
                 return;
             }
 
-            // 3. Logic chuyển màn hình nếu thỏa mãn điều kiện
-            if (switcher != null) {
-                try {
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/doi-phong-view.fxml"));
-                    Parent root = loader.load();
+        // 3. Logic chuyển màn hình nếu thỏa mãn điều kiện
+        if (switcher != null) {
+            DoiPhongView view = new DoiPhongView();
+            DoiPhongController controller = new DoiPhongController(view);
+            Parent root = view.getRoot();
+            controller.setContentSwitcher(this.switcher);
+            controller.nhanDuLieuTuPhong(maPhongCanDoi);
 
-                    DoiPhongController controller = loader.getController();
-                    controller.setContentSwitcher(this.switcher);
-                    controller.nhanDuLieuTuPhong(maPhongCanDoi);
-
-                    switcher.switchContent(root);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            ThongBaoUtil.hienThiLoi("Lỗi", "Không thể lấy thông tin phòng: " + e.getMessage());
-            return;
+            switcher.switchContent(root);
         }
 
     }
@@ -391,14 +379,22 @@ public class PhongController {
         if (switcher != null) switcher.switchContent("/com/example/louishotelmanagement/fxml/dat-dich-vu-view.fxml");
     }
 
-    public void moHuyDat(ActionEvent actionEvent) {
-        if (switcher != null) switcher.switchContent("/com/example/louishotelmanagement/fxml/huy-dat-phong-view.fxml");
-    }
+    @FXML private void moDichVu(ActionEvent actionEvent) { if (switcher != null) switcher.switchContent("/com/example/louishotelmanagement/fxml/dat-dich-vu-view.fxml"); }
+    @FXML
+    private void moHuyDat(ActionEvent actionEvent) {
+        if (switcher != null) {
+            // 1. Khởi tạo View (Giao diện)
+            HuyDatPhongView view = new HuyDatPhongView();
 
-    public void moThanhToan(ActionEvent actionEvent) {
-        if (switcher != null)
-            switcher.switchContent("/com/example/louishotelmanagement/fxml/quan-ly-hoa-don-view.fxml");
+            // 2. Khởi tạo Controller và truyền View vào
+            // (Lúc này Constructor của Controller sẽ nạp dữ liệu từ DB lên View)
+            HuyDatPhongController controller = new HuyDatPhongController(view);
+
+            // 3. Thực hiện chuyển màn hình bằng Root của View đã được nạp dữ liệu
+            switcher.switchContent(view.getRoot());
+        }
     }
+    @FXML private void moThanhToan(ActionEvent actionEvent) { if (switcher != null) switcher.switchContent("/com/example/louishotelmanagement/fxml/quan-ly-hoa-don-view.fxml"); }
 
     public void moHuy(ActionEvent actionEvent) { // Nút Trả phòng
         ArrayList<Phong> dsTarget = layDanhSachPhongTarget();
@@ -427,18 +423,11 @@ public class PhongController {
         LocalDate ngayDenVal = dpTuNgay.getValue() != null ? dpTuNgay.getValue() : LocalDate.now();
         LocalDate ngayDiVal = dpDenNgay.getValue() != null ? dpDenNgay.getValue() : LocalDate.now().plusDays(1);
         if (switcher != null) {
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/dat-phong-view.fxml"));
-                Parent root = loader.load();
-
-                DatPhongController ctrl = loader.getController();
-                ctrl.nhanDuLieuTuPhongView(dsTarget, ngayDenVal, ngayDiVal);
-
-
-                switcher.switchContent(root);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            DatPhongView view = new DatPhongView();
+            DatPhongController controller = new DatPhongController(view);
+            Parent root = view.getRoot();
+            controller.nhanDuLieuTuPhongView(dsTarget, ngayDenVal, ngayDiVal);
+            switcher.switchContent(root);
         }
     }
     // ============================================

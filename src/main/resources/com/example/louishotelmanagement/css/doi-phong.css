@@ -14,7 +14,25 @@
     -fx-fit-height: 40;
     -fx-fit-width: 40;
 }
+/* --- Nút Đổi Phòng (Đồng bộ với nút Nhận phòng) --- */
+#btnDoiPhong {
+    -fx-background-color: #007bff; /* Màu xanh dương */
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 18px;
+    -fx-padding: 10px 30px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 5, 0, 0, 1);
+    -fx-cursor: hand;
+    -fx-pref-height: 50px;
+    -fx-pref-width: 200px; /* Có thể chỉnh lại độ rộng tùy ý */
+}
 
+#btnDoiPhong:hover {
+    -fx-background-color: #0069d9;
+    -fx-opacity: 0.9;
+}
 /* --- Tiêu đề các phần (Thông tin đổi phòng, Danh sách phòng trống) --- */
 .section-heading {
     -fx-font-weight: 700;
