@@ -138,3 +138,31 @@
     -fx-pref-width: 250px;
     /* Cố định chiều rộng Input trong box */
 }
+
+/* Loại bỏ nền trắng và viền mặc định của ô Editor khi ComboBox editable */
+.combo-box.search-style .get-editor {
+    -fx-background-color: transparent;
+    -fx-padding: 0 10;
+    -fx-text-fill: #2c3e50; /* Màu chữ khớp với giao diện */
+}
+
+/* Định dạng lại khung ComboBox khi ở chế độ chỉnh sửa để giống TextField */
+.combo-box.search-style:editable {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 5px;
+    -fx-border-color: #dcdde1; /* Màu viền xám nhạt giống các ô khác */
+    -fx-border-radius: 5px;
+    -fx-border-width: 1px;
+}
+
+/* Hiệu ứng khi nhấn vào ô tìm kiếm (Focus) */
+.combo-box.search-style:editable:focused {
+    -fx-border-color: #3498db; /* Màu xanh dương giống nút Nhận phòng */
+    -fx-border-width: 1px;
+}
+
+/* Ẩn cái viền xanh loang mặc định của JavaFX */
+.combo-box.search-style:editable .get-editor:focused {
+    -fx-background-color: -fx-control-inner-background;
+    -fx-background-insets: 0;
+}

@@ -358,23 +358,38 @@ public class PhongController implements Initializable {
     }
 
     @FXML
-    private void moDoiPhong(ActionEvent actionEvent) {
+    private void moDoiPhong(ActionEvent actionEvent) throws SQLException {
         ArrayList<Phong> dsTarget = layDanhSachPhongTarget();
-        String maPhongCanDoi = dsTarget.isEmpty() ? null : dsTarget.get(0).getMaPhong();
 
+        // 1. Kiểm tra nếu chưa chọn phòng nào
+        if (dsTarget.isEmpty()) {
+            ThongBaoUtil.hienThiCanhBao("Lỗi", "Vui lòng chọn một phòng để đổi!");
+            return;
+        }
+
+        String maPhongCanDoi = dsTarget.get(0).getMaPhong();
+        TrangThaiPhong tt = phongDAO.layPhongTheoMa(maPhongCanDoi).getTrangThai();
+
+        // 2. SỬA TẠI ĐÂY: Nếu trạng thái KHÁC "DANG_SU_DUNG" thì mới báo lỗi
+        if (!tt.equals(TrangThaiPhong.DANG_SU_DUNG)) {
+            ThongBaoUtil.hienThiCanhBao("Lỗi", "Vui lòng chọn phòng đang sử dụng để đổi phòng");
+            return;
+        }
+
+        // 3. Logic chuyển màn hình nếu thỏa mãn điều kiện
         if (switcher != null) {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/louishotelmanagement/fxml/doi-phong-view.fxml"));
                 Parent root = loader.load();
 
-                if (maPhongCanDoi != null) {
-                    DoiPhongController controller = loader.getController();
-                    controller.setContentSwitcher(this.switcher);
-                    controller.nhanDuLieuTuPhong(maPhongCanDoi);
-                }
+                DoiPhongController controller = loader.getController();
+                controller.setContentSwitcher(this.switcher);
+                controller.nhanDuLieuTuPhong(maPhongCanDoi);
 
                 switcher.switchContent(root);
-            } catch (IOException e) { e.printStackTrace(); }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
